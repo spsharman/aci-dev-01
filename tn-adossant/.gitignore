@@ -1,5 +1,5 @@
 /.DS_Store
-/.terraform
+/.terraform*
 /.terraform.lock.hcl
 /plan.out
 /terraform.tfstate*
