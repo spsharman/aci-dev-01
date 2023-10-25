@@ -1,5 +1,6 @@
-.terraform*
-.terraform.lock.hcl
-plan.out
-terraform.tfstate*
-terraform.tfvars
+/.DS_Store
+/.terraform*
+/.terraform.lock.hcl
+/plan.out
+/terraform.tfstate*
+/terraform.tfvars
