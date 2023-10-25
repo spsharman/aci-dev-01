@@ -1,0 +1,83 @@
+---
+apic:
+  tenants:
+    - name: 'adossant'
+      description: Routable IP range 192.168.70-75.x
+      vrfs:
+        - name: 'vrf-01'
+          contracts:
+            imported_consumers:
+              - permit-from-lab-desktops
+              - permit-from-core-services
+              - permit-to-core-services
+      
+      bridge_domains:
+        - name: '192.168.70.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.70.1/24
+              public: true
+              private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: '192.168.71.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.71.1/24
+              public: true
+              private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: '192.168.72.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.72.1/24
+              public: true
+              private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: '192.168.73.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.73.1/24
+              public: true
+              private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+        
+        - name: '192.168.74.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.74.1/24
+              public: true
+              private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: '192.168.75.0_24'
+          description: PBR subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.75.1/24
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com

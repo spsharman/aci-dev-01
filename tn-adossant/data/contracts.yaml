@@ -1,0 +1,57 @@
+---
+apic:
+  tenants:
+    - name: 'adossant'
+      description: Routable IP range 192.168.70-75.x
+
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: unspecified
+        
+        - name: 'permit-any'
+          entries:
+            - name: 'permit-any'
+              ethertype: unspecified
+              protocol: unspecified
+
+        # - name: 'tcp-src-any-dst-80'
+        #   entries:
+        #     - name: 'tcp-src-any-dst-80'
+        #       ethertype: ip
+        #       protocol: tcp
+        #       destination_from_port: 80
+
+      contracts:
+        - name: 'permit-to-tn-adossant'
+          scope: global
+          subjects:
+            - name: 'permit-any'
+              filters:
+                - filter: permit-any
+
+        - name: 'permit-to-subnet-group-01'
+          subjects:
+            - name: 'permit-any'
+              filters:
+                - filter: permit-any
+
+        - name: 'permit-to-subnet-group-02'
+          subjects:
+            - name: 'permit-any'
+              filters:
+                - filter: permit-any
+      
+      imported_contracts:
+        - name: 'permit-from-lab-desktops'
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+        
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+        
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
