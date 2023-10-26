@@ -5,3 +5,4 @@
 /terraform.tfstate*
 /terraform.tfvars
 /deployment-notes.txt
+/baseline-files/*
