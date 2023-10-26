@@ -1,0 +1,7 @@
+/.DS_Store
+/.terraform*
+/.terraform.lock.hcl
+/plan.out
+/terraform.tfstate*
+/terraform.tfvars
+/deployment-notes.txt
