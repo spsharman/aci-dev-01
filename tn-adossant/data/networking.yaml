@@ -10,8 +10,67 @@ apic:
               - permit-from-lab-desktops
               - permit-from-core-services
               - permit-to-core-services
-      
+
+          leaked_internal_prefixes:
+            - prefix: 192.168.70.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 192.168.71.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 192.168.72.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally          
+
+            - prefix: 192.168.73.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 192.168.74.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 192.168.75.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: false
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
       bridge_domains:
+        - name: '6.6.6.0_24'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              private: true
+              shared: false
+              nd_ra_prefix: false
+
         - name: '192.168.70.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
@@ -81,3 +140,4 @@ apic:
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
+
