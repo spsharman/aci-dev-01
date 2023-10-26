@@ -14,24 +14,24 @@ apic:
               epg_selectors:
                 - tenant: adealdag
                   application_profile: network-segments
-                  endpoint_group: 192.168.70.0_24 
+                  endpoint_group: 192.168.40.0_24 
 
                 - tenant: adealdag                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.71.0_24
+                  endpoint_group: 192.168.41.0_24
 
                 - tenant: adealdag                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.72.0_24
+                  endpoint_group: 192.168.42.0_24
 
                 - tenant: adealdag                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.73.0_24
+                  endpoint_group: 192.168.43.0_24
 
                 - tenant: adealdag                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.74.0_24
+                  endpoint_group: 192.168.44.0_24
 
                 - tenant: adealdag                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.75.0_24
+                  endpoint_group: 192.168.45.0_24

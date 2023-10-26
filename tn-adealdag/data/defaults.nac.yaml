@@ -1,6 +1,6 @@
 # Overwrite default values here
 
-defaults:
+# defaults:
 #   apic:
 #     tenants:
 #       bridge_domains:

@@ -2,7 +2,7 @@
 apic:
   tenants:
     - name: 'adealdag'
-      description: Routable IP range 192.168.70-75.x
+      description: Routable IP range 192.168.40-45.x
 
       contracts:
         - name: 'permit-to-tn-adealdag'
