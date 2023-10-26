@@ -1,6 +1,6 @@
 apic:
   tenants:
-    - name: adossant
+    - name: adealdag
       application_profiles:
         - name: epg-matched-esg
           endpoint_security_groups:
@@ -12,26 +12,26 @@ apic:
               # preferred_group: true              
 
               epg_selectors:
-                - tenant: adossant
+                - tenant: adealdag
                   application_profile: network-segments
                   endpoint_group: 192.168.70.0_24 
 
-                - tenant: adossant                  
+                - tenant: adealdag                  
                   application_profile: network-segments
                   endpoint_group: 192.168.71.0_24
 
-                - tenant: adossant                  
+                - tenant: adealdag                  
                   application_profile: network-segments
                   endpoint_group: 192.168.72.0_24
 
-                - tenant: adossant                  
+                - tenant: adealdag                  
                   application_profile: network-segments
                   endpoint_group: 192.168.73.0_24
 
-                - tenant: adossant                  
+                - tenant: adealdag                  
                   application_profile: network-segments
                   endpoint_group: 192.168.74.0_24
 
-                - tenant: adossant                  
+                - tenant: adealdag                  
                   application_profile: network-segments
                   endpoint_group: 192.168.75.0_24

@@ -1,7 +1,7 @@
 # Overwrite default values here
 
-# defaults:
+defaults:
 #   apic:
-    # tenants: adossant
+#     tenants:
 #       bridge_domains:
 #         unicast_routing: false
