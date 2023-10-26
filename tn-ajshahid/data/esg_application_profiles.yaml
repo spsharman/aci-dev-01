@@ -1,0 +1,36 @@
+apic:
+  tenants:
+    - name: ajshahid
+      application_profiles:
+        - name: epg-matched-esg
+          endpoint_security_groups:
+            - name: network-segments
+              # description: 
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false             
+
+              epg_selectors:
+                - tenant: ajshahid
+                  application_profile: network-segments
+                  endpoint_group: 192.168.20.0_24 
+
+                - tenant: ajshahid                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.21.0_24
+
+                - tenant: ajshahid                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.22.0_24
+
+                - tenant: ajshahid                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.23.0_24
+
+                - tenant: ajshahid                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.24.0_24
+
+                - tenant: ajshahid                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.25.0_24
