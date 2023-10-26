@@ -1,7 +1,6 @@
 apic:
   tenants:
     - name: 'adossant'
-
       policies:
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com

@@ -8,8 +8,7 @@ apic:
               # description: 
               vrf: vrf-01
               shutdown: false
-              intra_esg_isolation: false
-              # preferred_group: true              
+              intra_esg_isolation: false             
 
               epg_selectors:
                 - tenant: adossant

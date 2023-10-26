@@ -2,8 +2,6 @@
 apic:
   tenants:
     - name: 'adossant'
-      description: Routable IP range 192.168.70-75.x
-
       filters:
         - name: 'icmp'
           entries:
