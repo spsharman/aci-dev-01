@@ -13,24 +13,24 @@ apic:
               epg_selectors:
                 - tenant: ajshahid
                   application_profile: network-segments
-                  endpoint_group: 192.168.20.0_24 
+                  endpoint_group: 192.168.110.0_24 
 
                 - tenant: ajshahid                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.21.0_24
+                  endpoint_group: 192.168.111.0_24
 
                 - tenant: ajshahid                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.22.0_24
+                  endpoint_group: 192.168.112.0_24
 
                 - tenant: ajshahid                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.23.0_24
+                  endpoint_group: 192.168.113.0_24
 
                 - tenant: ajshahid                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.24.0_24
+                  endpoint_group: 192.168.114.0_24
 
                 - tenant: ajshahid                  
                   application_profile: network-segments
-                  endpoint_group: 192.168.25.0_24
+                  endpoint_group: 192.168.115.0_24

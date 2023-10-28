@@ -2,7 +2,7 @@
 apic:
   tenants:
     - name: 'ajshahid'
-      description: Routable IP range 192.168.20-25.x
+      description: Routable IP range 192.168.10-115.x
       vrfs:
         - name: 'vrf-01'
           contracts:
@@ -12,7 +12,7 @@ apic:
               - permit-to-core-services
 
           leaked_internal_prefixes:
-            - prefix: 192.168.20.0/24
+            - prefix: 192.168.110.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -20,7 +20,7 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally
 
-            - prefix: 192.168.21.0/24
+            - prefix: 192.168.111.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -28,7 +28,7 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally
 
-            - prefix: 192.168.22.0/24
+            - prefix: 192.168.112.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -36,7 +36,7 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally          
 
-            - prefix: 192.168.23.0/24
+            - prefix: 192.168.113.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -44,7 +44,7 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally
 
-            - prefix: 192.168.24.0/24
+            - prefix: 192.168.114.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -52,7 +52,7 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally
 
-            - prefix: 192.168.25.0/24
+            - prefix: 192.168.115.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -71,11 +71,11 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: '192.168.20.0_24'
+        - name: '192.168.110.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.20.1/24
+            - ip: 192.168.110.1/24
               public: true
               private: false
               shared: true
@@ -83,11 +83,11 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: '192.168.21.0_24'
+        - name: '192.168.111.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.21.1/24
+            - ip: 192.168.111.1/24
               public: true
               private: false
               shared: true
@@ -95,11 +95,11 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: '192.168.22.0_24'
+        - name: '192.168.112.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.22.1/24
+            - ip: 192.168.112.1/24
               public: true
               private: false
               shared: true
@@ -107,11 +107,11 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: '192.168.23.0_24'
+        - name: '192.168.113.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.23.1/24
+            - ip: 192.168.113.1/24
               public: true
               private: false
               shared: true
@@ -119,11 +119,11 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
         
-        - name: '192.168.24.0_24'
+        - name: '192.168.114.0_24'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.24.1/24
+            - ip: 192.168.114.1/24
               public: true
               private: false
               shared: true
@@ -131,12 +131,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: '192.168.25.0_24'
+        - name: '192.168.115.0_24'
           description: PBR subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.25.1/24
+            - ip: 192.168.115.1/24
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com

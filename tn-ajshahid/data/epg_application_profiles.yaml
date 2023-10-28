@@ -5,8 +5,8 @@ apic:
       application_profiles:
         - name: 'network-segments'
           endpoint_groups:
-            - name: '192.168.20.0_24'
-              bridge_domain: 192.168.20.0_24
+            - name: '192.168.110.0_24'
+              bridge_domain: 192.168.110.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -15,8 +15,8 @@ apic:
                   primary_vlan: 1225
                   secondary_vlan: 1226
 
-            - name: '192.168.21.0_24'
-              bridge_domain: 192.168.21.0_24
+            - name: '192.168.111.0_24'
+              bridge_domain: 192.168.111.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -25,8 +25,8 @@ apic:
                   primary_vlan: 1227
                   secondary_vlan: 1228
 
-            - name: '192.168.22.0_24'
-              bridge_domain: 192.168.22.0_24
+            - name: '192.168.112.0_24'
+              bridge_domain: 192.168.112.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -35,8 +35,8 @@ apic:
                   primary_vlan: 1229
                   secondary_vlan: 1230
 
-            - name: '192.168.23.0_24'
-              bridge_domain: 192.168.23.0_24
+            - name: '192.168.113.0_24'
+              bridge_domain: 192.168.113.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -45,8 +45,8 @@ apic:
                   primary_vlan: 1231
                   secondary_vlan: 1232
 
-            - name: '192.168.24.0_24'
-              bridge_domain: 192.168.24.0_24
+            - name: '192.168.114.0_24'
+              bridge_domain: 192.168.114.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -55,8 +55,8 @@ apic:
                   primary_vlan: 1233
                   secondary_vlan: 1234
 
-            - name: '192.168.25.0_24'
-              bridge_domain: 192.168.25.0_24
+            - name: '192.168.115.0_24'
+              bridge_domain: 192.168.115.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
