@@ -2,7 +2,7 @@
 apic:
   tenants:
     - name: 'ajshahid'
-      description: Routable IP range 192.168.10-115.x
+      description: Routable IP range 192.168.110-115.x
       vrfs:
         - name: 'vrf-01'
           contracts:
