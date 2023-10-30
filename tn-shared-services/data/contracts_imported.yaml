@@ -1,6 +1,7 @@
 apic:
   tenants:
     - name: shared-services
+      managed: false
       imported_contracts:
         - name: permit-to-tn-demo-route-leaking
           tenant: demo-route-leaking
