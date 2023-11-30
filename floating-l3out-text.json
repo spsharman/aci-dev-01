@@ -1,0 +1,372 @@
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "l3extOut": {
+                "attributes": {
+                    "annotation": "",
+                    "descr": "",
+                    "dn": "uni/tn-esg-ssharman-380989/out-L3out-to-CSR",
+                    "enforceRtctrl": "export",
+                    "mplsEnabled": "no",
+                    "name": "L3out-to-CSR",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "targetDscp": "unspecified",
+                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                },
+                "children": [
+                    {
+                        "l3extRsL3DomAtt": {
+                            "attributes": {
+                                "annotation": "",
+                                "tDn": "uni/l3dom-Floating_L3out_HX_Cluster",
+                                "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                            }
+                        }
+                    },
+                    {
+                        "l3extRsEctx": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnFvCtxName": "vrf-esg-fmc",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "l3extLNodeP": {
+                            "attributes": {
+                                "annotation": "",
+                                "configIssues": "",
+                                "descr": "",
+                                "name": "node_profile-L3Out-to-CSR",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "tag": "yellow-green",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                            },
+                            "children": [
+                                {
+                                    "l3extRsNodeL3OutAtt": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "configIssues": "",
+                                            "rtrId": "192.168.1.102",
+                                            "rtrIdLoopBack": "yes",
+                                            "tDn": "topology/pod-1/node-102",
+                                            "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                        },
+                                        "children": [
+                                            {
+                                                "ipRouteP": {
+                                                    "attributes": {
+                                                        "aggregate": "no",
+                                                        "annotation": "",
+                                                        "descr": "CSR default route - Automated by Terraform",
+                                                        "fromPfxLen": "0",
+                                                        "ip": "0.0.0.0/0",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "pref": "1",
+                                                        "rtCtrl": "",
+                                                        "toPfxLen": "0",
+                                                        "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "ipNexthopP": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "nhAddr": "192.168.0.1",
+                                                                    "pref": "unspecified",
+                                                                    "type": "prefix",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "l3extRsNodeL3OutAtt": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "configIssues": "",
+                                            "rtrId": "192.168.1.101",
+                                            "rtrIdLoopBack": "yes",
+                                            "tDn": "topology/pod-1/node-101",
+                                            "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                        },
+                                        "children": [
+                                            {
+                                                "ipRouteP": {
+                                                    "attributes": {
+                                                        "aggregate": "no",
+                                                        "annotation": "",
+                                                        "descr": "CSR default route - Automated by Terraform",
+                                                        "fromPfxLen": "0",
+                                                        "ip": "0.0.0.0/0",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "pref": "1",
+                                                        "rtCtrl": "",
+                                                        "toPfxLen": "0",
+                                                        "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "ipNexthopP": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "nhAddr": "192.168.0.1",
+                                                                    "pref": "unspecified",
+                                                                    "type": "prefix",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "l3extLIfP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "name": "if_profile-L3Out-to-CSR",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "prio": "unspecified",
+                                            "tag": "yellow-green",
+                                            "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                        },
+                                        "children": [
+                                            {
+                                                "l3extVirtualLIfP": {
+                                                    "attributes": {
+                                                        "addr": "192.168.0.102/24",
+                                                        "annotation": "",
+                                                        "autostate": "disabled",
+                                                        "descr": "",
+                                                        "encap": "vlan-1407",
+                                                        "encapScope": "local",
+                                                        "ifInstT": "ext-svi",
+                                                        "ipv6Dad": "enabled",
+                                                        "llAddr": "::",
+                                                        "mac": "00:22:BD:F8:19:FF",
+                                                        "mode": "regular",
+                                                        "mtu": "inherit",
+                                                        "name": "",
+                                                        "nodeDn": "topology/pod-1/node-102",
+                                                        "targetDscp": "unspecified",
+                                                        "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extRsDynPathAtt": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "encap": "unknown",
+                                                                    "floatingAddr": "192.168.0.100/24",
+                                                                    "forgedTransmit": "Disabled",
+                                                                    "macChange": "Disabled",
+                                                                    "promMode": "Disabled",
+                                                                    "tDn": "uni/vmmp-VMware/dom-vmware60-hybridcloud",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extIp": {
+                                                                "attributes": {
+                                                                    "addr": "192.168.0.254/24",
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "ipv6Dad": "enabled",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extVirtualLIfP": {
+                                                    "attributes": {
+                                                        "addr": "192.168.0.101/24",
+                                                        "annotation": "",
+                                                        "autostate": "disabled",
+                                                        "descr": "",
+                                                        "encap": "vlan-1407",
+                                                        "encapScope": "local",
+                                                        "ifInstT": "ext-svi",
+                                                        "ipv6Dad": "enabled",
+                                                        "llAddr": "::",
+                                                        "mac": "00:22:BD:F8:19:FF",
+                                                        "mode": "regular",
+                                                        "mtu": "inherit",
+                                                        "name": "",
+                                                        "nodeDn": "topology/pod-1/node-101",
+                                                        "targetDscp": "unspecified",
+                                                        "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extRsDynPathAtt": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "encap": "unknown",
+                                                                    "floatingAddr": "192.168.0.100/24",
+                                                                    "forgedTransmit": "Disabled",
+                                                                    "macChange": "Disabled",
+                                                                    "promMode": "Disabled",
+                                                                    "tDn": "uni/vmmp-VMware/dom-vmware60-hybridcloud",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extIp": {
+                                                                "attributes": {
+                                                                    "addr": "192.168.0.254/24",
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "ipv6Dad": "enabled",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extRsNdIfPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnNdIfPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsLIfPCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsIngressQosDppPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosDppPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsEgressQosDppPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosDppPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsArpIfPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnArpIfPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "l3extInstP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "exceptionTag": "",
+                                "floodOnEncap": "disabled",
+                                "matchT": "AtleastOne",
+                                "name": "epg-external",
+                                "nameAlias": "",
+                                "pcEnfPref": "unenforced",
+                                "prefGrMemb": "exclude",
+                                "prio": "unspecified",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                            },
+                            "children": [
+                                {
+                                    "l3extSubnet": {
+                                        "attributes": {
+                                            "aggregate": "",
+                                            "annotation": "",
+                                            "descr": "",
+                                            "ip": "0.0.0.0/0",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "scope": "import-security",
+                                            "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCustQosPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnQosCustomPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCons": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "intent": "install",
+                                            "prio": "unspecified",
+                                            "tnVzBrCPName": "con-permit-any",
+                                            "userdom": ":all:common:vmware60-hybridcloud:SecDo-esg-ssharman-380989:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

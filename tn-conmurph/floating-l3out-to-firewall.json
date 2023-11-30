@@ -1,0 +1,265 @@
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "l3extOut": {
+                "attributes": {
+                    "annotation": "",
+                    "descr": "",
+                    "dn": "uni/tn-conmurph/out-floating-l3out-to-firewall",
+                    "enforceRtctrl": "export",
+                    "mplsEnabled": "no",
+                    "name": "floating-l3out-to-firewall",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "targetDscp": "unspecified",
+                    "userdom": ":all:mgmt:common:"
+                },
+                "children": [
+                    {
+                        "l3extRsL3DomAtt": {
+                            "attributes": {
+                                "annotation": "",
+                                "tDn": "uni/l3dom-conmurph.vrf-01",
+                                "userdom": ":all:mgmt:common:"
+                            }
+                        }
+                    },
+                    {
+                        "l3extRsEctx": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnFvCtxName": "vrf-01",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "l3extLNodeP": {
+                            "attributes": {
+                                "annotation": "",
+                                "configIssues": "",
+                                "descr": "",
+                                "name": "border-leafs",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "tag": "yellow-green",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "l3extRsNodeL3OutAtt": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "configIssues": "",
+                                            "rtrId": "101.2.1.1",
+                                            "rtrIdLoopBack": "no",
+                                            "tDn": "topology/pod-1/node-101",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extRsNodeL3OutAtt": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "configIssues": "",
+                                            "rtrId": "102.2.1.1",
+                                            "rtrIdLoopBack": "no",
+                                            "tDn": "topology/pod-1/node-102",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extLIfP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "name": "ucsc-c220m5-vds-01",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "prio": "unspecified",
+                                            "tag": "yellow-green",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "l3extVirtualLIfP": {
+                                                    "attributes": {
+                                                        "addr": "1.1.1.11/24",
+                                                        "annotation": "",
+                                                        "autostate": "disabled",
+                                                        "descr": "",
+                                                        "encap": "vlan-500",
+                                                        "encapScope": "local",
+                                                        "ifInstT": "ext-svi",
+                                                        "ipv6Dad": "enabled",
+                                                        "llAddr": "::",
+                                                        "mac": "00:22:BD:F8:19:FF",
+                                                        "mode": "regular",
+                                                        "mtu": "1500",
+                                                        "name": "",
+                                                        "nodeDn": "topology/pod-1/node-101",
+                                                        "targetDscp": "unspecified",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extRsDynPathAtt": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "encap": "unknown",
+                                                                    "floatingAddr": "1.1.1.1/24",
+                                                                    "forgedTransmit": "Disabled",
+                                                                    "macChange": "Disabled",
+                                                                    "promMode": "Disabled",
+                                                                    "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
+                                                                    "userdom": ":all:mgmt:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extVirtualLIfP": {
+                                                    "attributes": {
+                                                        "addr": "1.1.1.12/24",
+                                                        "annotation": "",
+                                                        "autostate": "disabled",
+                                                        "descr": "",
+                                                        "encap": "vlan-500",
+                                                        "encapScope": "local",
+                                                        "ifInstT": "ext-svi",
+                                                        "ipv6Dad": "enabled",
+                                                        "llAddr": "::",
+                                                        "mac": "00:22:BD:F8:19:FF",
+                                                        "mode": "regular",
+                                                        "mtu": "1500",
+                                                        "name": "",
+                                                        "nodeDn": "topology/pod-1/node-102",
+                                                        "targetDscp": "unspecified",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extRsDynPathAtt": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "encap": "unknown",
+                                                                    "floatingAddr": "1.1.1.1/24",
+                                                                    "forgedTransmit": "Disabled",
+                                                                    "macChange": "Disabled",
+                                                                    "promMode": "Disabled",
+                                                                    "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
+                                                                    "userdom": ":all:mgmt:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extRsNdIfPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnNdIfPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsLIfPCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsIngressQosDppPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosDppPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsEgressQosDppPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosDppPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsArpIfPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnArpIfPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "l3extInstP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "exceptionTag": "",
+                                "floodOnEncap": "disabled",
+                                "matchT": "AtleastOne",
+                                "name": "all-ext-subnets",
+                                "nameAlias": "",
+                                "pcEnfPref": "unenforced",
+                                "prefGrMemb": "exclude",
+                                "prio": "unspecified",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "l3extSubnet": {
+                                        "attributes": {
+                                            "aggregate": "",
+                                            "annotation": "",
+                                            "descr": "",
+                                            "ip": "0.0.0.0/0",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "scope": "import-security",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCustQosPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnQosCustomPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
