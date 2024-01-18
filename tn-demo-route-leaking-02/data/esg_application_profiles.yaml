@@ -1,0 +1,40 @@
+# apic:
+#   tenants:
+#     - name: demo-route-leaking-02
+#       application_profiles:
+#         - name: epg-matched-esg
+#           endpoint_security_groups:
+#             - name: network-segments
+#               # description: 
+#               vrf: vrf-01
+#               shutdown: false
+#               intra_esg_isolation: false             
+
+#               epg_selectors:
+#                 - tenant: demo-route-leaking-02
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.21.0_24 
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.22.0_24
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.23.0_24
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.24.0_24
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.25.0_24
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.26.0_24
+
+#                 - tenant: demo-route-leaking-02                  
+#                   application_profile: network-segments
+#                   endpoint_group: 10.0.27.0_24
