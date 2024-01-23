@@ -11,14 +11,19 @@ apic:
               - permit-from-core-services
               - permit-to-core-services
 
-          # leaked_internal_prefixes:
-          #   - prefix: 10.0.51.0/24
-          #     public: true
-          #     destinations:
-          #       - tenant: shared-services
-          #         vrf: vrf-01
-          #         public: false
-          #         description: Leaked to shared-services:vrf-01 and advertised externally
+          leaked_internal_prefixes:
+            - prefix: 10.0.51.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+                - tenant: common
+                  vrf: common.vrf-01
+                  public: false
+                  description: Leaked to common:common.vrf-01
 
           #   - prefix: 10.0.52.0/24
           #     public: true
@@ -85,9 +90,9 @@ apic:
           vrf: vrf-01
           subnets:
             - ip: 10.0.51.1/24
-              public: true
-              private: false
-              shared: true
+              # public: true
+              # private: false
+              # shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -97,9 +102,9 @@ apic:
           vrf: vrf-01
           subnets:
             - ip: 10.0.52.1/24
-              public: true
-              private: false
-              shared: true
+              # public: true
+              # private: false
+              # shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -109,9 +114,9 @@ apic:
           vrf: vrf-01
           subnets:
             - ip: 10.0.53.1/24
-              public: true
-              private: false
-              shared: true
+              # public: true
+              # private: false
+              # shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -121,9 +126,9 @@ apic:
           vrf: vrf-01
           subnets:
             - ip: 10.0.54.1/24
-              public: true
-              private: false
-              shared: true
+              # public: true
+              # private: false
+              # shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -133,9 +138,9 @@ apic:
           vrf: vrf-01
           subnets:
             - ip: 10.0.55.1/24
-              public: true
-              private: false
-              shared: true
+              # public: true
+              # private: false
+              # shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
