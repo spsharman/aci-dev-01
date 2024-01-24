@@ -14,7 +14,7 @@ apic:
 
       services:
         redirect_policies:
-          - name: redirect-to-ftdv-03-gig-0-3
+          - name: redirect-to-ftdv-03-adapter-6-gig-0-3
             l3_destinations:
               - ip: 6.6.6.11
                 mac: 00:50:56:a1:9a:87

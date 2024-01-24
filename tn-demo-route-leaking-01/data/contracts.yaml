@@ -14,7 +14,7 @@ apic:
           scope: global
           subjects:
             - name: 'redirect'
-              service_graph: redirect-to-ftdv-03-gig-0-3
+              service_graph: redirect-to-ftdv-03-adapter-6-gig-0-3
               filters:
                 - filter: permit-any
                 

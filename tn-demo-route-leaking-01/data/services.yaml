@@ -4,7 +4,7 @@ apic:
     - name: demo-route-leaking-01
       services:
         l4l7_devices:
-          - name: ftdv-03-eth6-gig-0-3
+          - name: ftdv-03-adapter-6-gig-0-3
             vmware_vmm_domain: hx-dev-01-vds-01
             context_aware: single-Context
             type: VIRTUAL
@@ -12,7 +12,7 @@ apic:
             service_type: FW
             trunking: false
             concrete_devices:
-              - name: ftdv-03-eth6-gig-0-3
+              - name: ftdv-03-adapter-6-gig-0-3
                 vcenter_name: hx-dev-01-vc01.uktme.cisco.com
                 vm_name: ftdv72_82-03.uktme.cisco.com
                 interfaces:
@@ -21,17 +21,17 @@ apic:
             logical_interfaces:
               - name: gig-0-3
                 concrete_interfaces:
-                  - device: ftdv-03-eth6-gig-0-3
+                  - device: ftdv-03-adapter-6-gig-0-3
                     interface_name: gig-0-3
 
         service_graph_templates:
-          - name: redirect-to-ftdv-03-gig-0-3
+          - name: redirect-to-ftdv-03-adapter-6-gig-0-3
             template_type: FW_ROUTED
             redirect: true
             share_encapsulation: false
             device:
-              tenant: shared-services
-              name: ftdv-03-eth6-gig-0-3
+              tenant: demo-route-leaking-01
+              name: ftdv-03-adapter-6-gig-0-3
             consumer:
               direct_connect: false
             provider:
@@ -39,16 +39,16 @@ apic:
 
         device_selection_policies:
           - contract: permit-to-esg-10.237.100.0_24
-            service_graph_template: redirect-to-ftdv-03-gig-0-3
+            service_graph_template: redirect-to-ftdv-03-adapter-6-gig-0-3
             consumer:
               redirect_policy:
-                name: redirect-to-ftdv-03-gig-0-3
+                name: redirect-to-ftdv-03-adapter-6-gig-0-3
               logical_interface: gig-0-3
               bridge_domain:
                 name: 6.6.6.0_24
             provider:
               redirect_policy:
-                name: redirect-to-ftdv-03-gig-0-3
+                name: redirect-to-ftdv-03-adapter-6-gig-0-3
               logical_interface: gig-0-3
               bridge_domain:
                 name: 6.6.6.0_24
