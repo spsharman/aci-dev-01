@@ -1,0 +1,47 @@
+---
+apic:
+  tenants:
+    - name: common
+      managed: false
+
+      vrfs:
+        - name: common.vrf-01
+          leaked_internal_prefixes:
+            - prefix: 10.0.51.0/24
+              description: tn-demo-route-leaking-01
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 10.0.52.0/24
+              description: tn-demo-route-leaking-01
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 10.0.61.0/24
+              description: tn-demo-route-leaking-02
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  description: Leaked to shared-services:vrf-01 and advertised externally          
+
+            - prefix: 10.0.62.0/24
+              description: tn-demo-route-leaking-02
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+
+            - prefix: 10.237.100.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  description: Leaked to shared-services:vrf-01 and advertised externally

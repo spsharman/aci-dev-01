@@ -1,0 +1,14 @@
+apic:
+  tenants:
+    - name: demo-route-leaking-02
+      managed: false
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets

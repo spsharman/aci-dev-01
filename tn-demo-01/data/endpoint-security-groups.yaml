@@ -1,0 +1,46 @@
+apic:
+  tenants:
+    - name: demo-01
+      application_profiles:
+        - name: epg-matched-esg
+          endpoint_security_groups:
+
+            - name: 10.0.51.0_24
+              # description: 
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+
+              epg_selectors:
+                - tenant: demo-route-leaking-01                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.51.0_24
+
+              contracts:
+                consumers:
+                  # - permit-to-esg-10.0.52.0_24
+                  # - permit-to-tn-demo-route-leaking-02
+                # imported_consumers:
+                #   - permit-to-tn-demo-route-leaking-02-esg-10.0.61.0_24
+                providers:
+                  # - permit-to-esg-10.0.51.0_24
+                  # - permit-to-tn-demo-route-leaking-01
+
+            - name: 10.0.52.0_24
+              # description: 
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+
+              epg_selectors:
+                - tenant: demo-route-leaking-01                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.52.0_24
+
+              contracts:
+                consumers:
+                  # - permit-to-esg-10.0.51.0_24
+                # imported_consumers:
+                #   - permit-to-tn-demo-route-leaking-02-esg-10.0.61.0_24
+                providers:
+                  # - permit-to-esg-10.0.52.0_24

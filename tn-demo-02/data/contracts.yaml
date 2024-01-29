@@ -1,0 +1,23 @@
+---
+apic:
+  tenants:
+    - name: demo-route-leaking-02
+      contracts:
+
+        - name: permit-to-esg-10.0.61.0_24
+          scope: tenant
+          subjects:
+            - name: permit-any
+              filters:
+                - filter: permit-any
+            # - name: redirect
+            #   service_graph: redirect-to-ftdv-03-adapter-6-gig-0-3
+
+        - name: permit-to-esg-10.0.62.0_24
+          scope: tenant
+          subjects:
+            - name: permit-any
+              filters:
+                - filter: permit-any
+            # - name: redirect
+            #   service_graph: redirect-to-ftdv-03-adapter-6-gig-0-3
