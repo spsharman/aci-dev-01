@@ -1,0 +1,32 @@
+---
+apic:
+  tenants:
+    - name: demo-02
+      vrfs:
+        - name: vrf-02
+          description: configured with NAC - internal vrf for tn-demo-02
+          alias: internal-vrf
+          # transit_route_tag_policy: demo-02.vrf-02
+####################################################################
+          contracts:
+            providers: 
+              - intra-tenant
+            consumers:
+              - intra-tenant
+####################################################################
+          leaked_internal_prefixes:
+            - prefix: 10.0.61.0/24
+              public: true
+              destinations:
+                - tenant: demo-02
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to demo-02:vrf-01 and advertised externally
+####################################################################
+            - prefix: 10.0.62.0/24
+              public: true
+              destinations:
+                - tenant: demo-02
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to demo-02:vrf-01 and advertised externally

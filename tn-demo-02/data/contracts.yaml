@@ -1,23 +1,37 @@
 ---
 apic:
   tenants:
-    - name: demo-route-leaking-02
+    - name: demo-02
       contracts:
-
+####################################################################
+        - name: intra-tenant
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+####################################################################
+        # - name: permit-to-tn-demo-02
+        #   scope: tenant
+        #   subjects:
+        #     - name: redirect
+        #       filters:
+        #         - filter: permit-src-any-dst-any
+        #       service_graph: ftdv-02-adapter-8-gig-0-5
+####################################################################
         - name: permit-to-esg-10.0.61.0_24
           scope: tenant
           subjects:
-            - name: permit-any
+            - name: redirect
               filters:
-                - filter: permit-any
-            # - name: redirect
-            #   service_graph: redirect-to-ftdv-03-adapter-6-gig-0-3
-
+                - filter: permit-src-any-dst-any
+              service_graph: ftdv-02-adapter-9-gig-0-6
+####################################################################
         - name: permit-to-esg-10.0.62.0_24
           scope: tenant
           subjects:
-            - name: permit-any
+            - name: redirect
               filters:
-                - filter: permit-any
-            # - name: redirect
-            #   service_graph: redirect-to-ftdv-03-adapter-6-gig-0-3
+                - filter: permit-src-any-dst-any
+              service_graph: ftdv-02-adapter-9-gig-0-6
+####################################################################

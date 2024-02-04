@@ -1,0 +1,17 @@
+################################ Exported contracts
+#   tenants:
+#     - name: shared-services
+#       managed: false
+#       imported_contracts:
+# ####################################################################
+#         - name: permit-to-tn-demo-02
+#           tenant: demo-02
+#           contract: permit-to-tn-demo-02
+# ####################################################################
+#         - name: permit-to-esg-10.0.61.0_24
+#           tenant: demo-02
+#           contract: permit-to-tn-demo-02-esg-10.0.61.0_24
+# ####################################################################
+#         - name: permit-to-esg-10.0.62.0_24
+#           tenant: demo-02
+#           contract: permit-to-tn-demo-02-esg-10.0.62.0_24

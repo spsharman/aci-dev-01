@@ -1,0 +1,74 @@
+apic:
+  tenants:
+    - name: shared-services
+      managed: false
+
+      l3outs:
+        - name: shared-services.vrf-01-ospf-area-0.0.0.1
+          description: configured with NAC
+          vrf: vrf-01
+          domain: shared-services.vrf-01
+          ospf:
+            area: 0.0.0.1
+            area_type: regular
+################################ Nodes
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 101
+                  router_id: 101.2.1.1
+                - node_id: 102
+                  router_id: 102.2.1.1
+################################ Interface 101/1/7
+              interface_profiles:
+                - name: leaf-101-eth7
+                  description: configured with NAC
+                  interfaces:
+                    - node_id: 101
+                      port: 7
+                      ip: 10.237.99.233/30
+                      mtu: inherit
+                      mac: 10:12:BD:F8:19:FF
+                  ospf:
+                    policy: OSPF_p2p
+################################ Interface 102/1/7
+                - name: leaf-102-eth7
+                  description: configured with NAC
+                  interfaces:
+                    - node_id: 102
+                      port: 7
+                      ip: 10.237.99.237/30
+                      mtu: inherit
+                      mac: 10:22:BD:F8:19:FF
+                  ospf:
+                    policy: OSPF_p2p
+################################ Interface hx-dev-01-fi-a-vds-02-vlan-8
+                - name: hx-dev-01-fi-a-vlan-8
+                  interfaces:
+                    - node_id: 101
+                      channel: hx-dev-01-fi-a
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.49/28
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     floating_ip: 10.237.99.51/28
+                  ospf:
+                    policy: broadcast
+################################ Interface hx-dev-01-fi-b-vds-02-vlan-8
+                - name: hx-dev-01-fi-b-vlan-8
+                  interfaces:
+                    - node_id: 102
+                      channel: hx-dev-01-fi-b
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.50/28
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     floating_ip: 10.237.99.51/28
+                  ospf:
+                    policy: broadcast

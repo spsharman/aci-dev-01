@@ -3,17 +3,17 @@ apic:
   tenants:
     - name: 'demo-01'
       filters:
+####################################################################
         - name: 'icmp'
           entries:
             - name: 'icmp'
               protocol: icmp
-        
-        - name: 'permit-any'
+####################################################################
+        - name: 'permit-src-any-dst-any'
           entries:
-            - name: 'permit-any'
+            - name: 'permit-src-any-dst-any'
               ethertype: unspecified
-              protocol: unspecified
-
+####################################################################
         # - name: 'tcp-src-any-dst-80'
         #   entries:
         #     - name: 'tcp-src-any-dst-80'
