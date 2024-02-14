@@ -1,0 +1,7 @@
+---
+apic:
+  tenants:
+    - name: shared-services
+      managed: false
+###############################
+
