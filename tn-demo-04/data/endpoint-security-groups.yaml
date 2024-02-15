@@ -3,23 +3,8 @@ apic:
   tenants:
     - name: demo-03
       application_profiles:
-        - name: all-epgs-endpoint-security-group
+        - name: epg-matched-esg
           endpoint_security_groups:
-########################################## ESG - 10.237.100.0_24
-            - name: 10.237.100.0_24
-              # description: 
-              vrf: common.vrf-01
-              shutdown: false
-              intra_esg_isolation: false
-              epg_selectors:
-                - tenant: demo-03                  
-                  application_profile: network-segments
-                  endpoint_group: 10.237.100.0_24
-              contracts:
-                # consumers:
-                # imported_consumers:
-                # providers:
-                #   - permit-to-esg-10.237.100.0_24
 ########################################## ESG - 10.0.71.0_24
             - name: 10.0.71.0_24
               # description: 

@@ -52,13 +52,13 @@ apic:
                   public: false
                   description: Leaked to shared-services:vrf-01 and advertised externally
 
-            - prefix: 192.168.115.0/24
-              public: true
-              destinations:
-                - tenant: shared-services
-                  vrf: vrf-01
-                  public: false
-                  description: Leaked to shared-services:vrf-01 and advertised externally
+            # - prefix: 192.168.115.0/24
+            #   public: true
+            #   destinations:
+            #     - tenant: shared-services
+            #       vrf: vrf-01
+            #       public: false
+            #       description: Leaked to shared-services:vrf-01 and advertised externally
 
       bridge_domains:
         - name: '6.6.6.0_24'
@@ -131,13 +131,13 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: '192.168.115.0_24'
-          description: PBR subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 192.168.115.1/24
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
+        # - name: '192.168.115.0_24'
+        #   description: PBR subnet
+        #   unknown_unicast: proxy
+        #   vrf: vrf-01
+        #   subnets:
+        #     - ip: 192.168.115.1/24
+        #       nd_ra_prefix: false
+        #   dhcp_labels:
+        #     - dhcp_relay_policy: dhcp.uktme.cisco.com
 

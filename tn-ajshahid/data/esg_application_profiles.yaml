@@ -31,6 +31,6 @@ apic:
                   application_profile: network-segments
                   endpoint_group: 192.168.114.0_24
 
-                - tenant: ajshahid                  
-                  application_profile: network-segments
-                  endpoint_group: 192.168.115.0_24
+                # - tenant: ajshahid                  
+                #   application_profile: network-segments
+                #   endpoint_group: 192.168.115.0_24

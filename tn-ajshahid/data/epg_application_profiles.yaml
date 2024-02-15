@@ -55,12 +55,12 @@ apic:
                   primary_vlan: 1233
                   secondary_vlan: 1234
 
-            - name: '192.168.115.0_24'
-              bridge_domain: 192.168.115.0_24
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-                  primary_vlan: 1235
-                  secondary_vlan: 1236
+            # - name: '192.168.115.0_24'
+            #   bridge_domain: 192.168.115.0_24
+            #   vmware_vmm_domains:
+            #     - name: 'hx-dev-01-vds-01'
+            #       u_segmentation: true
+            #       deployment_immediacy: immediate
+            #       resolution_immediacy: immediate
+            #       primary_vlan: 1235
+            #       secondary_vlan: 1236

@@ -2,4 +2,4 @@
 apic:
   tenants:
     - name: demo-03
-      description: Routable IP range 10.0.71-72.x
+      description: Routable IP range 10.237.100.0/24, 10.0.71-73.x/25
