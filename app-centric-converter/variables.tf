@@ -11,7 +11,7 @@
 
 variable "apic_username" {
   type = string
-}
+} 
 
 variable "apic_password" {
   type = string
@@ -23,7 +23,7 @@ variable "apic_url" {
 
 # Name of tenant that contains your applications
 variable "tenant" {
-  default = "demo-non-vmm"
+  default = "demo-03"
 }
 
 # Name of VRF containing IP addresses associated with your applications
@@ -48,33 +48,70 @@ variable "app_profiles" {
 
 # Map of each IP address and their associated application tag.
 variable "ips" {
-  default = {
-    "10.0.11.101" = {
-      app = "online-boutique"
-    },
-    "10.0.11.102" = {
-      app = "online-boutique"
-    },
-    "10.0.11.103" = {
-      app = "online-boutique"
-    },
-    "10.0.12.101" = {
-      app = "online-boutique"
-    },
-    "10.0.12.102" = {
-      app = "online-boutique"
-    },
-    "10.0.13.100" = {
-      app = "online-boutique"
-    },
-    "10.0.13.101" = {
-      app = "online-boutique"
-    },
-    "10.0.14.100" = {
-      app = "online-boutique"
-    },
-    "10.0.14.101" = {
-      app = "online-boutique"
-    }
-  }
-}
+   default = {
+     "10.0.71.51" = {
+       app = "online-boutique"
+     },
+     "10.0.71.52" = {
+       app = "online-boutique"
+     },
+     "10.0.71.53" = {
+       app = "online-boutique"
+     },
+     "10.0.72.51" = {
+       app = "online-boutique"
+     },
+     "10.0.72.52" = {
+       app = "online-boutique"
+     },
+     "10.0.72.53" = {
+       app = "online-boutique"
+     },
+     "10.0.73.51" = {
+       app = "online-boutique"
+     },
+     "10.0.73.52" = {
+       app = "online-boutique"
+     },
+     "10.0.73.53" = {
+       app = "online-boutique"
+     },
+     "10.0.73.54" = {
+       app = "online-boutique"
+     },
+   }
+ }
+
+#   default = {
+#     "10.0.71.51" = {
+#       app = "production"
+#     },
+#     "10.0.71.52" = {
+#       app = "production"
+#     },
+#     "10.0.71.53" = {
+#       app = "production"
+#     },
+#     "10.0.72.51" = {
+#       app = "production"
+#     },
+#     "10.0.72.52" = {
+#       app = "pre-production"
+#     },
+#     "10.0.72.53" = {
+#       app = "pre-production"
+#     },
+#     "10.0.73.51" = {
+#       app = "pre-production"
+#     },
+#     "10.0.73.52" = {
+#       app = "pre-production"
+#     },
+#     "10.0.73.53" = {
+#       app = "pre-production"
+#     },
+#     "10.0.73.54" = {
+#       app = "pre-production"
+#     },
+#   }
+# }

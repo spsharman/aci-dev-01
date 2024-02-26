@@ -1,0 +1,27 @@
+# ---
+# apic:
+#   tenants:
+#     - name: demo-03
+#       application_profiles:
+#         - name: epg-mapped-endpoint-security-groups
+#           endpoint_security_groups:
+# ########################################## ESG - group-01
+#             - name: epg-group-01
+#               description: all epgs
+#               vrf: vrf-01
+#               shutdown: false
+#               intra_esg_isolation: false
+#               epg_selectors:
+#                 - application_profile: network-segments
+#                   endpoint_group: 10.0.71.0_24
+
+#                 - application_profile: network-segments
+#                   endpoint_group: 10.0.72.0_24
+
+#                 - application_profile: network-segments
+#                   endpoint_group: 10.0.73.0_24
+
+#               contracts:
+#                 consumers:
+#                 imported_consumers:
+#                 providers:

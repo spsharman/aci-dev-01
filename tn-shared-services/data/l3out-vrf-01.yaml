@@ -132,6 +132,7 @@ apic:
 
                 - prefix: 10.237.97.128/27
                   name: core-services
+                  shared_route_control: true
                   shared_security: true
                   import_security: true
 

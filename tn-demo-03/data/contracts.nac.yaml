@@ -1,0 +1,45 @@
+---
+apic:
+  tenants:
+    - name: demo-03
+      contracts:
+####################################################################
+        - name: intra-tenant
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+####################################################################
+        - name: permit-to-all-applications
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+        #       service_graph: ftdv-02-adapter-8-gig-0-5
+####################################################################
+        - name: permit-to-tn-demo-03
+          scope: tenant
+          subjects:
+            - name: redirect
+              filters:
+                - filter: permit-src-any-dst-any
+        #       service_graph: ftdv-02-adapter-8-gig-0-5
+####################################################################
+        - name: permit-to-esg-10.0.71.0_24
+          scope: tenant
+          subjects:
+            - name: redirect
+              filters:
+                - filter: permit-src-any-dst-any
+        #       service_graph: ftdv-02-adapter-9-gig-0-6
+####################################################################
+        - name: permit-to-esg-10.0.72.0_24
+          scope: tenant
+          subjects:
+            - name: redirect
+              filters:
+                - filter: permit-src-any-dst-any
+        #       service_graph: ftdv-02-adapter-9-gig-0-6
+####################################################################

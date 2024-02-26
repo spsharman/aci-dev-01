@@ -1,0 +1,22 @@
+---
+apic:
+  tenants:
+    - name: 'demo-05'
+      filters:
+####################################################################
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+####################################################################
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+####################################################################
+        # - name: 'tcp-src-any-dst-80'
+        #   entries:
+        #     - name: 'tcp-src-any-dst-80'
+        #       ethertype: ip
+        #       protocol: tcp
+        #       destination_from_port: 80
