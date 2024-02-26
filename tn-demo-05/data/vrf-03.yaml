@@ -10,9 +10,13 @@ apic:
 ####################################################################
           contracts:
             providers: 
-              - intra-tenant
+              # - intra-tenant
             consumers:
-              - intra-tenant
+              # - intra-tenant
+            imported_consumers:
+              - permit-to-core-services
+              - permit-from-core-services
+              - permit-from-lab-desktops              
 ####################################################################
           # leaked_internal_prefixes:
           #   - prefix: 10.0.92.0/24

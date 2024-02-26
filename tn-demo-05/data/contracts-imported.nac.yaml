@@ -1,0 +1,18 @@
+############################## This file imports contracts to the demo-05 tenant
+---
+apic:
+  tenants:
+    - name: demo-05
+      imported_contracts:
+############################## Imported contracts from tenant shared-services
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
