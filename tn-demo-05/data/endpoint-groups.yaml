@@ -21,6 +21,12 @@ apic:
                   # primary_vlan: 1243
                   # secondary_vlan: 1244
 
+              contracts:
+                # consumers:
+                # imported_consumers:
+                providers:
+                  - permit-to-epg-10.0.91.0_24-epg-01
+
             - name: '10.0.91.0_24-epg-02'
               alias: internal-vrf-02
               bridge_domain: 10.0.91.0_24
@@ -31,7 +37,13 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
                   # primary_vlan: 1243
-                  # secondary_vlan: 1244   
+                  # secondary_vlan: 1244  
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                providers:
+                  # - permit-to-epg-10.0.91.0_24-epg-02 
 ####################################################################      
             - name: '10.0.92.0_24-epg-01'
               alias: internal-vrf-03
@@ -45,6 +57,13 @@ apic:
                   # primary_vlan: 1245
                   # secondary_vlan: 1246  
 
+              contracts:
+                consumers:
+                  - permit-to-epg-10.0.91.0_24-epg-01
+                # imported_consumers:
+                providers:
+                  # - permit-to-epg-10.0.92.0_24-epg-01
+
             - name: '10.0.92.0_24-epg-02'
               alias: internal-vrf-03
               bridge_domain: 10.0.92.0_24
@@ -56,4 +75,10 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1245
                   # secondary_vlan: 1246 
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                providers:
+                  # - permit-to-epg-10.0.92.0_24-epg-02
 ####################################################################      
