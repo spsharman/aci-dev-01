@@ -16,9 +16,9 @@ apic:
             - name: border-leafs
               nodes:
                 - node_id: 101
-                  router_id: 101.2.2.1
+                  router_id: 101.2.11.1
                 - node_id: 102
-                  router_id: 102.2.2.1
+                  router_id: 102.2.11.1
 ################################ Interface hx-dev-01-fi-a-vds-02-vlan-9                        
               interface_profiles:
                 - name: hx-dev-01-fi-a-vlan-9

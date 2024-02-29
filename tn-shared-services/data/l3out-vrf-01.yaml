@@ -49,7 +49,7 @@ apic:
                       channel: hx-dev-01-fi-a
                       vlan: 8
                       svi: true
-                      ip: 10.237.99.49/28
+                      ip: 10.237.99.49/29
                       mtu: 1500
                       # floating_svi: true
                       # paths:
@@ -64,7 +64,7 @@ apic:
                       channel: hx-dev-01-fi-b
                       vlan: 8
                       svi: true
-                      ip: 10.237.99.50/28
+                      ip: 10.237.99.50/29
                       mtu: 1500
                       # floating_svi: true
                       # paths:
