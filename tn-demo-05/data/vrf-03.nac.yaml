@@ -3,7 +3,7 @@ apic:
   tenants:
     - name: demo-05
       vrfs:
-        - name: vrf-02
+        - name: vrf-03
           description: configured with NAC - internal vrf for tn-demo-05
           alias: internal-vrf
           # transit_route_tag_policy: demo-05.vrf-02
@@ -14,12 +14,12 @@ apic:
             consumers:
               # - intra-tenant
             imported_consumers:
-              - permit-to-core-services
-              - permit-from-core-services
-              - permit-from-lab-desktops
+              # - permit-to-core-services
+              # - permit-from-core-services
+              # - permit-from-lab-desktops              
 ####################################################################
           # leaked_internal_prefixes:
-          #   - prefix: 10.0.91.0/24
+          #   - prefix: 10.0.92.0/24
           #     public: true
           #     destinations:
           #       - tenant: shared-services
@@ -31,7 +31,7 @@ apic:
           #         public: true
           #         description: Leaked to demo-05:vrf-01 and advertised externally
           #       - tenant: demo-05
-          #         vrf: vrf-03
+          #         vrf: vrf-02
           #         public: true
-          #         description: Leaked to demo-05:vrf-03
+          #         description: Leaked to demo-05:vrf-02
 ####################################################################

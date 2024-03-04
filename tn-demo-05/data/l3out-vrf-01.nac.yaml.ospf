@@ -54,8 +54,9 @@ apic:
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
-                # - prefix: 0.0.0.0/0
-                #   shared_route_control: true
+                - prefix: 0.0.0.0/0
+                  shared_route_control: true
+                  import_security: false
 
                 - prefix: 0.0.0.0/1
                   shared_security: true

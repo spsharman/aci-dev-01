@@ -1,0 +1,142 @@
+c8500-1#show run | sec bgp
+router bgp 65051
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf GREEN
+  redistribute connected
+  neighbor 10.20.51.1 remote-as 65151
+  neighbor 10.20.51.1 activate
+  neighbor 10.20.51.1 next-hop-self all
+  neighbor 10.20.51.1 default-originate
+  neighbor 10.20.51.5 remote-as 65151
+  neighbor 10.20.51.5 activate
+  neighbor 10.20.51.5 next-hop-self all
+  neighbor 10.20.51.5 default-originate
+  default-information originate
+ exit-address-family
+ !
+ address-family ipv4 vrf ISOLATED-1
+  redistribute connected
+  neighbor 10.20.52.1 remote-as 65151
+  neighbor 10.20.52.1 activate
+  neighbor 10.20.52.1 next-hop-self all
+  neighbor 10.20.52.1 default-originate
+  neighbor 10.20.52.5 remote-as 65151
+  neighbor 10.20.52.5 activate
+  neighbor 10.20.52.5 next-hop-self all
+  neighbor 10.20.52.5 default-originate
+  default-information originate
+ exit-address-family
+ !
+ address-family ipv4 vrf ISOLATED-2
+  redistribute connected
+  neighbor 10.20.53.1 remote-as 65151
+  neighbor 10.20.53.1 activate
+  neighbor 10.20.53.1 next-hop-self all
+  neighbor 10.20.53.1 default-originate
+  neighbor 10.20.53.5 remote-as 65151
+  neighbor 10.20.53.5 activate
+  neighbor 10.20.53.5 next-hop-self all
+  neighbor 10.20.53.5 default-originate
+  default-information originate
+ exit-address-family 
+
+
+
+
+
+
+vrf definition GREEN
+ rd-auto
+ !
+ address-family ipv4
+ exit-address-family
+!
+vrf definition ISOLATED-1
+ rd-auto
+ !
+ address-family ipv4
+ exit-address-family
+!
+vrf definition ISOLATED-2
+ rd-auto
+ !
+ address-family ipv4
+ exit-address-family 
+
+
+
+
+interface Loopback0
+ vrf forwarding GREEN
+ ip address 10.200.0.1 255.255.255.0
+!
+interface Loopback1
+ vrf forwarding GREEN
+ ip address 10.201.0.1 255.255.255.0
+!
+interface Loopback2
+ vrf forwarding GREEN
+ ip address 10.202.0.1 255.255.255.0
+!
+interface Loopback3
+ vrf forwarding ISOLATED-1
+ ip address 10.203.0.1 255.255.255.0
+!
+interface Loopback4
+ vrf forwarding ISOLATED-2
+ ip address 10.204.0.1 255.255.255.0
+!
+interface Loopback666
+ vrf forwarding GREEN
+ ip address 6.6.6.6 255.255.255.0
+!
+interface Loopback777
+ vrf forwarding ISOLATED-1
+ ip address 7.7.7.7 255.255.255.0
+!
+interface Loopback888
+ vrf forwarding ISOLATED-2
+ ip address 8.8.8.8 255.255.255.0 
+
+interface TenGigabitEthernet0/0/5.2051
+ encapsulation dot1Q 2051
+ vrf forwarding GREEN
+ ip address 10.20.51.2 255.255.255.252
+ cdp enable
+!         
+interface TenGigabitEthernet0/0/5.2052
+ encapsulation dot1Q 2052
+ vrf forwarding ISOLATED-1
+ ip address 10.20.52.2 255.255.255.252
+ cdp enable
+!
+interface TenGigabitEthernet0/0/5.2053
+ encapsulation dot1Q 2053
+ vrf forwarding ISOLATED-2
+ ip address 10.20.53.2 255.255.255.252
+ cdp enable
+!
+interface TenGigabitEthernet0/0/6
+ description to leaf-102-eth1/47
+ no ip address
+ no negotiation auto
+ cdp enable
+!
+interface TenGigabitEthernet0/0/6.2051
+ encapsulation dot1Q 2051
+ vrf forwarding GREEN
+ ip address 10.20.51.6 255.255.255.252
+ cdp enable
+!
+interface TenGigabitEthernet0/0/6.2052
+ encapsulation dot1Q 2052
+ vrf forwarding ISOLATED-1
+ ip address 10.20.52.6 255.255.255.252
+ cdp enable
+!
+interface TenGigabitEthernet0/0/6.2053
+ encapsulation dot1Q 2053
+ vrf forwarding ISOLATED-2
+ ip address 10.20.53.6 255.255.255.252
+ cdp enable 

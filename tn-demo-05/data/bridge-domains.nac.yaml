@@ -22,7 +22,7 @@ apic:
           vrf: vrf-02
           subnets:
             - ip: 10.0.91.1/24
-              # public: true
+              public: true
               # private: false
               shared: true
               nd_ra_prefix: false
@@ -35,7 +35,7 @@ apic:
           vrf: vrf-03
           subnets:
             - ip: 10.0.92.1/24
-              # public: true
+              public: true
               # private: false
               shared: true
               nd_ra_prefix: false

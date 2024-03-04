@@ -8,9 +8,9 @@ apic:
             providers:
               - ip: 10.237.97.133
                 type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
+                tenant: demo-05
+                l3out: demo-05.vrf-01-bgp
+                external_endpoint_group: all-external-subnets
 ####################################################################
         # route_tag_policies:
         #   - name: demo-05.vrf-01

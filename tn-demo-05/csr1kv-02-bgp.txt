@@ -1,0 +1,103 @@
+vrf definition tn-demo-05
+ rd 65000:10
+ address-family ipv4
+ exit-address-family
+
+
+interface GigabitEthernet5
+ vrf forwarding tn-demo-05
+ ip address 10.237.99.60 255.255.255.248
+
+interface Loopback0
+ vrf forwarding tn-demo-05
+ ip address 10.200.0.1 255.255.255.0
+!
+interface Loopback1
+ vrf forwarding tn-demo-05
+ ip address 10.201.0.1 255.255.255.0
+!
+interface Loopback2
+ vrf forwarding tn-demo-05
+ ip address 10.202.0.1 255.255.255.0
+!
+!interface Loopback666
+! vrf forwarding tn-demo-05
+! ip address 6.6.6.6 255.255.255.0
+!
+
+no router bgp 65051
+
+router bgp 65051
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf tn-demo-05
+  redistribute connected
+  neighbor 10.237.99.57 remote-as 65151
+  neighbor 10.237.99.57 activate
+  neighbor 10.237.99.57 next-hop-self all
+  neighbor 10.237.99.57 default-originate
+  neighbor 10.237.99.57 remote-as 65151
+  neighbor 10.237.99.57 activate
+  neighbor 10.237.99.57 next-hop-self all
+  neighbor 10.237.99.57 default-originate
+  default-information originate
+ exit-address-family
+!
+!
+
+
+vrf definition tn-demo-05
+ rd 65000:10
+ address-family ipv4
+ exit-address-family
+
+
+interface GigabitEthernet5
+ vrf forwarding tn-demo-05
+ ip address 10.237.99.60 255.255.255.248
+
+interface Loopback0
+ vrf forwarding tn-demo-05
+ ip address 10.200.0.1 255.255.255.0
+!
+interface Loopback1
+ vrf forwarding tn-demo-05
+ ip address 10.201.0.1 255.255.255.0
+!
+interface Loopback2
+ vrf forwarding tn-demo-05
+ ip address 10.202.0.1 255.255.255.0
+!
+!interface Loopback666
+! vrf forwarding tn-demo-05
+! ip address 6.6.6.6 255.255.255.0
+!
+
+no router bgp 65051
+
+router bgp 65051
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf tn-demo-05
+  redistribute connected
+  neighbor 10.237.99.57 remote-as 65151
+  neighbor 10.237.99.57 next-hop-self all
+  neighbor 10.237.99.57 default-originate
+  
+  neighbor 10.237.99.57 remote-as 65151
+  neighbor 10.237.99.57 next-hop-self all
+  neighbor 10.237.99.57 default-originate
+  neighbor 10.237.99.57 activate
+
+  neighbor 10.237.99.58 remote-as 65151
+  neighbor 10.237.99.58 next-hop-self all
+  neighbor 10.237.99.58 default-originate
+  neighbor 10.237.99.58 remote-as 65151
+  neighbor 10.237.99.58 next-hop-self all
+  neighbor 10.237.99.58 default-originate 
+  neighbor 10.237.99.58 activate  
+  
+  default-information originate
+ exit-address-family
+!
+!
