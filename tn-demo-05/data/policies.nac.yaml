@@ -9,7 +9,7 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: demo-05
-                l3out: demo-05.vrf-01-bgp
+                l3out: demo-05.vrf-01-bgp-AS-65151
                 external_endpoint_group: all-external-subnets
 ####################################################################
         # route_tag_policies:

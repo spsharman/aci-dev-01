@@ -1,0 +1,118 @@
+#
+# This tenant is used for my blog and for Ciscolive 
+#
+#
+---
+apic:
+  tenants:
+    - name: demo
+      description: Routable IP range 10.0.1-7.x
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf-01
+
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              private: true
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 10.0.1.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.1.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.2.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.2.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.3.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.3.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.4.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.4.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.5.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.5.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.6.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.6.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.0.7.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.0.7.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com

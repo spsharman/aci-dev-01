@@ -1,0 +1,555 @@
+#
+# This tenant is used as a landing tenant to move VMs so that they can be staged in isolation
+#
+# This configuration does not include L4-7 devices
+#
+              # vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                # - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244  
+#
+---
+apic:
+  tenants:
+    - name: staging
+      description: Routable IP range 192.168.150-156.x
+#
+# VRFs
+#
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf
+
+          contracts:
+            imported_consumers:
+              - permit-from-lab-desktops
+              - permit-from-core-services
+              - permit-to-core-services
+
+          # leaked_internal_prefixes:
+          #   - prefix: 192.168.150.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.151.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.152.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.153.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.154.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.155.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 192.168.156.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+#
+# Bridge Domains
+#
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              private: true
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 192.168.150.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.150.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.151.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.151.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.152.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.152.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.153.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.153.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.154.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.154.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.155.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.155.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.156.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.156.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+#
+# Contracts
+#
+      contracts:
+        - name: 'permit-src-any-dst-any'
+          scope: context
+          subjects:
+            - name: 'permit-src-any-dst-any'
+              qos_class: unspecified
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: intra-esg-online-boutique-backend-services
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              qos_class: unspecified
+              filters:
+                - filter: permit-src-any-dst-any
+                  log: true
+
+        - name: permit-to-all-applications
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              qos_class: unspecified
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-online-boutique-backend-services
+          scope: global
+          subjects:
+            - name: 'permit-src-any-dst-any'
+              qos_class: unspecified
+              filters:
+                - filter: permit-src-any-dst-any
+                  log: true
+
+        - name: permit-to-online-boutique-frontend-service
+          scope: context
+          subjects:
+            - name: tcp
+              qos_class: unspecified
+              filters:
+                - filter: 'tcp-src-any-dst-80'
+                  log: true
+            - name: 'icmp'
+              filters:
+                - filter: 'icmp'
+                  log: false
+
+        - name: permit-to-tn-staging
+          scope: global
+          subjects:
+            - name: 'permit-src-any-dst-any'
+              qos_class: unspecified
+              filters:
+                - filter: permit-src-any-dst-any
+                  log: true
+#
+# Filters
+#
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: unspecified
+        
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+              protocol: unspecified
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 443
+#
+# Application Profiles - network-segments
+#
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '10.237.100.0_24'
+              alias: common.vrf-01
+              bridge_domain: '10.237.100.x_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.150.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.150.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+      
+            - name: '192.168.151.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.151.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+        
+            - name: '192.168.152.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.152.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+    
+            - name: '192.168.153.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.153.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.154.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.154.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.155.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.155.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.156.0_24'
+              alias: internal-vrf-01
+              bridge_domain: '192.168.156.0_24'
+              vmware_vmm_domains:
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+#
+# Application Profiles - epg-matched-security-groups
+#
+        - name: epg-matched-security-groups
+          endpoint_security_groups:
+            - name: all-network-segments
+              description: all-network-segments
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+
+              epg_selectors:
+                - tenant: staging
+                  application_profile: network-segments
+                  endpoint_group: 192.168.150.0_24 
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.151.0_24
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.152.0_24
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.153.0_24
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.154.0_24
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.155.0_24
+
+                - tenant: staging                  
+                  application_profile: network-segments
+                  endpoint_group: 192.168.156.0_24
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                # providers:
+                  # - permit-to-esg-10.0.51.0_24
+#
+# Application Profiles - online-boutique
+#
+        - name: online-boutique
+          endpoint_security_groups:
+            - name: frontend-service
+              description: all
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-frontend-service
+
+              contracts:
+                consumers:
+                  - permit-to-online-boutique-backend-services
+                # imported_consumers:
+                providers:
+                  - permit-to-online-boutique-frontend-service
+
+            - name: backend-services
+              description: all
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: true
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-ad-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-cart-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-checkout-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-currency-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-email-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-payment-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-product-catalog-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-recommendation-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-redis-cart
+
+                - key: Function
+                  operator: equals
+                  value: tn-staging-online-boutique-shipping-service
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                providers:
+                  - permit-to-online-boutique-backend-services
+                intra_esgs:
+                  - intra-esg-online-boutique-backend-services
+#
+# Policies
+#
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets
+#
+# Services
+#
+      services:
+        redirect_policies:
+          - name: redirect-to-ftdv-02-adapter-7-gig-0-4
+            l3_destinations:
+              - ip: 6.6.6.11
+                mac: 00:50:56:A1:94:FF
+#
+# L4-7 Devices
+#
+        l4l7_devices:
+          - name: ftdv-02-adapter-7-gig-0-4
+            vmware_vmm_domain: ucsc-c220m5-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-02-adapter-7-gig-0-4
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-02.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-4
+                    vnic_name: Network adapter 7
+            logical_interfaces:
+              - name: gig-0-4
+                concrete_interfaces:
+                  - device: ftdv-02-adapter-7-gig-0-4
+                    interface_name: gig-0-4
+#
+# L4-7 Service Graph Template
+#
+        service_graph_templates:
+          - name: ftdv-02-adapter-7-gig-0-4
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: staging
+              name: ftdv-02-adapter-7-gig-0-4
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+#
+# L4-7 Device Selection Policy
+#
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-02-adapter-7-gig-0-4
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftdv-02-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftdv-02-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24

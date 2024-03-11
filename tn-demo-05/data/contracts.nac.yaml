@@ -54,3 +54,15 @@ apic:
 
         - name: permit-from-all-external-subnets-to-epg-10.0.91.0_24-epg-02
           scope: tenant
+#####################################################################      
+        - name: permit-from-epg-10.0.92.0_24-epg-01-to-all-external-subnets
+          scope: tenant
+
+        - name: permit-from-all-external-subnets-to-epg-10.0.92.0_24-epg-01
+          scope: tenant
+
+        - name: permit-from-epg-10.0.92.0_24-epg-02-to-all-external-subnets
+          scope: tenant
+
+        - name: permit-from-all-external-subnets-to-epg-10.0.92.0_24-epg-02
+          scope: tenant

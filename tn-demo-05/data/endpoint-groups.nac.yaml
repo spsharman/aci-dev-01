@@ -12,17 +12,6 @@ apic:
             - name: '10.0.91.0_24-epg-01'
               alias: internal-vrf-02
               bridge_domain: 10.0.91.0_24
-              subnets:
-                - ip: 10.0.91.1/24
-                  public: true
-                  private: false
-                  shared: true
-                  igmp_querier: false
-                  nd_ra_prefix: true
-                  no_default_gateway: true
-                  virtual: false
-                  nlb_group: "0.0.0.0"
-                  nlb_mac: "00:00:00:00:00:00"
               vmware_vmm_domains:
                 # - name: 'ucsc-c220m5-vds-01'
                 - name: 'hx-dev-01-vds-01'
@@ -31,12 +20,12 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1243
                   # secondary_vlan: 1244
-
               contracts:
-                # consumers:
+                consumers:
+                #   - permit-from-epg-10.0.91.0_24-epg-01-to-all-external-subnets
                 # imported_consumers:
-                providers:
-                  - permit-to-epg-10.0.91.0_24-epg-01
+                # providers:
+                #   - permit-from-all-external-subnets-to-epg-10.0.91.0_24-epg-01
 
             - name: '10.0.91.0_24-epg-02'
               alias: internal-vrf-02
@@ -49,13 +38,11 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1243
                   # secondary_vlan: 1244  
-
               contracts:
-                # consumers:
-                # imported_consumers:
-                providers:
-                  # - permit-to-epg-10.0.91.0_24-epg-02 
-####################################################################      
+                consumers: 
+                imported_consumers: 
+                providers: 
+
             - name: '10.0.92.0_24-epg-01'
               alias: internal-vrf-03
               bridge_domain: 10.0.92.0_24
@@ -67,13 +54,12 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1245
                   # secondary_vlan: 1246  
-
               contracts:
                 consumers:
-                  - permit-to-epg-10.0.91.0_24-epg-01
+                #   - permit-from-epg-10.0.92.0_24-epg-01-to-all-external-subnets
                 # imported_consumers:
-                providers:
-                  # - permit-to-epg-10.0.92.0_24-epg-01
+                # providers:
+                #   - permit-from-all-external-subnets-to-epg-10.0.92.0_24-epg-01
 
             - name: '10.0.92.0_24-epg-02'
               alias: internal-vrf-03
@@ -86,10 +72,8 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1245
                   # secondary_vlan: 1246 
-
               contracts:
-                # consumers:
-                # imported_consumers:
+                consumers:
+                imported_consumers:
                 providers:
-                  # - permit-to-epg-10.0.92.0_24-epg-02
 ####################################################################      

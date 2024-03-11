@@ -3,7 +3,7 @@ apic:
     - name: demo-05
 
       l3outs:
-        - name: demo-05.vrf-01-bgp
+        - name: demo-05.vrf-01-bgp-AS-65151
           description: configured with NAC
           alias: external-vrf
           vrf: vrf-01
