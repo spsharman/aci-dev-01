@@ -43,5 +43,5 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
                   primary_vlan: 1241
-                  secondary_vlan: 1249  
+                  secondary_vlan: 1242
 ####################################################################  

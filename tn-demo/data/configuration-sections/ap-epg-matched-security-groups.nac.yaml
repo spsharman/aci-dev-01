@@ -1,0 +1,49 @@
+---
+apic:
+  tenants:
+    - name: demo
+      description: Routable IP range 10.0.1-7.x
+
+      application_profiles:
+        - name: epg-matched-security-groups
+          endpoint_security_groups:
+            - name: all-network-segments
+              description: all-network-segments
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+
+              epg_selectors:
+                - tenant: demo
+                  application_profile: network-segments
+                  endpoint_group: 10.0.1.0_24 
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.2.0_24
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.3.0_24
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.4.0_24
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.5.0_24
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.6.0_24
+
+                - tenant: demo                  
+                  application_profile: network-segments
+                  endpoint_group: 10.0.7.0_24
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                # providers:
+                  # - permit-to-esg-10.0.51.0_24

@@ -1,0 +1,79 @@
+---
+apic:
+  tenants:
+    - name: demo
+      description: Routable IP range 10.0.1-7.x
+
+      application_profiles:
+        - name: online-boutique
+          endpoint_security_groups:
+            - name: frontend-service
+              description: all
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-frontend-service
+
+              contracts:
+                consumers:
+                  - permit-to-online-boutique-backend-services
+                # imported_consumers:
+                providers:
+                  - permit-to-online-boutique-frontend-service
+
+            - name: backend-services
+              description: all
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: true
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-ad-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-cart-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-checkout-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-currency-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-email-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-payment-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-product-catalog-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-recommendation-service
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-redis-cart
+
+                - key: Function
+                  operator: equals
+                  value: tn-demo-online-boutique-shipping-service
+
+              contracts:
+                # consumers:
+                # imported_consumers:
+                providers:
+                  - permit-to-online-boutique-backend-services
+                intra_esgs:
+                  - intra-esg-online-boutique-backend-services

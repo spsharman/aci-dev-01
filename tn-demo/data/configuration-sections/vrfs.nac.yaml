@@ -1,0 +1,10 @@
+---
+apic:
+  tenants:
+    - name: demo
+      description: Routable IP range 10.0.1-7.x
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf-01
