@@ -27,16 +27,43 @@ apic:
                 l3out: demo.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: all-external-subnets
 
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+      contracts:
+        - name: intra-tenant
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-vzAny
+          description: vzAny is contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
       vrfs:
         - name: vrf-01
           description: configured with NAC
           # alias: internal-vrf-01
 
           contracts:
-            providers: 
-              - default
-            consumers:
-              - default
+            providers:
+              - permit-to-vzAny
+            # consumers:
 
       l3outs:
         - name: demo.vrf-01-ospf-area-0.0.0.1
@@ -100,10 +127,9 @@ apic:
                 # - prefix: 128.0.0.0/1
                 #   shared_security: false
 
-              # contracts:
-              #   consumers:
-              #     - permit-to-esg-10.0.91.0_24
-              #     - permit-to-esg-10.0.92.0_24
+              contracts:
+                consumers:
+                  - permit-to-vzAny
 
       bridge_domains:
         # - name: 6.6.6.0_24
