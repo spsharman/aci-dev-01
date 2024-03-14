@@ -24,7 +24,7 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: demo
-                l3out: demo.vrf-01-ospf-area-0.0.0.1
+                l3out: demo.vrf-01-bgp-AS-65151
                 external_endpoint_group: all-external-subnets
 
       filters:
@@ -66,14 +66,11 @@ apic:
             # consumers:
 
       l3outs:
-        - name: demo.vrf-01-ospf-area-0.0.0.1
+        - name: demo.vrf-01-bgp-AS-65151
           description: configured with NAC
           # alias: external-vrf
           vrf: vrf-01
           domain: demo.vrf-01
-          ospf:
-            area: 0.0.0.1
-            area_type: regular
 
           node_profiles:
             - name: border-leafs
@@ -92,12 +89,27 @@ apic:
                       svi: true
                       ip: 10.237.99.81/29
                       mtu: 1500
-                      # floating_svi: true
-                      # paths:
-                      #   - physical_domain: hx-dev-01-vds-02
-                      #     # floating_ip: 10.237.99.59/29
-                  ospf:
-                    policy: broadcast
+                      bgp_peers:
+                        - ip: 10.237.99.84/29
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
 
                 - name: hx-dev-01-fi-b-vlan-34
                   interfaces:
@@ -106,13 +118,28 @@ apic:
                       vlan: 34
                       svi: true
                       ip: 10.237.99.82/29
-                      mtu: 1500
-                      # floating_svi: true
-                      # paths:
-                      #   - physical_domain: hx-dev-01-vds-02
-                      #     floating_ip: 10.237.99.59/29
-                  ospf:
-                    policy: broadcast
+                      mtu: 1500                      
+                      bgp_peers:
+                        - ip: 10.237.99.84/29
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
 
           external_endpoint_groups:
             - name: all-external-subnets
@@ -120,12 +147,6 @@ apic:
                 - prefix: 0.0.0.0/0
                   shared_route_control: false
                   import_security: true
-
-                # - prefix: 0.0.0.0/1
-                #   shared_security: false
-
-                # - prefix: 128.0.0.0/1
-                #   shared_security: false
 
               contracts:
                 consumers:
@@ -155,7 +176,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -170,7 +191,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -185,7 +206,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -200,7 +221,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -215,7 +236,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -230,7 +251,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -245,7 +266,7 @@ apic:
               shared: false
               nd_ra_prefix: false
           l3outs:
-            - demo.vrf-01-ospf-area-0.0.0.1
+            - demo.vrf-01-bgp-AS-65151
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 

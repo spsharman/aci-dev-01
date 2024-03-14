@@ -1,0 +1,71 @@
+---
+apic:
+  tenants:
+    - name: demo
+      description: Routable IP range 10.0.1-7.x
+      
+      l3outs:
+        - name: demo.vrf-01-ospf-area-0.0.0.1
+          description: configured with NAC
+          # alias: external-vrf
+          vrf: vrf-01
+          domain: demo.vrf-01
+          ospf:
+            area: 0.0.0.1
+            area_type: regular
+
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 101
+                  router_id: 101.2.0.1
+                - node_id: 102
+                  router_id: 102.2.0.1
+
+              interface_profiles:
+                - name: hx-dev-01-fi-a-vlan-34
+                  interfaces:
+                    - node_id: 101
+                      channel: hx-dev-01-fi-a
+                      vlan: 34
+                      svi: true
+                      ip: 10.237.99.81/29
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     # floating_ip: 10.237.99.59/29
+                  ospf:
+                    policy: broadcast
+
+                - name: hx-dev-01-fi-b-vlan-34
+                  interfaces:
+                    - node_id: 102
+                      channel: hx-dev-01-fi-b
+                      vlan: 34
+                      svi: true
+                      ip: 10.237.99.82/29
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     floating_ip: 10.237.99.59/29
+                  ospf:
+                    policy: broadcast
+
+          external_endpoint_groups:
+            - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  shared_route_control: false
+                  import_security: true
+
+                # - prefix: 0.0.0.0/1
+                #   shared_security: false
+
+                # - prefix: 128.0.0.0/1
+                #   shared_security: false
+
+              contracts:
+                consumers:
+                  - permit-to-vzAny
