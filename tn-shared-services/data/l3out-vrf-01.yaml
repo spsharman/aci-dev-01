@@ -89,6 +89,9 @@ apic:
 
               contracts:
                 consumers:
+                  - permit-to-ftd-management-ftd-mgmt
+                  - permit-to-csr-management-csr-mgmt
+                  - permit-to-csw-management-data-collector
                 providers:
                   - permit-to-shared-services.vrf-01-all-external-subnets
                 imported_consumers:
@@ -152,5 +155,9 @@ apic:
                   import_security: true
 
               contracts:
+                consumers:
+                  - permit-to-ftd-management-ftd-mgmt
+                  - permit-to-csr-management-csr-mgmt
+                  - permit-to-csw-management-data-collector
                 providers:
                   - permit-from-lab-desktops
