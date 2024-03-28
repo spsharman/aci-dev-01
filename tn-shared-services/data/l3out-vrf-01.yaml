@@ -100,10 +100,10 @@ apic:
                   - permit-to-tn-ajshahid
                   - permit-to-tn-conmurph-01
                   - permit-to-tn-containers
-                  - permit-to-tn-demo
+                  # - permit-to-tn-demo
                   - permit-to-tn-demo-03
                   - permit-to-tn-demo-non-vmm-online-boutique-all-services
-                  - permit-to-tn-demo-online-boutique-frontend-service
+                  # - permit-to-tn-demo-online-boutique-frontend-service
                   - permit-to-tn-fgandola
                   - permit-to-tn-fgandola-applications-development
                   - permit-to-tn-movaswan
