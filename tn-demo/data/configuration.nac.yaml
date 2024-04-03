@@ -14,7 +14,7 @@
 apic:
   tenants:
     - name: demo
-      description: Routable IP range 10.0.1-7.x
+      description: Routable IP range 10.0.1-5.x
 
       policies:
         dhcp_relay_policies:
@@ -240,36 +240,6 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.0.6.0_24
-          # alias: internal-vrf-01
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.0.6.1/24
-              public: true
-              # private: false
-              shared: false
-              nd_ra_prefix: false
-          l3outs:
-            - demo.vrf-01-bgp-AS-65151
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-        - name: 10.0.7.0_24
-          # alias: internal-vrf-01
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.0.7.1/24
-              public: true
-              # private: false
-              shared: false
-              nd_ra_prefix: false
-          l3outs:
-            - demo.vrf-01-bgp-AS-65151
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
       application_profiles:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
@@ -288,9 +258,9 @@ apic:
               bridge_domain: '10.0.1.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1243
-                  # secondary_vlan: 1244  
-                  # u_segmentation: true
+                  primary_vlan: 1243
+                  secondary_vlan: 1244  
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
       
@@ -299,9 +269,9 @@ apic:
               bridge_domain: '10.0.2.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1245
-                  # secondary_vlan: 1246  
-                  # u_segmentation: true
+                  primary_vlan: 1245
+                  secondary_vlan: 1246  
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
         
@@ -310,9 +280,9 @@ apic:
               bridge_domain: '10.0.3.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1247
-                  # secondary_vlan: 1248 
-                  # u_segmentation: true
+                  primary_vlan: 1247
+                  secondary_vlan: 1248 
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
     
@@ -321,9 +291,9 @@ apic:
               bridge_domain: '10.0.4.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1249
-                  # secondary_vlan: 1250 
-                  # u_segmentation: true
+                  primary_vlan: 1249
+                  secondary_vlan: 1250 
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
@@ -332,31 +302,33 @@ apic:
               bridge_domain: '10.0.5.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1251
-                  # secondary_vlan: 1252
-                  # u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-
-            - name: '10.0.6.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.6.0_24'
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1253
-                  # secondary_vlan: 1254  
-                  # u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-
-            - name: '10.0.7.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.7.0_24'
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1255
-                  # secondary_vlan: 1256 
-                  # u_segmentation: true
+                  primary_vlan: 1251
+                  secondary_vlan: 1252
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate 
 
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-epgs
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - tenant: demo
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.0.1.0_24'
+                - tenant: demo                  
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.0.2.0_24'
+                - tenant: demo                  
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.0.3.0_24'
+                - tenant: demo                  
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.0.4.0_24'
+                - tenant: demo                  
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.0.5.0_24'
