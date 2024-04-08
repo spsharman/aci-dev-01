@@ -58,7 +58,7 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-epg-10.0.91.0_24-epg-01
+        - name: permit-to-10.0.91.0_24-epg-01
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -66,7 +66,7 @@ apic:
                 - filter: permit-src-any-dst-any
               # service_graph: ftdv-02-adapter-8-gig-0-5
 
-        - name: permit-to-epg-10.0.91.0_24-epg-02
+        - name: permit-to-10.0.91.0_24-epg-02
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -74,7 +74,7 @@ apic:
                 - filter: permit-src-any-dst-any
               # service_graph: ftdv-02-adapter-8-gig-0-5
 
-        - name: permit-to-epg-10.0.92.0_24-epg-01
+        - name: permit-to-10.0.92.0_24-epg-01
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -82,7 +82,7 @@ apic:
                 - filter: permit-src-any-dst-any
               # service_graph: ftdv-02-adapter-8-gig-0-5
 
-        - name: permit-to-epg-10.0.92.0_24-epg-02
+        - name: permit-to-10.0.92.0_24-epg-02
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
