@@ -256,12 +256,12 @@ apic:
           alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
-          subnets:
-            - ip: 10.0.91.1/24
-              public: true
-              # private: false
-              shared: true
-              nd_ra_prefix: false
+          # subnets:
+          #   - ip: 10.0.91.1/24
+          #     public: true
+          #     # private: false
+          #     shared: true
+          #     nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -293,12 +293,18 @@ apic:
                   resolution_immediacy: immediate
                   # primary_vlan: 1243
                   # secondary_vlan: 1244
+              subnets:
+                - ip: 10.0.91.1/24
+                  public: false
+                  private: false
+                  shared: true
+                  no_default_gateway: false
               contracts:
                 consumers:
                 #   - permit-from-epg-10.0.91.0_24-epg-01-to-all-external-subnets
                 # imported_consumers:
-                # providers:
-                #   - permit-from-all-external-subnets-to-epg-10.0.91.0_24-epg-01
+                providers:
+                  - permit-to-10.0.91.0_24-epg-01
 
             - name: '10.0.91.0_24-epg-02'
               alias: internal-vrf-02
@@ -315,6 +321,7 @@ apic:
                 consumers: 
                 imported_consumers: 
                 providers: 
+                  - permit-to-10.0.91.0_24-epg-02
 
             - name: '10.0.92.0_24-epg-01'
               alias: internal-vrf-03
@@ -329,7 +336,8 @@ apic:
                   # secondary_vlan: 1246  
               contracts:
                 consumers:
-                #   - permit-from-epg-10.0.92.0_24-epg-01-to-all-external-subnets
+                  - permit-to-10.0.91.0_24-epg-01
+                  - permit-to-10.0.91.0_24-epg-02
                 # imported_consumers:
                 # providers:
                 #   - permit-from-all-external-subnets-to-epg-10.0.92.0_24-epg-01
