@@ -299,34 +299,34 @@ apic:
                   # primary_vlan: 1245
                   # secondary_vlan: 1246  
 
-        - name: network-security-groups
-          endpoint_security_groups:
-            - name: 10.0.51.0_24
-              # description: 
-              vrf: vrf-02
-              shutdown: false
-              intra_esg_isolation: false
-              epg_selectors:
-                - tenant: demo-01                 
-                  application_profile: network-segments
-                  endpoint_group: 10.0.51.0_24
-              contracts:
-                # consumers:
-                # imported_consumers:
-                providers:
-                  - permit-to-esg-10.0.51.0_24
+        # - name: network-security-groups
+        #   endpoint_security_groups:
+        #     - name: 10.0.51.0_24
+        #       # description: 
+        #       vrf: vrf-02
+        #       shutdown: false
+        #       intra_esg_isolation: false
+        #       epg_selectors:
+        #         - tenant: demo-01                 
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.51.0_24
+        #       contracts:
+        #         # consumers:
+        #         # imported_consumers:
+        #         providers:
+        #           - permit-to-esg-10.0.51.0_24
 
-            - name: 10.0.52.0_24
-              # description: 
-              vrf: vrf-02
-              shutdown: false
-              intra_esg_isolation: false
-              epg_selectors:
-                - tenant: demo-01                 
-                  application_profile: network-segments
-                  endpoint_group: 10.0.52.0_24
-              contracts:
-                # consumers:
-                # imported_consumers:
-                providers:
-                  - permit-to-esg-10.0.52.0_24
+        #     - name: 10.0.52.0_24
+        #       # description: 
+        #       vrf: vrf-02
+        #       shutdown: false
+        #       intra_esg_isolation: false
+        #       epg_selectors:
+        #         - tenant: demo-01                 
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.52.0_24
+        #       contracts:
+        #         # consumers:
+        #         # imported_consumers:
+        #         providers:
+        #           - permit-to-esg-10.0.52.0_24
