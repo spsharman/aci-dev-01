@@ -140,7 +140,6 @@ apic:
               destinations:
                 - tenant: demo-01
                   vrf: vrf-02
-                  public: true
                   description: Leaked to tn-demo-01:vrf-02
 
         - name: vrf-02
@@ -280,8 +279,8 @@ apic:
               alias: internal-vrf
               bridge_domain: 10.0.51.0_24
               vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                # - name: 'hx-dev-01-vds-01'
+                # - name: 'ucsc-c220m5-vds-01'
+                - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
@@ -292,8 +291,8 @@ apic:
               alias: internal-vrf
               bridge_domain: 10.0.52.0_24
               vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                # - name: 'hx-dev-01-vds-01'
+                # - name: 'ucsc-c220m5-vds-01'
+                - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
