@@ -1,7 +1,7 @@
 #
-# This tenant is used for route leaking from VRF-01 (external) to VRF-02 (internal).
+# This tenant is used for testing different EPG route leaking scenarios. 
 #
-# Route leaking is also implemented between VRF-02 and VRF-03
+# VRF-01 (external), VRF-02 (internal), VRF-03 (internal).
 #
 ---
 apic:
@@ -107,29 +107,26 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
-        # - name: permit-to-tn-demo-01
-        #   scope: tenant
-        #   subjects:
-        #     - name: redirect
-        #       filters:
-        #         - filter: permit-src-any-dst-any
-        #       service_graph: ftdv-02-adapter-8-gig-0-5
-
-        - name: permit-to-esg-10.0.51.0_24
+        - name: permit-to-epg-10.0.51.0_24
           scope: tenant
           subjects:
-            - name: redirect
-              filters:
+            - name: permit-src-any-dst-any
+              filters: 
                 - filter: permit-src-any-dst-any
-              service_graph: ftdv-02-adapter-8-gig-0-5
 
-        - name: permit-to-esg-10.0.52.0_24
+        - name: permit-to-epg-10.0.52.0_24
           scope: tenant
           subjects:
-            - name: redirect
-              filters:
+            - name: permit-src-any-dst-any
+              filters: 
                 - filter: permit-src-any-dst-any
-              service_graph: ftdv-02-adapter-8-gig-0-5
+
+        - name: permit-to-all-external-subnets
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
 
       vrfs:
         - name: vrf-01
@@ -141,15 +138,18 @@ apic:
                 - tenant: demo-01
                   vrf: vrf-02
                   description: Leaked to tn-demo-01:vrf-02
+                - tenant: demo-01
+                  vrf: vrf-03
+                  description: Leaked to tn-demo-01:vrf-03
 
         - name: vrf-02
           description: configured with NAC - internal vrf for tn-demo-01
-          alias: internal-vrf
+          alias: internal-vrf-02
           contracts:
             providers: 
-              - intra-tenant
+              # - intra-tenant
             consumers:
-              - intra-tenant
+              # - intra-tenant
           leaked_internal_prefixes:
             - prefix: 10.0.51.0/24
               public: true
@@ -158,6 +158,16 @@ apic:
                   vrf: vrf-01
                   public: true
                   description: Leaked to demo-01:vrf-01 and advertised externally
+
+        - name: vrf-03
+          description: configured with NAC - internal vrf for tn-demo-01
+          alias: internal-vrf-03
+          contracts:
+            providers: 
+              # - intra-tenant
+            consumers:
+              # - intra-tenant
+          leaked_internal_prefixes:
             - prefix: 10.0.52.0/24
               public: true
               destinations:
@@ -218,8 +228,10 @@ apic:
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
-                # - prefix: 0.0.0.0/0
-                #   shared_route_control: true
+                - prefix: 0.0.0.0/0
+                  shared_route_control: true
+                  shared_security: false
+                  import_security: false
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -229,13 +241,15 @@ apic:
 
               contracts:
                 consumers:
-                  - permit-to-esg-10.0.51.0_24
-                  - permit-to-esg-10.0.52.0_24
+                  - permit-to-epg-10.0.51.0_24
+                  - permit-to-epg-10.0.52.0_24
+                providers:
+                  - permit-to-all-external-subnets
 
       bridge_domains:
         - name: 6.6.6.0_24
           description: PBR subnet
-          alias: internal-vrf
+          alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
@@ -246,28 +260,28 @@ apic:
               nd_ra_prefix: false
 
         - name: 10.0.51.0_24
-          alias: internal-vrf
+          alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
-          subnets:
-            - ip: 10.0.51.1/24
+          # subnets:
+          #   - ip: 10.0.51.1/24
               # public: true
               # private: false
               # shared: true
-              nd_ra_prefix: false
+              # nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
         - name: 10.0.52.0_24
-          alias: internal-vrf
+          alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
-          subnets:
-            - ip: 10.0.52.1/24
+          # subnets:
+          #   - ip: 10.0.52.1/24
               # public: true
               # private: false
               # shared: true
-              nd_ra_prefix: false
+              # nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -276,57 +290,47 @@ apic:
           description: EPGs provide the VLAN backing for application workloads
           endpoint_groups:
             - name: '10.0.51.0_24'
-              alias: internal-vrf
+              alias: internal-vrf-02
               bridge_domain: 10.0.51.0_24
+              subnets:
+                - ip: 10.0.51.1/24
+                  public: true
+                  private: false
+                  shared: true
+                  igmp_querier: false
+                  nd_ra_prefix: true
+                  no_default_gateway: false
               vmware_vmm_domains:
                 # - name: 'ucsc-c220m5-vds-01'
                 - name: 'hx-dev-01-vds-01'
-                  u_segmentation: true
+                  u_segmentation: false
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
                   # primary_vlan: 1243
-                  # secondary_vlan: 1244                  
+                  # secondary_vlan: 1244
+              contracts:
+                providers:
+                  - permit-to-epg-10.0.51.0_24
 
             - name: '10.0.52.0_24'
-              alias: internal-vrf
+              alias: internal-vrf-02
               bridge_domain: 10.0.52.0_24
+              subnets:
+                - ip: 10.0.52.1/24
+                  public: true
+                  private: false
+                  shared: true
+                  igmp_querier: false
+                  nd_ra_prefix: true
+                  no_default_gateway: false
               vmware_vmm_domains:
                 # - name: 'ucsc-c220m5-vds-01'
                 - name: 'hx-dev-01-vds-01'
-                  u_segmentation: true
+                  u_segmentation: false
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
                   # primary_vlan: 1245
                   # secondary_vlan: 1246  
-
-        # - name: network-security-groups
-        #   endpoint_security_groups:
-        #     - name: 10.0.51.0_24
-        #       # description: 
-        #       vrf: vrf-02
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       epg_selectors:
-        #         - tenant: demo-01                 
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.51.0_24
-        #       contracts:
-        #         # consumers:
-        #         # imported_consumers:
-        #         providers:
-        #           - permit-to-esg-10.0.51.0_24
-
-        #     - name: 10.0.52.0_24
-        #       # description: 
-        #       vrf: vrf-02
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       epg_selectors:
-        #         - tenant: demo-01                 
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.52.0_24
-        #       contracts:
-        #         # consumers:
-        #         # imported_consumers:
-        #         providers:
-        #           - permit-to-esg-10.0.52.0_24
+              contracts:
+                providers:
+                  - permit-to-epg-10.0.52.0_24
