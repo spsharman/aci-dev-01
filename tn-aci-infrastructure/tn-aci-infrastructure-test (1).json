@@ -4,21 +4,21 @@
         {
             "fvTenant": {
                 "attributes": {
-                    "annotation": "",
-                    "descr": "Nexus Dashboard, MSO etc",
-                    "dn": "uni/tn-aci-infrastructure",
-                    "name": "aci-infrastructure",
+                    "annotation": "orchestrator:terraform",
+                    "descr": "Routable IP range 192.168.5.x",
+                    "dn": "uni/tn-aci-infrastructure-test",
+                    "name": "aci-infrastructure-test",
                     "nameAlias": "",
                     "ownerKey": "",
                     "ownerTag": "",
-                    "userdom": ":all:"
+                    "userdom": ":all:common:"
                 },
                 "children": [
                     {
                         "vnsSvcCont": {
                             "attributes": {
                                 "annotation": "",
-                                "userdom": "all"
+                                "userdom": ":all:common:"
                             }
                         }
                     },
@@ -26,7 +26,7 @@
                         "fvEpTags": {
                             "attributes": {
                                 "annotation": "",
-                                "userdom": "all"
+                                "userdom": ":all:common:"
                             }
                         }
                     },
@@ -34,7 +34,7 @@
                         "fvBD": {
                             "attributes": {
                                 "OptimizeWanBandwidth": "no",
-                                "annotation": "",
+                                "annotation": "orchestrator:terraform",
                                 "arpFlood": "yes",
                                 "descr": "",
                                 "enableRogueExceptMac": "no",
@@ -52,7 +52,7 @@
                                 "mcastAllow": "no",
                                 "multiDstPktAct": "bd-flood",
                                 "name": "192.168.5.x_24",
-                                "nameAlias": "",
+                                "nameAlias": "common.vrf-01",
                                 "ownerKey": "",
                                 "ownerTag": "",
                                 "serviceBdRoutingDisable": "no",
@@ -60,7 +60,7 @@
                                 "unicastRoute": "yes",
                                 "unkMacUcastAct": "proxy",
                                 "unkMcastAct": "flood",
-                                "userdom": ":all:mgmt:common:",
+                                "userdom": ":all:common:",
                                 "v6unkMcastAct": "flood",
                                 "vmac": "not-applicable"
                             },
@@ -68,7 +68,7 @@
                                 {
                                     "fvSubnet": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "ctrl": "",
                                             "descr": "",
                                             "ip": "192.168.5.1/24",
@@ -77,7 +77,7 @@
                                             "nameAlias": "",
                                             "preferred": "no",
                                             "scope": "public",
-                                            "userdom": ":all:mgmt:common:",
+                                            "userdom": ":all:common:",
                                             "virtual": "no"
                                         }
                                     }
@@ -87,7 +87,7 @@
                                         "attributes": {
                                             "annotation": "",
                                             "tnMldSnoopPolName": "",
-                                            "userdom": "all"
+                                            "userdom": ":all:common:"
                                         }
                                     }
                                 },
@@ -96,16 +96,16 @@
                                         "attributes": {
                                             "annotation": "",
                                             "tnIgmpSnoopPolName": "",
-                                            "userdom": "all"
+                                            "userdom": ":all:common:"
                                         }
                                     }
                                 },
                                 {
                                     "fvRsCtx": {
                                         "attributes": {
-                                            "annotation": "",
-                                            "tnFvCtxName": "common.vrf-01",
-                                            "userdom": "all"
+                                            "annotation": "orchestrator:terraform",
+                                            "tnFvCtxName": "vrf-01",
+                                            "userdom": ":all:common:"
                                         }
                                     }
                                 },
@@ -115,7 +115,7 @@
                                             "annotation": "",
                                             "resolveAct": "resolve",
                                             "tnFvEpRetPolName": "",
-                                            "userdom": "all"
+                                            "userdom": ":all:common:"
                                         }
                                     }
                                 },
@@ -124,7 +124,7 @@
                                         "attributes": {
                                             "annotation": "",
                                             "tnNdIfPolName": "",
-                                            "userdom": "all"
+                                            "userdom": ":all:common:"
                                         }
                                     }
                                 }
@@ -136,27 +136,27 @@
                             "attributes": {
                                 "annotation": "",
                                 "tnMonEPGPolName": "",
-                                "userdom": "all"
+                                "userdom": ":all:common:"
                             }
                         }
                     },
                     {
                         "fvAp": {
                             "attributes": {
-                                "annotation": "",
+                                "annotation": "orchestrator:terraform",
                                 "descr": "",
                                 "name": "nexus-dashboard",
                                 "nameAlias": "",
                                 "ownerKey": "",
                                 "ownerTag": "",
                                 "prio": "unspecified",
-                                "userdom": ":all:mgmt:common:"
+                                "userdom": ":all:common:"
                             },
                             "children": [
                                 {
                                     "fvAEPg": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "descr": "",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
@@ -168,15 +168,15 @@
                                             "nameAlias": "",
                                             "pcEnfPref": "unenforced",
                                             "prefGrMemb": "exclude",
-                                            "prio": "level3",
+                                            "prio": "unspecified",
                                             "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
+                                            "userdom": ":all:common:"
                                         },
                                         "children": [
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -187,365 +187,6 @@
                                                         "epgCos": "Cos0",
                                                         "epgCosPref": "disabled",
                                                         "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "lazy",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    },
-                                                    "children": [
-                                                        {
-                                                            "vmmSecP": {
-                                                                "attributes": {
-                                                                    "allowPromiscuous": "reject",
-                                                                    "annotation": "",
-                                                                    "descr": "",
-                                                                    "forgedTransmits": "reject",
-                                                                    "macChanges": "reject",
-                                                                    "name": "",
-                                                                    "nameAlias": "",
-                                                                    "ownerKey": "",
-                                                                    "ownerTag": "",
-                                                                    "userdom": ":all:mgmt:common:"
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsBd": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "192.168.5.x_24",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "fvAEPg": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "fwdCtrl": "",
-                                            "hasMcastSource": "no",
-                                            "isAttrBasedEPg": "no",
-                                            "matchT": "AtleastOne",
-                                            "name": "nexus-dashboard-mgmt",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "level3",
-                                            "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "lazy",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    },
-                                                    "children": [
-                                                        {
-                                                            "vmmSecP": {
-                                                                "attributes": {
-                                                                    "allowPromiscuous": "reject",
-                                                                    "annotation": "",
-                                                                    "descr": "",
-                                                                    "forgedTransmits": "reject",
-                                                                    "macChanges": "reject",
-                                                                    "name": "",
-                                                                    "nameAlias": "",
-                                                                    "ownerKey": "",
-                                                                    "ownerTag": "",
-                                                                    "userdom": ":all:mgmt:common:"
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsBd": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "10.237.100.x_24",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "fvAp": {
-                            "attributes": {
-                                "annotation": "",
-                                "descr": "",
-                                "name": "multisite",
-                                "nameAlias": "",
-                                "ownerKey": "",
-                                "ownerTag": "",
-                                "prio": "unspecified",
-                                "userdom": ":all:mgmt:common:"
-                            },
-                            "children": [
-                                {
-                                    "fvAEPg": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "fwdCtrl": "",
-                                            "hasMcastSource": "no",
-                                            "isAttrBasedEPg": "no",
-                                            "matchT": "AtleastOne",
-                                            "name": "msc-3.1.1g",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "level3",
-                                            "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsBd": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "10.237.100.x_24",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "fvAEPg": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "fwdCtrl": "",
-                                            "hasMcastSource": "no",
-                                            "isAttrBasedEPg": "no",
-                                            "matchT": "AtleastOne",
-                                            "name": "ipn-inside",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "level3",
-                                            "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "fvRsPathAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "descr": "",
-                                                        "encap": "vlan-4",
-                                                        "instrImedcy": "immediate",
-                                                        "mode": "regular",
-                                                        "primaryEncap": "unknown",
-                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
-                                                        "userdom": ":all:mgmt:common:"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "lazy",
                                                         "ipamDhcpOverride": "0.0.0.0",
                                                         "ipamEnabled": "no",
                                                         "ipamGateway": "0.0.0.0",
@@ -559,193 +200,9 @@
                                                         "resImedcy": "immediate",
                                                         "secondaryEncapInner": "unknown",
                                                         "switchingMode": "native",
-                                                        "tDn": "uni/phys-external-switches",
+                                                        "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
                                                         "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "vlan-4",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsBd": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "vlan-4",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "fvAEPg": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "fwdCtrl": "",
-                                            "hasMcastSource": "no",
-                                            "isAttrBasedEPg": "no",
-                                            "matchT": "AtleastOne",
-                                            "name": "cloud-connectors",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "level3",
-                                            "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
-                                                        "vnetOnly": "no"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsBd": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "10.237.100.x_24",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "fvAEPg": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "fwdCtrl": "",
-                                            "hasMcastSource": "no",
-                                            "isAttrBasedEPg": "no",
-                                            "matchT": "AtleastOne",
-                                            "name": "ipn-mgmt",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "level3",
-                                            "shutdown": "no",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "fvRsDomAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "apiMode": "mgmt",
-                                                        "bindingType": "none",
-                                                        "classPref": "encap",
-                                                        "customEpgName": "",
-                                                        "delimiter": "",
-                                                        "encap": "unknown",
-                                                        "encapMode": "auto",
-                                                        "epgCos": "Cos0",
-                                                        "epgCosPref": "disabled",
-                                                        "instrImedcy": "immediate",
-                                                        "ipamDhcpOverride": "0.0.0.0",
-                                                        "ipamEnabled": "no",
-                                                        "ipamGateway": "0.0.0.0",
-                                                        "lagPolicyName": "",
-                                                        "netflowDir": "both",
-                                                        "netflowPref": "disabled",
-                                                        "numPorts": "0",
-                                                        "portAllocation": "none",
-                                                        "primaryEncap": "unknown",
-                                                        "primaryEncapInner": "unknown",
-                                                        "resImedcy": "pre-provision",
-                                                        "secondaryEncapInner": "unknown",
-                                                        "switchingMode": "native",
-                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
-                                                        "untagged": "no",
-                                                        "userdom": ":all:mgmt:common:",
+                                                        "userdom": ":all:common:",
                                                         "vnetOnly": "no"
                                                     },
                                                     "children": [
@@ -753,7 +210,7 @@
                                                             "vmmSecP": {
                                                                 "attributes": {
                                                                     "allowPromiscuous": "reject",
-                                                                    "annotation": "",
+                                                                    "annotation": "orchestrator:terraform",
                                                                     "descr": "",
                                                                     "forgedTransmits": "reject",
                                                                     "macChanges": "reject",
@@ -761,7 +218,59 @@
                                                                     "nameAlias": "",
                                                                     "ownerKey": "",
                                                                     "ownerTag": "",
-                                                                    "userdom": ":all:mgmt:common:"
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
                                                                 }
                                                             }
                                                         }
@@ -773,16 +282,597 @@
                                                     "attributes": {
                                                         "annotation": "",
                                                         "tnQosCustomPolName": "",
-                                                        "userdom": "all"
+                                                        "userdom": ":all:common:"
                                                     }
                                                 }
                                             },
                                             {
                                                 "fvRsBd": {
                                                     "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "tnFvBDName": "192.168.5.x_24",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "nexus-dashboard-mgmt",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-ucsc-c220m5-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
                                                         "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
                                                         "tnFvBDName": "10.237.100.x_24",
-                                                        "userdom": "all"
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvAp": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "name": "multisite",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "userdom": ":all:common:"
+                            },
+                            "children": [
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "msc-3.1.1g",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "tnFvBDName": "10.237.100.x_24",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "ipn-inside",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "encap": "vlan-444",
+                                                        "instrImedcy": "lazy",
+                                                        "mode": "regular",
+                                                        "primaryEncap": "unknown",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "vlan-444",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "lazy",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "lazy",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/phys-external-switches",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "tnFvBDName": "vlan-4",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "ipn-mgmt",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "tnFvBDName": "10.237.100.x_24",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "cloud-connectors",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "tnFvBDName": "10.237.100.x_24",
+                                                        "userdom": ":all:common:"
                                                     }
                                                 }
                                             }

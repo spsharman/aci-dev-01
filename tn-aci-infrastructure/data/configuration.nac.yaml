@@ -1,0 +1,96 @@
+#
+# This tenant is used for aci-infrastructure 
+#
+#
+              # vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                # - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244  
+#
+---
+apic:
+  tenants:
+    - name: aci-infrastructure
+      description: Routable IP range 192.168.5.x
+
+      bridge_domains:
+        - name: 192.168.5.x_24
+          alias: common.vrf-01
+          unknown_unicast: proxy
+          vrf: common.vrf-01
+          subnets:
+            - ip: 192.168.5.1/24
+              public: true
+              # private: false
+              shared: false
+              nd_ra_prefix: false
+
+      application_profiles:      
+        - name: 'multisite'
+          endpoint_groups:      
+            - name: 'cloud-connectors'
+              bridge_domain: 10.237.100.x_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: 'ipn-inside'
+              bridge_domain: vlan-4
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  vlan: 444
+              physical_domains:
+                - "external-switches"
+              static_ports:
+                - channel: "vpc_to_r07-tor"
+                  vlan: 444
+                  node_id: 101
+                  node2_id: 102
+
+            - name: 'ipn-mgmt'
+              bridge_domain: 10.237.100.x_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: 'msc-3.1.1g'
+              bridge_domain: 10.237.100.x_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+        - name: 'nexus-dashboard'
+          endpoint_groups:      
+            - name: 'apic-inb-mgmt'
+              bridge_domain: 192.168.5.x_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: 'nexus-dashboard-mgmt'
+              bridge_domain: 10.237.100.x_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                - name: 'ucsc-c220m5-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
