@@ -1,0 +1,216 @@
+#
+# This tenant is used for movaswan 
+#
+#
+              # vmware_vmm_domains:
+                # - name: 'hx-dev-01-vds-01'
+                # - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244  
+#
+---
+apic:
+  tenants:
+    - name: movaswan
+      description: Routable IP range 192.168.60-65.x
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets
+
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+      contracts:
+        - name: intra-tenant
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-vzAny
+          description: vzAny is contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-from-vzAny
+          description: vzAny is contract Consumer
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+      imported_contracts:
+        - name: 'permit-from-lab-desktops'
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+        
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+        
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf-01
+          contracts:
+            providers:
+              - intra-tenant
+            consumers:
+              - intra-tenant
+
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              private: true
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 192.168.60.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.60.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.61.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.61.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.62.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.62.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.63.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.63.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.64.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.64.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.65.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.65.1/24
+              public: true
+              # private: false
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+      application_profiles:      
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.60.0_24'
+              bridge_domain: 192.168.60.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+
+            - name: '192.168.61.0_24'
+              bridge_domain: 192.168.61.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+            
+            - name: '192.168.62.0_24'
+              bridge_domain: 192.168.62.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+
+            - name: '192.168.63.0_24'
+              bridge_domain: 192.168.63.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+
+            - name: '192.168.64.0_24'
+              bridge_domain: 192.168.64.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+
+            - name: '192.168.65.0_24'
+              bridge_domain: 192.168.65.0_24
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
