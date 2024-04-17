@@ -132,15 +132,15 @@ apic:
         - name: vrf-01
           description: configured with NAC - external vrf for tn-demo-01
           alias: external-vrf
-          leaked_external_prefixes:
-            - prefix: 0.0.0.0/0
-              destinations:
-                - tenant: demo-01
-                  vrf: vrf-02
-                  description: Leaked to tn-demo-01:vrf-02
-                - tenant: demo-01
-                  vrf: vrf-03
-                  description: Leaked to tn-demo-01:vrf-03
+          # leaked_external_prefixes:
+          #   - prefix: 0.0.0.0/0
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-02
+          #         description: Leaked to tn-demo-01:vrf-02
+          #       - tenant: demo-01
+          #         vrf: vrf-03
+          #         description: Leaked to tn-demo-01:vrf-03
 
         - name: vrf-02
           description: configured with NAC - internal vrf for tn-demo-01
@@ -150,14 +150,14 @@ apic:
               # - intra-tenant
             consumers:
               # - intra-tenant
-          leaked_internal_prefixes:
-            - prefix: 10.0.51.0/24
-              public: true
-              destinations:
-                - tenant: demo-01
-                  vrf: vrf-01
-                  public: true
-                  description: Leaked to demo-01:vrf-01 and advertised externally
+          # leaked_internal_prefixes:
+          #   - prefix: 10.0.51.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to demo-01:vrf-01 and advertised externally
 
         - name: vrf-03
           description: configured with NAC - internal vrf for tn-demo-01
@@ -167,14 +167,14 @@ apic:
               # - intra-tenant
             consumers:
               # - intra-tenant
-          leaked_internal_prefixes:
-            - prefix: 10.0.52.0/24
-              public: true
-              destinations:
-                - tenant: demo-01
-                  vrf: vrf-01
-                  public: true
-                  description: Leaked to demo-01:vrf-01 and advertised externally
+          # leaked_internal_prefixes:
+          #   - prefix: 10.0.52.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to demo-01:vrf-01 and advertised externally
 
       l3outs:
         - name: demo-01.vrf-01-ospf-area-0.0.0.1
@@ -273,9 +273,9 @@ apic:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
         - name: 10.0.52.0_24
-          alias: internal-vrf-02
+          alias: internal-vrf-03
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-03
           # subnets:
           #   - ip: 10.0.52.1/24
               # public: true
@@ -313,7 +313,7 @@ apic:
                   - permit-to-epg-10.0.51.0_24
 
             - name: '10.0.52.0_24'
-              alias: internal-vrf-02
+              alias: internal-vrf-03
               bridge_domain: 10.0.52.0_24
               subnets:
                 - ip: 10.0.52.1/24
