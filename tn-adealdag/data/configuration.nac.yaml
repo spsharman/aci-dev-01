@@ -61,6 +61,14 @@ apic:
               filters:
                 - filter: permit-src-any-dst-any
 
+        - name: permit-to-tn-adealdag
+          description: permit to tenant
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
       imported_contracts:
         - name: 'permit-from-lab-desktops'
           tenant: shared-services
