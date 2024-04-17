@@ -14,9 +14,8 @@ provider "aci" {
 }
 
 module "aci" {
-    source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
-    source  >= "netascode/nac-aci/aci"
-    version = "0.8.1"
+  source  = "netascode/nac-aci/aci"
+  version = ">=0.8.1"
 
   yaml_directories = ["data"]
 
