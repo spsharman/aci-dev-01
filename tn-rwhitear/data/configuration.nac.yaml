@@ -195,7 +195,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.10.0_24'
+            - name: '192.168.10.x_24'
               bridge_domain: 192.168.10.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
@@ -203,7 +203,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.11.0_24'
+            - name: '192.168.11.x_24'
               bridge_domain: 192.168.11.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
@@ -211,7 +211,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
             
-            - name: '192.168.12.0_24'
+            - name: '192.168.12.x_24'
               bridge_domain: 192.168.12.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
@@ -219,7 +219,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.13.0_24'
+            - name: '192.168.13.x_24'
               bridge_domain: 192.168.13.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
@@ -227,7 +227,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.14.0_24'
+            - name: '192.168.14.x_24'
               bridge_domain: 192.168.14.0_24
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
