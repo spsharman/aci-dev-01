@@ -6,3 +6,6 @@
 /terraform.tfvars
 /deployment-notes.txt
 /baseline-files/*
+.DS_Store
+tn-*/terraform.tfstate
+tn-*/terraform.tfstate.backup
