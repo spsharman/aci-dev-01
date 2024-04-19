@@ -61,7 +61,7 @@ apic:
               filters:
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-tn-kschemer
+        - name: permit-to-tn-rotaplin
           description: permit to tenant
           scope: global
           subjects:
