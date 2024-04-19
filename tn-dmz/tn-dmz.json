@@ -1,1 +1,485 @@
-{"totalCount":"1","imdata":[{"fvTenant":{"attributes":{"annotation":"","descr":"","dn":"uni/tn-dmz","name":"dmz","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:"},"children":[{"vnsSvcCont":{"attributes":{"annotation":"","userdom":"all"}}},{"fvEpTags":{"attributes":{"annotation":"","userdom":"all"}}},{"fvRsTenantMonPol":{"attributes":{"annotation":"","tnMonEPGPolName":"","userdom":"all"}}},{"fvAp":{"attributes":{"annotation":"","descr":"","name":"public","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","userdom":":all:mgmt:common:"},"children":[{"fvAEPg":{"attributes":{"annotation":"","descr":"","exceptionTag":"","floodOnEncap":"disabled","fwdCtrl":"","hasMcastSource":"no","isAttrBasedEPg":"no","matchT":"AtleastOne","name":"64.103.44.48_28","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"unspecified","shutdown":"no","userdom":":all:mgmt:common:"},"children":[{"fvRsPathAtt":{"attributes":{"annotation":"","descr":"","encap":"vlan-3001","instrImedcy":"immediate","mode":"regular","primaryEncap":"unknown","tDn":"topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]","userdom":":all:mgmt:common:"}}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"vlan-3001","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"immediate","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/vmmp-VMware/dom-hx-dev-01-vds-01","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"},"children":[{"vmmSecP":{"attributes":{"allowPromiscuous":"reject","annotation":"","descr":"","forgedTransmits":"reject","macChanges":"reject","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"}}}]}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"unknown","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"lazy","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/phys-dmz","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"}}},{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"fvRsBd":{"attributes":{"annotation":"","tnFvBDName":"vlan-3001","userdom":"all"}}}]}},{"fvAEPg":{"attributes":{"annotation":"","descr":"","exceptionTag":"","floodOnEncap":"disabled","fwdCtrl":"","hasMcastSource":"no","isAttrBasedEPg":"no","matchT":"AtleastOne","name":"64.103.44.96_28","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"level3","shutdown":"no","userdom":":all:mgmt:common:"},"children":[{"fvRsPathAtt":{"attributes":{"annotation":"","descr":"","encap":"vlan-3003","instrImedcy":"immediate","mode":"regular","primaryEncap":"unknown","tDn":"topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]","userdom":":all:mgmt:common:"}}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"unknown","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"lazy","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/phys-dmz","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"}}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"vlan-3003","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"immediate","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/vmmp-VMware/dom-hx-dev-01-vds-01","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"},"children":[{"vmmSecP":{"attributes":{"allowPromiscuous":"reject","annotation":"","descr":"","forgedTransmits":"reject","macChanges":"reject","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"}}}]}},{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"fvRsBd":{"attributes":{"annotation":"","tnFvBDName":"vlan-3003","userdom":"all"}}}]}},{"fvAEPg":{"attributes":{"annotation":"","descr":"","exceptionTag":"","floodOnEncap":"disabled","fwdCtrl":"","hasMcastSource":"no","isAttrBasedEPg":"no","matchT":"AtleastOne","name":"64.103.44.64_27","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"level3","shutdown":"no","userdom":":all:mgmt:common:"},"children":[{"fvRsPathAtt":{"attributes":{"annotation":"","descr":"","encap":"vlan-3002","instrImedcy":"immediate","mode":"regular","primaryEncap":"unknown","tDn":"topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]","userdom":":all:mgmt:common:"}}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"unknown","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"lazy","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/phys-dmz","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"}}},{"fvRsDomAtt":{"attributes":{"annotation":"","apiMode":"mgmt","bindingType":"none","classPref":"encap","customEpgName":"","delimiter":"","encap":"vlan-3002","encapMode":"auto","epgCos":"Cos0","epgCosPref":"disabled","instrImedcy":"immediate","ipamDhcpOverride":"0.0.0.0","ipamEnabled":"no","ipamGateway":"0.0.0.0","lagPolicyName":"","netflowDir":"both","netflowPref":"disabled","numPorts":"0","portAllocation":"none","primaryEncap":"unknown","primaryEncapInner":"unknown","resImedcy":"immediate","secondaryEncapInner":"unknown","switchingMode":"native","tDn":"uni/vmmp-VMware/dom-hx-dev-01-vds-01","untagged":"no","userdom":":all:mgmt:common:","vnetOnly":"no"},"children":[{"vmmSecP":{"attributes":{"allowPromiscuous":"reject","annotation":"","descr":"","forgedTransmits":"reject","macChanges":"reject","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"}}}]}},{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"fvRsBd":{"attributes":{"annotation":"","tnFvBDName":"vlan-3002","userdom":"all"}}}]}}]}}]}}]}
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "annotation": "",
+                    "descr": "",
+                    "dn": "uni/tn-dmz",
+                    "name": "dmz",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "userdom": ":all:"
+                },
+                "children": [
+                    {
+                        "vnsSvcCont": {
+                            "attributes": {
+                                "annotation": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvEpTags": {
+                            "attributes": {
+                                "annotation": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvRsTenantMonPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnMonEPGPolName": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvAp": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "public",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "64.103.44.48_28",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "encap": "vlan-3001",
+                                                        "instrImedcy": "immediate",
+                                                        "mode": "regular",
+                                                        "primaryEncap": "unknown",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "vlan-3001",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:mgmt:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "lazy",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/phys-dmz",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "vlan-3001",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "64.103.44.96_28",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "level3",
+                                            "shutdown": "no",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "encap": "vlan-3003",
+                                                        "instrImedcy": "immediate",
+                                                        "mode": "regular",
+                                                        "primaryEncap": "unknown",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "lazy",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/phys-dmz",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "vlan-3003",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:mgmt:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "vlan-3003",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "64.103.44.64_27",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "level3",
+                                            "shutdown": "no",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "encap": "vlan-3002",
+                                                        "instrImedcy": "immediate",
+                                                        "mode": "regular",
+                                                        "primaryEncap": "unknown",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "lazy",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/phys-dmz",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "vlan-3002",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "immediate",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "immediate",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/vmmp-VMware/dom-hx-dev-01-vds-01",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "vmmSecP": {
+                                                                "attributes": {
+                                                                    "allowPromiscuous": "reject",
+                                                                    "annotation": "",
+                                                                    "descr": "",
+                                                                    "forgedTransmits": "reject",
+                                                                    "macChanges": "reject",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "ownerKey": "",
+                                                                    "ownerTag": "",
+                                                                    "userdom": ":all:mgmt:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "vlan-3002",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

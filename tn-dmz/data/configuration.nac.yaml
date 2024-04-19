@@ -1,0 +1,70 @@
+#
+# This tenant is used for dmz
+#
+#
+# vmware_vmm_domains:
+# - name: 'ucsc-c220m5-vds-01'
+# - name: 'hx-dev-01-vds-01'
+# primary_vlan: 1243
+# secondary_vlan: 1244
+#
+---
+apic:
+  tenants:
+    - name: dmz
+      description: Routable range 64.103.44.x 
+
+      application_profiles:
+        - name: "public"
+          endpoint_groups:
+
+            - name: "64.103.44.48_28"
+              bridge_domain: vlan-3001
+              vmware_vmm_domains:
+                - name: "hx-dev-01-vds-01"
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  vlan: 3001
+              physical_domains:
+                - "dmz"
+              static_ports:
+                - channel: "vpc_to_r07-tor"
+                  vlan: 3001
+                  node_id: 101
+                  node2_id: 102
+                  deployment_immediacy: immediate
+                  
+            - name: "64.103.44.64_27"
+              bridge_domain: vlan-3002
+              vmware_vmm_domains:
+                - name: "hx-dev-01-vds-01"
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  vlan: 3002
+              physical_domains:
+                - "dmz"
+              static_ports:
+                - channel: "vpc_to_r07-tor"
+                  vlan: 3002
+                  node_id: 101
+                  node2_id: 102
+                  deployment_immediacy: immediate
+
+            - name: "64.103.44.96_28"
+              bridge_domain: vlan-3003
+              vmware_vmm_domains:
+                - name: "hx-dev-01-vds-01"
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  vlan: 3003
+              physical_domains:
+                - "dmz"
+              static_ports:
+                - channel: "vpc_to_r07-tor"
+                  vlan: 3003
+                  node_id: 101
+                  node2_id: 102
+                  deployment_immediacy: immediate
