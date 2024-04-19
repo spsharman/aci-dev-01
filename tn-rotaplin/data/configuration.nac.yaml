@@ -245,26 +245,26 @@ apic:
               # preferred_group: true              
 
               epg_selectors:
-                - tenant: template
+                - tenant: rotaplin
                   application_profile: network-segments
                   endpoint_group: 192.168.160.0_24 
 
-                - tenant: template                  
+                - tenant: rotaplin                  
                   application_profile: network-segments
                   endpoint_group: 192.168.161.0_24
 
-                - tenant: template                  
+                - tenant: rotaplin                  
                   application_profile: network-segments
                   endpoint_group: 192.168.162.0_24
 
-                - tenant: template                  
+                - tenant: rotaplin                  
                   application_profile: network-segments
                   endpoint_group: 192.168.163.0_24
 
-                - tenant: template                  
+                - tenant: rotaplin                  
                   application_profile: network-segments
                   endpoint_group: 192.168.164.0_24
 
-                - tenant: template                  
+                - tenant: rotaplin                  
                   application_profile: network-segments
                   endpoint_group: 192.168.165.0_24
