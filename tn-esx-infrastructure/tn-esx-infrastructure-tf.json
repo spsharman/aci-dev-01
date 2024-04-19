@@ -4,7 +4,7 @@
         {
             "fvTenant": {
                 "attributes": {
-                    "annotation": "",
+                    "annotation": "orchestrator:terraform",
                     "descr": "Routable IP range 192.168.4.x",
                     "dn": "uni/tn-esx-infrastructure",
                     "name": "esx-infrastructure",
@@ -34,9 +34,9 @@
                         "fvBD": {
                             "attributes": {
                                 "OptimizeWanBandwidth": "no",
-                                "annotation": "",
+                                "annotation": "orchestrator:terraform",
                                 "arpFlood": "yes",
-                                "descr": "",
+                                "descr": "vmotion and vsan",
                                 "enableRogueExceptMac": "no",
                                 "epClear": "no",
                                 "epMoveDetectMode": "",
@@ -52,7 +52,7 @@
                                 "mcastAllow": "no",
                                 "multiDstPktAct": "bd-flood",
                                 "name": "192.168.4.x_24",
-                                "nameAlias": "",
+                                "nameAlias": "common.vrf-01",
                                 "ownerKey": "",
                                 "ownerTag": "",
                                 "serviceBdRoutingDisable": "no",
@@ -68,7 +68,7 @@
                                 {
                                     "fvSubnet": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "ctrl": "",
                                             "descr": "",
                                             "ip": "192.168.4.1/25",
@@ -85,7 +85,7 @@
                                 {
                                     "fvSubnet": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "ctrl": "",
                                             "descr": "",
                                             "ip": "192.168.4.129/25",
@@ -120,7 +120,7 @@
                                 {
                                     "fvRsCtx": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "tnFvCtxName": "common.vrf-01",
                                             "userdom": "all"
                                         }
@@ -160,7 +160,7 @@
                     {
                         "fvAp": {
                             "attributes": {
-                                "annotation": "",
+                                "annotation": "orchestrator:terraform",
                                 "descr": "",
                                 "name": "host-connectivity",
                                 "nameAlias": "",
@@ -173,7 +173,7 @@
                                 {
                                     "fvAEPg": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "descr": "",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
@@ -193,7 +193,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-987",
                                                         "instrImedcy": "immediate",
@@ -207,7 +207,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-987",
                                                         "instrImedcy": "immediate",
@@ -221,7 +221,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -264,7 +264,7 @@
                                             {
                                                 "fvRsBd": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "tnFvBDName": "192.168.4.x_24",
                                                         "userdom": ""
                                                     }
@@ -276,7 +276,7 @@
                                 {
                                     "fvAEPg": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "descr": "",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
@@ -296,7 +296,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-992",
                                                         "instrImedcy": "immediate",
@@ -310,7 +310,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-992",
                                                         "instrImedcy": "immediate",
@@ -324,7 +324,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-992",
                                                         "instrImedcy": "immediate",
@@ -338,7 +338,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -372,7 +372,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -406,7 +406,7 @@
                                                             "vmmSecP": {
                                                                 "attributes": {
                                                                     "allowPromiscuous": "reject",
-                                                                    "annotation": "",
+                                                                    "annotation": "orchestrator:terraform",
                                                                     "descr": "",
                                                                     "forgedTransmits": "reject",
                                                                     "macChanges": "reject",
@@ -433,7 +433,7 @@
                                             {
                                                 "fvRsBd": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "tnFvBDName": "vlan-992",
                                                         "userdom": ""
                                                     }
@@ -445,7 +445,7 @@
                                 {
                                     "fvAEPg": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "descr": "",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
@@ -465,7 +465,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-986",
                                                         "instrImedcy": "immediate",
@@ -479,7 +479,7 @@
                                             {
                                                 "fvRsPathAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "descr": "",
                                                         "encap": "vlan-986",
                                                         "instrImedcy": "immediate",
@@ -493,7 +493,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -527,7 +527,7 @@
                                                             "vmmSecP": {
                                                                 "attributes": {
                                                                     "allowPromiscuous": "reject",
-                                                                    "annotation": "",
+                                                                    "annotation": "orchestrator:terraform",
                                                                     "descr": "",
                                                                     "forgedTransmits": "reject",
                                                                     "macChanges": "reject",
@@ -545,7 +545,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -588,7 +588,7 @@
                                             {
                                                 "fvRsBd": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "tnFvBDName": "192.168.4.x_24",
                                                         "userdom": ""
                                                     }
@@ -600,7 +600,7 @@
                                 {
                                     "fvAEPg": {
                                         "attributes": {
-                                            "annotation": "",
+                                            "annotation": "orchestrator:terraform",
                                             "descr": "",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
@@ -612,7 +612,7 @@
                                             "nameAlias": "",
                                             "pcEnfPref": "unenforced",
                                             "prefGrMemb": "exclude",
-                                            "prio": "level3",
+                                            "prio": "unspecified",
                                             "shutdown": "no",
                                             "userdom": ":all:mgmt:common:"
                                         },
@@ -620,7 +620,7 @@
                                             {
                                                 "fvRsDomAtt": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "apiMode": "mgmt",
                                                         "bindingType": "none",
                                                         "classPref": "encap",
@@ -630,7 +630,7 @@
                                                         "encapMode": "auto",
                                                         "epgCos": "Cos0",
                                                         "epgCosPref": "disabled",
-                                                        "instrImedcy": "lazy",
+                                                        "instrImedcy": "immediate",
                                                         "ipamDhcpOverride": "0.0.0.0",
                                                         "ipamEnabled": "no",
                                                         "ipamGateway": "0.0.0.0",
@@ -654,7 +654,7 @@
                                                             "vmmSecP": {
                                                                 "attributes": {
                                                                     "allowPromiscuous": "reject",
-                                                                    "annotation": "",
+                                                                    "annotation": "orchestrator:terraform",
                                                                     "descr": "",
                                                                     "forgedTransmits": "reject",
                                                                     "macChanges": "reject",
@@ -681,7 +681,7 @@
                                             {
                                                 "fvRsBd": {
                                                     "attributes": {
-                                                        "annotation": "",
+                                                        "annotation": "orchestrator:terraform",
                                                         "tnFvBDName": "192.168.4.x_24",
                                                         "userdom": "all"
                                                     }
