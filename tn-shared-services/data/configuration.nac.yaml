@@ -1,7 +1,24 @@
+---
 apic:
   tenants:
     - name: shared-services
       managed: false
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: demo-01
+                l3out: demo-01.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: all-external-subnets
+
+      imported_contracts:
+        - name: permit-to-tn-demo-03
+          tenant: demo-03
+          contract: permit-to-tn-demo-03
 
       l3outs:
         - name: shared-services.vrf-01-ospf-area-0.0.0.1
@@ -11,7 +28,7 @@ apic:
           ospf:
             area: 0.0.0.1
             area_type: regular
-################################ Nodes
+# Nodes
           node_profiles:
             - name: border-leafs
               nodes:
@@ -19,7 +36,7 @@ apic:
                   router_id: 101.2.1.1
                 - node_id: 102
                   router_id: 102.2.1.1
-################################ Interface 101/1/7
+# Interfaces
               interface_profiles:
                 - name: leaf-101-eth7
                   description: configured with NAC
@@ -31,7 +48,7 @@ apic:
                       mac: 10:12:BD:F8:19:FF
                   ospf:
                     policy: OSPF_p2p
-################################ Interface 102/1/7
+
                 - name: leaf-102-eth7
                   description: configured with NAC
                   interfaces:
@@ -42,7 +59,7 @@ apic:
                       mac: 10:22:BD:F8:19:FF
                   ospf:
                     policy: OSPF_p2p
-################################ Interface hx-dev-01-fi-a-vds-02-vlan-8
+
                 - name: hx-dev-01-fi-a-vlan-8
                   interfaces:
                     - node_id: 101
@@ -57,7 +74,7 @@ apic:
                       #     floating_ip: 10.237.99.51/28
                   ospf:
                     policy: broadcast
-################################ Interface hx-dev-01-fi-b-vds-02-vlan-8
+
                 - name: hx-dev-01-fi-b-vlan-8
                   interfaces:
                     - node_id: 102
@@ -72,8 +89,10 @@ apic:
                       #     floating_ip: 10.237.99.51/28
                   ospf:
                     policy: broadcast
-################################ External EPG all-external-subnets                  
+
           external_endpoint_groups:
+
+# extEPG all external subnets
             - name: all-external-subnets
               subnets:
                 # - prefix: 0.0.0.0/0
@@ -92,6 +111,7 @@ apic:
                   - permit-to-ftd-management-ftd-mgmt
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
+                  - permit-to-n9000v-management-n9000v-mgmt
                 providers:
                   - permit-to-shared-services.vrf-01-all-external-subnets
                 imported_consumers:
@@ -119,7 +139,8 @@ apic:
                   - permit-to-tn-ssharman-firewalls-ftd-mgmt
                   - permit-to-tn-ssharman-online-boutique-hx
                   - permit-to-tn-ssharman-online-boutique-sa-frontend-service
-################################ External EPG core-services-subnets                  
+
+# extEPG core-services
             - name: core-services-subnets
               subnets:
                 # - prefix: 0.0.0.0/0
@@ -143,7 +164,8 @@ apic:
                 providers:
                   - permit-from-core-services
                   - permit-to-core-services
-################################ External EPG lab-desktops-subnets                  
+
+# extEPG lab desktops
             - name: lab-desktops-subnets
               subnets:
                 # - prefix: 0.0.0.0/0
@@ -159,5 +181,6 @@ apic:
                   - permit-to-ftd-management-ftd-mgmt
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
+                  - permit-to-n9000v-management-n9000v-mgmt
                 providers:
                   - permit-from-lab-desktops

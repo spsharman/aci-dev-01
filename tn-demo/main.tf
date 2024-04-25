@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      version = "2.13.2"
+      version = ">=2.13.2"
     }
   }
 }
