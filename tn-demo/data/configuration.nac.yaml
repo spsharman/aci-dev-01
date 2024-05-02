@@ -34,18 +34,6 @@ apic:
               - ip: 6.6.6.11
                 mac: 00:50:56:a1:ac:90
 
-          - name: redirect-to-csr1kv-01-adapter-2-gig-2
-            l3_destinations:
-              - ip: 6.6.6.12
-                mac: 00:50:56:a1:f6:8b
-
-          - name: redirect-to-n9000v-01-adapter-2-eth-1-1
-            l3_destinations:
-              - ip: 6.6.6.13
-                mac: 00:a1:4c:23:1b:08
-                # mac: 00:50:56:a1:7a:16
-
-
         # imported_l4l7_devices: #imported L4-7 device is not programming the correct funcType
         #   - name: ftdv-03-adapter-5-gig-0-2
         #     tenant: shared-services
@@ -71,47 +59,6 @@ apic:
                   - device: ftdv-03-adapter-5-gig-0-2
                     interface_name: gig-0-2
 
-          - name: csr1kv-01-adapter-2-gig-2
-            vmware_vmm_domain: hx-dev-01-vds-01
-            context_aware: single-Context
-            type: VIRTUAL
-            function: GoTo
-            service_type: OTHERS
-            trunking: false
-            concrete_devices:
-              - name: csr1kv-01-adapter-2-gig-2
-                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
-                vm_name: csr1kv-01
-                interfaces:
-                  - name: gig-2
-                    vnic_name: Network adapter 2
-            logical_interfaces:
-              - name: gig-2
-                concrete_interfaces:
-                  - device: csr1kv-01-adapter-2-gig-2
-                    interface_name: gig-2
-
-          - name: n9000v-01-adapter-2-eth-1-1
-            vmware_vmm_domain: hx-dev-01-vds-01
-            context_aware: single-Context
-            type: VIRTUAL
-            function: GoTo
-            service_type: OTHERS
-            trunking: false
-            promiscuous_mode: true
-            concrete_devices:
-              - name: n9000v-01-adapter-2-eth-1-1
-                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
-                vm_name: n9000v-01
-                interfaces:
-                  - name: eth-1-1
-                    vnic_name: Network adapter 2
-            logical_interfaces:
-              - name: eth-1-1
-                concrete_interfaces:
-                  - device: n9000v-01-adapter-2-eth-1-1
-                    interface_name: eth-1-1
-
         service_graph_templates:
           - name: ftdv-03-adapter-5-gig-0-2
             template_type: FW_ROUTED
@@ -120,30 +67,6 @@ apic:
             device:
               tenant: demo
               name: ftdv-03-adapter-5-gig-0-2
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
-
-          - name: csr1kv-01-adapter-2-gig-2
-            template_type: OTHER
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: demo
-              name: csr1kv-01-adapter-2-gig-2
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
-
-          - name: n9000v-01-adapter-2-eth-1-1
-            template_type: OTHER
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: demo
-              name: n9000v-01-adapter-2-eth-1-1
             consumer:
               direct_connect: false
             provider:
@@ -162,36 +85,6 @@ apic:
               redirect_policy:
                 name: redirect-to-ftdv-03-adapter-5-gig-0-2
               logical_interface: gig-0-2
-              bridge_domain:
-                name: 6.6.6.0_24
-
-          - contract: any
-            service_graph_template: csr1kv-01-adapter-2-gig-2
-            consumer:
-              redirect_policy:
-                name: redirect-to-csr1kv-01-adapter-2-gig-2
-              logical_interface: gig-2
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: redirect-to-csr1kv-01-adapter-2-gig-2
-              logical_interface: gig-2
-              bridge_domain:
-                name: 6.6.6.0_24
-
-          - contract: any
-            service_graph_template: n9000v-01-adapter-2-eth-1-1
-            consumer:
-              redirect_policy:
-                name: redirect-to-n9000v-01-adapter-2-eth-1-1
-              logical_interface: eth-1-1
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: redirect-to-n9000v-01-adapter-2-eth-1-1
-              logical_interface: eth-1-1
               bridge_domain:
                 name: 6.6.6.0_24
 
