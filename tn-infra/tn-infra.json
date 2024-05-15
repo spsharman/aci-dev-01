@@ -1,1 +1,1488 @@
-{"totalCount":"1","imdata":[{"fvTenant":{"attributes":{"annotation":"","descr":"","dn":"uni/tn-infra","name":"infra","nameAlias":"","ownerKey":"","ownerTag":"","userdom":"all"},"children":[{"vnsSvcCont":{"attributes":{"annotation":"","userdom":"all"}}},{"ospfIfPol":{"attributes":{"annotation":"orchestrator:msc","cost":"unspecified","ctrl":"mtu-ignore","deadIntvl":"40","descr":"","helloIntvl":"10","name":"msc-ospf-policy-default","nameAlias":"","nwT":"bcast","ownerKey":"","ownerTag":"","pfxSuppress":"inherit","prio":"1","rexmitIntvl":"5","userdom":":all:","xmitDelay":"1"}}},{"mplsLabelPol":{"attributes":{"annotation":"","descr":"","maxDynamicLabel":"525286","maxStaticLabel":"0","minDynamicLabel":"16","minStaticLabel":"0","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","userdom":"all"},"children":[{"mplsSrgbLabelPol":{"attributes":{"annotation":"","descr":"","localId":"1","maxSrgbLabel":"23999","minSrgbLabel":"16000","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":"all"}}}]}},{"mldSnoopPol":{"attributes":{"adminSt":"disabled","annotation":"","ctrl":"opt-flood,querier","descr":"","lastMbrIntvl":"1","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","queryIntvl":"125","rspIntvl":"10","startQueryCnt":"2","startQueryIntvl":"31","userdom":"all","ver":"v2"}}},{"aaaDomainRef":{"attributes":{"annotation":"","descr":"","name":"infra","nameAlias":"","ownerKey":"","ownerTag":"","userdom":"all"}}},{"qosDscpTransPol":{"attributes":{"adminSt":"disabled","annotation":"","control":"CS0","descr":"","level1":"CS1","level2":"CS2","level3":"CS3","level4":"AF11","level5":"AF21","level6":"AF31","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","policy":"CS4","span":"CS5","traceroute":"CS6","userdom":"all"}}},{"fvAp":{"attributes":{"annotation":"","descr":"","name":"access","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","userdom":"all"},"children":[{"fvAEPg":{"attributes":{"annotation":"","descr":"","exceptionTag":"","floodOnEncap":"disabled","fwdCtrl":"","hasMcastSource":"no","isAttrBasedEPg":"no","matchT":"AtleastOne","name":"default","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"unspecified","shutdown":"no","userdom":"all"},"children":[{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"fvRsBd":{"attributes":{"annotation":"","tnFvBDName":"default","userdom":"all"}}}]}}]}},{"fvAp":{"attributes":{"annotation":"","descr":"","name":"ave-ctrl","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","userdom":"all"},"children":[{"fvAEPg":{"attributes":{"annotation":"","descr":"","exceptionTag":"","floodOnEncap":"disabled","fwdCtrl":"","hasMcastSource":"no","isAttrBasedEPg":"no","matchT":"AtleastOne","name":"ave-ctrl","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"unspecified","shutdown":"no","userdom":"all"},"children":[{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"fvRsBd":{"attributes":{"annotation":"","tnFvBDName":"ave-ctrl","userdom":"all"}}}]}}]}},{"fvFabricExtConnP":{"attributes":{"annotation":"","descr":"","id":"1","name":"","nameAlias":"","ownerKey":"","ownerTag":"","rt":"extended:as2-nn4:5:16","siteId":"3","userdom":":all:"},"children":[{"l3extFabricExtRoutingP":{"attributes":{"annotation":"","descr":"","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"},"children":[{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.3.0.52/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.204.0.0/25","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.203.0.128/25","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.203.0.52/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"","descr":"","ip":"10.201.0.52/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:mgmt:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.203.0.116/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"","descr":"","ip":"10.201.0.116/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:mgmt:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.3.0.128/25","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.203.0.0/25","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"","descr":"","ip":"10.202.0.116/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:mgmt:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"","descr":"","ip":"10.202.0.52/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:mgmt:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.3.0.116/28","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:msc","descr":"","ip":"10.3.0.0/25","name":"","nameAlias":"","scope":"import-security","userdom":":all:"}}}]}},{"fvSiteConnP":{"attributes":{"annotation":"orchestrator:msc","bgpAsn":"0","descr":"","id":"0","name":"","nameAlias":"","userdom":":all:"},"children":[{"fvIntersiteMcastConnP":{"attributes":{"addr":"0.0.0.0","annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:"}}}]}},{"fvPodConnP":{"attributes":{"annotation":"","assocIntersitePodId":"0","descr":"","id":"1","name":"","nameAlias":"","userdom":":all:"},"children":[{"fvIp":{"attributes":{"addr":"100.1.1.3/32","annotation":"","userdom":":all:"}}},{"fvIntersiteConnP":{"attributes":{"addr":"100.2.1.100/32","annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:"}}}]}},{"fvPeeringP":{"attributes":{"annotation":"","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","type":"automatic_with_full_mesh","userdom":":all:"}}},{"fvIntersitePeeringP":{"attributes":{"annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","type":"automatic_with_full_mesh","userdom":":all:"}}},{"tagAnnotation":{"attributes":{"key":"mscSiteName","userdom":":all:","value":"aci-dev-01"}}},{"fvIntersiteMcastConnP":{"attributes":{"addr":"104.1.1.100/32","annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:"}}},{"cloudsecControl":{"attributes":{"adminSt":"disabled","annotation":"","descr":"","name":"","nameAlias":"","ownerKey":"","ownerTag":"","udpPortCtrl":"unassigned","userdom":":all:"}}}]}},{"fvRsTenantMonPol":{"attributes":{"annotation":"","tnMonEPGPolName":"","userdom":"all"}}},{"fvBD":{"attributes":{"OptimizeWanBandwidth":"no","annotation":"","arpFlood":"no","descr":"","enableRogueExceptMac":"no","epClear":"no","epMoveDetectMode":"","hostBasedRouting":"no","intersiteBumTrafficAllow":"no","intersiteL2Stretch":"no","ipLearning":"yes","ipv6McastAllow":"no","limitIpLearnToSubnets":"yes","llAddr":"::","mac":"00:22:BD:F8:19:FF","mcastARPDrop":"no","mcastAllow":"no","multiDstPktAct":"bd-flood","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","serviceBdRoutingDisable":"no","type":"regular","unicastRoute":"yes","unkMacUcastAct":"proxy","unkMcastAct":"flood","userdom":"all","v6unkMcastAct":"flood","vmac":"not-applicable"},"children":[{"fvRsMldsn":{"attributes":{"annotation":"","tnMldSnoopPolName":"","userdom":"all"}}},{"fvRsIgmpsn":{"attributes":{"annotation":"","tnIgmpSnoopPolName":"","userdom":"all"}}},{"fvRsCtx":{"attributes":{"annotation":"","tnFvCtxName":"overlay-1","userdom":"all"}}},{"fvRsBdToEpRet":{"attributes":{"annotation":"","resolveAct":"resolve","tnFvEpRetPolName":"","userdom":"all"}}},{"fvRsBDToNdP":{"attributes":{"annotation":"","tnNdIfPolName":"","userdom":"all"}}}]}},{"fvBD":{"attributes":{"OptimizeWanBandwidth":"no","annotation":"","arpFlood":"no","descr":"","enableRogueExceptMac":"no","epClear":"no","epMoveDetectMode":"","hostBasedRouting":"no","intersiteBumTrafficAllow":"no","intersiteL2Stretch":"no","ipLearning":"yes","ipv6McastAllow":"no","limitIpLearnToSubnets":"yes","llAddr":"::","mac":"00:22:BD:F8:19:FF","mcastARPDrop":"no","mcastAllow":"no","multiDstPktAct":"bd-flood","name":"ave-ctrl","nameAlias":"","ownerKey":"","ownerTag":"","serviceBdRoutingDisable":"no","type":"regular","unicastRoute":"yes","unkMacUcastAct":"proxy","unkMcastAct":"flood","userdom":"all","v6unkMcastAct":"flood","vmac":"not-applicable"},"children":[{"fvRsMldsn":{"attributes":{"annotation":"","tnMldSnoopPolName":"","userdom":"all"}}},{"fvRsIgmpsn":{"attributes":{"annotation":"","tnIgmpSnoopPolName":"","userdom":"all"}}},{"fvRsCtx":{"attributes":{"annotation":"","tnFvCtxName":"ave-ctrl","userdom":"all"}}},{"fvRsBdToEpRet":{"attributes":{"annotation":"","resolveAct":"resolve","tnFvEpRetPolName":"ave-ctrl","userdom":"all"}}},{"fvRsBDToNdP":{"attributes":{"annotation":"","tnNdIfPolName":"","userdom":"all"}}}]}},{"fvCtx":{"attributes":{"annotation":"","bdEnforcedEnable":"no","descr":"","ipDataPlaneLearning":"enabled","knwMcastAct":"permit","name":"ave-ctrl","nameAlias":"","ownerKey":"","ownerTag":"","pcEnfDir":"ingress","pcEnfPref":"enforced","userdom":"all","vrfIndex":"0"},"children":[{"fvRsVrfValidationPol":{"attributes":{"annotation":"","tnL3extVrfValidationPolName":"","userdom":"all"}}},{"vzAny":{"attributes":{"annotation":"","descr":"","matchT":"AtleastOne","name":"","nameAlias":"","prefGrMemb":"disabled","userdom":"all"}}},{"fvRsOspfCtxPol":{"attributes":{"annotation":"","tnOspfCtxPolName":"","userdom":"all"}}},{"fvRsCtxToEpRet":{"attributes":{"annotation":"","tnFvEpRetPolName":"","userdom":"all"}}},{"fvRsCtxToExtRouteTagPol":{"attributes":{"annotation":"","tnL3extRouteTagPolName":"","userdom":"all"}}},{"fvRsBgpCtxPol":{"attributes":{"annotation":"","tnBgpCtxPolName":"","userdom":"all"}}}]}},{"fvCtx":{"attributes":{"annotation":"","bdEnforcedEnable":"no","descr":"","ipDataPlaneLearning":"enabled","knwMcastAct":"permit","name":"overlay-1","nameAlias":"","ownerKey":"","ownerTag":"","pcEnfDir":"ingress","pcEnfPref":"enforced","userdom":"all","vrfIndex":"0"},"children":[{"fvRsVrfValidationPol":{"attributes":{"annotation":"","tnL3extVrfValidationPolName":"","userdom":"all"}}},{"vzAny":{"attributes":{"annotation":"","descr":"","matchT":"AtleastOne","name":"","nameAlias":"","prefGrMemb":"disabled","userdom":"all"}}},{"fvRsOspfCtxPol":{"attributes":{"annotation":"","tnOspfCtxPolName":"","userdom":"all"}}},{"fvRsCtxToEpRet":{"attributes":{"annotation":"","tnFvEpRetPolName":"","userdom":"all"}}},{"fvRsCtxToExtRouteTagPol":{"attributes":{"annotation":"","tnL3extRouteTagPolName":"","userdom":"all"}}},{"fvRsBgpCtxPol":{"attributes":{"annotation":"orchestrator:msc","tnBgpCtxPolName":"msc-bgp-timer-policy-default","userdom":"all"}}}]}},{"cloudsecIfPol":{"attributes":{"annotation":"","descr":"","forceClean":"disabled","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","sakExpiryTime":"15","stopRekey":"no","userdom":"all"}}},{"fvEpRetPol":{"attributes":{"annotation":"","bounceAgeIntvl":"150","bounceTrig":"protocol","descr":"","holdIntvl":"5","localEpAgeIntvl":"120","moveFreq":"1","name":"ave-ctrl","nameAlias":"","ownerKey":"","ownerTag":"","remoteEpAgeIntvl":"120","userdom":"all"}}},{"igmpSnoopPol":{"attributes":{"adminSt":"enabled","annotation":"","ctrl":"opt-flood,querier","descr":"","lastMbrIntvl":"1","name":"default","nameAlias":"","ownerKey":"","ownerTag":"","queryIntvl":"125","rspIntvl":"10","startQueryCnt":"2","startQueryIntvl":"31","userdom":"all","ver":"v3"}}},{"bgpCtxPol":{"attributes":{"annotation":"orchestrator:msc","descr":"","grCtrl":"helper","holdIntvl":"180","kaIntvl":"60","maxAsLimit":"0","name":"msc-bgp-timer-policy-default","nameAlias":"","ownerKey":"","ownerTag":"","staleIntvl":"default","userdom":":all:"}}},{"l3extOut":{"attributes":{"annotation":"orchestrator:msc","descr":"","enforceRtctrl":"export","mplsEnabled":"no","name":"intersite","nameAlias":"","ownerKey":"","ownerTag":"","targetDscp":"unspecified","userdom":":all:"},"children":[{"ospfExtP":{"attributes":{"annotation":"orchestrator:msc","areaCost":"1","areaCtrl":"redistribute,summary","areaId":"backbone","areaType":"regular","descr":"","multipodInternal":"no","nameAlias":"","userdom":":all:"}}},{"l3extRsEctx":{"attributes":{"annotation":"orchestrator:msc","tnFvCtxName":"overlay-1","userdom":"all"}}},{"l3extProvLbl":{"attributes":{"annotation":"orchestrator:msc","descr":"","name":"hcloudGolfLabel","nameAlias":"","ownerKey":"","ownerTag":"","tag":"yellow-green","userdom":":all:"}}},{"l3extLNodeP":{"attributes":{"annotation":"orchestrator:msc","configIssues":"","descr":"","name":"node-201-profile","nameAlias":"","ownerKey":"","ownerTag":"","tag":"yellow-green","targetDscp":"unspecified","userdom":":all:"},"children":[{"l3extRsNodeL3OutAtt":{"attributes":{"annotation":"orchestrator:msc","configIssues":"","rtrId":"201.1.1.1","rtrIdLoopBack":"no","tDn":"topology/pod-1/node-201","userdom":":all:"},"children":[{"l3extLoopBackIfP":{"attributes":{"addr":"201.1.1.1","annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","userdom":":all:"}}},{"l3extIntersiteLoopBackIfP":{"attributes":{"addr":"201.1.1.1","annotation":"orchestrator:msc","descr":"","name":"","nameAlias":"","userdom":":all:"}}},{"l3extInfraNodeP":{"attributes":{"annotation":"orchestrator:msc","descr":"","fabricExtCtrlPeering":"no","fabricExtIntersiteCtrlPeering":"yes","name":"","nameAlias":"","spineRole":"msite-speaker","userdom":":all:"}}}]}},{"l3extLIfP":{"attributes":{"annotation":"orchestrator:msc","descr":"","name":"interface-201-1-48-profile","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","tag":"yellow-green","userdom":":all:"},"children":[{"ospfIfP":{"attributes":{"annotation":"","authKeyId":"1","authType":"none","descr":"","name":"","nameAlias":"","userdom":":all:"},"children":[{"ospfRsIfPol":{"attributes":{"annotation":"orchestrator:msc","tnOspfIfPolName":"broadcast","userdom":"all"}}}]}},{"l3extRsPathL3OutAtt":{"attributes":{"addr":"192.168.7.1/24","annotation":"orchestrator:msc","autostate":"disabled","descr":"","encap":"vlan-4","encapScope":"local","ifInstT":"sub-interface","ipv6Dad":"enabled","isMultiPodDirect":"no","llAddr":"::","mac":"00:22:BD:F8:19:FF","mode":"regular","mtu":"1500","tDn":"topology/pod-1/paths-201/pathep-[eth1/48]","targetDscp":"unspecified","userdom":":all:"}}},{"l3extRsNdIfPol":{"attributes":{"annotation":"","tnNdIfPolName":"","userdom":"all"}}},{"l3extRsLIfPCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"l3extRsIngressQosDppPol":{"attributes":{"annotation":"","tnQosDppPolName":"","userdom":"all"}}},{"l3extRsEgressQosDppPol":{"attributes":{"annotation":"","tnQosDppPolName":"","userdom":"all"}}},{"l3extRsArpIfPol":{"attributes":{"annotation":"","tnArpIfPolName":"","userdom":"all"}}}]}},{"bgpInfraPeerP":{"attributes":{"addr":"10.203.0.116","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:msc","capability":"","ctrl":"send-com,send-ext-com","ctrlExt":"","dataPlaneAddr":"0.0.0.0","descr":"","name":"","nameAlias":"","peerCtrl":"","peerT":"wan","privateASctrl":"","remoteIntersiteRR":"no","srcIfT":"l3out-loopback","trustCtrl":"untrusted","ttl":"16","userdom":":all:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"","tnBgpPeerPfxPolName":"","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"orchestrator:msc","asn":"65202","descr":"","name":"","nameAlias":"","userdom":":all:"}}}]}},{"bgpInfraPeerP":{"attributes":{"addr":"10.3.0.116","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:msc","capability":"","ctrl":"send-com,send-ext-com","ctrlExt":"","dataPlaneAddr":"0.0.0.0","descr":"","name":"","nameAlias":"","peerCtrl":"","peerT":"wan","privateASctrl":"","remoteIntersiteRR":"no","srcIfT":"l3out-loopback","trustCtrl":"untrusted","ttl":"16","userdom":":all:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"","tnBgpPeerPfxPolName":"","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"orchestrator:msc","asn":"65201","descr":"","name":"","nameAlias":"","userdom":":all:"}}}]}},{"bgpInfraPeerP":{"attributes":{"addr":"10.203.0.52","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:msc","capability":"","ctrl":"send-com,send-ext-com","ctrlExt":"","dataPlaneAddr":"0.0.0.0","descr":"","name":"","nameAlias":"","peerCtrl":"","peerT":"wan","privateASctrl":"","remoteIntersiteRR":"no","srcIfT":"l3out-loopback","trustCtrl":"untrusted","ttl":"16","userdom":":all:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"","tnBgpPeerPfxPolName":"","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"orchestrator:msc","asn":"65202","descr":"","name":"","nameAlias":"","userdom":":all:"}}}]}},{"bgpInfraPeerP":{"attributes":{"addr":"10.3.0.52","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:msc","capability":"","ctrl":"send-com,send-ext-com","ctrlExt":"","dataPlaneAddr":"0.0.0.0","descr":"","name":"","nameAlias":"","peerCtrl":"","peerT":"wan","privateASctrl":"","remoteIntersiteRR":"no","srcIfT":"l3out-loopback","trustCtrl":"untrusted","ttl":"16","userdom":":all:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"","tnBgpPeerPfxPolName":"","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"orchestrator:msc","asn":"65201","descr":"","name":"","nameAlias":"","userdom":":all:"}}}]}}]}},{"l3extInstP":{"attributes":{"annotation":"orchestrator:msc","descr":"","exceptionTag":"","floodOnEncap":"disabled","matchT":"AtleastOne","name":"intersiteInstP","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"unspecified","targetDscp":"unspecified","userdom":":all:"},"children":[{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}}]}},{"bgpExtP":{"attributes":{"annotation":"orchestrator:msc","descr":"","nameAlias":"","userdom":":all:"}}}]}}]}}]}
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "annotation": "",
+                    "descr": "",
+                    "dn": "uni/tn-infra",
+                    "name": "infra",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "userdom": "all"
+                },
+                "children": [
+                    {
+                        "vnsSvcCont": {
+                            "attributes": {
+                                "annotation": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "ospfIfPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:msc",
+                                "cost": "unspecified",
+                                "ctrl": "mtu-ignore",
+                                "deadIntvl": "40",
+                                "descr": "",
+                                "helloIntvl": "10",
+                                "name": "msc-ospf-policy-default",
+                                "nameAlias": "",
+                                "nwT": "bcast",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "pfxSuppress": "inherit",
+                                "prio": "1",
+                                "rexmitIntvl": "5",
+                                "userdom": ":all:",
+                                "xmitDelay": "1"
+                            }
+                        }
+                    },
+                    {
+                        "mplsLabelPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "maxDynamicLabel": "525286",
+                                "maxStaticLabel": "0",
+                                "minDynamicLabel": "16",
+                                "minStaticLabel": "0",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "userdom": "all"
+                            },
+                            "children": [
+                                {
+                                    "mplsSrgbLabelPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "localId": "1",
+                                            "maxSrgbLabel": "23999",
+                                            "minSrgbLabel": "16000",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "mldSnoopPol": {
+                            "attributes": {
+                                "adminSt": "disabled",
+                                "annotation": "",
+                                "ctrl": "opt-flood,querier",
+                                "descr": "",
+                                "lastMbrIntvl": "1",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "queryIntvl": "125",
+                                "rspIntvl": "10",
+                                "startQueryCnt": "2",
+                                "startQueryIntvl": "31",
+                                "userdom": "all",
+                                "ver": "v2"
+                            }
+                        }
+                    },
+                    {
+                        "aaaDomainRef": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "infra",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "qosDscpTransPol": {
+                            "attributes": {
+                                "adminSt": "disabled",
+                                "annotation": "",
+                                "control": "CS0",
+                                "descr": "",
+                                "level1": "CS1",
+                                "level2": "CS2",
+                                "level3": "CS3",
+                                "level4": "AF11",
+                                "level5": "AF21",
+                                "level6": "AF31",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "policy": "CS4",
+                                "span": "CS5",
+                                "traceroute": "CS6",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvAp": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "access",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "userdom": "all"
+                            },
+                            "children": [
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "default",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": "all"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "default",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvAp": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "ave-ctrl",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "userdom": "all"
+                            },
+                            "children": [
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "ave-ctrl",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": "all"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "ave-ctrl",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvFabricExtConnP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "id": "1",
+                                "name": "",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "rt": "extended:as2-nn4:5:16",
+                                "siteId": "3",
+                                "userdom": ":all:"
+                            },
+                            "children": [
+                                {
+                                    "l3extFabricExtRoutingP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "name": "default",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.3.0.52/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.204.0.0/25",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.203.0.128/25",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.203.0.52/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "ip": "10.201.0.52/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.203.0.116/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "ip": "10.201.0.116/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.3.0.128/25",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.203.0.0/25",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "ip": "10.202.0.116/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "",
+                                                        "descr": "",
+                                                        "ip": "10.202.0.52/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.3.0.116/28",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "ip": "10.3.0.0/25",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvSiteConnP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "bgpAsn": "0",
+                                            "descr": "",
+                                            "id": "0",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "userdom": ":all:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvIntersiteMcastConnP": {
+                                                    "attributes": {
+                                                        "addr": "0.0.0.0",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "ownerKey": "",
+                                                        "ownerTag": "",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvPodConnP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "assocIntersitePodId": "0",
+                                            "descr": "",
+                                            "id": "1",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "userdom": ":all:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvIp": {
+                                                    "attributes": {
+                                                        "addr": "100.1.1.3/32",
+                                                        "annotation": "",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvIntersiteConnP": {
+                                                    "attributes": {
+                                                        "addr": "100.2.1.100/32",
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "ownerKey": "",
+                                                        "ownerTag": "",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "fvPeeringP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "type": "automatic_with_full_mesh",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvIntersitePeeringP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "descr": "",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "type": "automatic_with_full_mesh",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "tagAnnotation": {
+                                        "attributes": {
+                                            "key": "mscSiteName",
+                                            "userdom": ":all:",
+                                            "value": "aci-dev-01"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvIntersiteMcastConnP": {
+                                        "attributes": {
+                                            "addr": "104.1.1.100/32",
+                                            "annotation": "orchestrator:msc",
+                                            "descr": "",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "cloudsecControl": {
+                                        "attributes": {
+                                            "adminSt": "disabled",
+                                            "annotation": "",
+                                            "descr": "",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "udpPortCtrl": "unassigned",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvRsTenantMonPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnMonEPGPolName": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvBD": {
+                            "attributes": {
+                                "OptimizeWanBandwidth": "no",
+                                "annotation": "",
+                                "arpFlood": "no",
+                                "descr": "",
+                                "enableRogueExceptMac": "no",
+                                "epClear": "no",
+                                "epMoveDetectMode": "",
+                                "hostBasedRouting": "no",
+                                "intersiteBumTrafficAllow": "no",
+                                "intersiteL2Stretch": "no",
+                                "ipLearning": "yes",
+                                "ipv6McastAllow": "no",
+                                "limitIpLearnToSubnets": "yes",
+                                "llAddr": "::",
+                                "mac": "00:22:BD:F8:19:FF",
+                                "mcastARPDrop": "no",
+                                "mcastAllow": "no",
+                                "multiDstPktAct": "bd-flood",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "serviceBdRoutingDisable": "no",
+                                "type": "regular",
+                                "unicastRoute": "yes",
+                                "unkMacUcastAct": "proxy",
+                                "unkMcastAct": "flood",
+                                "userdom": "all",
+                                "v6unkMcastAct": "flood",
+                                "vmac": "not-applicable"
+                            },
+                            "children": [
+                                {
+                                    "fvRsMldsn": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnMldSnoopPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsIgmpsn": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnIgmpSnoopPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtx": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnFvCtxName": "overlay-1",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBdToEpRet": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "resolveAct": "resolve",
+                                            "tnFvEpRetPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBDToNdP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnNdIfPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvBD": {
+                            "attributes": {
+                                "OptimizeWanBandwidth": "no",
+                                "annotation": "",
+                                "arpFlood": "no",
+                                "descr": "",
+                                "enableRogueExceptMac": "no",
+                                "epClear": "no",
+                                "epMoveDetectMode": "",
+                                "hostBasedRouting": "no",
+                                "intersiteBumTrafficAllow": "no",
+                                "intersiteL2Stretch": "no",
+                                "ipLearning": "yes",
+                                "ipv6McastAllow": "no",
+                                "limitIpLearnToSubnets": "yes",
+                                "llAddr": "::",
+                                "mac": "00:22:BD:F8:19:FF",
+                                "mcastARPDrop": "no",
+                                "mcastAllow": "no",
+                                "multiDstPktAct": "bd-flood",
+                                "name": "ave-ctrl",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "serviceBdRoutingDisable": "no",
+                                "type": "regular",
+                                "unicastRoute": "yes",
+                                "unkMacUcastAct": "proxy",
+                                "unkMcastAct": "flood",
+                                "userdom": "all",
+                                "v6unkMcastAct": "flood",
+                                "vmac": "not-applicable"
+                            },
+                            "children": [
+                                {
+                                    "fvRsMldsn": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnMldSnoopPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsIgmpsn": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnIgmpSnoopPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtx": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnFvCtxName": "ave-ctrl",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBdToEpRet": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "resolveAct": "resolve",
+                                            "tnFvEpRetPolName": "ave-ctrl",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBDToNdP": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnNdIfPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvCtx": {
+                            "attributes": {
+                                "annotation": "",
+                                "bdEnforcedEnable": "no",
+                                "descr": "",
+                                "ipDataPlaneLearning": "enabled",
+                                "knwMcastAct": "permit",
+                                "name": "ave-ctrl",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "pcEnfDir": "ingress",
+                                "pcEnfPref": "enforced",
+                                "userdom": "all",
+                                "vrfIndex": "0"
+                            },
+                            "children": [
+                                {
+                                    "fvRsVrfValidationPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extVrfValidationPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "vzAny": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "matchT": "AtleastOne",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "prefGrMemb": "disabled",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsOspfCtxPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnOspfCtxPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToEpRet": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnFvEpRetPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToExtRouteTagPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extRouteTagPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBgpCtxPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnBgpCtxPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvCtx": {
+                            "attributes": {
+                                "annotation": "",
+                                "bdEnforcedEnable": "no",
+                                "descr": "",
+                                "ipDataPlaneLearning": "enabled",
+                                "knwMcastAct": "permit",
+                                "name": "overlay-1",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "pcEnfDir": "ingress",
+                                "pcEnfPref": "enforced",
+                                "userdom": "all",
+                                "vrfIndex": "0"
+                            },
+                            "children": [
+                                {
+                                    "fvRsVrfValidationPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extVrfValidationPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "vzAny": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "matchT": "AtleastOne",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "prefGrMemb": "disabled",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsOspfCtxPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnOspfCtxPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToEpRet": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnFvEpRetPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToExtRouteTagPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extRouteTagPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBgpCtxPol": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "tnBgpCtxPolName": "msc-bgp-timer-policy-default",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "cloudsecIfPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "forceClean": "disabled",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "sakExpiryTime": "15",
+                                "stopRekey": "no",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvEpRetPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "bounceAgeIntvl": "150",
+                                "bounceTrig": "protocol",
+                                "descr": "",
+                                "holdIntvl": "5",
+                                "localEpAgeIntvl": "120",
+                                "moveFreq": "1",
+                                "name": "ave-ctrl",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "remoteEpAgeIntvl": "120",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "igmpSnoopPol": {
+                            "attributes": {
+                                "adminSt": "enabled",
+                                "annotation": "",
+                                "ctrl": "opt-flood,querier",
+                                "descr": "",
+                                "lastMbrIntvl": "1",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "queryIntvl": "125",
+                                "rspIntvl": "10",
+                                "startQueryCnt": "2",
+                                "startQueryIntvl": "31",
+                                "userdom": "all",
+                                "ver": "v3"
+                            }
+                        }
+                    },
+                    {
+                        "bgpCtxPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:msc",
+                                "descr": "",
+                                "grCtrl": "helper",
+                                "holdIntvl": "180",
+                                "kaIntvl": "60",
+                                "maxAsLimit": "0",
+                                "name": "msc-bgp-timer-policy-default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "staleIntvl": "default",
+                                "userdom": ":all:"
+                            }
+                        }
+                    },
+                    {
+                        "l3extOut": {
+                            "attributes": {
+                                "annotation": "orchestrator:msc",
+                                "descr": "",
+                                "enforceRtctrl": "export",
+                                "mplsEnabled": "no",
+                                "name": "intersite",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:"
+                            },
+                            "children": [
+                                {
+                                    "ospfExtP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "areaCost": "1",
+                                            "areaCtrl": "redistribute,summary",
+                                            "areaId": "backbone",
+                                            "areaType": "regular",
+                                            "descr": "",
+                                            "multipodInternal": "no",
+                                            "nameAlias": "",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extRsEctx": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "tnFvCtxName": "overlay-1",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extProvLbl": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "descr": "",
+                                            "name": "hcloudGolfLabel",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "tag": "yellow-green",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extLNodeP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "configIssues": "",
+                                            "descr": "",
+                                            "name": "node-201-profile",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "tag": "yellow-green",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:"
+                                        },
+                                        "children": [
+                                            {
+                                                "l3extRsNodeL3OutAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:msc",
+                                                        "configIssues": "",
+                                                        "rtrId": "201.1.1.1",
+                                                        "rtrIdLoopBack": "no",
+                                                        "tDn": "topology/pod-1/node-201",
+                                                        "userdom": ":all:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extLoopBackIfP": {
+                                                                "attributes": {
+                                                                    "addr": "201.1.1.1",
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extIntersiteLoopBackIfP": {
+                                                                "attributes": {
+                                                                    "addr": "201.1.1.1",
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extInfraNodeP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "descr": "",
+                                                                    "fabricExtCtrlPeering": "no",
+                                                                    "fabricExtIntersiteCtrlPeering": "yes",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "spineRole": "msite-speaker",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extLIfP": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:msc",
+                                                        "descr": "",
+                                                        "name": "interface-201-1-48-profile",
+                                                        "nameAlias": "",
+                                                        "ownerKey": "",
+                                                        "ownerTag": "",
+                                                        "prio": "unspecified",
+                                                        "tag": "yellow-green",
+                                                        "userdom": ":all:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "ospfIfP": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "authKeyId": "1",
+                                                                    "authType": "none",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "ospfRsIfPol": {
+                                                                            "attributes": {
+                                                                                "annotation": "orchestrator:msc",
+                                                                                "tnOspfIfPolName": "broadcast",
+                                                                                "userdom": "all"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsPathL3OutAtt": {
+                                                                "attributes": {
+                                                                    "addr": "192.168.7.1/24",
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "autostate": "disabled",
+                                                                    "descr": "",
+                                                                    "encap": "vlan-4",
+                                                                    "encapScope": "local",
+                                                                    "ifInstT": "sub-interface",
+                                                                    "ipv6Dad": "enabled",
+                                                                    "isMultiPodDirect": "no",
+                                                                    "llAddr": "::",
+                                                                    "mac": "00:22:BD:F8:19:FF",
+                                                                    "mode": "regular",
+                                                                    "mtu": "1500",
+                                                                    "tDn": "topology/pod-1/paths-201/pathep-[eth1/48]",
+                                                                    "targetDscp": "unspecified",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsNdIfPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnNdIfPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsLIfPCustQosPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosCustomPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsIngressQosDppPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosDppPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsEgressQosDppPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosDppPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsArpIfPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnArpIfPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "bgpInfraPeerP": {
+                                                    "attributes": {
+                                                        "addr": "10.203.0.116",
+                                                        "addrTCtrl": "af-ucast",
+                                                        "adminSt": "enabled",
+                                                        "allowedSelfAsCnt": "3",
+                                                        "annotation": "orchestrator:msc",
+                                                        "capability": "",
+                                                        "ctrl": "send-com,send-ext-com",
+                                                        "ctrlExt": "",
+                                                        "dataPlaneAddr": "0.0.0.0",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "peerCtrl": "",
+                                                        "peerT": "wan",
+                                                        "privateASctrl": "",
+                                                        "remoteIntersiteRR": "no",
+                                                        "srcIfT": "l3out-loopback",
+                                                        "trustCtrl": "untrusted",
+                                                        "ttl": "16",
+                                                        "userdom": ":all:",
+                                                        "weight": "0"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "bgpRsPeerPfxPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnBgpPeerPfxPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "bgpAsP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "asn": "65202",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "bgpInfraPeerP": {
+                                                    "attributes": {
+                                                        "addr": "10.3.0.116",
+                                                        "addrTCtrl": "af-ucast",
+                                                        "adminSt": "enabled",
+                                                        "allowedSelfAsCnt": "3",
+                                                        "annotation": "orchestrator:msc",
+                                                        "capability": "",
+                                                        "ctrl": "send-com,send-ext-com",
+                                                        "ctrlExt": "",
+                                                        "dataPlaneAddr": "0.0.0.0",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "peerCtrl": "",
+                                                        "peerT": "wan",
+                                                        "privateASctrl": "",
+                                                        "remoteIntersiteRR": "no",
+                                                        "srcIfT": "l3out-loopback",
+                                                        "trustCtrl": "untrusted",
+                                                        "ttl": "16",
+                                                        "userdom": ":all:",
+                                                        "weight": "0"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "bgpRsPeerPfxPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnBgpPeerPfxPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "bgpAsP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "asn": "65201",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "bgpInfraPeerP": {
+                                                    "attributes": {
+                                                        "addr": "10.203.0.52",
+                                                        "addrTCtrl": "af-ucast",
+                                                        "adminSt": "enabled",
+                                                        "allowedSelfAsCnt": "3",
+                                                        "annotation": "orchestrator:msc",
+                                                        "capability": "",
+                                                        "ctrl": "send-com,send-ext-com",
+                                                        "ctrlExt": "",
+                                                        "dataPlaneAddr": "0.0.0.0",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "peerCtrl": "",
+                                                        "peerT": "wan",
+                                                        "privateASctrl": "",
+                                                        "remoteIntersiteRR": "no",
+                                                        "srcIfT": "l3out-loopback",
+                                                        "trustCtrl": "untrusted",
+                                                        "ttl": "16",
+                                                        "userdom": ":all:",
+                                                        "weight": "0"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "bgpRsPeerPfxPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnBgpPeerPfxPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "bgpAsP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "asn": "65202",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "bgpInfraPeerP": {
+                                                    "attributes": {
+                                                        "addr": "10.3.0.52",
+                                                        "addrTCtrl": "af-ucast",
+                                                        "adminSt": "enabled",
+                                                        "allowedSelfAsCnt": "3",
+                                                        "annotation": "orchestrator:msc",
+                                                        "capability": "",
+                                                        "ctrl": "send-com,send-ext-com",
+                                                        "ctrlExt": "",
+                                                        "dataPlaneAddr": "0.0.0.0",
+                                                        "descr": "",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "peerCtrl": "",
+                                                        "peerT": "wan",
+                                                        "privateASctrl": "",
+                                                        "remoteIntersiteRR": "no",
+                                                        "srcIfT": "l3out-loopback",
+                                                        "trustCtrl": "untrusted",
+                                                        "ttl": "16",
+                                                        "userdom": ":all:",
+                                                        "weight": "0"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "bgpRsPeerPfxPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnBgpPeerPfxPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "bgpAsP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:msc",
+                                                                    "asn": "65201",
+                                                                    "descr": "",
+                                                                    "name": "",
+                                                                    "nameAlias": "",
+                                                                    "userdom": ":all:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "l3extInstP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "matchT": "AtleastOne",
+                                            "name": "intersiteInstP",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "bgpExtP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:msc",
+                                            "descr": "",
+                                            "nameAlias": "",
+                                            "userdom": ":all:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
