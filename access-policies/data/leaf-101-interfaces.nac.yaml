@@ -1,9 +1,0 @@
-apic:
-  new_interface_configuration: true
-  interface_policies:
-    nodes:
-      - id: 101
-        interfaces:
-          - port: 40
-            description: testing with NAC
-            policy_group: test

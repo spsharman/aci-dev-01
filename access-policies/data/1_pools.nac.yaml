@@ -1,0 +1,273 @@
+apic:
+  new_interface_configuration: false
+  access_policies:
+
+# VLAN pools  
+    vlan_pools:
+      - name: external-switches
+        allocation: static
+        ranges:
+          - from: 4
+            description: multisite ipn peering
+          - from: 5
+            description: fabric inband management
+          - from: 113
+            description: L3 peering to r40-c6506a
+          - from: 114
+            description: L3 peering to r40-c6506b
+          - from: 115
+            description: L3 peering to r40-c6506a
+          - from: 116
+            description: L3 peering to r40-c6506b
+          - from: 986
+            description: hx-dev-01 - vmotion
+          - from: 987
+            description: hx-dev-01 - storage
+          - from: 992
+            description: hx-dev-01 - esx-mgmt
+          - from: 3001
+            description: public ip range 64.103.44.48/28
+          - from: 3002
+            description: public ip range 64.103.44.64/27
+          - from: 3003
+            description: public ip range 64.103.44.96/28
+      - name: fabric-inband-mgmt
+        allocation: static
+        ranges:
+          - from: 5
+            description: fabric inband management
+      - name: hx-dev-01-vds-01
+        allocation: dynamic
+        ranges:
+          - from: 4
+            description: multisite ipn peering
+            allocation: static
+          - from: 1001
+            to: 1100
+            description: dynamic vlans for VMM integration
+          - from: 1201
+            to: 1202
+            description: primary/secondary PVLANs
+          - from: 1203
+            to: 1204
+            description: primary/secondary PVLANs
+          - from: 1205
+            to: 1206
+            description: primary/secondary PVLANs
+          - from: 1207
+            to: 1208
+            description: primary/secondary PVLANs
+          - from: 1209
+            to: 1210
+            description: primary/secondary PVLANs
+          - from: 1211
+            to: 1212
+            description: primary/secondary PVLANs
+          - from: 1213
+            to: 1214
+            description: primary/secondary PVLANs
+          - from: 1215
+            to: 1216
+            description: primary/secondary PVLANs
+          - from: 1217
+            to: 1218
+            description: primary/secondary PVLANs
+          - from: 1219
+            to: 1220
+            description: primary/secondary PVLANs
+          - from: 1221
+            to: 1222
+            description: primary/secondary PVLANs
+          - from: 1223
+            to: 1224
+            description: primary/secondary PVLANs
+          - from: 1225
+            to: 1226
+            description: primary/secondary PVLANs
+          - from: 1227
+            to: 1228
+            description: primary/secondary PVLANs
+          - from: 1229
+            to: 1230
+            description: primary/secondary PVLANs
+          - from: 1231
+            to: 1232
+            description: primary/secondary PVLANs
+          - from: 1233
+            to: 1234
+            description: primary/secondary PVLANs
+          - from: 1235
+            to: 1236
+            description: primary/secondary PVLANs
+          - from: 1237
+            to: 1238
+            description: primary/secondary PVLANs
+          - from: 1239
+            to: 1240
+            description: primary/secondary PVLANs
+          - from: 1241
+            to: 1242
+            description: primary/secondary PVLANs
+          - from: 1243
+            to: 1244
+            description: primary/secondary PVLANs
+          - from: 1245
+            to: 1246
+            description: primary/secondary PVLANs
+          - from: 1247
+            to: 1248
+            description: primary/secondary PVLANs
+          - from: 1249
+            to: 1250
+            description: primary/secondary PVLANs
+          - from: 1251
+            to: 1252
+            description: primary/secondary PVLANs
+          - from: 1253
+            to: 1254
+            description: primary/secondary PVLANs
+          - from: 1255
+            to: 1256
+            description: primary/secondary PVLANs
+          - from: 1257
+            to: 1258
+            description: primary/secondary PVLANs
+          - from: 1259
+            to: 1260
+            description: primary/secondary PVLANs
+          - from: 1261
+            to: 1262
+            description: primary/secondary PVLANs
+          - from: 1263
+            to: 1264
+            description: primary/secondary PVLANs
+          - from: 1265
+            to: 1266
+            description: primary/secondary PVLANs
+          - from: 1267
+            to: 1268
+            description: primary/secondary PVLANs
+          - from: 1269
+            to: 1270
+            description: primary/secondary PVLANs
+          - from: 3001
+            description: public ip range 64.103.44.48/28
+            allocation: static
+          - from: 3002
+            description: public ip range 64.103.44.64/27
+            allocation: static
+          - from: 3003
+            description: public ip range 64.103.44.96/28
+            allocation: static
+      - name: hx-dev-01-vds-02
+        allocation: static
+        ranges:
+          - from: 6
+            description: ftd-mgmt
+          - from: 7
+            description: ftd-diagnostic
+          - from: 8
+            description: shared-services.vrf-01-ospf-area-0.0.0.1
+          - from: 9
+            description: tn-demo-01 L3out to csr1kv
+          - from: 10
+            description: tn-demo-02 L3out to csr1kv
+          - from: 11
+            description: tn-demo-05 L3out to csr1kv
+          - from: 12
+            description: ftdv-01-eth5-gig-0-2
+          - from: 13
+            description: ftdv-01-eth5-gig-0-3
+          - from: 14
+            description: ftdv-01-eth5-gig-0-4
+          - from: 15
+            description: undocumented
+          - from: 16
+            description: nkt workloads
+          - from: 17
+            to: 18
+            description: primary/secondary PVLANs
+          - from: 22
+            to: 23
+            description: primary/secondary PVLANs
+          - from: 24
+            to: 25
+            description: primary/secondary PVLANs
+          - from: 27
+            to: 27
+            description: primary/secondary PVLANs
+          - from: 28
+            to: 29
+            description: primary/secondary PVLANs
+          - from: 30
+            description: undocumented
+          - from: 31
+            description: undocumented
+          - from: 32
+            description: undocumented
+          - from: 33
+            description: undocumented
+          - from: 34
+            description: tn-demo-03 L3out to csr1kv
+      - name: hyperflex
+        allocation: static
+        ranges:
+          - from: 5
+            description: fabric inband management
+          - from: 986
+            description: hx-dev-01 vmotion
+          - from: 987
+            description: hx-dev-01 storage
+          - from: 992
+            description: hx-dev-01 esx management
+      - name: mgmt_inb
+        allocation: static
+        ranges:
+          - from: 114
+            description: fabric inband management
+      - name: ucsc-c220m5-vds-01
+        allocation: dynamic
+        ranges:
+          - from: 10
+            to: 11
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 20
+            to: 21
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 30
+            to: 31
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 40
+            to: 41
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 50
+            to: 51
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 60
+            to: 61
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 70
+            to: 71
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 500
+            description: conmurph floating L3out
+            allocation: static
+          - from: 986
+            description: ucsc-c220m5 vmotion
+            allocation: static
+          - from: 992
+            description: ucsc-c220m5 esx management
+            allocation: static
+          - from: 1101
+            to: 1200
+            description: dynamic vlans for VMM integration
+          - from: 1201
+            to: 1300
+            description: dynamic vlans for VMM integration

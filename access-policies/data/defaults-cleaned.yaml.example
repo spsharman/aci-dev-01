@@ -1,0 +1,354 @@
+defaults:
+  apic:
+    access_policies:
+      aaeps:
+        name_suffix: '_nac'
+      fex_interface_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          port_blocks:
+            name_suffix: '_nac'
+      interface_policies:
+        cdp_policies:
+          name_suffix: '_nac'
+        l2_policies:
+          name_suffix: '_nac'
+        link_level_policies:
+          name_suffix: '_nac'
+        lldp_policies:
+          name_suffix: '_nac'
+        mcp_policies:
+          name_suffix: '_nac'
+        port_channel_member_policies:
+          name_suffix: '_nac'
+        port_channel_policies:
+          name_suffix: '_nac'
+        spanning_tree_policies:
+          name_suffix: '_nac'
+        storm_control_policies:
+          name_suffix: '_nac'
+      leaf_interface_policy_groups:
+        name_suffix: '_nac'
+      leaf_interface_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          port_blocks:
+            name_suffix: '_nac'
+          sub_port_blocks:
+            name_suffix: '_nac'
+      leaf_switch_policy_groups:
+        name_suffix: '_nac'
+      leaf_switch_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          node_blocks:
+            name_suffix: '_nac'
+      physical_domains:
+        name_suffix: '_nac'
+      routed_domains:
+        name_suffix: '_nac'
+      span:
+        destination_groups:
+          name_suffix: '_nac'
+        filter_groups:
+          entries:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+        source_groups:
+          name_suffix: '_nac'
+          sources:
+            name_suffix: '_nac'
+      spine_interface_policy_groups:
+        name_suffix: '_nac'
+      spine_interface_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          port_blocks:
+            name_suffix: '_nac'
+      spine_switch_policy_groups:
+        name_suffix: '_nac'
+      spine_switch_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          node_blocks:
+            name_suffix: '_nac'
+      switch_policies:
+        forwarding_scale_policies:
+          name_suffix: '_nac'
+        mst_policies:
+          name_suffix: '_nac'
+        vpc_policies:
+          name_suffix: '_nac'
+      vlan_pools:
+        name_suffix: '_nac'
+      vspan:
+        destination_groups:
+          destinations:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+        sessions:
+          name_suffix: '_nac'
+          sources:
+            name_suffix: '_nac'
+    fabric_policies:
+      aaa:
+        ca_certificates:
+          name_suffix: '_nac'
+        key_rings:
+          name_suffix: '_nac'
+      config_exports:
+        name_suffix: '_nac'
+      dns_policies:
+        name_suffix: '_nac'
+      external_connectivity_policy:
+        name_suffix: '_nac'
+        routing_profiles:
+          name_suffix: '_nac'
+      geolocation:
+        sites:
+          buildings:
+            floors:
+              name_suffix: '_nac'
+              rooms:
+                name_suffix: '_nac'
+                rows:
+                  name_suffix: '_nac'
+                  racks:
+                    name_suffix: '_nac'
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+      l2_mtu_policies:
+        name_suffix: '_nac'
+      leaf_interface_policy_groups:
+        name_suffix: '_nac'
+      leaf_interface_profiles:
+        name_suffix: '_nac'
+      leaf_switch_policy_groups:
+        name_suffix: '_nac'
+      leaf_switch_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          node_blocks:
+            name_suffix: '_nac'
+      monitoring:
+        snmp_traps:
+          name_suffix: '_nac'
+        syslogs:
+          name_suffix: '_nac'
+      pod_policies:
+        date_time_policies:
+          name_suffix: '_nac'
+        management_access_policies:
+          name_suffix: '_nac'
+        snmp_policies:
+          clients:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+      pod_policy_groups:
+        name_suffix: '_nac'
+      pod_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          pod_blocks:
+            name_suffix: '_nac'
+      remote_locations:
+        name_suffix: '_nac'
+      schedulers:
+        name_suffix: '_nac'
+        recurring_windows:
+          name_suffix: '_nac'
+      span:
+        destination_groups:
+          name_suffix: '_nac'
+        source_groups:
+          name_suffix: '_nac'
+          sources:
+            name_suffix: '_nac'
+      spine_interface_policy_groups:
+        name_suffix: '_nac'
+      spine_interface_profiles:
+        name_suffix: '_nac'
+      spine_switch_policy_groups:
+        name_suffix: '_nac'
+      spine_switch_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          node_blocks:
+            name_suffix: '_nac'
+      switch_policies:
+        node_control_policies:
+          name_suffix: '_nac'
+        psu_policies:
+          name_suffix: '_nac'
+      vmware_vmm_domains:
+        credential_policies:
+          name_suffix: '_nac'
+        name_suffix: '_nac'
+        vcenters:
+          name_suffix: '_nac'
+        vswitch:
+          enhanced_lags:
+            name_suffix: '_nac'
+    node_policies:
+      update_groups:
+        name_suffix: '_nac'
+    tenants:
+      application_profiles:
+        endpoint_groups:
+          name_suffix: '_nac'
+          static_endpoints:
+            name_suffix: '_nac'
+          subnets:
+            ip_pools:
+              name_suffix: '_nac'
+          vmware_vmm_domains:
+            name_suffix: '_nac'
+        endpoint_security_groups:
+          name_suffix: '_nac'
+        name_suffix: '_nac'
+      bridge_domains:
+        name_suffix: '_nac'
+      contracts:
+        name_suffix: '_nac'
+        subjects:
+          name_suffix: '_nac'
+      ext_mgmt_instances:
+        name_suffix: '_nac'
+      filters:
+        entries:
+          name_suffix: '_nac'
+        name_suffix: '_nac'
+      imported_contracts:
+        name_suffix: '_nac'
+      inb_endpoint_groups:
+        name_suffix: '_nac'
+      l3outs:
+        export_route_map:
+          contexts:
+            name_suffix: '_nac'
+        external_endpoint_groups:
+          name_suffix: '_nac'
+          route_control_profiles:
+            name_suffix: '_nac'
+          subnets:
+            route_control_profiles:
+              name_suffix: '_nac'
+        import_route_map:
+          contexts:
+            name_suffix: '_nac'
+        name_suffix: '_nac'
+        node_profiles:
+          interface_profiles:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+      oob_contracts:
+        name_suffix: '_nac'
+        subjects:
+          name_suffix: '_nac'
+      oob_endpoint_groups:
+        name_suffix: '_nac'
+      policies:
+        bfd_interface_policies:
+          name_suffix: '_nac'
+        bfd_multihop_node_policies:
+          name_suffix: '_nac'
+        bgp_address_family_context_policies:
+          name_suffix: '_nac'
+        bgp_best_path_policies:
+          name_suffix: '_nac'
+        bgp_peer_prefix_policies:
+          name_suffix: '_nac'
+        bgp_timer_policies:
+          name_suffix: '_nac'
+        custom_qos:
+          name_suffix: '_nac'
+        dhcp_option_policies:
+          name_suffix: '_nac'
+          options:
+            name_suffix: '_nac'
+        dhcp_relay_policies:
+          name_suffix: '_nac'
+        eigrp_interface_policies:
+          name_suffix: '_nac'
+        igmp_interface_policies:
+          name_suffix: '_nac'
+        igmp_snooping_policies:
+          name_suffix: '_nac'
+        ip_sla_policies:
+          name_suffix: '_nac'
+        match_rules:
+          community_terms:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+          regex_community_terms:
+            name_suffix: '_nac'
+        mpls_custom_qos_policies:
+          name_suffix: '_nac'
+        multicast_route_maps:
+          name_suffix: '_nac'
+        nd_interface_policies:
+          name_suffix: '_nac'
+        nd_ra_prefix_policies:
+          name_suffix: '_nac'
+        ospf_interface_policies:
+          name_suffix: '_nac'
+        ospf_timer_policies:
+          name_suffix: '_nac'
+        pim_policies:
+          name_suffix: '_nac'
+        qos:
+          name_suffix: '_nac'
+        route_control_route_maps:
+          contexts:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+        route_tag_policies:
+          name_suffix: '_nac'
+        set_rules:
+          name_suffix: '_nac'
+        span:
+          destination_groups:
+            name_suffix: '_nac'
+          source_groups:
+            name_suffix: '_nac'
+        trust_control_policies:
+          name_suffix: '_nac'
+      services:
+        l4l7_devices:
+          concrete_devices:
+            interfaces:
+              name_suffix: '_nac'
+            name_suffix: '_nac'
+          logical_interfaces:
+            concrete_interfaces:
+              name_suffix: '_nac'
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+        redirect_backup_policies:
+          name_suffix: '_nac'
+        redirect_health_groups:
+          name_suffix: '_nac'
+        redirect_policies:
+          name_suffix: '_nac'
+        service_epg_policies:
+          name_suffix: '_nac'
+        service_graph_templates:
+          name_suffix: '_nac'
+      sr_mpls_l3outs:
+        external_endpoint_groups:
+          name_suffix: '_nac'
+        name_suffix: '_nac'
+        node_profiles:
+          interface_profiles:
+            name_suffix: '_nac'
+          name_suffix: '_nac'
+      vrfs:
+        name_suffix: '_nac'

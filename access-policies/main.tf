@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      version = "2.13.2"
+      version = ">=2.13.2"
     }
   }
 }
@@ -16,14 +16,14 @@ provider "aci" {
 module "aci" {
     # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
   source  = "netascode/nac-aci/aci"
-  version = "0.8.1"
+  version = ">=0.8.1"
 
   yaml_directories = ["data"]
 
   manage_access_policies    = true
   manage_fabric_policies    = false
   manage_pod_policies       = false
-  manage_node_policies      = false
+  manage_node_policies      = true
   manage_interface_policies = true
   manage_tenants            = false
 }
