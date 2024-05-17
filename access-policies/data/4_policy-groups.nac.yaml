@@ -38,5 +38,4 @@ apic:
         aaep: vpc_to_r07-tor
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
-        port_channel_policy: lacp-active
         l2_policy: port-local-vlans   
