@@ -18,9 +18,11 @@ apic:
           admin_state: true
         - name: cdp-disabled
           admin_state: false
+
       l2_policies:
         - name: port-local-vlans
           vlan_scope: portlocal
+
       lldp_policies:
         - name: lldp-enabled
           admin_rx_state: true
@@ -28,9 +30,11 @@ apic:
         - name: lldp-disabled
           admin_rx_state: false
           admin_tx_state: false
+
       mcp_policies:
         - name: mcp-enabled
           admin_state: true
+
       port_channel_policies:
         - name: lacp-active
           mode: active
@@ -50,11 +54,13 @@ apic:
         infra_vlan: false
         physical_domains:
           - fabric-inband-mgmt
+
       - name: hyperflex
         infra_vlan: false
         physical_domains:
           - hx-dev-01-vds-02
           - hyperflex
+
         routed_domains:
           - ajshahid.vrf-01
           - conmurph-01.vrf-01
@@ -73,20 +79,25 @@ apic:
           - shared-services.vrf-03
         # vmware_vmm_domains:
           # - hx-dev-01-vds-01
+
       - name: multisite
         routed_domains:
           - multisite
+
       - name: shared-services.vrf-01-ospf-area-0.0.0.1
         routed_domains:
           - shared-services.vrf-01
+
       - name: ucs-c220m5-vds-01
         routed_domains:
           - conmurph.vrf-01
         # vmware_vmm_domains:
           # - ucsc-c220m5-vds-01
+
       - name: vpc_to_r07-tor
         routed_domains:
           - mgmt_inb
+
         physical_domains:
           - dmz
           - external-switches

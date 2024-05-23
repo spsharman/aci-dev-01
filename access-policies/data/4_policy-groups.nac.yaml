@@ -4,38 +4,44 @@ apic:
 
 # Interface policy groups
     leaf_interface_policy_groups:
+
 # Access port
       - name: fabric-inband-mgmt
         type: access
         aaep: fabric-inband-mgmt
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+
       - name: shared-services.vrf-01-ospf-area-0.0.0.1
         type: access
         aaep: shared-services.vrf-01-ospf-area-0.0.0.1
         cdp_policy: cdp-enabled
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
+
       - name: ucs-c220m5-vds-01
         type: access
         aaep: ucs-c220m5-vds-01
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+
 # Port channel
       - name: hx-dev-01-fi-a
         type: pc
         aaep: hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+
       - name: hx-dev-01-fi-b
         type: pc
         aaep: hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+
 # Virtual port channel
       - name: vpc_to_r07-tor
         type: vpc
         aaep: vpc_to_r07-tor
         cdp_policy: cdp-enabled
-        lldp_policy: lldp-enabled
-        l2_policy: port-local-vlans   
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
