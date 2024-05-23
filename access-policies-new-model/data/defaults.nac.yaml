@@ -1,0 +1,50 @@
+---
+defaults:
+  apic:
+    access_policies:
+      vlan_pools:
+        name_suffix: '_nac'
+
+      physical_domains:
+        name_suffix: '_nac'
+
+      routed_domains:
+        name_suffix: '_nac'
+
+      aaeps:
+        name_suffix: '_nac'
+
+      interface_policies:
+        cdp_policies:
+          name_suffix: '_nac'
+        l2_policies:
+          name_suffix: '_nac'
+        lldp_policies:
+          name_suffix: '_nac'
+        mcp_policies:
+          name_suffix: '_nac'
+        port_channel_policies:
+          name_suffix: '_nac'
+
+      leaf_interface_policy_groups:
+        name_suffix: '_nac'
+
+      leaf_interface_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          port_blocks:
+            name_suffix: '_nac'
+          sub_port_blocks:
+            name_suffix: '_nac'
+
+      leaf_switch_profiles:
+        name_suffix: '_nac'
+        selectors:
+          name_suffix: '_nac'
+          node_blocks:
+            name_suffix: '_nac'
+
+    node_policies:
+      vpc_groups:
+        name_suffix: '_nac'
