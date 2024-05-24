@@ -4,13 +4,13 @@ apic:
     nodes:
       - id: 101
         role: leaf
-        name: aci-dev-01-leaf-101
-        serial_number: FDO22130VGK
+        # name: aci-dev-01-leaf-101
+        # serial_number: FDO22130VGK
 
       - id: 102
         role: leaf 
-        name: aci-dev-01-leaf-102
-        serial_number: FDO22050E83
+        # name: aci-dev-01-leaf-102
+        # serial_number: FDO22050E83
 
   interface_policies:
     nodes:
