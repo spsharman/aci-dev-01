@@ -1,1 +1,1060 @@
-{"totalCount":"1","imdata":[{"fvTenant":{"attributes":{"annotation":"","descr":"","dn":"uni/tn-containers","name":"containers","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"},"children":[{"bgpCtxAfPol":{"attributes":{"annotation":"orchestrator:terraform","ctrl":"","descr":"","eDist":"20","iDist":"200","localDist":"220","maxEcmp":"64","maxEcmpIbgp":"64","maxLocalEcmp":"0","name":"CalicoL3OUT","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:common:"}}},{"bgpCtxAfPol":{"attributes":{"annotation":"orchestrator:terraform","ctrl":"","descr":"","eDist":"20","iDist":"200","localDist":"220","maxEcmp":"64","maxEcmpIbgp":"64","maxLocalEcmp":"0","name":"K8s_L3OUT","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:common:"}}},{"fvCtx":{"attributes":{"annotation":"","bdEnforcedEnable":"no","descr":"","ipDataPlaneLearning":"enabled","knwMcastAct":"permit","name":"containers.vrf-01","nameAlias":"","ownerKey":"","ownerTag":"","pcEnfDir":"ingress","pcEnfPref":"enforced","userdom":":all:mgmt:common:","vrfIndex":"0"},"children":[{"fvRsVrfValidationPol":{"attributes":{"annotation":"","tnL3extVrfValidationPolName":"","userdom":"all"}}},{"vzAny":{"attributes":{"annotation":"","descr":"","matchT":"AtleastOne","name":"","nameAlias":"","prefGrMemb":"disabled","userdom":"all"}}},{"fvRsOspfCtxPol":{"attributes":{"annotation":"","tnOspfCtxPolName":"","userdom":"all"}}},{"fvRsCtxToEpRet":{"attributes":{"annotation":"","tnFvEpRetPolName":"","userdom":"all"}}},{"fvRsCtxToBgpCtxAfPol":{"attributes":{"af":"ipv4-ucast","annotation":"","tnBgpCtxAfPolName":"K8s_L3OUT","userdom":":all:common:"}}},{"fvRsCtxToExtRouteTagPol":{"attributes":{"annotation":"","tnL3extRouteTagPolName":"","userdom":"all"}}},{"fvRsBgpCtxPol":{"attributes":{"annotation":"","tnBgpCtxPolName":"","userdom":"all"}}}]}},{"bgpPeerPfxPol":{"attributes":{"action":"reject","annotation":"orchestrator:terraform","descr":"","maxPfx":"500","name":"K8s_L3OUT","nameAlias":"","ownerKey":"","ownerTag":"","restartTime":"infinite","thresh":"75","userdom":":all:common:"}}},{"bgpPeerPfxPol":{"attributes":{"action":"reject","annotation":"orchestrator:terraform","descr":"","maxPfx":"500","name":"CalicoL3OUT","nameAlias":"","ownerKey":"","ownerTag":"","restartTime":"infinite","thresh":"75","userdom":":all:common:"}}},{"vzFilter":{"attributes":{"annotation":"","descr":"","name":"permit-any","nameAlias":"","ownerKey":"","ownerTag":"","userdom":":all:mgmt:common:"},"children":[{"vzEntry":{"attributes":{"annotation":"","applyToFrag":"no","arpOpc":"unspecified","dFromPort":"unspecified","dToPort":"unspecified","descr":"","etherT":"unspecified","icmpv4T":"unspecified","icmpv6T":"unspecified","matchDscp":"unspecified","name":"unspecified","nameAlias":"","prot":"unspecified","sFromPort":"unspecified","sToPort":"unspecified","stateful":"no","tcpRules":"","userdom":":all:mgmt:common:"}}}]}},{"rtctrlSubjP":{"attributes":{"annotation":"orchestrator:terraform","descr":"","name":"K8s_L3OUT-export-match","nameAlias":"","userdom":":all:common:"},"children":[{"rtctrlMatchRtDest":{"attributes":{"aggregate":"yes","annotation":"orchestrator:terraform","descr":"","fromPfxLen":"0","ip":"192.168.17.0/24","name":"","nameAlias":"","toPfxLen":"0","userdom":":all:common:"}}}]}},{"rtctrlSubjP":{"attributes":{"annotation":"orchestrator:terraform","descr":"","name":"K8s_L3OUT-import-match","nameAlias":"","userdom":":all:common:"},"children":[{"rtctrlMatchRtDest":{"attributes":{"aggregate":"yes","annotation":"orchestrator:terraform","descr":"","fromPfxLen":"0","ip":"192.168.18.0/24","name":"","nameAlias":"","toPfxLen":"0","userdom":":all:common:"}}},{"rtctrlMatchRtDest":{"attributes":{"aggregate":"yes","annotation":"orchestrator:terraform","descr":"","fromPfxLen":"0","ip":"192.168.19.0/24","name":"","nameAlias":"","toPfxLen":"0","userdom":":all:common:"}}},{"rtctrlMatchRtDest":{"attributes":{"aggregate":"yes","annotation":"orchestrator:terraform","descr":"","fromPfxLen":"0","ip":"192.168.16.0/24","name":"","nameAlias":"","toPfxLen":"0","userdom":":all:common:"}}},{"rtctrlMatchRtDest":{"attributes":{"aggregate":"yes","annotation":"orchestrator:terraform","descr":"","fromPfxLen":"0","ip":"192.168.17.0/24","name":"","nameAlias":"","toPfxLen":"0","userdom":":all:common:"}}}]}},{"vnsSvcCont":{"attributes":{"annotation":"","userdom":"all"}}},{"fvEpTags":{"attributes":{"annotation":"","userdom":"all"}}},{"bgpBestPathCtrlPol":{"attributes":{"annotation":"orchestrator:terraform","ctrl":"asPathMultipathRelax","descr":"","name":"K8s_L3OUT-Relax-AS","nameAlias":"","userdom":":all:common:"}}},{"bgpBestPathCtrlPol":{"attributes":{"annotation":"orchestrator:terraform","ctrl":"asPathMultipathRelax","descr":"","name":"CalicoL3OUT-Relax-AS","nameAlias":"","userdom":":all:common:"}}},{"fvRsTenantMonPol":{"attributes":{"annotation":"","tnMonEPGPolName":"","userdom":"all"}}},{"bgpCtxPol":{"attributes":{"annotation":"orchestrator:terraform","descr":"","grCtrl":"helper","holdIntvl":"3","kaIntvl":"1","maxAsLimit":"1","name":"K8s_L3OUT-Timers","nameAlias":"","ownerKey":"","ownerTag":"","staleIntvl":"6","userdom":":all:common:"}}},{"bgpCtxPol":{"attributes":{"annotation":"orchestrator:terraform","descr":"","grCtrl":"helper","holdIntvl":"3","kaIntvl":"1","maxAsLimit":"1","name":"CalicoL3OUT-Timers","nameAlias":"","ownerKey":"","ownerTag":"","staleIntvl":"6","userdom":":all:common:"}}},{"l3extOut":{"attributes":{"annotation":"orchestrator:terraform","descr":"","enforceRtctrl":"export,import","mplsEnabled":"no","name":"K8s_L3OUT","nameAlias":"","ownerKey":"","ownerTag":"","targetDscp":"unspecified","userdom":":all:common:"},"children":[{"rtctrlProfile":{"attributes":{"annotation":"orchestrator:terraform","autoContinue":"no","descr":"","name":"default-import","nameAlias":"","ownerKey":"","ownerTag":"","type":"combinable","userdom":":all:common:"},"children":[{"rtctrlCtxP":{"attributes":{"action":"permit","annotation":"orchestrator:terraform","descr":"","name":"import_cluster_subnets","nameAlias":"","order":"0","userdom":":all:common:"},"children":[{"rtctrlRsCtxPToSubjP":{"attributes":{"annotation":"orchestrator:terraform","tnRtctrlSubjPName":"K8s_L3OUT-import-match","userdom":":all:common:"}}}]}}]}},{"rtctrlProfile":{"attributes":{"annotation":"orchestrator:terraform","autoContinue":"no","descr":"","name":"default-export","nameAlias":"","ownerKey":"","ownerTag":"","type":"combinable","userdom":":all:common:"},"children":[{"rtctrlCtxP":{"attributes":{"action":"permit","annotation":"orchestrator:terraform","descr":"","name":"export_pod_subnet","nameAlias":"","order":"0","userdom":":all:common:"},"children":[{"rtctrlRsCtxPToSubjP":{"attributes":{"annotation":"orchestrator:terraform","tnRtctrlSubjPName":"K8s_L3OUT-export-match","userdom":":all:common:"}}}]}}]}},{"l3extRsL3DomAtt":{"attributes":{"annotation":"","tDn":"uni/l3dom-containers.vrf-01","userdom":":all:mgmt:common:"}}},{"l3extRsEctx":{"attributes":{"annotation":"orchestrator:terraform","tnFvCtxName":"containers.vrf-01","userdom":"all"}}},{"l3extLNodeP":{"attributes":{"annotation":"orchestrator:terraform","configIssues":"","descr":"","name":"node_profile_FL3out","nameAlias":"","ownerKey":"","ownerTag":"","tag":"yellow-green","targetDscp":"unspecified","userdom":":all:common:"},"children":[{"l3extLIfP":{"attributes":{"annotation":"orchestrator:terraform","descr":"","name":"int_profile_FL3out","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","tag":"yellow-green","userdom":":all:common:"},"children":[{"l3extVirtualLIfP":{"attributes":{"addr":"192.168.16.1/24","annotation":"orchestrator:terraform","autostate":"enabled","descr":"","encap":"vlan-16","encapScope":"local","ifInstT":"ext-svi","ipv6Dad":"enabled","llAddr":"::","mac":"00:22:BD:F8:19:FF","mode":"regular","mtu":"9000","name":"","nodeDn":"topology/pod-1/node-101","targetDscp":"unspecified","userdom":":all:common:"},"children":[{"l3extRsDynPathAtt":{"attributes":{"annotation":"orchestrator:terraform","encap":"unknown","floatingAddr":"192.168.16.254/24","forgedTransmit":"Disabled","macChange":"Disabled","promMode":"Disabled","tDn":"uni/phys-hyperflex","userdom":":all:common:"}}},{"l3extIp":{"attributes":{"addr":"192.168.16.253/24","annotation":"orchestrator:terraform","descr":"","ipv6Dad":"enabled","name":"","nameAlias":"","userdom":":all:common:"}}},{"bgpPeerP":{"attributes":{"addr":"192.168.16.0/24","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:terraform","capability":"","connectivityType":"tenant","ctrl":"as-override,dis-peer-as-check","ctrlExt":"","descr":"","name":"","nameAlias":"","peerCtrl":"","privateASctrl":"","ttl":"1","userdom":":all:common:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"orchestrator:terraform","tnBgpPeerPfxPolName":"K8s_L3OUT","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"","asn":"65002","descr":"","name":"","nameAlias":"","userdom":":all:common:"}}}]}}]}},{"l3extVirtualLIfP":{"attributes":{"addr":"192.168.16.2/24","annotation":"orchestrator:terraform","autostate":"enabled","descr":"","encap":"vlan-16","encapScope":"local","ifInstT":"ext-svi","ipv6Dad":"enabled","llAddr":"::","mac":"00:22:BD:F8:19:FF","mode":"regular","mtu":"9000","name":"","nodeDn":"topology/pod-1/node-102","targetDscp":"unspecified","userdom":":all:common:"},"children":[{"l3extRsDynPathAtt":{"attributes":{"annotation":"orchestrator:terraform","encap":"unknown","floatingAddr":"192.168.16.254/24","forgedTransmit":"Disabled","macChange":"Disabled","promMode":"Disabled","tDn":"uni/phys-hyperflex","userdom":":all:common:"}}},{"l3extIp":{"attributes":{"addr":"192.168.16.253/24","annotation":"orchestrator:terraform","descr":"","ipv6Dad":"enabled","name":"","nameAlias":"","userdom":":all:common:"}}},{"bgpPeerP":{"attributes":{"addr":"192.168.16.0/24","addrTCtrl":"af-ucast","adminSt":"enabled","allowedSelfAsCnt":"3","annotation":"orchestrator:terraform","capability":"","connectivityType":"tenant","ctrl":"as-override,dis-peer-as-check","ctrlExt":"","descr":"","name":"","nameAlias":"","peerCtrl":"","privateASctrl":"","ttl":"1","userdom":":all:common:","weight":"0"},"children":[{"bgpRsPeerPfxPol":{"attributes":{"annotation":"orchestrator:terraform","tnBgpPeerPfxPolName":"K8s_L3OUT","userdom":"all"}}},{"bgpAsP":{"attributes":{"annotation":"","asn":"65002","descr":"","name":"","nameAlias":"","userdom":":all:common:"}}}]}}]}},{"l3extRsNdIfPol":{"attributes":{"annotation":"","tnNdIfPolName":"","userdom":"all"}}},{"l3extRsLIfPCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}},{"l3extRsIngressQosDppPol":{"attributes":{"annotation":"","tnQosDppPolName":"","userdom":"all"}}},{"l3extRsEgressQosDppPol":{"attributes":{"annotation":"","tnQosDppPolName":"","userdom":"all"}}},{"l3extRsArpIfPol":{"attributes":{"annotation":"","tnArpIfPolName":"","userdom":"all"}}}]}},{"l3extRsNodeL3OutAtt":{"attributes":{"annotation":"orchestrator:terraform","configIssues":"","rtrId":"102.2.1.1","rtrIdLoopBack":"no","tDn":"topology/pod-1/node-102","userdom":":all:common:"}}},{"l3extRsNodeL3OutAtt":{"attributes":{"annotation":"orchestrator:terraform","configIssues":"","rtrId":"101.2.1.1","rtrIdLoopBack":"no","tDn":"topology/pod-1/node-101","userdom":":all:common:"}}},{"bgpProtP":{"attributes":{"annotation":"orchestrator:terraform","name":"","nameAlias":"","userdom":":all:common:"},"children":[{"bgpRsBgpNodeCtxPol":{"attributes":{"annotation":"orchestrator:terraform","tnBgpCtxPolName":"K8s_L3OUT-Timers","userdom":"all"}}},{"bgpRsBestPathCtrlPol":{"attributes":{"annotation":"","tnBgpBestPathCtrlPolName":"K8s_L3OUT-Relax-AS","userdom":":all:common:"}}}]}}]}},{"l3extInstP":{"attributes":{"annotation":"orchestrator:terraform","descr":"","exceptionTag":"","floodOnEncap":"disabled","matchT":"AtleastOne","name":"catch_all","nameAlias":"","pcEnfPref":"unenforced","prefGrMemb":"exclude","prio":"unspecified","targetDscp":"unspecified","userdom":":all:common:"},"children":[{"fvRsProv":{"attributes":{"annotation":"","intent":"install","matchT":"AtleastOne","prio":"unspecified","tnVzBrCPName":"permit-to-tn-containers","userdom":":all:mgmt:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"shared-rtctrl","annotation":"orchestrator:terraform","descr":"","ip":"192.168.19.0/24","name":"","nameAlias":"","scope":"import-security,shared-rtctrl,shared-security","userdom":":all:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"shared-rtctrl","annotation":"orchestrator:terraform","descr":"","ip":"192.168.17.0/24","name":"","nameAlias":"","scope":"import-security,shared-rtctrl,shared-security","userdom":":all:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"shared-rtctrl","annotation":"orchestrator:terraform","descr":"","ip":"192.168.18.0/24","name":"","nameAlias":"","scope":"import-security,shared-rtctrl,shared-security","userdom":":all:common:"}}},{"l3extSubnet":{"attributes":{"aggregate":"","annotation":"orchestrator:terraform","descr":"","ip":"192.168.16.0/24","name":"","nameAlias":"","scope":"import-security,shared-rtctrl,shared-security","userdom":":all:common:"}}},{"fvRsCustQosPol":{"attributes":{"annotation":"","tnQosCustomPolName":"","userdom":"all"}}}]}},{"bgpExtP":{"attributes":{"annotation":"orchestrator:terraform","descr":"","nameAlias":"","userdom":":all:common:"}}}]}},{"vzBrCP":{"attributes":{"annotation":"","descr":"","intent":"install","name":"common.vrf-01-l3out-to-tn-containers-k8s_L3out-catch_all","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","scope":"global","targetDscp":"unspecified","userdom":":all:mgmt:common:"},"children":[{"vzSubj":{"attributes":{"annotation":"","consMatchT":"AtleastOne","descr":"","name":"permit-any","nameAlias":"","prio":"unspecified","provMatchT":"AtleastOne","revFltPorts":"yes","targetDscp":"unspecified","userdom":":all:mgmt:common:"},"children":[{"vzRsSubjFiltAtt":{"attributes":{"action":"permit","annotation":"","directives":"","priorityOverride":"default","tnVzFilterName":"default","userdom":":all:mgmt:common:"}}}]}}]}},{"vzBrCP":{"attributes":{"annotation":"","descr":"","intent":"install","name":"permit-to-tn-containers","nameAlias":"","ownerKey":"","ownerTag":"","prio":"unspecified","scope":"global","targetDscp":"unspecified","userdom":":all:mgmt:common:"},"children":[{"vzSubj":{"attributes":{"annotation":"","consMatchT":"AtleastOne","descr":"","name":"permit-any","nameAlias":"","prio":"unspecified","provMatchT":"AtleastOne","revFltPorts":"yes","targetDscp":"unspecified","userdom":":all:mgmt:common:"},"children":[{"vzRsSubjFiltAtt":{"attributes":{"action":"permit","annotation":"","directives":"","priorityOverride":"default","tnVzFilterName":"permit-any","userdom":":all:mgmt:common:"}}}]}}]}}]}}]}
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "fvTenant": {
+                "attributes": {
+                    "annotation": "",
+                    "descr": "",
+                    "dn": "uni/tn-containers",
+                    "name": "containers",
+                    "nameAlias": "",
+                    "ownerKey": "",
+                    "ownerTag": "",
+                    "userdom": ":all:mgmt:common:"
+                },
+                "children": [
+                    {
+                        "bgpCtxAfPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "ctrl": "",
+                                "descr": "",
+                                "eDist": "20",
+                                "iDist": "200",
+                                "localDist": "220",
+                                "maxEcmp": "64",
+                                "maxEcmpIbgp": "64",
+                                "maxLocalEcmp": "0",
+                                "name": "CalicoL3OUT",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "bgpCtxAfPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "ctrl": "",
+                                "descr": "",
+                                "eDist": "20",
+                                "iDist": "200",
+                                "localDist": "220",
+                                "maxEcmp": "64",
+                                "maxEcmpIbgp": "64",
+                                "maxLocalEcmp": "0",
+                                "name": "K8s_L3OUT",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "fvCtx": {
+                            "attributes": {
+                                "annotation": "",
+                                "bdEnforcedEnable": "no",
+                                "descr": "",
+                                "ipDataPlaneLearning": "enabled",
+                                "knwMcastAct": "permit",
+                                "name": "containers.vrf-01",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "pcEnfDir": "ingress",
+                                "pcEnfPref": "enforced",
+                                "userdom": ":all:mgmt:common:",
+                                "vrfIndex": "0"
+                            },
+                            "children": [
+                                {
+                                    "fvRsVrfValidationPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extVrfValidationPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "vzAny": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "matchT": "AtleastOne",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "prefGrMemb": "disabled",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsOspfCtxPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnOspfCtxPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToEpRet": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnFvEpRetPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToBgpCtxAfPol": {
+                                        "attributes": {
+                                            "af": "ipv4-ucast",
+                                            "annotation": "",
+                                            "tnBgpCtxAfPolName": "K8s_L3OUT",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsCtxToExtRouteTagPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnL3extRouteTagPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "fvRsBgpCtxPol": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tnBgpCtxPolName": "",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "bgpPeerPfxPol": {
+                            "attributes": {
+                                "action": "reject",
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "maxPfx": "500",
+                                "name": "K8s_L3OUT",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "restartTime": "infinite",
+                                "thresh": "75",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "bgpPeerPfxPol": {
+                            "attributes": {
+                                "action": "reject",
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "maxPfx": "500",
+                                "name": "CalicoL3OUT",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "restartTime": "infinite",
+                                "thresh": "75",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "vzFilter": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "permit-any",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "vzEntry": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "applyToFrag": "no",
+                                            "arpOpc": "unspecified",
+                                            "dFromPort": "unspecified",
+                                            "dToPort": "unspecified",
+                                            "descr": "",
+                                            "etherT": "unspecified",
+                                            "icmpv4T": "unspecified",
+                                            "icmpv6T": "unspecified",
+                                            "matchDscp": "unspecified",
+                                            "name": "unspecified",
+                                            "nameAlias": "",
+                                            "prot": "unspecified",
+                                            "sFromPort": "unspecified",
+                                            "sToPort": "unspecified",
+                                            "stateful": "no",
+                                            "tcpRules": "",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "rtctrlSubjP": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "name": "K8s_L3OUT-export-match",
+                                "nameAlias": "",
+                                "userdom": ":all:common:"
+                            },
+                            "children": [
+                                {
+                                    "rtctrlMatchRtDest": {
+                                        "attributes": {
+                                            "aggregate": "yes",
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "fromPfxLen": "0",
+                                            "ip": "192.168.17.0/24",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "toPfxLen": "0",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "rtctrlSubjP": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "name": "K8s_L3OUT-import-match",
+                                "nameAlias": "",
+                                "userdom": ":all:common:"
+                            },
+                            "children": [
+                                {
+                                    "rtctrlMatchRtDest": {
+                                        "attributes": {
+                                            "aggregate": "yes",
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "fromPfxLen": "0",
+                                            "ip": "192.168.18.0/24",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "toPfxLen": "0",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "rtctrlMatchRtDest": {
+                                        "attributes": {
+                                            "aggregate": "yes",
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "fromPfxLen": "0",
+                                            "ip": "192.168.19.0/24",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "toPfxLen": "0",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "rtctrlMatchRtDest": {
+                                        "attributes": {
+                                            "aggregate": "yes",
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "fromPfxLen": "0",
+                                            "ip": "192.168.16.0/24",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "toPfxLen": "0",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "rtctrlMatchRtDest": {
+                                        "attributes": {
+                                            "aggregate": "yes",
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "fromPfxLen": "0",
+                                            "ip": "192.168.17.0/24",
+                                            "name": "",
+                                            "nameAlias": "",
+                                            "toPfxLen": "0",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vnsSvcCont": {
+                            "attributes": {
+                                "annotation": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "fvEpTags": {
+                            "attributes": {
+                                "annotation": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "bgpBestPathCtrlPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "ctrl": "asPathMultipathRelax",
+                                "descr": "",
+                                "name": "K8s_L3OUT-Relax-AS",
+                                "nameAlias": "",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "bgpBestPathCtrlPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "ctrl": "asPathMultipathRelax",
+                                "descr": "",
+                                "name": "CalicoL3OUT-Relax-AS",
+                                "nameAlias": "",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "fvRsTenantMonPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnMonEPGPolName": "",
+                                "userdom": "all"
+                            }
+                        }
+                    },
+                    {
+                        "bgpCtxPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "grCtrl": "helper",
+                                "holdIntvl": "3",
+                                "kaIntvl": "1",
+                                "maxAsLimit": "1",
+                                "name": "K8s_L3OUT-Timers",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "staleIntvl": "6",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "bgpCtxPol": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "grCtrl": "helper",
+                                "holdIntvl": "3",
+                                "kaIntvl": "1",
+                                "maxAsLimit": "1",
+                                "name": "CalicoL3OUT-Timers",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "staleIntvl": "6",
+                                "userdom": ":all:common:"
+                            }
+                        }
+                    },
+                    {
+                        "l3extOut": {
+                            "attributes": {
+                                "annotation": "orchestrator:terraform",
+                                "descr": "",
+                                "enforceRtctrl": "export,import",
+                                "mplsEnabled": "no",
+                                "name": "K8s_L3OUT",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:common:"
+                            },
+                            "children": [
+                                {
+                                    "rtctrlProfile": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "autoContinue": "no",
+                                            "descr": "",
+                                            "name": "default-import",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "type": "combinable",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "rtctrlCtxP": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "name": "import_cluster_subnets",
+                                                        "nameAlias": "",
+                                                        "order": "0",
+                                                        "userdom": ":all:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "rtctrlRsCtxPToSubjP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "tnRtctrlSubjPName": "K8s_L3OUT-import-match",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "rtctrlProfile": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "autoContinue": "no",
+                                            "descr": "",
+                                            "name": "default-export",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "type": "combinable",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "rtctrlCtxP": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "name": "export_pod_subnet",
+                                                        "nameAlias": "",
+                                                        "order": "0",
+                                                        "userdom": ":all:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "rtctrlRsCtxPToSubjP": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "tnRtctrlSubjPName": "K8s_L3OUT-export-match",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "l3extRsL3DomAtt": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tDn": "uni/l3dom-containers.vrf-01",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extRsEctx": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "tnFvCtxName": "containers.vrf-01",
+                                            "userdom": "all"
+                                        }
+                                    }
+                                },
+                                {
+                                    "l3extLNodeP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "configIssues": "",
+                                            "descr": "",
+                                            "name": "node_profile_FL3out",
+                                            "nameAlias": "",
+                                            "ownerKey": "",
+                                            "ownerTag": "",
+                                            "tag": "yellow-green",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "l3extLIfP": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "name": "int_profile_FL3out",
+                                                        "nameAlias": "",
+                                                        "ownerKey": "",
+                                                        "ownerTag": "",
+                                                        "prio": "unspecified",
+                                                        "tag": "yellow-green",
+                                                        "userdom": ":all:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "l3extVirtualLIfP": {
+                                                                "attributes": {
+                                                                    "addr": "192.168.16.1/24",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "autostate": "enabled",
+                                                                    "descr": "",
+                                                                    "encap": "vlan-16",
+                                                                    "encapScope": "local",
+                                                                    "ifInstT": "ext-svi",
+                                                                    "ipv6Dad": "enabled",
+                                                                    "llAddr": "::",
+                                                                    "mac": "00:22:BD:F8:19:FF",
+                                                                    "mode": "regular",
+                                                                    "mtu": "9000",
+                                                                    "name": "",
+                                                                    "nodeDn": "topology/pod-1/node-101",
+                                                                    "targetDscp": "unspecified",
+                                                                    "userdom": ":all:common:"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "l3extRsDynPathAtt": {
+                                                                            "attributes": {
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "encap": "unknown",
+                                                                                "floatingAddr": "192.168.16.254/24",
+                                                                                "forgedTransmit": "Disabled",
+                                                                                "macChange": "Disabled",
+                                                                                "promMode": "Disabled",
+                                                                                "tDn": "uni/phys-hyperflex",
+                                                                                "userdom": ":all:common:"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "l3extIp": {
+                                                                            "attributes": {
+                                                                                "addr": "192.168.16.253/24",
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "descr": "",
+                                                                                "ipv6Dad": "enabled",
+                                                                                "name": "",
+                                                                                "nameAlias": "",
+                                                                                "userdom": ":all:common:"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "bgpPeerP": {
+                                                                            "attributes": {
+                                                                                "addr": "192.168.16.0/24",
+                                                                                "addrTCtrl": "af-ucast",
+                                                                                "adminSt": "enabled",
+                                                                                "allowedSelfAsCnt": "3",
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "capability": "",
+                                                                                "connectivityType": "tenant",
+                                                                                "ctrl": "as-override,dis-peer-as-check",
+                                                                                "ctrlExt": "",
+                                                                                "descr": "",
+                                                                                "name": "",
+                                                                                "nameAlias": "",
+                                                                                "peerCtrl": "",
+                                                                                "privateASctrl": "",
+                                                                                "ttl": "1",
+                                                                                "userdom": ":all:common:",
+                                                                                "weight": "0"
+                                                                            },
+                                                                            "children": [
+                                                                                {
+                                                                                    "bgpRsPeerPfxPol": {
+                                                                                        "attributes": {
+                                                                                            "annotation": "orchestrator:terraform",
+                                                                                            "tnBgpPeerPfxPolName": "K8s_L3OUT",
+                                                                                            "userdom": "all"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "bgpAsP": {
+                                                                                        "attributes": {
+                                                                                            "annotation": "",
+                                                                                            "asn": "65002",
+                                                                                            "descr": "",
+                                                                                            "name": "",
+                                                                                            "nameAlias": "",
+                                                                                            "userdom": ":all:common:"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extVirtualLIfP": {
+                                                                "attributes": {
+                                                                    "addr": "192.168.16.2/24",
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "autostate": "enabled",
+                                                                    "descr": "",
+                                                                    "encap": "vlan-16",
+                                                                    "encapScope": "local",
+                                                                    "ifInstT": "ext-svi",
+                                                                    "ipv6Dad": "enabled",
+                                                                    "llAddr": "::",
+                                                                    "mac": "00:22:BD:F8:19:FF",
+                                                                    "mode": "regular",
+                                                                    "mtu": "9000",
+                                                                    "name": "",
+                                                                    "nodeDn": "topology/pod-1/node-102",
+                                                                    "targetDscp": "unspecified",
+                                                                    "userdom": ":all:common:"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "l3extRsDynPathAtt": {
+                                                                            "attributes": {
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "encap": "unknown",
+                                                                                "floatingAddr": "192.168.16.254/24",
+                                                                                "forgedTransmit": "Disabled",
+                                                                                "macChange": "Disabled",
+                                                                                "promMode": "Disabled",
+                                                                                "tDn": "uni/phys-hyperflex",
+                                                                                "userdom": ":all:common:"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "l3extIp": {
+                                                                            "attributes": {
+                                                                                "addr": "192.168.16.253/24",
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "descr": "",
+                                                                                "ipv6Dad": "enabled",
+                                                                                "name": "",
+                                                                                "nameAlias": "",
+                                                                                "userdom": ":all:common:"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "bgpPeerP": {
+                                                                            "attributes": {
+                                                                                "addr": "192.168.16.0/24",
+                                                                                "addrTCtrl": "af-ucast",
+                                                                                "adminSt": "enabled",
+                                                                                "allowedSelfAsCnt": "3",
+                                                                                "annotation": "orchestrator:terraform",
+                                                                                "capability": "",
+                                                                                "connectivityType": "tenant",
+                                                                                "ctrl": "as-override,dis-peer-as-check",
+                                                                                "ctrlExt": "",
+                                                                                "descr": "",
+                                                                                "name": "",
+                                                                                "nameAlias": "",
+                                                                                "peerCtrl": "",
+                                                                                "privateASctrl": "",
+                                                                                "ttl": "1",
+                                                                                "userdom": ":all:common:",
+                                                                                "weight": "0"
+                                                                            },
+                                                                            "children": [
+                                                                                {
+                                                                                    "bgpRsPeerPfxPol": {
+                                                                                        "attributes": {
+                                                                                            "annotation": "orchestrator:terraform",
+                                                                                            "tnBgpPeerPfxPolName": "K8s_L3OUT",
+                                                                                            "userdom": "all"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "bgpAsP": {
+                                                                                        "attributes": {
+                                                                                            "annotation": "",
+                                                                                            "asn": "65002",
+                                                                                            "descr": "",
+                                                                                            "name": "",
+                                                                                            "nameAlias": "",
+                                                                                            "userdom": ":all:common:"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsNdIfPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnNdIfPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsLIfPCustQosPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosCustomPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsIngressQosDppPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosDppPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsEgressQosDppPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnQosDppPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "l3extRsArpIfPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnArpIfPolName": "",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "l3extRsNodeL3OutAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "configIssues": "",
+                                                        "rtrId": "102.2.1.1",
+                                                        "rtrIdLoopBack": "no",
+                                                        "tDn": "topology/pod-1/node-102",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extRsNodeL3OutAtt": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "configIssues": "",
+                                                        "rtrId": "101.2.1.1",
+                                                        "rtrIdLoopBack": "no",
+                                                        "tDn": "topology/pod-1/node-101",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "bgpProtP": {
+                                                    "attributes": {
+                                                        "annotation": "orchestrator:terraform",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "userdom": ":all:common:"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "bgpRsBgpNodeCtxPol": {
+                                                                "attributes": {
+                                                                    "annotation": "orchestrator:terraform",
+                                                                    "tnBgpCtxPolName": "K8s_L3OUT-Timers",
+                                                                    "userdom": "all"
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "bgpRsBestPathCtrlPol": {
+                                                                "attributes": {
+                                                                    "annotation": "",
+                                                                    "tnBgpBestPathCtrlPolName": "K8s_L3OUT-Relax-AS",
+                                                                    "userdom": ":all:common:"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "l3extInstP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "matchT": "AtleastOne",
+                                            "name": "catch_all",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsProv": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "intent": "install",
+                                                        "matchT": "AtleastOne",
+                                                        "prio": "unspecified",
+                                                        "tnVzBrCPName": "permit-to-tn-containers",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "shared-rtctrl",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "ip": "192.168.19.0/24",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security,shared-rtctrl,shared-security",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "shared-rtctrl",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "ip": "192.168.17.0/24",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security,shared-rtctrl,shared-security",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "shared-rtctrl",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "ip": "192.168.18.0/24",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security,shared-rtctrl,shared-security",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "l3extSubnet": {
+                                                    "attributes": {
+                                                        "aggregate": "",
+                                                        "annotation": "orchestrator:terraform",
+                                                        "descr": "",
+                                                        "ip": "192.168.16.0/24",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "scope": "import-security,shared-rtctrl,shared-security",
+                                                        "userdom": ":all:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "bgpExtP": {
+                                        "attributes": {
+                                            "annotation": "orchestrator:terraform",
+                                            "descr": "",
+                                            "nameAlias": "",
+                                            "userdom": ":all:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vzBrCP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "intent": "install",
+                                "name": "common.vrf-01-l3out-to-tn-containers-k8s_L3out-catch_all",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "scope": "global",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "vzSubj": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "consMatchT": "AtleastOne",
+                                            "descr": "",
+                                            "name": "permit-any",
+                                            "nameAlias": "",
+                                            "prio": "unspecified",
+                                            "provMatchT": "AtleastOne",
+                                            "revFltPorts": "yes",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "default",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vzBrCP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "intent": "install",
+                                "name": "permit-to-tn-containers",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "scope": "global",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "vzSubj": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "consMatchT": "AtleastOne",
+                                            "descr": "",
+                                            "name": "permit-any",
+                                            "nameAlias": "",
+                                            "prio": "unspecified",
+                                            "provMatchT": "AtleastOne",
+                                            "revFltPorts": "yes",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "permit-any",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

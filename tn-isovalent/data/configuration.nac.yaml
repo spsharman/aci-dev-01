@@ -1,0 +1,239 @@
+# Manual steps
+
+# Add BGP protocol profile to node profiles
+# Add secondary IP addresses to floating L3out
+
+---
+apic:
+  tenants:
+    - name: isovalent
+      description: Routable IP range TBC
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: isovalent
+                l3out: isovalent.vrf-01-bgp-AS-65152
+                external_endpoint_group: all-external-subnets
+
+        bgp_timer_policies:
+          - name: cilium-cni
+            description: BGP timer policies for cilium cni
+            keepalive_interval: 1
+            hold_interval: 3
+            stale_interval: 6
+            graceful_restart_helper: true
+            maximum_as_limit: 1
+
+        bgp_address_family_context_policies:
+          - name: cilium-cni
+            description: BGP weights and paths policies for cilium cni
+            ebgp_distance: 20
+            ibgp_distance: 200
+            local_distance: 220
+            ebgp_max_ecmp: 64
+            ibgp_max_ecmp: 64
+            local_max_ecmp: 0
+            enable_host_route_leak: false
+
+        bgp_peer_prefix_policies:
+          - name: cilium-cni
+            description: BGP prefix policies for cilium cni
+            action: 'reject'
+            threshold: 75
+            max_prefixes: 500
+
+        bgp_best_path_policies:
+          - name: cilium-cni
+            description: BGP best path policy for cilium cni
+            control_type: multi-path-relax
+
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+      imported_contracts:
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
+          
+      contracts:
+        - name: intra-tenant
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-node-subnet
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: external-vrf
+          contracts:
+            providers: 
+              # - intra-tenant
+            consumers:
+              # - intra-tenant
+            imported_consumers:
+
+      l3outs:
+        - name: isovalent.vrf-01-bgp-AS-65152
+          description: configured with NAC
+          alias: external-vrf
+          vrf: vrf-01
+          domain: isovalent.vrf-01
+
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 101
+                  router_id: 101.2.1.1
+                  
+                - node_id: 102
+                  router_id: 102.2.1.1
+
+              interface_profiles:
+                - name: hx-dev-01-fi-a-vlan-16                  
+                  interfaces:
+                    - node_id: 101
+                      channel: hx-dev-01-fi-a
+                      vlan: 16
+                      floating_svi: true
+                      paths:
+                        - floating_ip: 10.237.101.3/27
+                          physical_domain: hx-dev-01-vds-02
+                      ip: 10.237.101.1/27
+                      ip_shared: 10.237.101.4/27
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.237.101.0/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: none
+                          peer_prefix_policy: cilium-cni
+
+                - name: hx-dev-01-fi-b-vlan-16
+                  interfaces:
+                    - node_id: 102
+                      channel: hx-dev-01-fi-b
+                      vlan: 16
+                      floating_svi: true
+                      paths:
+                        - floating_ip: 10.237.101.3/27
+                          physical_domain: hx-dev-01-vds-02
+                      ip: 10.237.101.2/27
+                      ip_shared: 10.237.101.4/27
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.237.101.0/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: none
+                          peer_prefix_policy: cilium-cni
+
+          external_endpoint_groups:
+            - name: node-subnet
+              description: node subnet range
+              subnets:
+                - prefix: 10.237.101.0/27
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+              contracts:
+                providers:
+                  - permit-to-node-subnet
+
+            - name: external-subnet
+              description: external subnet range
+              subnets:
+                - prefix: 10.237.101.32/27
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+
+            - name: cluster-subnet
+              description: cluster subnet range
+              subnets:
+                - prefix: 10.1.0.0/16
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: false
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
