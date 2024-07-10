@@ -8,17 +8,19 @@ apic:
   tenants:
     - name: isovalent
       description: Routable IP range TBC
+      security_domains:
+        - isovalent
 
       policies:
-        dhcp_relay_policies:
-          - name: dhcp.uktme.cisco.com
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: isovalent
-                l3out: isovalent.vrf-01-bgp-AS-65152
-                external_endpoint_group: all-external-subnets
+        # dhcp_relay_policies:
+        #   - name: dhcp.uktme.cisco.com
+        #     description: "dhcp.uktme.cisco.com"
+        #     providers:
+        #       - ip: 10.237.97.133
+        #         type: external_epg
+        #         tenant: isovalent
+        #         l3out: isovalent.vrf-01-bgp-AS-65152
+        #         external_endpoint_group: all-external-subnets
 
         bgp_timer_policies:
           - name: cilium-cni
@@ -91,10 +93,20 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
+        - name: permit-to-external-subnet
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
       vrfs:
         - name: vrf-01
           description: configured with NAC
           alias: external-vrf
+          bgp:
+            timer_policy: cilium-cni
+            ipv4_address_family_context_policy: cilium-cni
           contracts:
             providers: 
               # - intra-tenant
@@ -134,7 +146,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          local_as: 65151
+                          # local_as: 65151
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
@@ -169,7 +181,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          local_as: 65151
+                          # local_as: 65151
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
@@ -219,12 +231,15 @@ apic:
                   shared_security: true
                   aggregate_import_route_control: false
                   aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
+                  aggregate_shared_route_control: true
                   bgp_route_summarization: false
                   ospf_route_summarization: false
+              contracts:
+                providers:
+                  - permit-to-external-subnet
 
-            - name: cluster-subnet
-              description: cluster subnet range
+            - name: pod-subnet
+              description: pod subnet range
               subnets:
                 - prefix: 10.1.0.0/16
                   import_route_control: false
@@ -237,3 +252,6 @@ apic:
                   aggregate_shared_route_control: false
                   bgp_route_summarization: false
                   ospf_route_summarization: false
+              contracts:
+                consumers:
+                  - permit-to-node-subnet
