@@ -146,7 +146,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          # local_as: 65151
+                          # local_as: 65003
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
@@ -181,7 +181,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          # local_as: 65151
+                          # local_as: 65003
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
