@@ -58,6 +58,22 @@ apic:
                 from_port: 18
                 to_port: 18
 
+          - name: ftd-ccl
+            policy_group: ftd-ccl
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 13
+                to_port: 13
+
+          - name: ftd-data
+            policy_group: ftd-data
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 11
+                to_port: 11
+
       - name: aci-dev-01-leaf-102
         selectors:
           - name: fabric-inband-mgmt
@@ -111,3 +127,19 @@ apic:
                 description: configured by NAC
                 from_port: 18
                 to_port: 18
+
+          - name: ftd-ccl
+            policy_group: ftd-ccl
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 13
+                to_port: 13
+
+          - name: ftd-data
+            policy_group: ftd-data
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 11
+                to_port: 11

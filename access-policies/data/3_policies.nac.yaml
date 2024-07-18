@@ -61,6 +61,10 @@ apic:
           - hx-dev-01-vds-02
           - hyperflex
 
+      - name: firewalls
+        physical_domains:
+          - firewalls
+
         routed_domains:
           - ajshahid.vrf-01
           - conmurph-01.vrf-01

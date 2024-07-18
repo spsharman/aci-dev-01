@@ -14,6 +14,8 @@ apic:
         vlan_pool: hx-dev-01-vds-02
       - name: hyperflex
         vlan_pool: hyperflex
+      - name: firewalls
+        vlan_pool: firewalls
 
 # L3 Domains
     routed_domains:

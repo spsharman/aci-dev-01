@@ -25,6 +25,20 @@ apic:
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
+      - name: ftd-ccl
+        type: access
+        aaep: firewalls
+        lldp_policy: lldp-enabled
+        cdp_policy: cdp-enabled
+        l2_policy: port-local-vlans
+
+      - name: ftd-data
+        type: access
+        aaep: firewalls
+        lldp_policy: lldp-enabled
+        cdp_policy: cdp-enabled
+        l2_policy: port-local-vlans
+
 # Port channel
       - name: hx-dev-01-fi-a
         type: pc

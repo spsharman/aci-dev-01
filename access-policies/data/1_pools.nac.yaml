@@ -271,3 +271,16 @@ apic:
           - from: 1201
             to: 1300
             description: dynamic vlans for VMM integration
+      - name: firewalls
+        allocation: static
+        ranges:
+          - from: 10
+            to: 10
+            description: firepower data
+            allocation: inherit
+            role: external
+          - from: 11
+            to: 11
+            description: firepower cluster control link
+            allocation: inherit
+            role: external
