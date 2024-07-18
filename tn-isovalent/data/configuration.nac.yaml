@@ -104,6 +104,14 @@ apic:
         - name: vrf-01
           description: configured with NAC
           alias: external-vrf
+          leaked_external_prefixes:
+            - prefix: 10.237.101.32/27
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: common
+                  vrf: common.vrf-01
+                  description: Leaked to common:common.vrf-01
           bgp:
             timer_policy: cilium-cni
             ipv4_address_family_context_policy: cilium-cni
@@ -146,7 +154,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          # local_as: 65003
+                          local_as: 65151
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
@@ -163,7 +171,7 @@ apic:
                           unicast_address_family: true
                           multicast_address_family: false
                           admin_state: true
-                          as_propagate: none
+                          as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
 
                 - name: hx-dev-01-fi-b-vlan-16
@@ -181,7 +189,7 @@ apic:
                       bgp_peers:
                         - ip: 10.237.101.0/27
                           remote_as: 65051
-                          # local_as: 65003
+                          local_as: 65151
                           allow_self_as: false
                           as_override: true
                           disable_peer_as_check: true
@@ -198,7 +206,7 @@ apic:
                           unicast_address_family: true
                           multicast_address_family: false
                           admin_state: true
-                          as_propagate: none
+                          as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
 
           external_endpoint_groups:
@@ -234,6 +242,8 @@ apic:
                   aggregate_shared_route_control: true
                   bgp_route_summarization: false
                   ospf_route_summarization: false
+                # - prefix: 10.237.100.0/24
+                #   export_route_control: true
               contracts:
                 providers:
                   - permit-to-external-subnet
@@ -255,3 +265,32 @@ apic:
               contracts:
                 consumers:
                   - permit-to-node-subnet
+
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '10.237.100.0_24'
+              alias: common.vrf-01
+              bridge_domain: '10.237.100.x_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: epg-10.237.100.0_24
+              vrf: common.vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - tenant: isovalent
+                  application_profile: 'network-segments'
+                  endpoint_group: '10.237.100.0_24'
+              contracts:
+                consumers:
+                  - permit-to-external-subnet
