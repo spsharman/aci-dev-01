@@ -19,7 +19,7 @@ apic:
         - name: permit-to-tn-demo-03
           tenant: demo-03
           contract: permit-to-tn-demo-03
-
+# L3out
       l3outs:
         - name: shared-services.vrf-01-ospf-area-0.0.0.1
           description: configured with NAC
