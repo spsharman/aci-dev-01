@@ -294,3 +294,4 @@ apic:
               contracts:
                 consumers:
                   - permit-to-external-subnet
+                  - permit-to-node-subnet
