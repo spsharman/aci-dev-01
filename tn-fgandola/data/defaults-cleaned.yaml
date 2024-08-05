@@ -1,0 +1,154 @@
+# defaults:
+#   apic:
+#     tenants:
+#       application_profiles:
+#         endpoint_groups:
+#           name_suffix: '_nac'
+#           static_endpoints:
+#             name_suffix: '_nac'
+#           subnets:
+#             ip_pools:
+#               name_suffix: '_nac'
+#           vmware_vmm_domains:
+#             name_suffix: '_nac'
+#         endpoint_security_groups:
+#           name_suffix: '_nac'
+#         name_suffix: '_nac'
+#       bridge_domains:
+#         name_suffix: '_nac'
+#       contracts:
+#         name_suffix: '_nac'
+#         subjects:
+#           name_suffix: '_nac'
+#       ext_mgmt_instances:
+#         name_suffix: '_nac'
+#       filters:
+#         entries:
+#           name_suffix: '_nac'
+#         name_suffix: '_nac'
+#       imported_contracts:
+#         name_suffix: '_nac'
+#       inb_endpoint_groups:
+#         name_suffix: '_nac'
+#       l3outs:
+#         export_route_map:
+#           contexts:
+#             name_suffix: '_nac'
+#         external_endpoint_groups:
+#           name_suffix: '_nac'
+#           route_control_profiles:
+#             name_suffix: '_nac'
+#           subnets:
+#             route_control_profiles:
+#               name_suffix: '_nac'
+#         import_route_map:
+#           contexts:
+#             name_suffix: '_nac'
+#         name_suffix: '_nac'
+#         node_profiles:
+#           interface_profiles:
+#             name_suffix: '_nac'
+#           name_suffix: '_nac'
+#       oob_contracts:
+#         name_suffix: '_nac'
+#         subjects:
+#           name_suffix: '_nac'
+#       oob_endpoint_groups:
+#         name_suffix: '_nac'
+#       policies:
+#         bfd_interface_policies:
+#           name_suffix: '_nac'
+#         bfd_multihop_node_policies:
+#           name_suffix: '_nac'
+#         bgp_address_family_context_policies:
+#           name_suffix: '_nac'
+#         bgp_best_path_policies:
+#           name_suffix: '_nac'
+#         bgp_peer_prefix_policies:
+#           name_suffix: '_nac'
+#         bgp_timer_policies:
+#           name_suffix: '_nac'
+#         custom_qos:
+#           name_suffix: '_nac'
+#         dhcp_option_policies:
+#           name_suffix: '_nac'
+#           options:
+#             name_suffix: '_nac'
+#         dhcp_relay_policies:
+#           name_suffix: '_nac'
+#         eigrp_interface_policies:
+#           name_suffix: '_nac'
+#         igmp_interface_policies:
+#           name_suffix: '_nac'
+#         igmp_snooping_policies:
+#           name_suffix: '_nac'
+#         ip_sla_policies:
+#           name_suffix: '_nac'
+#         match_rules:
+#           community_terms:
+#             name_suffix: '_nac'
+#           name_suffix: '_nac'
+#           regex_community_terms:
+#             name_suffix: '_nac'
+#         mpls_custom_qos_policies:
+#           name_suffix: '_nac'
+#         multicast_route_maps:
+#           name_suffix: '_nac'
+#         nd_interface_policies:
+#           name_suffix: '_nac'
+#         nd_ra_prefix_policies:
+#           name_suffix: '_nac'
+#         ospf_interface_policies:
+#           name_suffix: '_nac'
+#         ospf_timer_policies:
+#           name_suffix: '_nac'
+#         pim_policies:
+#           name_suffix: '_nac'
+#         qos:
+#           name_suffix: '_nac'
+#         route_control_route_maps:
+#           contexts:
+#             name_suffix: '_nac'
+#           name_suffix: '_nac'
+#         route_tag_policies:
+#           name_suffix: '_nac'
+#         set_rules:
+#           name_suffix: '_nac'
+#         span:
+#           destination_groups:
+#             name_suffix: '_nac'
+#           source_groups:
+#             name_suffix: '_nac'
+#         trust_control_policies:
+#           name_suffix: '_nac'
+#       services:
+#         l4l7_devices:
+#           concrete_devices:
+#             interfaces:
+#               name_suffix: '_nac'
+#             name_suffix: '_nac'
+#           logical_interfaces:
+#             concrete_interfaces:
+#               name_suffix: '_nac'
+#             name_suffix: '_nac'
+#           name_suffix: '_nac'
+#         redirect_backup_policies:
+#           name_suffix: '_nac'
+#         redirect_health_groups:
+#           name_suffix: '_nac'
+#         redirect_policies:
+#           name_suffix: '_nac'
+#         service_epg_policies:
+#           name_suffix: '_nac'
+#         service_graph_templates:
+#           name_suffix: '_nac'
+#       sr_mpls_l3outs:
+#         external_endpoint_groups:
+#           name_suffix: '_nac'
+#         name_suffix: '_nac'
+#         node_profiles:
+#           interface_profiles:
+#             name_suffix: '_nac'
+#           name_suffix: '_nac'
+#       vrfs:
+#         name_suffix: '_nac'

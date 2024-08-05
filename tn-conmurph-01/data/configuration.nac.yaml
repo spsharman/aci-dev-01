@@ -1,0 +1,61 @@
+#
+# This tenant is primarily used for firewall testing
+#
+#
+              # vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                # - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244  
+#
+# 
+#
+---
+apic:
+  tenants:
+    - name: conmurph-01
+      managed: false    
+      # description: Routable IP range 192.168.151-155.x
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets
+
+      services:
+      #   redirect_policies:
+      #     - name: redirect-to-ftdv-03-adapter-5-gig-0-2
+      #       l3_destinations:
+      #         - ip: 6.6.6.11
+      #           mac: 00:50:56:a1:ac:90
+
+        imported_l4l7_devices: #imported L4-7 device is not programming the correct funcType
+          - name: ftdv-01-adapter-9-gig-0-6
+            tenant: shared-services
+
+        # l4l7_devices:
+        #   - name: ftdv-01-adapter-9-gig-0-6
+        #     vmware_vmm_domain: hx-dev-01-vds-01
+        #     context_aware: single-Context
+        #     type: VIRTUAL
+        #     function: GoTo
+        #     service_type: FW
+        #     trunking: false
+        #     concrete_devices:
+        #       - name: ftdv-01-adapter-9-gig-0-6
+        #         vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+        #         vm_name: ftdv72_82-03.uktme.cisco.com
+        #         interfaces:
+        #           - name: gig-0-6
+        #             vnic_name: Network adapter 6
+        #     logical_interfaces:
+        #       - name: gig-0-6
+        #         concrete_interfaces:
+        #           - device: ftdv-01-adapter-9-gig-0-6
+        #             interface_name: gig-0-6
