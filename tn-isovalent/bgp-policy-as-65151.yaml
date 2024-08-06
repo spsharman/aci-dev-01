@@ -1,0 +1,31 @@
+# Cilium BGP settings to peeer with ACI fabric
+
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPPeeringPolicy
+metadata:
+ name: bgp-peering-policy-leaf101-202
+spec: # CiliumBGPPeeringPolicySpec
+ nodeSelector:
+    matchLabels:
+      bgp: "true"
+ virtualRouters: # []CiliumBGPVirtualRouter
+ - localASN: 65051
+   exportPodCIDR: true
+   serviceSelector:
+     matchLabels:
+       type: bgp
+   neighbors: # []CiliumBGPNeighbor
+    - peerAddress: '10.237.101.1/27'
+      peerASN: 65151
+      gracefulRestart:
+        enabled: true
+      holdTimeSeconds: 3
+      keepAliveTimeSeconds: 1
+      connectRetryTimeSeconds: 6
+    - peerAddress: '10.237.101.2/27'
+      peerASN: 65151
+      gracefulRestart:
+        enabled: true
+      holdTimeSeconds: 3
+      keepAliveTimeSeconds: 1
+      connectRetryTimeSeconds: 6
