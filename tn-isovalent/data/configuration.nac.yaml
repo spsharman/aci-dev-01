@@ -12,15 +12,15 @@ apic:
         - isovalent
 
       policies:
-        # dhcp_relay_policies:
-        #   - name: dhcp.uktme.cisco.com
-        #     description: "dhcp.uktme.cisco.com"
-        #     providers:
-        #       - ip: 10.237.97.133
-        #         type: external_epg
-        #         tenant: isovalent
-        #         l3out: isovalent.vrf-01-bgp-AS-65152
-        #         external_endpoint_group: all-external-subnets
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets
 
         bgp_timer_policies:
           - name: cilium-cni

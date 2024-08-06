@@ -14,7 +14,7 @@
 apic:
   tenants:
     - name: fgandola
-      managed: false    
+      managed: true
       description: Routable IP range 192.168.151-155.x
 
       policies:
@@ -72,10 +72,10 @@ apic:
           - name: redirect-to-ftd-4112-cluster-data-01-L2
             type: L2
             ip_sla_policy: l2ping-aggressive-timers
-            # threshold: true
-            # threshold_down_action: deny
-            # max_threshold: 100
-            # min_threshold: 50
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
             l1l2_destinations:
               - name: ftd-4112-cluster-01-data-01
                 redirect_health_group: ftd-4112-cluster-data-01-L2
@@ -87,10 +87,10 @@ apic:
 
           - name: redirect-to-ftd-4112-cluster-data-02-L2
             type: L2
-            # threshold: true
-            # threshold_down_action: deny
-            # max_threshold: 100
-            # min_threshold: 50
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
             ip_sla_policy: l2ping-aggressive-timers
             l1l2_destinations:
               - name: ftd-4112-cluster-01-data-02
@@ -202,6 +202,31 @@ apic:
                     interface_name: data-02-vlan-13-L2
 
         service_graph_templates:
+
+          # - name: test-with-tn-fgandola
+          #   template_type: FW_ROUTED
+          #   redirect: true
+          #   share_encapsulation: false
+          #   device:
+          #     tenant: fgandola
+          #     name: ftd-4112-one-arm-L3
+          #   consumer:
+          #     direct_connect: false
+          #   provider:
+          #     direct_connect: true
+
+          # - name: test-with-tn-shared-services
+          #   template_type: FW_ROUTED
+          #   redirect: true
+          #   share_encapsulation: false
+          #   device:
+          #     tenant: shared-services
+          #     name: ftd-4112-one-arm-L3
+          #   consumer:
+          #     direct_connect: false
+          #   provider:
+          #     direct_connect: true
+
           - name: ftd-4112-one-arm-L3
             template_type: FW_ROUTED
             redirect: true
