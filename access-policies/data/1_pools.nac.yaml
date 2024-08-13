@@ -4,6 +4,12 @@ apic:
 
 # VLAN pools  
     vlan_pools:
+      - name: container-nodes
+        allocation: static
+        ranges:
+          - from: 16
+            description: L3out to isovalent.vrf-01
+
       - name: external-switches
         allocation: static
         ranges:
@@ -31,134 +37,190 @@ apic:
             description: public ip range 64.103.44.64/27
           - from: 3003
             description: public ip range 64.103.44.96/28
-      - name: fabric-inband-mgmt
+
+      - name: firewalls
         allocation: static
         ranges:
-          - from: 5
-            description: fabric inband management
+          - from: 10
+            to: 10
+            description: firepower management
+            allocation: inherit
+            role: external
+          - from: 11
+            to: 11
+            description: firepower cluster control link
+            allocation: inherit
+            role: external
+          - from: 12
+            to: 12
+            description: firepower data-01
+            allocation: inherit
+            role: external
+          - from: 13
+            to: 13
+            description: firepower data-02
+            allocation: inherit
+            role: external
+
       - name: hx-dev-01-vds-01
         allocation: dynamic
         ranges:
           - from: 4
-            description: multisite ipn peering
             allocation: static
+            description: multisite ipn peering
           - from: 1001
             to: 1100
             description: dynamic vlans for VMM integration
           - from: 1201
             to: 1202
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1203
             to: 1204
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1205
             to: 1206
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1207
             to: 1208
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1209
             to: 1210
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1211
             to: 1212
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1213
             to: 1214
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1215
             to: 1216
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1217
             to: 1218
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1219
             to: 1220
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1221
             to: 1222
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1223
             to: 1224
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1225
             to: 1226
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1227
             to: 1228
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1229
             to: 1230
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1231
             to: 1232
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1233
             to: 1234
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1235
             to: 1236
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1237
             to: 1238
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1239
             to: 1240
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1241
             to: 1242
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1243
             to: 1244
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1245
             to: 1246
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1247
             to: 1248
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1249
             to: 1250
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1251
             to: 1252
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1253
             to: 1254
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1255
             to: 1256
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1257
             to: 1258
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1259
             to: 1260
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1261
             to: 1262
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1263
             to: 1264
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1265
             to: 1266
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1267
             to: 1268
+            allocation: static
             description: primary/secondary PVLANs
           - from: 1269
             to: 1270
+            allocation: static
             description: primary/secondary PVLANs
           - from: 3001
+            allocation: static
             description: public ip range 64.103.44.48/28
-            allocation: static
           - from: 3002
+            allocation: static
             description: public ip range 64.103.44.64/27
-            allocation: static
           - from: 3003
-            description: public ip range 64.103.44.96/28
             allocation: static
+            description: public ip range 64.103.44.96/28
+
       - name: hx-dev-01-vds-02
         allocation: static
         ranges:
@@ -193,7 +255,7 @@ apic:
           - from: 24
             to: 25
             description: primary/secondary PVLANs
-          - from: 27
+          - from: 26
             to: 27
             description: primary/secondary PVLANs
           - from: 28
@@ -209,6 +271,7 @@ apic:
             description: undocumented
           - from: 34
             description: tn-demo-03 L3out to csr1kv
+
       - name: hyperflex
         allocation: static
         ranges:
@@ -220,11 +283,13 @@ apic:
             description: hx-dev-01 storage
           - from: 992
             description: hx-dev-01 esx management
+
       - name: mgmt_inb
         allocation: static
         ranges:
-          - from: 114
+          - from: 3966
             description: fabric inband management
+
       - name: ucsc-c220m5-vds-01
         allocation: dynamic
         ranges:
@@ -271,16 +336,5 @@ apic:
           - from: 1201
             to: 1300
             description: dynamic vlans for VMM integration
-      - name: firewalls
-        allocation: static
-        ranges:
-          - from: 10
-            to: 10
-            description: firepower data
-            allocation: inherit
-            role: external
-          - from: 11
-            to: 11
-            description: firepower cluster control link
-            allocation: inherit
-            role: external
+
+

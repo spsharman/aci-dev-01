@@ -14,17 +14,16 @@ provider "aci" {
 }
 
 module "aci" {
-    # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
-  source  = "netascode/nac-aci/aci"
-  version = ">=0.8.1"
+  # source  = "netascode/nac-aci/aci"
+  source = "git::https://github.com/netascode/terraform-aci-nac-aci?ref=jg-pvlan"
+  # version = ">=0.8.1"
 
-  yaml_directories = ["data", "data/old_model"]
-  # yaml_directories = ["data", "data/new_model"]
+  yaml_directories = ["data"]
 
-  manage_access_policies    = true
+  manage_access_policies    = false
   manage_fabric_policies    = false
   manage_pod_policies       = false
   manage_node_policies      = false
-  manage_interface_policies = true
-  manage_tenants            = false
+  manage_interface_policies = false
+  manage_tenants            = true
 }

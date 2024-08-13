@@ -8,7 +8,7 @@ apic:
 # Access port
       - name: fabric-inband-mgmt
         type: access
-        aaep: fabric-inband-mgmt
+        aaep: mgmt_inb
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
@@ -25,37 +25,80 @@ apic:
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
-      - name: ftd-ccl
-        type: access
-        aaep: firewalls
-        lldp_policy: lldp-enabled
-        cdp_policy: cdp-enabled
-        l2_policy: port-local-vlans
-
-      - name: ftd-data
-        type: access
-        aaep: firewalls
-        lldp_policy: lldp-enabled
-        cdp_policy: cdp-enabled
-        l2_policy: port-local-vlans
-
 # Port channel
       - name: hx-dev-01-fi-a
         type: pc
         aaep: hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
 
       - name: hx-dev-01-fi-b
         type: pc
         aaep: hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
 
 # Virtual port channel
+      - name: vpc_to_ftd-4112-01-ccl
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_ftd-4112-01-mgmt
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_ftd-4112-02-ccl
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_ftd-4112-02-mgmt
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_ftd-4112-cluster-data-01
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_ftd-4112-cluster-data-02
+        type: vpc
+        aaep: firewalls
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
       - name: vpc_to_r07-tor
         type: vpc
         aaep: vpc_to_r07-tor
+        cdp_policy: cdp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_r28-tor
+        type: vpc
+        aaep: vpc_to_r28-tor
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active

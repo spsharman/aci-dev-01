@@ -16,6 +16,7 @@ apic:
       cdp_policies:
         - name: cdp-enabled
           admin_state: true
+
         - name: cdp-disabled
           admin_state: false
 
@@ -27,6 +28,7 @@ apic:
         - name: lldp-enabled
           admin_rx_state: true
           admin_tx_state: true
+
         - name: lldp-disabled
           admin_rx_state: false
           admin_tx_state: false
@@ -50,20 +52,25 @@ apic:
 
 # Global policies
     aaeps:
-      - name: fabric-inband-mgmt
-        infra_vlan: false
+      - name: container-nodes
         physical_domains:
-          - fabric-inband-mgmt
+          - container-nodes
 
-      - name: hyperflex
+      - name: mgmt_inb
         infra_vlan: false
         physical_domains:
-          - hx-dev-01-vds-02
-          - hyperflex
+          - mgmt_inb
 
       - name: firewalls
         physical_domains:
           - firewalls
+
+      - name: hyperflex
+        infra_vlan: false
+        physical_domains:
+          - container-nodes
+          - hx-dev-01-vds-02
+          - hyperflex
 
         routed_domains:
           - ajshahid.vrf-01
@@ -77,12 +84,14 @@ apic:
           - demo-03.vrf-01
           - demo-05.vrf-01
           - demo.vrf-01
+          - isovalent.vrf-01
           - shared-services.vrf-01
           - shared-services.vrf-01-static-routes
           - shared-services.vrf-02
           - shared-services.vrf-03
-        # vmware_vmm_domains:
-          # - hx-dev-01-vds-01
+
+        vmware_vmm_domains:
+          - hx-dev-01-vds-01
 
       - name: multisite
         routed_domains:
@@ -93,10 +102,8 @@ apic:
           - shared-services.vrf-01
 
       - name: ucs-c220m5-vds-01
-        routed_domains:
-          - conmurph.vrf-01
-        # vmware_vmm_domains:
-          # - ucsc-c220m5-vds-01
+        vmware_vmm_domains:
+          - ucsc-c220m5-vds-01
 
       - name: vpc_to_r07-tor
         routed_domains:
@@ -106,3 +113,7 @@ apic:
           - dmz
           - external-switches
           - hyperflex
+
+      - name: vpc_to_r28-tor
+        physical_domains:
+          - container-nodes

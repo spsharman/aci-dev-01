@@ -28,6 +28,256 @@
                         }
                     },
                     {
+                        "fvAp": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "name": "mgmt_inb",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "fvAEPg": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "descr": "",
+                                            "exceptionTag": "",
+                                            "floodOnEncap": "disabled",
+                                            "fwdCtrl": "",
+                                            "hasMcastSource": "no",
+                                            "isAttrBasedEPg": "no",
+                                            "matchT": "AtleastOne",
+                                            "name": "mgmt_inb",
+                                            "nameAlias": "",
+                                            "pcEnfPref": "unenforced",
+                                            "prefGrMemb": "exclude",
+                                            "prio": "unspecified",
+                                            "shutdown": "no",
+                                            "userdom": ":all:mgmt:common:"
+                                        },
+                                        "children": [
+                                            {
+                                                "fvRsProv": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "intent": "install",
+                                                        "matchT": "AtleastOne",
+                                                        "prio": "unspecified",
+                                                        "tnVzBrCPName": "permit_to_inb-mgmt",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvSubnet": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "ctrl": "",
+                                                        "descr": "",
+                                                        "ip": "10.237.96.225/29",
+                                                        "ipDPLearning": "enabled",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "preferred": "no",
+                                                        "scope": "public,shared",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "virtual": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsDomAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "apiMode": "mgmt",
+                                                        "bindingType": "none",
+                                                        "classPref": "encap",
+                                                        "customEpgName": "",
+                                                        "delimiter": "",
+                                                        "encap": "unknown",
+                                                        "encapMode": "auto",
+                                                        "epgCos": "Cos0",
+                                                        "epgCosPref": "disabled",
+                                                        "instrImedcy": "lazy",
+                                                        "ipamDhcpOverride": "0.0.0.0",
+                                                        "ipamEnabled": "no",
+                                                        "ipamGateway": "0.0.0.0",
+                                                        "lagPolicyName": "",
+                                                        "netflowDir": "both",
+                                                        "netflowPref": "disabled",
+                                                        "numPorts": "0",
+                                                        "portAllocation": "none",
+                                                        "primaryEncap": "unknown",
+                                                        "primaryEncapInner": "unknown",
+                                                        "resImedcy": "lazy",
+                                                        "secondaryEncapInner": "unknown",
+                                                        "switchingMode": "native",
+                                                        "tDn": "uni/phys-mgmt_inb",
+                                                        "untagged": "no",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "vnetOnly": "no"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsCustQosPol": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnQosCustomPolName": "",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvRsBd": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "inb",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vzOOBBrCP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "intent": "install",
+                                "name": "default",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "scope": "context",
+                                "targetDscp": "unspecified",
+                                "userdom": ""
+                            },
+                            "children": [
+                                {
+                                    "vzSubj": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "consMatchT": "AtleastOne",
+                                            "descr": "",
+                                            "name": "oob-default-subj",
+                                            "nameAlias": "",
+                                            "prio": "unspecified",
+                                            "provMatchT": "AtleastOne",
+                                            "revFltPorts": "yes",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ""
+                                        },
+                                        "children": [
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "http-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "default",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "snmp-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "https-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "icmp-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "ntp-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "ssh-filter",
+                                                        "userdom": ""
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "fvRsTenantMonPol": {
+                            "attributes": {
+                                "annotation": "",
+                                "tnMonEPGPolName": "",
+                                "userdom": ""
+                            }
+                        }
+                    },
+                    {
                         "fvBD": {
                             "attributes": {
                                 "OptimizeWanBandwidth": "no",
@@ -68,13 +318,13 @@
                                             "annotation": "",
                                             "ctrl": "",
                                             "descr": "",
-                                            "ip": "192.168.6.1/24",
+                                            "ip": "10.237.96.225/29",
                                             "ipDPLearning": "enabled",
                                             "name": "",
                                             "nameAlias": "",
                                             "preferred": "no",
                                             "scope": "public,shared",
-                                            "userdom": ":all:",
+                                            "userdom": ":all:mgmt:common:",
                                             "virtual": "no"
                                         }
                                     }
@@ -113,15 +363,6 @@
                                             "resolveAct": "resolve",
                                             "tnFvEpRetPolName": "",
                                             "userdom": ""
-                                        }
-                                    }
-                                },
-                                {
-                                    "fvRsBDToOut": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "tnL3extOutName": "mgmt.inb-ospf-area-0.0.0.0",
-                                            "userdom": ":all:mgmt:common:"
                                         }
                                     }
                                 },
@@ -304,423 +545,6 @@
                                             "tnBgpCtxPolName": "",
                                             "userdom": ""
                                         }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "vzOOBBrCP": {
-                            "attributes": {
-                                "annotation": "",
-                                "descr": "",
-                                "intent": "install",
-                                "name": "default",
-                                "nameAlias": "",
-                                "ownerKey": "",
-                                "ownerTag": "",
-                                "prio": "unspecified",
-                                "scope": "context",
-                                "targetDscp": "unspecified",
-                                "userdom": ""
-                            },
-                            "children": [
-                                {
-                                    "vzSubj": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "consMatchT": "AtleastOne",
-                                            "descr": "",
-                                            "name": "oob-default-subj",
-                                            "nameAlias": "",
-                                            "prio": "unspecified",
-                                            "provMatchT": "AtleastOne",
-                                            "revFltPorts": "yes",
-                                            "targetDscp": "unspecified",
-                                            "userdom": ""
-                                        },
-                                        "children": [
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "http-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "default",
-                                                        "userdom": ":all:mgmt:common:"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "snmp-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "https-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "icmp-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "ntp-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "ssh-filter",
-                                                        "userdom": ""
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "fvRsTenantMonPol": {
-                            "attributes": {
-                                "annotation": "",
-                                "tnMonEPGPolName": "",
-                                "userdom": ""
-                            }
-                        }
-                    },
-                    {
-                        "l3extOut": {
-                            "attributes": {
-                                "annotation": "",
-                                "descr": "",
-                                "enforceRtctrl": "export",
-                                "mplsEnabled": "no",
-                                "name": "mgmt.inb-ospf-area-0.0.0.0",
-                                "nameAlias": "",
-                                "ownerKey": "",
-                                "ownerTag": "",
-                                "targetDscp": "unspecified",
-                                "userdom": ":all:common:"
-                            },
-                            "children": [
-                                {
-                                    "ospfExtP": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "areaCost": "1",
-                                            "areaCtrl": "redistribute,summary",
-                                            "areaId": "backbone",
-                                            "areaType": "regular",
-                                            "descr": "",
-                                            "multipodInternal": "no",
-                                            "nameAlias": "",
-                                            "userdom": ":all:common:"
-                                        }
-                                    }
-                                },
-                                {
-                                    "l3extRsL3DomAtt": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "tDn": "uni/l3dom-mgmt_inb",
-                                            "userdom": ":all:common:"
-                                        }
-                                    }
-                                },
-                                {
-                                    "l3extRsEctx": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "tnFvCtxName": "inb",
-                                            "userdom": ""
-                                        }
-                                    }
-                                },
-                                {
-                                    "l3extLNodeP": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "configIssues": "",
-                                            "descr": "",
-                                            "name": "border-leafs",
-                                            "nameAlias": "",
-                                            "ownerKey": "",
-                                            "ownerTag": "",
-                                            "tag": "yellow-green",
-                                            "targetDscp": "unspecified",
-                                            "userdom": ":all:mgmt:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "l3extRsNodeL3OutAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "configIssues": "",
-                                                        "rtrId": "101.2.2.1",
-                                                        "rtrIdLoopBack": "no",
-                                                        "tDn": "topology/pod-1/node-101",
-                                                        "userdom": ":all:mgmt:common:"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "l3extRsNodeL3OutAtt": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "configIssues": "",
-                                                        "rtrId": "102.2.2.1",
-                                                        "rtrIdLoopBack": "no",
-                                                        "tDn": "topology/pod-1/node-102",
-                                                        "userdom": ":all:mgmt:common:"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "l3extLIfP": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "descr": "",
-                                                        "name": "vpc_to_r07-tor",
-                                                        "nameAlias": "",
-                                                        "ownerKey": "",
-                                                        "ownerTag": "",
-                                                        "prio": "unspecified",
-                                                        "tag": "yellow-green",
-                                                        "userdom": ":all:mgmt:common:"
-                                                    },
-                                                    "children": [
-                                                        {
-                                                            "ospfIfP": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "authKeyId": "1",
-                                                                    "authType": "none",
-                                                                    "descr": "",
-                                                                    "name": "",
-                                                                    "nameAlias": "",
-                                                                    "userdom": ":all:mgmt:common:"
-                                                                },
-                                                                "children": [
-                                                                    {
-                                                                        "ospfRsIfPol": {
-                                                                            "attributes": {
-                                                                                "annotation": "",
-                                                                                "tnOspfIfPolName": "broadcast",
-                                                                                "userdom": "all"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsPathL3OutAtt": {
-                                                                "attributes": {
-                                                                    "addr": "0.0.0.0",
-                                                                    "annotation": "",
-                                                                    "autostate": "disabled",
-                                                                    "descr": "",
-                                                                    "encap": "vlan-114",
-                                                                    "encapScope": "local",
-                                                                    "ifInstT": "ext-svi",
-                                                                    "ipv6Dad": "enabled",
-                                                                    "isMultiPodDirect": "no",
-                                                                    "llAddr": "::",
-                                                                    "mac": "12:22:BD:F8:19:FF",
-                                                                    "mode": "regular",
-                                                                    "mtu": "inherit",
-                                                                    "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_r07-tor]",
-                                                                    "targetDscp": "unspecified",
-                                                                    "userdom": ":all:mgmt:common:"
-                                                                },
-                                                                "children": [
-                                                                    {
-                                                                        "l3extMember": {
-                                                                            "attributes": {
-                                                                                "addr": "10.237.99.228/29",
-                                                                                "annotation": "",
-                                                                                "descr": "",
-                                                                                "ipv6Dad": "enabled",
-                                                                                "llAddr": "::",
-                                                                                "name": "",
-                                                                                "nameAlias": "",
-                                                                                "side": "B",
-                                                                                "userdom": ":all:mgmt:common:"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "l3extMember": {
-                                                                            "attributes": {
-                                                                                "addr": "10.237.99.227/29",
-                                                                                "annotation": "",
-                                                                                "descr": "",
-                                                                                "ipv6Dad": "enabled",
-                                                                                "llAddr": "::",
-                                                                                "name": "",
-                                                                                "nameAlias": "",
-                                                                                "side": "A",
-                                                                                "userdom": ":all:mgmt:common:"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsNdIfPol": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "tnNdIfPolName": "",
-                                                                    "userdom": "all"
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsLIfPCustQosPol": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "tnQosCustomPolName": "",
-                                                                    "userdom": "all"
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsIngressQosDppPol": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "tnQosDppPolName": "",
-                                                                    "userdom": "all"
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsEgressQosDppPol": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "tnQosDppPolName": "",
-                                                                    "userdom": "all"
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "l3extRsArpIfPol": {
-                                                                "attributes": {
-                                                                    "annotation": "",
-                                                                    "tnArpIfPolName": "",
-                                                                    "userdom": "all"
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "l3extInstP": {
-                                        "attributes": {
-                                            "annotation": "",
-                                            "descr": "",
-                                            "exceptionTag": "",
-                                            "floodOnEncap": "disabled",
-                                            "matchT": "AtleastOne",
-                                            "name": "mgmt.inb-all-ext-subnets",
-                                            "nameAlias": "",
-                                            "pcEnfPref": "unenforced",
-                                            "prefGrMemb": "exclude",
-                                            "prio": "unspecified",
-                                            "targetDscp": "unspecified",
-                                            "userdom": ":all:common:"
-                                        },
-                                        "children": [
-                                            {
-                                                "l3extSubnet": {
-                                                    "attributes": {
-                                                        "aggregate": "",
-                                                        "annotation": "",
-                                                        "descr": "",
-                                                        "ip": "0.0.0.0/0",
-                                                        "name": "",
-                                                        "nameAlias": "",
-                                                        "scope": "import-security",
-                                                        "userdom": ":all:common:"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsCustQosPol": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnQosCustomPolName": "",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "fvRsCons": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "intent": "install",
-                                                        "prio": "unspecified",
-                                                        "tnVzBrCPName": "permit_to_inb-mgmt",
-                                                        "userdom": ":all:common:"
-                                                    }
-                                                }
-                                            }
-                                        ]
                                     }
                                 }
                             ]
@@ -1139,7 +963,7 @@
                                         "attributes": {
                                             "annotation": "",
                                             "descr": "",
-                                            "encap": "vlan-5",
+                                            "encap": "vlan-3966",
                                             "exceptionTag": "",
                                             "floodOnEncap": "disabled",
                                             "matchT": "AtleastOne",
@@ -1151,22 +975,13 @@
                                         },
                                         "children": [
                                             {
-                                                "mgmtRsMgmtBD": {
-                                                    "attributes": {
-                                                        "annotation": "",
-                                                        "tnFvBDName": "inb",
-                                                        "userdom": "all"
-                                                    }
-                                                }
-                                            },
-                                            {
                                                 "mgmtRsInBStNode": {
                                                     "attributes": {
-                                                        "addr": "192.168.6.2/24",
+                                                        "addr": "10.237.96.226/29",
                                                         "annotation": "",
                                                         "configurationMode": "static",
                                                         "descr": "",
-                                                        "gw": "192.168.6.1",
+                                                        "gw": "10.237.96.225",
                                                         "tDn": "topology/pod-1/node-1",
                                                         "userdom": ":all:",
                                                         "v6Addr": "::",
@@ -1177,11 +992,11 @@
                                             {
                                                 "mgmtRsInBStNode": {
                                                     "attributes": {
-                                                        "addr": "192.168.6.6/24",
+                                                        "addr": "10.237.96.230/29",
                                                         "annotation": "",
                                                         "configurationMode": "static",
                                                         "descr": "",
-                                                        "gw": "192.168.6.1",
+                                                        "gw": "10.237.96.225",
                                                         "tDn": "topology/pod-1/node-202",
                                                         "userdom": ":all:",
                                                         "v6Addr": "::",
@@ -1192,11 +1007,11 @@
                                             {
                                                 "mgmtRsInBStNode": {
                                                     "attributes": {
-                                                        "addr": "192.168.6.8/24",
+                                                        "addr": "10.237.96.228/29",
                                                         "annotation": "",
                                                         "configurationMode": "static",
                                                         "descr": "",
-                                                        "gw": "192.168.6.1",
+                                                        "gw": "10.237.96.225",
                                                         "tDn": "topology/pod-1/node-102",
                                                         "userdom": ":all:",
                                                         "v6Addr": "::",
@@ -1207,11 +1022,11 @@
                                             {
                                                 "mgmtRsInBStNode": {
                                                     "attributes": {
-                                                        "addr": "192.168.6.7/24",
+                                                        "addr": "10.237.96.227/29",
                                                         "annotation": "",
                                                         "configurationMode": "static",
                                                         "descr": "",
-                                                        "gw": "192.168.6.1",
+                                                        "gw": "10.237.96.225",
                                                         "tDn": "topology/pod-1/node-101",
                                                         "userdom": ":all:",
                                                         "v6Addr": "::",
@@ -1222,15 +1037,41 @@
                                             {
                                                 "mgmtRsInBStNode": {
                                                     "attributes": {
-                                                        "addr": "192.168.6.5/24",
+                                                        "addr": "10.237.96.229/29",
                                                         "annotation": "",
                                                         "configurationMode": "static",
                                                         "descr": "",
-                                                        "gw": "192.168.6.1",
+                                                        "gw": "10.237.96.225",
                                                         "tDn": "topology/pod-1/node-201",
                                                         "userdom": ":all:",
                                                         "v6Addr": "::",
                                                         "v6Gw": "::"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "mgmtRsMgmtBD": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tnFvBDName": "inb",
+                                                        "userdom": "all"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "fvSubnet": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "ctrl": "nd",
+                                                        "descr": "",
+                                                        "ip": "10.237.96.225/29",
+                                                        "ipDPLearning": "enabled",
+                                                        "name": "",
+                                                        "nameAlias": "",
+                                                        "preferred": "no",
+                                                        "scope": "private",
+                                                        "userdom": ":all:mgmt:common:",
+                                                        "virtual": "no"
                                                     }
                                                 }
                                             },
@@ -1337,6 +1178,55 @@
                         }
                     },
                     {
+                        "vzBrCP": {
+                            "attributes": {
+                                "annotation": "",
+                                "descr": "",
+                                "intent": "install",
+                                "name": "permit_to_inb-mgmt",
+                                "nameAlias": "",
+                                "ownerKey": "",
+                                "ownerTag": "",
+                                "prio": "unspecified",
+                                "scope": "global",
+                                "targetDscp": "unspecified",
+                                "userdom": ":all:"
+                            },
+                            "children": [
+                                {
+                                    "vzSubj": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "consMatchT": "AtleastOne",
+                                            "descr": "",
+                                            "name": "default",
+                                            "nameAlias": "",
+                                            "prio": "unspecified",
+                                            "provMatchT": "AtleastOne",
+                                            "revFltPorts": "yes",
+                                            "targetDscp": "unspecified",
+                                            "userdom": ":all:"
+                                        },
+                                        "children": [
+                                            {
+                                                "vzRsSubjFiltAtt": {
+                                                    "attributes": {
+                                                        "action": "permit",
+                                                        "annotation": "",
+                                                        "directives": "",
+                                                        "priorityOverride": "default",
+                                                        "tnVzFilterName": "default",
+                                                        "userdom": ":all:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "mgmtExtMgmtEntity": {
                             "attributes": {
                                 "annotation": "",
@@ -1396,49 +1286,26 @@
                         }
                     },
                     {
-                        "vzBrCP": {
+                        "vzCPIf": {
                             "attributes": {
                                 "annotation": "",
                                 "descr": "",
-                                "intent": "install",
-                                "name": "permit_to_inb-mgmt",
+                                "name": "permit-to-shared-services.vrf-01-all-external-subnets",
                                 "nameAlias": "",
                                 "ownerKey": "",
                                 "ownerTag": "",
-                                "prio": "unspecified",
-                                "scope": "context",
-                                "targetDscp": "unspecified",
-                                "userdom": ":all:"
+                                "userdom": ":all:mgmt:common:"
                             },
                             "children": [
                                 {
-                                    "vzSubj": {
+                                    "vzRsIf": {
                                         "attributes": {
                                             "annotation": "",
-                                            "consMatchT": "AtleastOne",
-                                            "descr": "",
-                                            "name": "default",
-                                            "nameAlias": "",
+                                            "intent": "install",
                                             "prio": "unspecified",
-                                            "provMatchT": "AtleastOne",
-                                            "revFltPorts": "yes",
-                                            "targetDscp": "unspecified",
-                                            "userdom": ":all:"
-                                        },
-                                        "children": [
-                                            {
-                                                "vzRsSubjFiltAtt": {
-                                                    "attributes": {
-                                                        "action": "permit",
-                                                        "annotation": "",
-                                                        "directives": "",
-                                                        "priorityOverride": "default",
-                                                        "tnVzFilterName": "default",
-                                                        "userdom": ":all:"
-                                                    }
-                                                }
-                                            }
-                                        ]
+                                            "tDn": "uni/tn-shared-services/brc-permit-to-shared-services.vrf-01-all-external-subnets",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
                                     }
                                 }
                             ]

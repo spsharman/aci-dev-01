@@ -1,0 +1,251 @@
+apic:
+  new_interface_configuration: false
+  access_policies:  
+
+# Leaf interface profile
+    leaf_interface_profiles:
+# aci-dev-01-leaf-101
+      - name: aci-dev-01-leaf-101
+        selectors:
+          - name: fabric-inband-mgmt
+            policy_group: fabric-inband-mgmt
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 48
+                to_port: 48
+
+          - name: ftd-4112-01-mgmt
+            policy_group: vpc_to_ftd-4112-01-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/1
+                from_port: 11
+                to_port: 11
+
+          - name: ftd-4112-01-ccl
+            policy_group: vpc_to_ftd-4112-01-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/3
+                from_port: 13
+                to_port: 13
+
+          - name: ftd-4112-02-mgmt
+            policy_group: vpc_to_ftd-4112-02-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/1
+                from_port: 12
+                to_port: 12
+
+          - name: ftd-4112-02-ccl
+            policy_group: vpc_to_ftd-4112-02-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/3
+                from_port: 14
+                to_port: 14
+
+          - name: ftd-4112-cluster-data-01
+            policy_group: vpc_to_ftd-4112-cluster-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/5
+                from_port: 15
+                to_port: 15
+              - name: block-2
+                description: ftd-4112-02 e1/5
+                from_port: 16
+                to_port: 16
+
+          - name: ftd-4112-cluster-data-02
+            policy_group: vpc_to_ftd-4112-cluster-data-02
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/7
+                from_port: 17
+                to_port: 17
+              - name: block-2
+                description: ftd-4112-02 e1/7
+                from_port: 18
+                to_port: 18
+
+          - name: hx-dev-01-fi-a
+            policy_group: hx-dev-01-fi-a
+            port_blocks:
+              - name: block-1
+                description: hx-dev-01-fi-a e1/1
+                from_port: 1
+                to_port: 1
+              - name: block-2
+                description: hx-dev-01-fi-a e1/2
+                from_port: 2
+                to_port: 2
+
+          - name: shared-services.vrf-01-ospf-area-0.0.0.1
+            policy_group: shared-services.vrf-01-ospf-area-0.0.0.1
+            port_blocks:
+              - name: block-1
+                description: core-03 e1/7
+                from_port: 7
+                to_port: 7
+
+          - name: ucs-c220m5-vds-01
+            policy_group: ucs-c220m5-vds-01
+            port_blocks:
+              - name: block-1
+                description: host-01
+                from_port: 29
+                to_port: 29
+              - name: block-2
+                description: host-02
+                from_port: 30
+                to_port: 30
+              - name: block-3
+                description: host-03
+                from_port: 31
+                to_port: 31
+              - name: block-4
+                description: host-04
+                from_port: 32
+                to_port: 32
+
+          - name: vpc_to_r07-tor
+            policy_group: vpc_to_r07-tor
+            port_blocks:
+              - name: block-1
+                description: rack-07-tor g0/11
+                from_port: 45
+                to_port: 45
+
+          - name: vpc_to_r28-tor
+            policy_group: vpc_to_r28-tor
+            port_blocks:
+              - name: block-1
+                description: rack-28-tor g0/47
+                from_port: 39
+                to_port: 39
+
+# aci-dev-01-leaf-102
+      - name: aci-dev-01-leaf-102
+        selectors:
+          - name: fabric-inband-mgmt
+            policy_group: fabric-inband-mgmt
+            port_blocks:
+              - name: block-1
+                description: configured by NAC
+                from_port: 48
+                to_port: 48
+
+          - name: ftd-4112-01-mgmt
+            policy_group: vpc_to_ftd-4112-01-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/2
+                from_port: 11
+                to_port: 11
+
+          - name: ftd-4112-01-ccl
+            policy_group: vpc_to_ftd-4112-01-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/4
+                from_port: 13
+                to_port: 13
+
+          - name: ftd-4112-02-mgmt
+            policy_group: vpc_to_ftd-4112-02-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/2
+                from_port: 12
+                to_port: 12
+
+          - name: ftd-4112-02-ccl
+            policy_group: vpc_to_ftd-4112-02-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/4
+                from_port: 14
+                to_port: 14
+
+          - name: ftd-4112-cluster-data-01
+            policy_group: vpc_to_ftd-4112-cluster-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/6
+                from_port: 15
+                to_port: 15
+              - name: block-2
+                description: ftd-4112-02 e1/6
+                from_port: 16
+                to_port: 16
+
+          - name: ftd-4112-cluster-data-02
+            policy_group: vpc_to_ftd-4112-cluster-data-02
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/8
+                from_port: 17
+                to_port: 17
+              - name: block-2
+                description: ftd-4112-02 e1/8
+                from_port: 18
+                to_port: 18
+
+          - name: hx-dev-01-fi-b
+            policy_group: hx-dev-01-fi-b
+            port_blocks:
+              - name: block-1
+                description: hx-dev-01-fi-b e1/1
+                from_port: 1
+                to_port: 1
+              - name: block-2
+                description: hx-dev-01-fi-b e1/2
+                from_port: 2
+                to_port: 2
+
+          - name: shared-services.vrf-01-ospf-area-0.0.0.1
+            policy_group: shared-services.vrf-01-ospf-area-0.0.0.1
+            port_blocks:
+              - name: block-1
+                description: core-04 esx1/7
+                from_port: 7
+                to_port: 7
+
+          - name: ucs-c220m5-vds-01
+            policy_group: ucs-c220m5-vds-01
+            port_blocks:
+              - name: block-1
+                description: host-01
+                from_port: 29
+                to_port: 29
+              - name: block-2
+                description: host-02
+                from_port: 30
+                to_port: 30
+              - name: block-3
+                description: host-03
+                from_port: 31
+                to_port: 31
+              - name: block-4
+                description: host-04
+                from_port: 32
+                to_port: 32
+
+          - name: vpc_to_r07-tor
+            policy_group: vpc_to_r07-tor
+            port_blocks:
+              - name: block-1
+                description: rack-07-tor g0/12
+                from_port: 45
+                to_port: 45
+
+          - name: vpc_to_r28-tor
+            policy_group: vpc_to_r28-tor
+            port_blocks:
+              - name: block-1
+                description: rack-28-tor g0/48
+                from_port: 39
+                to_port: 39
