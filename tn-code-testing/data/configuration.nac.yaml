@@ -1,0 +1,432 @@
+#
+# This tenant is primarily used for code testing
+#
+#
+              # vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                # - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244  
+#
+# 
+#
+---
+apic:
+  tenants:
+    - name: code-testing
+      managed: false
+      description: This tenant is used for testing code
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: core-services-subnets
+
+        ip_sla_policies:
+          - name: icmp-default-timers
+            description: This policy sends a icmp ping every 60 seconds
+            frequency: 60
+            multiplier: 3
+            sla_type: icmp
+
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+          - name: l2ping-default-timers
+            description: This policy send a l2ping every 60 seconds
+            frequency: 60
+            multiplier: 3
+            sla_type: l2ping
+
+          - name: l2ping-aggressive-timers
+            description: This policy sends a l2ping ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: l2ping
+
+      services:
+        redirect_policies:
+          - name: redirect-to-ftd-4112-cluster-data-01-L3
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:08:E3:D4:E5:F6
+                redirect_health_group: ftd-4112-cluster-data-01-L3
+
+          - name: redirect-to-ftd-4112-cluster-data-02-L3
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 7.7.7.10
+                mac: 00:08:E3:D4:BB:BB
+                redirect_health_group: ftd-4112-cluster-data-02-L3
+
+          - name: redirect-to-ftd-4112-cluster-data-01-L2
+            type: L2
+            ip_sla_policy: l2ping-aggressive-timers
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
+            l1l2_destinations:
+              - name: ftd-4112-cluster-01-data-01
+                redirect_health_group: ftd-4112-cluster-data-01-L2
+                mac: 00:08:E3:D4:E5:F6
+                concrete_interface:
+                  l4l7_device: ftd-4112-two-arm-L2
+                  concrete_device: ftd-4112-cluster
+                  interface: data-01-vlan-12-L2
+
+          - name: redirect-to-ftd-4112-cluster-data-02-L2
+            type: L2
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
+            ip_sla_policy: l2ping-aggressive-timers
+            l1l2_destinations:
+              - name: ftd-4112-cluster-01-data-02
+                redirect_health_group: ftd-4112-cluster-data-02-L2
+                mac: 00:08:E3:D4:BB:BB
+                concrete_interface:
+                  l4l7_device: ftd-4112-two-arm-L2
+                  concrete_device: ftd-4112-cluster
+                  interface: data-02-vlan-13-L2
+
+        redirect_health_groups:
+          - name: ftd-4112-cluster-data-01-L2
+          - name: ftd-4112-cluster-data-02-L2
+          - name: ftd-4112-cluster-data-01-L3
+          - name: ftd-4112-cluster-data-02-L3
+
+#         imported_l4l7_devices:
+#           - name: ftd-4112-one-arm-L3
+#             tenant: shared-services
+
+#           - name: ftd-4112-two-arm-L3
+#             tenant: shared-services
+
+#           - name: ftd-4112-two-arm-L2
+#             tenant: shared-services
+
+        l4l7_devices:
+          - name: ftd-4112-one-arm-L3
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-cluster
+                interfaces:
+                  - name: data
+                    node_id: 101
+                    node2_id: 102
+                    channel: vpc_to_ftd-4112-cluster-data-01
+            logical_interfaces:
+              - name: consumer
+                vlan: 12
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data
+              - name: provider
+                vlan: 12
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data
+
+          - name: ftd-4112-two-arm-L3
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-cluster
+                interfaces:
+                  - name: data-01-vlan-12
+                    node_id: 101
+                    node2_id: 102
+                    channel: vpc_to_ftd-4112-cluster-data-01
+                  - name: data-02-vlan-13
+                    node_id: 101
+                    node2_id: 102
+                    channel: vpc_to_ftd-4112-cluster-data-02
+            logical_interfaces:
+              - name: consumer
+                vlan: 12
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data-01-vlan-12
+              - name: provider
+                vlan: 13
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data-02-vlan-13
+
+        service_graph_templates:
+
+          - name: ftd-4112-one-arm-L3
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: code-testing
+              name: ftd-4112-one-arm-L3
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+#           - name: ftd-4112-two-arm-L2 - configured in main.tf
+
+          - name: ftd-4112-two-arm-L3
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: code-testing
+              name: ftd-4112-two-arm-L3
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+# Device selection policy for one-arm-L3
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-01-L3
+              logical_interface: consumer
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-01-L3
+              logical_interface: provider
+              bridge_domain:
+                name: 6.6.6.0_24
+
+# Device selection policy for two-arm-L2 - configured in main.tf
+
+# Device selection policy for two-arm-L3
+          - contract: any
+            service_graph_template: ftd-4112-two-arm-L3
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-01-L3
+              logical_interface: consumer
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-02-L3
+              logical_interface: provider
+              bridge_domain:
+                name: 7.7.7.0_24
+
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-151'
+          entries:
+            - name: 'tcp-src-any-dst-151'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 151
+              destination_to_port: 151
+
+        - name: 'tcp-src-any-dst-152'
+          entries:
+            - name: 'tcp-src-any-dst-152'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 152
+              destination_to_port: 152
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+      imported_contracts:
+        - name: permit-from-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-to-shared-services-ftd-management-ftd-mgmt
+          tenant: shared-services
+          contract: permit-to-ftd-management-ftd-mgmt
+
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+      contracts:
+          - name: inter-epg
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: inter-esg
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: intra-esg-production
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: permit-to-development
+            description: permit to development applications
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-esg-192.168.151.0_24
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-151'
+                    action: permit
+
+          - name: permit-to-esg-192.168.152.0_24
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-152'
+                    action: permit
+
+          - name: permit-to-production
+            description: permit to production applications
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-tn-nac-testing
+            description: permit to tenant
+            scope: global
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-vzAny
+            description: vzAny is contract Provider
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-from-vzAny
+            description: vzAny is contract Consumer
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf-01
+
+      bridge_domains:
+        - name: 1.1.1.0_24
+          description: FTD Cluster subnet
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 1.1.1.254/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 6.6.6.0_24
+          description: PBR subnet data-01
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 7.7.7.0_24
+          description: PBR subnet data-02
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 7.7.7.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false

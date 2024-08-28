@@ -12,7 +12,7 @@
 apic:
   tenants:
     - name: demo-non-vmm-test
-      description: Routable IP range 10.0.10-15.x
+      description: Routable IP range 10.0.11-15.x
 
       policies:
         dhcp_relay_policies:
@@ -179,99 +179,54 @@ apic:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
           endpoint_groups:      
-            - name: '10.0.10.0_24'
-              bridge_domain: 10.0.10.0_24
+            - name: '10.0.11.0_24'
+              bridge_domain: 10.0.11.0_24
               physical_domains:
                 - "hx-dev-01-vds-02"
               static_ports:
                 - channel: "hx-dev-01-fi-a"
-                  vlan:
-                  primary_vlan: 
+                  vlan: 23
+                  primary_vlan: 22
                   node_id: 101
                   node2_id: 102
+                  deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
-                  vlan: XXX
+                  vlan: 23
+                  primary_vlan: 22
                   node_id: 101
                   node2_id: 102
-
-            - name: '10.0.11.0_24'
-              bridge_domain: 10.0.11.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
                   deployment_immediacy: immediate
-                  resolution_immediacy: immediate
 
-            - name: '10.0.12.0_24'
-              bridge_domain: 10.0.12.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-            
-            - name: '10.0.13.0_24'
-              bridge_domain: 10.0.13.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
+        # - name: epg-security-groups
+        #   endpoint_security_groups:
+        #     - name: all-epgs
+        #       # description: 
+        #       vrf: vrf-01
+        #       shutdown: false
+        #       intra_esg_isolation: false
+        #       # preferred_group: true              
 
-            - name: '10.0.14.0_24'
-              bridge_domain: 10.0.14.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
+        #       epg_selectors:
+        #         - tenant: demo-non-vmm
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.11.0_24 
 
-            - name: '10.0.15.0_24'
-              bridge_domain: 10.0.15.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
+        #         - tenant: demo-non-vmm                  
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.12.0_24
 
-            - name: '10.0.16.0_24'
-              bridge_domain: 10.0.16.0_24
-              vmware_vmm_domains:
-                - name: 'ucsc-c220m5-vds-01'
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
+        #         - tenant: demo-non-vmm                  
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.13.0_24
 
-        - name: epg-security-groups
-          endpoint_security_groups:
-            - name: all-epgs
-              # description: 
-              vrf: vrf-01
-              shutdown: false
-              intra_esg_isolation: false
-              # preferred_group: true              
+        #         - tenant: demo-non-vmm                  
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.14.0_24
 
-              epg_selectors:
-                - tenant: demo-non-vmm
-                  application_profile: network-segments
-                  endpoint_group: 10.0.11.0_24 
+        #         - tenant: demo-non-vmm                  
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.15.0_24
 
-                - tenant: demo-non-vmm                  
-                  application_profile: network-segments
-                  endpoint_group: 10.0.12.0_24
-
-                - tenant: demo-non-vmm                  
-                  application_profile: network-segments
-                  endpoint_group: 10.0.13.0_24
-
-                - tenant: demo-non-vmm                  
-                  application_profile: network-segments
-                  endpoint_group: 10.0.14.0_24
-
-                - tenant: demo-non-vmm                  
-                  application_profile: network-segments
-                  endpoint_group: 10.0.15.0_24
-
-                - tenant: demo-non-vmm                  
-                  application_profile: network-segments
-                  endpoint_group: 10.0.16.0_24
+        #         - tenant: demo-non-vmm                  
+        #           application_profile: network-segments
+        #           endpoint_group: 10.0.16.0_24

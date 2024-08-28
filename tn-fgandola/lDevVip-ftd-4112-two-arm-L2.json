@@ -1,0 +1,149 @@
+{
+    "totalCount": "1",
+    "imdata": [
+        {
+            "vnsLDevVip": {
+                "attributes": {
+                    "activeActive": "yes",
+                    "annotation": "",
+                    "contextAware": "single-Context",
+                    "devtype": "PHYSICAL",
+                    "dn": "uni/tn-fgandola/lDevVip-ftd-4112-two-arm-L2",
+                    "funcType": "L2",
+                    "isCopy": "no",
+                    "managed": "no",
+                    "mode": "legacy-Mode",
+                    "name": "ftd-4112-two-arm-L2",
+                    "nameAlias": "",
+                    "packageModel": "",
+                    "promMode": "no",
+                    "svcType": "OTHERS",
+                    "trunking": "no",
+                    "userdom": ":all:mgmt:common:"
+                },
+                "children": [
+                    {
+                        "vnsRsALDevToPhysDomP": {
+                            "attributes": {
+                                "annotation": "",
+                                "tDn": "uni/phys-firewalls",
+                                "userdom": ":all:mgmt:common:"
+                            }
+                        }
+                    },
+                    {
+                        "vnsLIf": {
+                            "attributes": {
+                                "annotation": "",
+                                "encap": "unknown",
+                                "lagPolicyName": "",
+                                "name": "consumer",
+                                "nameAlias": "",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "vnsRsCIfAttN": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tDn": "uni/tn-fgandola/lDevVip-ftd-4112-two-arm-L2/cDev-ftd-4112-cluster/cIf-[data-01]",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vnsLIf": {
+                            "attributes": {
+                                "annotation": "",
+                                "encap": "unknown",
+                                "lagPolicyName": "",
+                                "name": "provider",
+                                "nameAlias": "",
+                                "userdom": ":all:mgmt:common:"
+                            },
+                            "children": [
+                                {
+                                    "vnsRsCIfAttN": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "tDn": "uni/tn-fgandola/lDevVip-ftd-4112-two-arm-L2/cDev-ftd-4112-cluster/cIf-[data-02]",
+                                            "userdom": ":all:mgmt:common:"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "vnsCDev": {
+                            "attributes": {
+                                "annotation": "",
+                                "cloneCount": "0",
+                                "devCtxLbl": "",
+                                "host": "",
+                                "isCloneOperation": "no",
+                                "isTemplate": "no",
+                                "name": "ftd-4112-cluster",
+                                "nameAlias": "",
+                                "userdom": ":all:mgmt:common:",
+                                "vcenterName": "",
+                                "vmName": ""
+                            },
+                            "children": [
+                                {
+                                    "vnsCIf": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "encap": "vlan-13",
+                                            "name": "data-02",
+                                            "nameAlias": "",
+                                            "userdom": ":all:mgmt:common:",
+                                            "vnicName": ""
+                                        },
+                                        "children": [
+                                            {
+                                                "vnsRsCIfPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_ftd-4112-cluster-data-02]",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "vnsCIf": {
+                                        "attributes": {
+                                            "annotation": "",
+                                            "encap": "vlan-12",
+                                            "name": "data-01",
+                                            "nameAlias": "",
+                                            "userdom": ":all:mgmt:common:",
+                                            "vnicName": ""
+                                        },
+                                        "children": [
+                                            {
+                                                "vnsRsCIfPathAtt": {
+                                                    "attributes": {
+                                                        "annotation": "",
+                                                        "tDn": "topology/pod-1/protpaths-101-102/pathep-[vpc_to_ftd-4112-cluster-data-01]",
+                                                        "userdom": ":all:mgmt:common:"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
