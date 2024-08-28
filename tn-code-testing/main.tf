@@ -14,7 +14,7 @@ provider "aci" {
 }
 
 module "aci" {
-  source  = "netascode/nac-aci/aci"
+  source = "netascode/nac-aci/aci"
 
   yaml_directories = ["data"]
 
@@ -35,7 +35,7 @@ data "aci_tenant" "code-testing" {
 # Create L4-7 Device
 resource "aci_l4_l7_device" "ftd-4112-two-arm-L2" {
   tenant_dn                            = data.aci_tenant.code-testing.id
-  name                                 = "ftd-4112-two-arm-L2"
+  name                                 = "ftd-4112-two-arm-L2-active-active"
   active                               = "yes"
   context_aware                        = "single-Context"
   device_type                          = "PHYSICAL"
@@ -86,7 +86,7 @@ resource "aci_l4_l7_logical_interface" "provider" {
 # Create L4-L7 Service Graph template
 resource "aci_l4_l7_service_graph_template" "ftd-4112-two-arm-L2" {
   tenant_dn                         = data.aci_tenant.code-testing.id
-  name                              = "ftd-4112-two-arm-L2"
+  name                              = "ftd-4112-two-arm-L2-active-active"
   l4_l7_service_graph_template_type = "legacy"
   ui_template_type                  = "UNSPECIFIED"
   term_cons_name                    = "T1"
@@ -103,7 +103,7 @@ resource "aci_function_node" "N1" {
   routing_mode                         = "Redirect"
   l4_l7_device_interface_consumer_name = "consumer"
   l4_l7_device_interface_provider_name = "provider"
-  relation_vns_rs_node_to_l_dev        = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2"
+  relation_vns_rs_node_to_l_dev        = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2-active-active"
 }
 
 # Add consumer interface
@@ -140,30 +140,29 @@ resource "aci_connection" "N1-provider" {
 resource "aci_logical_device_context" "ftd-4112-two-arm-L2" {
   tenant_dn                          = data.aci_tenant.code-testing.id
   ctrct_name_or_lbl                  = "any"
-  graph_name_or_lbl                  = "ftd-4112-two-arm-L2"
+  graph_name_or_lbl                  = "ftd-4112-two-arm-L2-active-active"
   node_name_or_lbl                   = "N1"
-  relation_vns_rs_l_dev_ctx_to_l_dev = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2"
+  relation_vns_rs_l_dev_ctx_to_l_dev = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2-active-active"
 }
 
 # Create L4-L7 Device Selection Policy Interface
 resource "aci_logical_interface_context" "consumer" {
-  logical_device_context_dn        = aci_logical_device_context.ftd-4112-two-arm-L2.id
-  conn_name_or_lbl                 = "consumer"
-  l3_dest                          = "yes"
-  permit_log                       = "no"
-  relation_vns_rs_l_if_ctx_to_l_if = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2/lIf-consumer"
-  relation_vns_rs_l_if_ctx_to_bd   = "uni/tn-code-testing/BD-ftd-4112-consumer-L2"
-  # relation_vns_rs_l_if_ctx_to_svc_redirect_pol = ""
-
+  logical_device_context_dn                    = aci_logical_device_context.ftd-4112-two-arm-L2.id
+  conn_name_or_lbl                             = "consumer"
+  l3_dest                                      = "yes"
+  permit_log                                   = "no"
+  relation_vns_rs_l_if_ctx_to_l_if             = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2-active-active/lIf-consumer"
+  relation_vns_rs_l_if_ctx_to_bd               = "uni/tn-code-testing/BD-ftd-4112-consumer-L2-active-active"
+  relation_vns_rs_l_if_ctx_to_svc_redirect_pol = "uni/tn-code-testing/svcCont/svcRedirectPol-redirect-to-ftd-4112-cluster-data-01-L2-active-active"
 }
 
 # Create L4-L7 Device Selection Policy Interface
 resource "aci_logical_interface_context" "provider" {
-  logical_device_context_dn        = aci_logical_device_context.ftd-4112-two-arm-L2.id
-  conn_name_or_lbl                 = "provider"
-  l3_dest                          = "yes"
-  permit_log                       = "no"
-  relation_vns_rs_l_if_ctx_to_l_if = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2/lIf-provider"
-  relation_vns_rs_l_if_ctx_to_bd   = "uni/tn-code-testing/BD-ftd-4112-provider-L2"
-  # relation_vns_rs_l_if_ctx_to_svc_redirect_pol = ""
+  logical_device_context_dn                    = aci_logical_device_context.ftd-4112-two-arm-L2.id
+  conn_name_or_lbl                             = "provider"
+  l3_dest                                      = "yes"
+  permit_log                                   = "no"
+  relation_vns_rs_l_if_ctx_to_l_if             = "uni/tn-code-testing/lDevVip-ftd-4112-two-arm-L2-active-active/lIf-provider"
+  relation_vns_rs_l_if_ctx_to_bd               = "uni/tn-code-testing/BD-ftd-4112-provider-L2-active-active"
+  relation_vns_rs_l_if_ctx_to_svc_redirect_pol = "uni/tn-code-testing/svcCont/svcRedirectPol-redirect-to-ftd-4112-cluster-data-02-L2-active-active"
 }

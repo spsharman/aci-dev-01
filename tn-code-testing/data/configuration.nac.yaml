@@ -72,10 +72,10 @@ apic:
           - name: redirect-to-ftd-4112-cluster-data-01-L2
             type: L2
             ip_sla_policy: l2ping-aggressive-timers
-            threshold: true
-            threshold_down_action: deny
-            max_threshold: 100
-            min_threshold: 50
+            # threshold: true
+            # threshold_down_action: deny
+            # max_threshold: 100
+            # min_threshold: 50
             l1l2_destinations:
               - name: ftd-4112-cluster-01-data-01
                 redirect_health_group: ftd-4112-cluster-data-01-L2
@@ -87,10 +87,10 @@ apic:
 
           - name: redirect-to-ftd-4112-cluster-data-02-L2
             type: L2
-            threshold: true
-            threshold_down_action: deny
-            max_threshold: 100
-            min_threshold: 50
+            # threshold: true
+            # threshold_down_action: deny
+            # max_threshold: 100
+            # min_threshold: 50
             ip_sla_policy: l2ping-aggressive-timers
             l1l2_destinations:
               - name: ftd-4112-cluster-01-data-02
@@ -101,9 +101,43 @@ apic:
                   concrete_device: ftd-4112-cluster
                   interface: data-02-vlan-13-L2
 
+          - name: redirect-to-ftd-4112-cluster-data-01-L2-active-active
+            type: L2
+            ip_sla_policy: l2ping-aggressive-timers
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
+            l1l2_destinations:
+              - name: ftd-4112-cluster-01-data-01
+                redirect_health_group: ftd-4112-cluster-data-01-L2-active-active
+                mac: 00:08:E3:D4:E5:F6
+                concrete_interface:
+                  l4l7_device: ftd-4112-two-arm-L2-active-active
+                  concrete_device: ftd-4112-cluster
+                  interface: data-01-vlan-12-L2
+
+          - name: redirect-to-ftd-4112-cluster-data-02-L2-active-active
+            type: L2
+            threshold: true
+            threshold_down_action: deny
+            max_threshold: 100
+            min_threshold: 50
+            ip_sla_policy: l2ping-aggressive-timers
+            l1l2_destinations:
+              - name: ftd-4112-cluster-01-data-02
+                redirect_health_group: ftd-4112-cluster-data-02-L2-active-active
+                mac: 00:08:E3:D4:BB:BB
+                concrete_interface:
+                  l4l7_device: ftd-4112-two-arm-L2-active-active
+                  concrete_device: ftd-4112-cluster
+                  interface: data-02-vlan-13-L2
+
         redirect_health_groups:
           - name: ftd-4112-cluster-data-01-L2
+          - name: ftd-4112-cluster-data-01-L2-active-active
           - name: ftd-4112-cluster-data-02-L2
+          - name: ftd-4112-cluster-data-02-L2-active-active
           - name: ftd-4112-cluster-data-01-L3
           - name: ftd-4112-cluster-data-02-L3
 
@@ -143,6 +177,36 @@ apic:
                 concrete_interfaces:
                   - device: ftd-4112-cluster
                     interface_name: data
+
+          - name: ftd-4112-two-arm-L2
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: L2
+            service_type: OTHERS
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-cluster
+                interfaces:
+                  - name: data-01-vlan-12-L2
+                    node_id: 101
+                    node2_id: 102
+                    channel: vpc_to_ftd-4112-cluster-data-01
+                  - name: data-02-vlan-13-L2
+                    node_id: 101
+                    node2_id: 102
+                    channel: vpc_to_ftd-4112-cluster-data-02
+            logical_interfaces:
+              - name: consumer
+                vlan: 12
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data-01-vlan-12-L2
+              - name: provider
+                vlan: 13
+                concrete_interfaces:
+                  - device: ftd-4112-cluster
+                    interface_name: data-02-vlan-13-L2
 
           - name: ftd-4112-two-arm-L3
             physical_domain: firewalls
@@ -188,7 +252,19 @@ apic:
             provider:
               direct_connect: true
 
-#           - name: ftd-4112-two-arm-L2 - configured in main.tf
+          - name: ftd-4112-two-arm-L2
+            template_type: OTHER
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: code-testing
+              name: ftd-4112-two-arm-L2
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+#           - name: ftd-4112-two-arm-L2-active-active - configured in main.tf
 
           - name: ftd-4112-two-arm-L3
             template_type: FW_ROUTED
@@ -219,7 +295,23 @@ apic:
               bridge_domain:
                 name: 6.6.6.0_24
 
-# Device selection policy for two-arm-L2 - configured in main.tf
+# Device selection policy for two-arm-L2
+          - contract: any
+            service_graph_template: ftd-4112-two-arm-L2
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-01-L2
+              logical_interface: consumer
+              bridge_domain:
+                name: ftd-4112-consumer-L2
+            provider:
+              redirect_policy:
+                name: redirect-to-ftd-4112-cluster-data-02-L2
+              logical_interface: provider
+              bridge_domain:
+                name: ftd-4112-provider-L2
+
+# Device selection policy for two-arm-L2-active-active - configured in main.tf
 
 # Device selection policy for two-arm-L3
           - contract: any
@@ -344,6 +436,22 @@ apic:
                 filters:
                   - filter: src-any-dst-any
 
+          - name: permit-to-epg-192.168.151.0_24
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-151'
+                    action: permit
+
+          - name: permit-to-epg-192.168.152.0_24
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-152'
+                    action: permit
+
           - name: permit-to-esg-192.168.151.0_24
             scope: context
             subjects:
@@ -430,3 +538,105 @@ apic:
               public: false
               shared: false
               nd_ra_prefix: false
+
+        - name: 192.168.151.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.151.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.152.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.152.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.153.0_24
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.153.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: ftd-4112-consumer-L2
+          alias: internal-vrf-01
+          vrf: vrf-01
+
+        - name: ftd-4112-provider-L2
+          alias: internal-vrf-01
+          vrf: vrf-01
+
+        - name: ftd-4112-consumer-L2-active-active
+          alias: internal-vrf-01
+          vrf: vrf-01
+
+        - name: ftd-4112-provider-L2-active-active
+          alias: internal-vrf-01
+          vrf: vrf-01
+
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for workloads
+          endpoint_groups:      
+            - name: '192.168.151.0_24'
+              # description:
+              alias: internal-vrf-01
+              bridge_domain: '192.168.151.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # u_segmentation: true
+                  # primary_vlan: 1211
+                  # secondary_vlan: 1212
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                consumers:
+                  - permit-to-epg-192.168.152.0_24
+                providers:
+                  - permit-to-epg-192.168.151.0_24
+
+            - name: '192.168.152.0_24'
+              # description: 
+              alias: internal-vrf-01
+              bridge_domain: '192.168.152.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # u_segmentation: true
+                  # primary_vlan: 1213
+                  # secondary_vlan: 1214 
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                consumers:
+                  - permit-to-epg-192.168.151.0_24
+                providers:
+                  - permit-to-epg-192.168.152.0_24
+
+            - name: '192.168.153.0_24'
+              # description: 
+              alias: internal-vrf-01
+              bridge_domain: '192.168.153.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # u_segmentation: true
+                  # primary_vlan: 1215
+                  # secondary_vlan: 1216
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
