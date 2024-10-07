@@ -11,7 +11,7 @@
 ---
 apic:
   tenants:
-    - name: demo-non-vmm-test
+    - name: demo-non-vmm
       description: Routable IP range 10.0.11-15.x
 
       policies:
@@ -183,50 +183,95 @@ apic:
               bridge_domain: 10.0.11.0_24
               physical_domains:
                 - "hx-dev-01-vds-02"
+              intra_epg_isolation: true
+              proxy_arp: true
               static_ports:
                 - channel: "hx-dev-01-fi-a"
+                  node_id: 101
                   vlan: 23
                   primary_vlan: 22
-                  node_id: 101
-                  node2_id: 102
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
+                  node_id: 102                
                   vlan: 23
                   primary_vlan: 22
-                  node_id: 101
-                  node2_id: 102
                   deployment_immediacy: immediate
 
-        # - name: epg-security-groups
-        #   endpoint_security_groups:
-        #     - name: all-epgs
-        #       # description: 
-        #       vrf: vrf-01
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       # preferred_group: true              
+            - name: '10.0.12.0_24'
+              bridge_domain: 10.0.12.0_24
+              physical_domains:
+                - "hx-dev-01-vds-02"
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - channel: "hx-dev-01-fi-a"
+                  node_id: 101
+                  vlan: 25
+                  primary_vlan: 24
+                  deployment_immediacy: immediate
+                - channel: "hx-dev-01-fi-b"
+                  node_id: 102                
+                  vlan: 25
+                  primary_vlan: 24
+                  deployment_immediacy: immediate
 
-        #       epg_selectors:
-        #         - tenant: demo-non-vmm
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.11.0_24 
+            - name: '10.0.13.0_24'
+              bridge_domain: 10.0.13.0_24
+              physical_domains:
+                - "hx-dev-01-vds-02"
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - channel: "hx-dev-01-fi-a"
+                  node_id: 101
+                  vlan: 27
+                  primary_vlan: 26
+                  deployment_immediacy: immediate
+                - channel: "hx-dev-01-fi-b"
+                  node_id: 102                
+                  vlan: 27
+                  primary_vlan: 26
+                  deployment_immediacy: immediate
 
-        #         - tenant: demo-non-vmm                  
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.12.0_24
+            - name: '10.0.14.0_24'
+              bridge_domain: 10.0.14.0_24
+              physical_domains:
+                - "hx-dev-01-vds-02"
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - channel: "hx-dev-01-fi-a"
+                  node_id: 101
+                  vlan: 29
+                  primary_vlan: 28
+                  deployment_immediacy: immediate
+                - channel: "hx-dev-01-fi-b"
+                  node_id: 102                
+                  vlan: 29
+                  primary_vlan: 28
+                  deployment_immediacy: immediate
 
-        #         - tenant: demo-non-vmm                  
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.13.0_24
+        - name: epg-security-groups
+          endpoint_security_groups:
+            - name: all-epgs
+              description: matches all EPGs
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: true
 
-        #         - tenant: demo-non-vmm                  
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.14.0_24
+              contracts:
+                intra_esgs:
+                  - intra-tenant
 
-        #         - tenant: demo-non-vmm                  
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.15.0_24
+              epg_selectors:
+                  - application_profile: network-segments
+                    endpoint_group: 10.0.11.0_24 
 
-        #         - tenant: demo-non-vmm                  
-        #           application_profile: network-segments
-        #           endpoint_group: 10.0.16.0_24
+                  - application_profile: network-segments
+                    endpoint_group: 10.0.12.0_24
+                
+                  - application_profile: network-segments
+                    endpoint_group: 10.0.13.0_24
+
+                  - application_profile: network-segments
+                    endpoint_group: 10.0.14.0_24
