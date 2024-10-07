@@ -17,14 +17,6 @@ apic:
             description: multisite ipn peering
           - from: 5
             description: fabric inband management
-          - from: 113
-            description: L3 peering to r40-c6506a
-          - from: 114
-            description: L3 peering to r40-c6506b
-          - from: 115
-            description: L3 peering to r40-c6506a
-          - from: 116
-            description: L3 peering to r40-c6506b
           - from: 986
             description: hx-dev-01 - vmotion
           - from: 987
