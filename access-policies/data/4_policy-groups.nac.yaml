@@ -89,16 +89,9 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_r07-tor
+      - name: vpc_to_rack_L11-tor
         type: vpc
-        aaep: vpc_to_r07-tor
-        cdp_policy: cdp-enabled
-        l2_policy: port-local-vlans
-        port_channel_policy: lacp-active
-
-      - name: vpc_to_r28-tor
-        type: vpc
-        aaep: vpc_to_r28-tor
+        aaep: vpc_to_rack_L11-tor
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active

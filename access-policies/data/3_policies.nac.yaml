@@ -102,18 +102,13 @@ apic:
           - shared-services.vrf-01
 
       - name: ucs-c220m5-vds-01
-        vmware_vmm_domains:
+        physical_domains:
           - ucsc-c220m5-vds-01
 
-      - name: vpc_to_r07-tor
+      - name: vpc_to_rack_L11-tor
         # routed_domains:
         #   - mgmt_inb
-
         physical_domains:
           - dmz
           - external-switches
           - hyperflex
-
-      - name: vpc_to_r28-tor
-        physical_domains:
-          - container-nodes

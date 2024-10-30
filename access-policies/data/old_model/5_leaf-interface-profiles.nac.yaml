@@ -111,21 +111,13 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_r07-tor
-            policy_group: vpc_to_r07-tor
+          - name: vpc_to_rack-L11-tor
+            policy_group: vpc_to_rack_L11-tor
             port_blocks:
               - name: block-1
-                description: rack-07-tor g0/11
+                description: rack-L11-tor g1/0/47
                 from_port: 45
                 to_port: 45
-
-          - name: vpc_to_r28-tor
-            policy_group: vpc_to_r28-tor
-            port_blocks:
-              - name: block-1
-                description: rack-28-tor g0/47
-                from_port: 39
-                to_port: 39
 
 # aci-dev-01-leaf-102
       - name: aci-dev-01-leaf-102
@@ -234,18 +226,10 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_r07-tor
-            policy_group: vpc_to_r07-tor
+          - name: vpc_to_rack_L11-tor
+            policy_group: vpc_to_rack_L11-tor
             port_blocks:
               - name: block-1
-                description: rack-07-tor g0/12
+                description: rack-L11-tor g1/0/48
                 from_port: 45
                 to_port: 45
-
-          - name: vpc_to_r28-tor
-            policy_group: vpc_to_r28-tor
-            port_blocks:
-              - name: block-1
-                description: rack-28-tor g0/48
-                from_port: 39
-                to_port: 39

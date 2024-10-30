@@ -283,50 +283,46 @@ apic:
             description: fabric inband management
 
       - name: ucsc-c220m5-vds-01
-        allocation: dynamic
+        allocation: static
         ranges:
-          - from: 10
-            to: 11
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 20
-            to: 21
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 30
-            to: 31
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 40
-            to: 41
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 50
-            to: 51
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 60
-            to: 61
-            description: primary/secondary PVLANs
-            allocation: static
-          - from: 70
-            to: 71
-            description: primary/secondary PVLANs
-            allocation: static
           - from: 500
             description: conmurph floating L3out
             allocation: static
           - from: 986
-            description: ucsc-c220m5 vmotion
+            description: ucsc-c220m5 vmk1 vmotion
             allocation: static
           - from: 992
-            description: ucsc-c220m5 esx management
+            description: ucsc-c220m5 vmk0 esx management
             allocation: static
-          - from: 1101
-            to: 1200
-            description: dynamic vlans for VMM integration
-          - from: 1201
-            to: 1300
-            description: dynamic vlans for VMM integration
-
+          - from: 3002
+            description: ucs-c220m5 vmk2 vsan
+            allocation: static
+          - from: 3010
+            to: 3011
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3012
+            to: 3013
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3014
+            to: 3015
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3016
+            to: 3017
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3018
+            to: 3019
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3020
+            to: 3021
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3022
+            to: 3023
+            description: primary/secondary PVLANs
+            allocation: static
 

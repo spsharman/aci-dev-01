@@ -35,23 +35,12 @@ apic:
       application_profiles:
         - name: "host-connectivity"
           endpoint_groups:
-
             - name: "host-mgmt"
               bridge_domain: vlan-992
-              vmware_vmm_domains:
-                - name: "ucsc-c220m5-vds-01"
-                  u_segmentation: false
-                  deployment_immediacy: immediate
-                  resolution_immediacy: pre-provision
-                  vlan: 992
               physical_domains:
                 - "hyperflex"
+                - "ucsc-c220m5-vds-01"
               static_ports:
-                - channel: "vpc_to_r07-tor"
-                  vlan: 992
-                  node_id: 101
-                  node2_id: 102
-                  deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-a"
                   vlan: 992
                   node_id: 101
@@ -59,6 +48,43 @@ apic:
                 - channel: "hx-dev-01-fi-b"
                   vlan: 992
                   node_id: 102
+                  deployment_immediacy: immediate
+                - channel: "vpc_to_rack_L11-tor"
+                  vlan: 992
+                  node_id: 101
+                  node2_id: 102
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 29
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 29
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 30
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 30
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 31
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 31
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 32
+                  vlan: 992
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 32
+                  vlan: 992
                   deployment_immediacy: immediate
 
             - name: "hx-storage"
@@ -77,14 +103,9 @@ apic:
 
             - name: "vmotion"
               bridge_domain: 192.168.4.x_24
-              vmware_vmm_domains:
-                - name: "ucsc-c220m5-vds-01"
-                  u_segmentation: false
-                  deployment_immediacy: immediate
-                  resolution_immediacy: pre-provision
-                  vlan: 986
               physical_domains:
                 - "hyperflex"
+                - "ucsc-c220m5-vds-01"
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 986
@@ -94,11 +115,73 @@ apic:
                   vlan: 986
                   node_id: 102
                   deployment_immediacy: immediate
+                - node_id: 101
+                  port: 29
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 29
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 30
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 30
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 31
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 31
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 32
+                  vlan: 986
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 32
+                  vlan: 986
+                  deployment_immediacy: immediate
 
             - name: "vsan"
               bridge_domain: 192.168.4.x_24
-              vmware_vmm_domains:
-                - name: "ucsc-c220m5-vds-01"
-                  u_segmentation: false
+              physical_domains:
+                - "ucsc-c220m5-vds-01"
+              static_ports:
+                - node_id: 101
+                  port: 29
+                  vlan: 3002
                   deployment_immediacy: immediate
-                  resolution_immediacy: pre-provision
+                - node_id: 102
+                  port: 29
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 30
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 30
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 31
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 31
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 101
+                  port: 32
+                  vlan: 3002
+                  deployment_immediacy: immediate
+                - node_id: 102
+                  port: 32
+                  vlan: 3002
+                  deployment_immediacy: immediate
