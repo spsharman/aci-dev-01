@@ -608,7 +608,7 @@
                                             "hasMcastSource": "no",
                                             "isAttrBasedEPg": "no",
                                             "matchT": "AtleastOne",
-                                            "name": "vsan",
+                                            "name": "ip-storage",
                                             "nameAlias": "",
                                             "pcEnfPref": "unenforced",
                                             "prefGrMemb": "exclude",

@@ -295,7 +295,7 @@ apic:
             description: ucsc-c220m5 vmk0 esx management
             allocation: static
           - from: 3002
-            description: ucs-c220m5 vmk2 vsan
+            description: ucs-c220m5 vmk2 ip-storage
             allocation: static
           - from: 3010
             to: 3011

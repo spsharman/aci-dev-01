@@ -16,7 +16,7 @@ apic:
 
       bridge_domains:
         - name: 192.168.4.x_24
-          description: vmotion and vsan
+          description: vmotion and ip-storage
           alias: common.vrf-01
           unknown_unicast: proxy
           vrf: common.vrf-01
@@ -148,7 +148,7 @@ apic:
                   vlan: 986
                   deployment_immediacy: immediate
 
-            - name: "vsan"
+            - name: "ip-storage"
               bridge_domain: 192.168.4.x_24
               physical_domains:
                 - "ucsc-c220m5-vds-01"
