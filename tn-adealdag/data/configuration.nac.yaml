@@ -199,6 +199,7 @@ apic:
       application_profiles:      
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
+
 # EPGs
           endpoint_groups:      
             - name: '192.168.40.0_24'
@@ -297,8 +298,6 @@ apic:
                   primary_vlan: 3012
                   deployment_immediacy: immediate
 
-
-
 # ESGs
         - name: epg-security-groups
           endpoint_security_groups:
@@ -318,23 +317,3 @@ apic:
               contracts:
                 intra_esgs:
                   - permit-intra-esg
-
-#                 - tenant: adealdag                  
-#                   application_profile: network-segments
-#                   endpoint_group: 192.168.41.0_24
-
-#                 - tenant: adealdag                  
-#                   application_profile: network-segments
-#                   endpoint_group: 192.168.42.0_24
-
-#                 - tenant: adealdag                  
-#                   application_profile: network-segments
-#                   endpoint_group: 192.168.43.0_24
-
-#                 - tenant: adealdag                  
-#                   application_profile: network-segments
-#                   endpoint_group: 192.168.44.0_24
-
-#                 - tenant: adealdag                  
-#                   application_profile: network-segments
-#                   endpoint_group: 192.168.45.0_24
