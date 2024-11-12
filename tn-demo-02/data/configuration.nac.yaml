@@ -52,6 +52,13 @@ apic:
         #       filters:
         #         - filter: permit-src-any-dst-any
         #       service_graph: ftdv-02-adapter-8-gig-0-5
+        - name: permit-intra-esg
+          description: permits intra-esg any/any
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
 
         - name: permit-to-esg-10.0.61.0_24
           scope: tenant
@@ -324,7 +331,7 @@ apic:
               # description: 
               vrf: vrf-02
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               epg_selectors:               
                 - application_profile: network-segments
                   endpoint_group: 10.0.61.0_24
@@ -333,12 +340,14 @@ apic:
                 # imported_consumers:
                 providers:
                   - permit-to-esg-10.0.61.0_24
+                intra_esgs:
+                  - permit-intra-esg
 
             - name: 10.0.62.0_24
               # description: 
               vrf: vrf-02
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               epg_selectors:
                 - application_profile: network-segments
                   endpoint_group: 10.0.62.0_24
@@ -347,3 +356,5 @@ apic:
                 # imported_consumers:
                 providers:
                   - permit-to-esg-10.0.62.0_24
+                intra_esgs:
+                  - permit-intra-esg
