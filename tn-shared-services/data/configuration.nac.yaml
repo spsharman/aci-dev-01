@@ -119,8 +119,8 @@ apic:
                 imported_consumers:
                   - permit-to-tn-adealdag
                   # - permit-to-tn-adossant
-                  - permit-to-tn-ajshahid
-                  - permit-to-tn-conmurph-01
+                  # - permit-to-tn-ajshahid
+                  # - permit-to-tn-conmurph-01
                   - permit-to-tn-containers
                   # - permit-to-tn-demo
                   - permit-to-tn-demo-03
@@ -131,8 +131,8 @@ apic:
                   - permit-to-tn-movaswan
                   - permit-to-tn-ndsouzar
                   # - permit-to-tn-ngorse
-                  - permit-to-tn-rotaplin
-                  - permit-to-tn-roxadiaz
+                  # - permit-to-tn-rotaplin
+                  # - permit-to-tn-roxadiaz
                   - permit-to-tn-rwhitear
                   # - permit-to-tn-sgioia
                   - permit-to-tn-ssharman
