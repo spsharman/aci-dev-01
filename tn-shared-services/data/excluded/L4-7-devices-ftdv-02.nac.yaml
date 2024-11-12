@@ -4,7 +4,7 @@ apic:
       managed: false
       services:
         l4l7_devices:
-#############################################################################
+#
           - name: ftdv-02-adapter-5-gig-0-2
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context
@@ -24,7 +24,7 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-02-adapter-5-gig-0-2
                     interface_name: gig-0-2
-# #############################################################################
+#
           - name: ftdv-02-adapter-6-gig-0-3
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context
@@ -44,7 +44,7 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-02-adapter-6-gig-0-3
                     interface_name: gig-0-3
-# #############################################################################
+#
           - name: ftdv-02-adapter-7-gig-0-4
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context
@@ -64,7 +64,7 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-02-adapter-7-gig-0-4
                     interface_name: gig-0-4
-# #############################################################################
+#
           - name: ftdv-02-adapter-8-gig-0-5
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context
@@ -84,7 +84,7 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-02-adapter-8-gig-0-5
                     interface_name: gig-0-5
-# #############################################################################
+# 
           - name: ftdv-02-adapter-9-gig-0-6
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context
@@ -104,7 +104,7 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-02-adapter-9-gig-0-6
                     interface_name: gig-0-6
-# #############################################################################
+# 
           - name: ftdv-02-adapter-10-gig-0-7
             vmware_vmm_domain: ucsc-c220m5-vds-01
             context_aware: single-Context

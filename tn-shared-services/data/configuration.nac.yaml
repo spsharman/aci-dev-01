@@ -4,6 +4,7 @@ apic:
     - name: shared-services
       managed: false
 
+# Policies
       policies:
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
@@ -15,6 +16,7 @@ apic:
                 l3out: demo-01.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: all-external-subnets
 
+# Contracts
       imported_contracts:
         - name: permit-to-tn-demo-03
           tenant: demo-03
@@ -116,7 +118,7 @@ apic:
                   - permit-to-shared-services.vrf-01-all-external-subnets
                 imported_consumers:
                   - permit-to-tn-adealdag
-                  - permit-to-tn-adossant
+                  # - permit-to-tn-adossant
                   - permit-to-tn-ajshahid
                   - permit-to-tn-conmurph-01
                   - permit-to-tn-containers
@@ -125,14 +127,14 @@ apic:
                   - permit-to-tn-demo-non-vmm-online-boutique-all-services
                   # - permit-to-tn-demo-online-boutique-frontend-service
                   - permit-to-tn-fgandola
-                  - permit-to-tn-fgandola-applications-development
+                  # - permit-to-tn-fgandola-applications-development
                   - permit-to-tn-movaswan
                   - permit-to-tn-ndsouzar
                   # - permit-to-tn-ngorse
                   - permit-to-tn-rotaplin
                   - permit-to-tn-roxadiaz
                   - permit-to-tn-rwhitear
-                  - permit-to-tn-sgioia
+                  # - permit-to-tn-sgioia
                   - permit-to-tn-ssharman
                   - permit-to-tn-ssharman-applications-development
                   - permit-to-tn-ssharman-applications-production
