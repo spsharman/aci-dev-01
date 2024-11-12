@@ -7,7 +7,7 @@
 # - name: 'hx-dev-01-vds-01'
 # primary_vlan: 1243
 # secondary_vlan: 1244
-#
+# vpc_to_rack-L11-tor
 ---
 apic:
   tenants:
@@ -29,7 +29,7 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_r07-tor"
+                - channel: "vpc_to_rack-L11-tor"
                   vlan: 3001
                   node_id: 101
                   node2_id: 102
@@ -46,7 +46,7 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_r07-tor"
+                - channel: "vpc_to_rack-L11-tor"
                   vlan: 3002
                   node_id: 101
                   node2_id: 102
@@ -63,7 +63,7 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_r07-tor"
+                - channel: "vpc_to_rack-L11-tor"
                   vlan: 3003
                   node_id: 101
                   node2_id: 102
