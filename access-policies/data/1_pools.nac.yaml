@@ -325,4 +325,15 @@ apic:
             to: 3023
             description: primary/secondary PVLANs
             allocation: static
-
+          - from: 3024
+            to: 3025
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3026
+            to: 3027
+            description: primary/secondary PVLANs
+            allocation: static
+          - from: 3028
+            to: 3029
+            description: primary/secondary PVLANs
+            allocation: static

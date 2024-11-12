@@ -23,9 +23,3 @@ plan.out
 # Exclude .terraform directories
 .terraform/
 **/.terraform/
-
-# Exclude baseline files
-**/baseline-files/*
-
-# Exclude deployment notes
-**/deployment-notes.txt
