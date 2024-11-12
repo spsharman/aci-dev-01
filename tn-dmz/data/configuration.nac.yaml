@@ -29,12 +29,12 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_rack-L11-tor"
+                - channel: "vpc_to_rack_L11-tor"
                   vlan: 3001
                   node_id: 101
                   node2_id: 102
                   deployment_immediacy: immediate
-                  
+
             - name: "64.103.44.64_27"
               bridge_domain: vlan-3002
               vmware_vmm_domains:
@@ -46,7 +46,7 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_rack-L11-tor"
+                - channel: "vpc_to_rack_L11-tor"
                   vlan: 3002
                   node_id: 101
                   node2_id: 102
@@ -63,7 +63,7 @@ apic:
               physical_domains:
                 - "dmz"
               static_ports:
-                - channel: "vpc_to_rack-L11-tor"
+                - channel: "vpc_to_rack_L11-tor"
                   vlan: 3003
                   node_id: 101
                   node2_id: 102
