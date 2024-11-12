@@ -58,7 +58,7 @@ variable "pvlan-portgroups" {
   default = {
 # Port group name should follow the ACI structure 'tenant|application profile|epg'
     "adealdag|network-segments|192.168.40.0_24" = 3011
-    "adealdag|network-segments|192.168.40.1_24" = 3013
+    "adealdag|network-segments|192.168.41.0_24" = 3013
   }
 }
 
