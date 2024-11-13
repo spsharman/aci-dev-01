@@ -115,10 +115,13 @@ apic:
           description: intra ESG contract for monitoring
           scope: context
           subjects:
-            - name: redirect
-              service_graph: csr1kv-01-adapter-2-gig-2
-              filters: 
+            - name: permit-src-any-dst-any
+              filters:
                 - filter: permit-src-any-dst-any
+            # - name: redirect
+            #   service_graph: csr1kv-01-adapter-2-gig-2
+            #   filters: 
+            #     - filter: permit-src-any-dst-any
 
         - name: permit-to-vzAny
           description: vzAny is contract Provider
