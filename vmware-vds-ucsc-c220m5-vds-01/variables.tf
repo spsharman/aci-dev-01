@@ -61,6 +61,8 @@ variable "pvlan-portgroups" {
     "adealdag|network-segments|192.168.41.0_24" = 3013
     "demo-02|network-segments|10.0.61.0_24" = 3015
     "demo-02|network-segments|10.0.62.0_24" = 3017
+    "demo-03|network-segments|10.0.71.0_24" = 3019
+    "demo-03|network-segments|10.0.72.0_24" = 3021
   }
 }
 
