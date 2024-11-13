@@ -63,6 +63,8 @@ variable "pvlan-portgroups" {
     "demo-02|network-segments|10.0.62.0_24" = 3017
     "demo-03|network-segments|10.0.71.0_24" = 3019
     "demo-03|network-segments|10.0.72.0_24" = 3021
+    "demo-04|network-segments|10.0.81.0_24" = 3023
+    "demo-04|network-segments|10.0.82.0_24" = 3025
   }
 }
 
