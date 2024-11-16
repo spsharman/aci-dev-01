@@ -5,6 +5,7 @@ provider "registry.terraform.io/ciscodevnet/aci" {
   version     = "2.13.0"
   constraints = ">= 2.0.0, >= 2.6.0, >= 2.6.1"
   hashes = [
+    "h1:Q4gkAwHlraP2IXo2n1yDgSRdnkfB072RWS9ZRFsbL5M=",
     "h1:u2It7qQW08h/VCWUmVyJzRUa1tUzJ7oliYoSWxZekKs=",
     "zh:082ee01e73eb732c40de89da58d367aa3bb57a6f818d715eb4c45357c9cdf708",
     "zh:10092d45d576e4421a964e3cffe78424ab31f4d1e8bf97ff96e00a171ea0c209",
@@ -33,6 +34,7 @@ provider "registry.terraform.io/hashicorp/local" {
   constraints = ">= 2.3.0"
   hashes = [
     "h1:V2G4qygMV0uHy+QTMlrjSyYgzpYmYyB6gWuE09+5CPI=",
+    "h1:gpp25uNkYJYzJVnkyRr7RIBVfwLs9GSq2HNnFpTRBg0=",
     "zh:244b445bf34ddbd167731cc6c6b95bbed231dc4493f8cc34bd6850cfe1f78528",
     "zh:3c330bdb626123228a0d1b1daa6c741b4d5d484ab1c7ae5d2f48d4c9885cc5e9",
     "zh:5ff5f9b791ddd7557e815449173f2db38d338e674d2d91800ac6e6d808de1d1d",
@@ -52,6 +54,7 @@ provider "registry.terraform.io/netascode/utils" {
   version     = "0.2.5"
   constraints = ">= 0.2.5"
   hashes = [
+    "h1:4AzUCbJVDuVzrOS+bdc6LpaQpekZRD2kpbIXJbE+aew=",
     "h1:vSxJjaCF+t3FhJMNPmOeO+uHQ2m1OYhRqMZ93jTNSbE=",
     "zh:012e0209ce8a280d183c5546b541474c7525fc8cccaa5dfab7740debb45cf7ee",
     "zh:0290fc1302cff865042856c053afa9bd17f761a7b15d3308a44c2a066940246f",

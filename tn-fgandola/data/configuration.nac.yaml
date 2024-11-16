@@ -53,240 +53,240 @@ apic:
             multiplier: 3
             sla_type: l2ping
 
-      services:
-        redirect_policies:
-          - name: redirect-to-ftd-4112-cluster-data-01
-            ip_sla_policy: icmp-aggressive-timers
-            l3_destinations:
-              - ip: 6.6.6.10
-                mac: 00:08:E3:D4:E5:F6
-                redirect_health_group: ftd-4112-cluster-data-01
+#       services:
+#         redirect_policies:
+#           - name: redirect-to-ftd-4112-cluster-data-01
+#             ip_sla_policy: icmp-aggressive-timers
+#             l3_destinations:
+#               - ip: 6.6.6.10
+#                 mac: 00:08:E3:D4:E5:F6
+#                 redirect_health_group: ftd-4112-cluster-data-01
 
-          - name: redirect-to-ftd-4112-cluster-data-02
-            ip_sla_policy: icmp-aggressive-timers
-            l3_destinations:
-              - ip: 7.7.7.10
-                mac: 00:08:E3:D4:BB:BB
-                redirect_health_group: ftd-4112-cluster-data-02
+#           - name: redirect-to-ftd-4112-cluster-data-02
+#             ip_sla_policy: icmp-aggressive-timers
+#             l3_destinations:
+#               - ip: 7.7.7.10
+#                 mac: 00:08:E3:D4:BB:BB
+#                 redirect_health_group: ftd-4112-cluster-data-02
 
-          - name: redirect-to-ftd-4112-cluster-data-01-L2
-            type: L2
-            ip_sla_policy: l2ping-aggressive-timers
-            # threshold: true
-            # threshold_down_action: deny
-            # max_threshold: 100
-            # min_threshold: 50
-            l1l2_destinations:
-              - name: ftd-4112-cluster-01-data-01
-                redirect_health_group: ftd-4112-cluster-data-01-L2
-                mac: 00:08:E3:D4:E5:F6
-                concrete_interface:
-                  l4l7_device: ftd-4112-two-arm-L2
-                  concrete_device: ftd-4112-cluster
-                  interface: data-01-vlan-12-L2
+#           - name: redirect-to-ftd-4112-cluster-data-01-L2
+#             type: L2
+#             ip_sla_policy: l2ping-aggressive-timers
+#             # threshold: true
+#             # threshold_down_action: deny
+#             # max_threshold: 100
+#             # min_threshold: 50
+#             l1l2_destinations:
+#               - name: ftd-4112-cluster-01-data-01
+#                 redirect_health_group: ftd-4112-cluster-data-01-L2
+#                 mac: 00:08:E3:D4:E5:F6
+#                 concrete_interface:
+#                   l4l7_device: ftd-4112-two-arm-L2
+#                   concrete_device: ftd-4112-cluster
+#                   interface: data-01-vlan-12-L2
 
-          - name: redirect-to-ftd-4112-cluster-data-02-L2
-            type: L2
-            ip_sla_policy: l2ping-aggressive-timers
-            # threshold: true
-            # threshold_down_action: deny
-            # max_threshold: 100
-            # min_threshold: 50
-            l1l2_destinations:
-              - name: ftd-4112-cluster-01-data-02
-                redirect_health_group: ftd-4112-cluster-data-02-L2
-                mac: 00:08:E3:D4:BB:BB
-                concrete_interface:
-                  l4l7_device: ftd-4112-two-arm-L2
-                  concrete_device: ftd-4112-cluster
-                  interface: data-02-vlan-13-L2
+#           - name: redirect-to-ftd-4112-cluster-data-02-L2
+#             type: L2
+#             ip_sla_policy: l2ping-aggressive-timers
+#             # threshold: true
+#             # threshold_down_action: deny
+#             # max_threshold: 100
+#             # min_threshold: 50
+#             l1l2_destinations:
+#               - name: ftd-4112-cluster-01-data-02
+#                 redirect_health_group: ftd-4112-cluster-data-02-L2
+#                 mac: 00:08:E3:D4:BB:BB
+#                 concrete_interface:
+#                   l4l7_device: ftd-4112-two-arm-L2
+#                   concrete_device: ftd-4112-cluster
+#                   interface: data-02-vlan-13-L2
 
-        redirect_health_groups:
-          - name: ftd-4112-cluster-data-01
-          - name: ftd-4112-cluster-data-02
-          - name: ftd-4112-cluster-data-01-L2
-          - name: ftd-4112-cluster-data-02-L2
+#         redirect_health_groups:
+#           - name: ftd-4112-cluster-data-01
+#           - name: ftd-4112-cluster-data-02
+#           - name: ftd-4112-cluster-data-01-L2
+#           - name: ftd-4112-cluster-data-02-L2
 
-        # imported_l4l7_devices:
-        #   - name: ftd-4112-one-arm-L3
-        #     tenant: shared-services
+#         # imported_l4l7_devices:
+#         #   - name: ftd-4112-one-arm-L3
+#         #     tenant: shared-services
 
-        #   - name: ftd-4112-two-arm-L3
-        #     tenant: shared-services
+#         #   - name: ftd-4112-two-arm-L3
+#         #     tenant: shared-services
 
-        #   - name: ftd-4112-two-arm-L2
-        #     tenant: shared-services
+#         #   - name: ftd-4112-two-arm-L2
+#         #     tenant: shared-services
 
-        l4l7_devices:
-          - name: ftd-4112-one-arm-L3
-            physical_domain: firewalls
-            context_aware: single-Context
-            type: PHYSICAL
-            function: GoTo
-            service_type: FW
-            trunking: false
-            concrete_devices:
-              - name: ftd-4112-cluster
-                interfaces:
-                  - name: data
-                    node_id: 101
-                    node2_id: 102
-                    channel: vpc_to_ftd-4112-cluster-data-01
-            logical_interfaces:
-              - name: data
-                vlan: 12
-                concrete_interfaces:
-                  - device: ftd-4112-cluster
-                    interface_name: data
+#         l4l7_devices:
+#           - name: ftd-4112-one-arm-L3
+#             physical_domain: firewalls
+#             context_aware: single-Context
+#             type: PHYSICAL
+#             function: GoTo
+#             service_type: FW
+#             trunking: false
+#             concrete_devices:
+#               - name: ftd-4112-cluster
+#                 interfaces:
+#                   - name: data
+#                     node_id: 101
+#                     node2_id: 102
+#                     channel: vpc_to_ftd-4112-cluster-data-01
+#             logical_interfaces:
+#               - name: data
+#                 vlan: 12
+#                 concrete_interfaces:
+#                   - device: ftd-4112-cluster
+#                     interface_name: data
 
-          - name: ftd-4112-two-arm-L3
-            physical_domain: firewalls
-            context_aware: single-Context
-            type: PHYSICAL
-            function: GoTo
-            service_type: FW
-            trunking: false
-            concrete_devices:
-              - name: ftd-4112-cluster
-                interfaces:
-                  - name: data-01-vlan-12
-                    node_id: 101
-                    node2_id: 102
-                    channel: vpc_to_ftd-4112-cluster-data-01
-                  - name: data-02-vlan-13
-                    node_id: 101
-                    node2_id: 102
-                    channel: vpc_to_ftd-4112-cluster-data-02
-            logical_interfaces:
-              - name: consumer
-                vlan: 12
-                concrete_interfaces:
-                  - device: ftd-4112-cluster
-                    interface_name: data-01-vlan-12
-              - name: provider
-                vlan: 13
-                concrete_interfaces:
-                  - device: ftd-4112-cluster
-                    interface_name: data-02-vlan-13
+#           - name: ftd-4112-two-arm-L3
+#             physical_domain: firewalls
+#             context_aware: single-Context
+#             type: PHYSICAL
+#             function: GoTo
+#             service_type: FW
+#             trunking: false
+#             concrete_devices:
+#               - name: ftd-4112-cluster
+#                 interfaces:
+#                   - name: data-01-vlan-12
+#                     node_id: 101
+#                     node2_id: 102
+#                     channel: vpc_to_ftd-4112-cluster-data-01
+#                   - name: data-02-vlan-13
+#                     node_id: 101
+#                     node2_id: 102
+#                     channel: vpc_to_ftd-4112-cluster-data-02
+#             logical_interfaces:
+#               - name: consumer
+#                 vlan: 12
+#                 concrete_interfaces:
+#                   - device: ftd-4112-cluster
+#                     interface_name: data-01-vlan-12
+#               - name: provider
+#                 vlan: 13
+#                 concrete_interfaces:
+#                   - device: ftd-4112-cluster
+#                     interface_name: data-02-vlan-13
 
-# Manually configured in main.tf due to NAC active/active support
-          - name: ftd-4112-two-arm-L2
-            physical_domain: firewalls
-            context_aware: single-Context
-            type: PHYSICAL
-            function: L2
-            service_type: OTHERS
-            trunking: false
-            concrete_devices:
-              - name: ftd-4112-cluster
-                interfaces:
-                  - name: data-01-vlan-12-L2
-                    node_id: 101
-                    node2_id: 102
-                    channel: vpc_to_ftd-4112-cluster-data-01
-                    # vlan: 12
-                  - name: data-02-vlan-13-L2
-                    node_id: 101
-                    node2_id: 102
-                    channel: vpc_to_ftd-4112-cluster-data-02
-                    # vlan: 13
-            logical_interfaces:
-              - name: consumer
-                vlan: 12
-                concrete_interfaces:
-                  - device: ftd-4112-cluster
-                    interface_name: data-01-vlan-12-L2
-              - name: provider
-                vlan: 13
-                concrete_interfaces:
-                  - device: ftd-4112-cluster
-                    interface_name: data-02-vlan-13-L2
+# # Manually configured in main.tf due to NAC active/active support
+#           - name: ftd-4112-two-arm-L2
+#             physical_domain: firewalls
+#             context_aware: single-Context
+#             type: PHYSICAL
+#             function: L2
+#             service_type: OTHERS
+#             trunking: false
+#             concrete_devices:
+#               - name: ftd-4112-cluster
+#                 interfaces:
+#                   - name: data-01-vlan-12-L2
+#                     node_id: 101
+#                     node2_id: 102
+#                     channel: vpc_to_ftd-4112-cluster-data-01
+#                     # vlan: 12
+#                   - name: data-02-vlan-13-L2
+#                     node_id: 101
+#                     node2_id: 102
+#                     channel: vpc_to_ftd-4112-cluster-data-02
+#                     # vlan: 13
+#             logical_interfaces:
+#               - name: consumer
+#                 vlan: 12
+#                 concrete_interfaces:
+#                   - device: ftd-4112-cluster
+#                     interface_name: data-01-vlan-12-L2
+#               - name: provider
+#                 vlan: 13
+#                 concrete_interfaces:
+#                   - device: ftd-4112-cluster
+#                     interface_name: data-02-vlan-13-L2
 
-        service_graph_templates:
-          - name: ftd-4112-one-arm-L3
-            template_type: FW_ROUTED
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: fgandola
-              name: ftd-4112-one-arm-L3
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
+#         service_graph_templates:
+#           - name: ftd-4112-one-arm-L3
+#             template_type: FW_ROUTED
+#             redirect: true
+#             share_encapsulation: false
+#             device:
+#               tenant: fgandola
+#               name: ftd-4112-one-arm-L3
+#             consumer:
+#               direct_connect: false
+#             provider:
+#               direct_connect: true
 
-          - name: ftd-4112-two-arm-L2
-            template_type: OTHER
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: fgandola
-              name: ftd-4112-two-arm-L2
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
+#           - name: ftd-4112-two-arm-L2
+#             template_type: OTHER
+#             redirect: true
+#             share_encapsulation: false
+#             device:
+#               tenant: fgandola
+#               name: ftd-4112-two-arm-L2
+#             consumer:
+#               direct_connect: false
+#             provider:
+#               direct_connect: true
 
-          - name: ftd-4112-two-arm-L3
-            template_type: FW_ROUTED
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: fgandola
-              name: ftd-4112-two-arm-L3
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
+#           - name: ftd-4112-two-arm-L3
+#             template_type: FW_ROUTED
+#             redirect: true
+#             share_encapsulation: false
+#             device:
+#               tenant: fgandola
+#               name: ftd-4112-two-arm-L3
+#             consumer:
+#               direct_connect: false
+#             provider:
+#               direct_connect: true
 
-        device_selection_policies:
-# Device selection policy for one-arm-L3
-          - contract: any
-            service_graph_template: ftd-4112-one-arm-L3
-            consumer:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-01
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-01
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
+#         device_selection_policies:
+# # Device selection policy for one-arm-L3
+#           - contract: any
+#             service_graph_template: ftd-4112-one-arm-L3
+#             consumer:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-01
+#               logical_interface: data
+#               bridge_domain:
+#                 name: 6.6.6.0_24
+#             provider:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-01
+#               logical_interface: data
+#               bridge_domain:
+#                 name: 6.6.6.0_24
 
-# Device selection policy for two-arm-L2
-          - contract: any
-            service_graph_template: ftd-4112-two-arm-L2
-            consumer:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-01-L2
-              logical_interface: consumer
-              bridge_domain:
-                name: ftd-4112-consumer-L2
-            provider:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-02-L2
-              logical_interface: provider
-              bridge_domain:
-                name: ftd-4112-provider-L2
+# # Device selection policy for two-arm-L2
+#           - contract: any
+#             service_graph_template: ftd-4112-two-arm-L2
+#             consumer:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-01-L2
+#               logical_interface: consumer
+#               bridge_domain:
+#                 name: ftd-4112-consumer-L2
+#             provider:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-02-L2
+#               logical_interface: provider
+#               bridge_domain:
+#                 name: ftd-4112-provider-L2
 
-# Device selection policy for two-arm-L3
-          - contract: any
-            service_graph_template: ftd-4112-two-arm-L3
-            consumer:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-01
-              logical_interface: consumer
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: redirect-to-ftd-4112-cluster-data-02
-              logical_interface: provider
-              bridge_domain:
-                name: 7.7.7.0_24
+# # Device selection policy for two-arm-L3
+#           - contract: any
+#             service_graph_template: ftd-4112-two-arm-L3
+#             consumer:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-01
+#               logical_interface: consumer
+#               bridge_domain:
+#                 name: 6.6.6.0_24
+#             provider:
+#               redirect_policy:
+#                 name: redirect-to-ftd-4112-cluster-data-02
+#               logical_interface: provider
+#               bridge_domain:
+#                 name: 7.7.7.0_24
 
       filters:
         - name: 'icmp'

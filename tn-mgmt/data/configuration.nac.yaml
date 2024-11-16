@@ -1,0 +1,117 @@
+# Need to configure node management oob IPs
+
+    # APIC oob management 10.237.97.182
+    # APIC oob gw 10.237.97.177
+
+    # Node 201 oob 10.237.97.183/28
+    # Node 201 gw 10.237.97.177
+
+    # Node 202 oob 10.237.97.184/28
+    # Node 202 gw 10.237.97.177
+
+    # Node 101 oob 10.237.97.185/28
+    # Node 101 gw 10.237.97.177
+
+    # Node 102 oob 10.237.97.186/28
+    # Node 102 gw 10.237.97.177
+
+# Inband management vlan = 3966 ????
+
+# inb BD gw 10.237.96.225/29
+
+# Need to configure node management inb IPs
+
+    # APIC inb management 10.237.96.226/29
+    # APIC inb gw 10.237.96.225
+
+    # Node 201 inb 10.237.96.229/29
+    # Node 201 gw 10.237.96.225
+
+    # Node 202 inb 10.237.96.230/29
+    # Node 202 gw 10.237.96.225
+
+    # Node 101 inb 10.237.96.227/29
+    # Node 101 gw 10.237.96.225
+
+    # Node 102 inb 10.237.96.228/29
+    # Node 102 gw10.237.96.225
+
+# Provided inb management contract = permit_to_inb-mgmt
+
+# Need to check match rules for interface IPs
+---
+apic:
+  tenants:
+    - name: mgmt
+      managed: false
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: all-external-subnets
+
+# Filters
+      filters:
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: permit-to-tn-mgmt-inb-mgmt
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+# Imported contracts
+      imported_contracts:
+        - name: permit-to-shared-services.vrf-01-all-external-subnets
+          tenant: mgmt
+          contract: permit-to-shared-services.vrf-01-all-external-subnets
+
+# VRFs
+      vrfs:
+        - name: oob
+
+        - name: inb
+
+# Bridge domains
+      bridge_domains:
+        - name: inb
+          description: inb bridge domain
+          unknown_unicast: proxy
+          vrf: inb
+          subnets:
+            - ip: 10.237.96.225/29
+              public: true
+              shared: true
+              nd_ra_prefix: false
+
+# Application Profiles
+      application_profiles:
+        - name: mgmt_inb
+          managed: true
+          endpoint_groups:
+            - name: mgmt_inb
+              bridge_domain: inb
+              physical_domains:
+                - mgmt_inb
+              subnets:
+                - ip: 10.237.96.225/29
+                  public: true
+                  shared: true
+                  no_default_gateway: false
+                  virtual: false
+              contracts:
+                providers:
+                  - permit-to-tn-mgmt-inb-mgmt

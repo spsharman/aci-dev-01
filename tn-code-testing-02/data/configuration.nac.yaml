@@ -1,0 +1,560 @@
+# Need to create route maps to expose the Isovalent subnets and map to the L3out
+
+---
+apic:
+  tenants:
+    - name: code-testing-02
+      managed: true
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: code-testing-02
+                l3out: code-testing-02.vrf-01-ospf-area-0.0.0.1
+                external_endpoint_group: all-external-subnets
+
+        match_rules:
+          - name: match-10.237.101.0_27
+            description: matches Isovalent node subnets
+            prefixes:
+              - ip: 10.237.101.0/27
+                aggregate: false
+
+          - name: match-10.237.101.32_27
+            description: matches Isovalent external subnets
+            prefixes:
+              - ip: 10.237.101.32/27
+                aggregate: true
+                from_length: 32
+                to_length: 32
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# TCP
+        - name: 'tcp-src-22-dst-any'
+          entries:
+            - name: 'tcp-src-22-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 22
+              source_to_port: 22
+
+        - name: 'tcp-src-80-dst-any'
+          entries:
+            - name: 'tcp-src-80-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 80
+              source_to_port: 80
+
+        - name: 'tcp-src-443-dst-any'
+          entries:
+            - name: 'tcp-src-443-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 443
+              source_to_port: 443
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-53'
+          entries:
+            - name: 'tcp-src-any-dst-53'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+# UDP
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'udp-src-any-dst-67'
+          entries:
+            - name: 'udp-src-any-dst-67'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 67
+              destination_to_port: 67
+
+        - name: 'udp-src-any-dst-514'
+          entries:
+            - name: 'udp-src-any-dst-514'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 514
+              destination_to_port: 514
+
+        - name: 'udp-src-any-dst-123'
+          entries:
+            - name: 'udp-src-any-dst-123'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 123
+              destination_to_port: 123
+
+        - name: 'udp-src-any-dst-5140'
+          entries:
+            - name: 'udp-src-any-dst-5140'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 5140
+              destination_to_port: 5140
+
+# Contracts
+      contracts:
+        - name: permit-to-csr-management-csr-mgmt
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-csw-management-data-collector
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-n9000v-management-n9000v-mgmt
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-ftd-management-ftd-mgmt
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-from-core-services
+          scope: global
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-22-dst-any'
+
+        - name: permit-to-core-services
+          scope: global
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-any-dst-22'
+
+        - name: permit-from-lab-desktops
+          scope: global
+          subjects:
+            - name: tcp
+              filters:
+                - filter: src-any-dst-any
+
+# Imported contracts
+      imported_contracts:
+        - name: permit-to-tn-mgmt-inb-mgmt
+          tenant: mgmt
+          contract: permit-to-tn-mgmt-inb-mgmt
+
+        - name: permit-to-tn-isovalent-external-subnet
+          tenant: isovalent
+          contract: permit-to-tn-isovalent-external-subnet
+
+        - name: permit-to-tn-isovalent-node-subnet
+          tenant: isovalent
+          contract: permit-to-tn-isovalent-node-subnet
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: external connectivity
+          alias: external-vrf
+          leaked_external_prefixes:
+            - prefix: 0.0.0.0/0
+              destinations:
+                - tenant: ajshahid
+                  vrf: vrf-01
+                  description: Leaked to tn-ajshahid:vrf-01
+
+                - tenant: common
+                  vrf: common.vrf-01
+                  description: Leaked to tn-common:common.vrf-01
+
+                - tenant: demo-01
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-01:vrf-01
+
+                - tenant: demo-02
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-02:vrf-01
+
+                - tenant: demo-03
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-03:vrf-01
+
+                - tenant: demo-04
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-04:vrf-01
+
+                - tenant: demo-non-vmm
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-non-vmm:vrf-01
+
+                - tenant: fgandola
+                  vrf: vrf-01
+                  description: Leaked to tn-fgandola:vrf-01
+
+                - tenant: rotaplin
+                  vrf: vrf-01
+                  description: Leaked to tn-rotaplin:vrf-01
+
+                - tenant: rwhitear
+                  vrf: vrf-01
+                  description: Leaked to tn-rwhitear:vrf-01
+
+                - tenant: ssharman
+                  vrf: vrf-01
+                  description: Leaked to tn-ssharman:vrf-01
+          contracts:
+            consumers:
+              - permit-from-core-services
+              - permit-from-lab-desktops
+              - permit-to-core-services
+        # - name: vrf-02
+        #   description: internal
+        #   alias: internal-vrf
+        #   leaked_internal_prefixes:
+        #     - prefix: 
+        #       public: false
+
+# L3out
+      l3outs:
+        - name: code-testing-02.vrf-01-ospf-area-0.0.0.1
+          description: configured with NAC
+          vrf: vrf-01
+          domain: code-testing-02.vrf-01
+          ospf:
+            area: 0.0.0.1
+            area_type: regular
+          export_route_control_enforcement: true
+          export_route_map:
+            name: export-tn-isovalent-subnets
+            type: combinable
+            contexts:
+              - name: permit-10.237.101.0_27
+                order: 0
+                action: permit
+                match_rules:
+                  - match-10.237.101.0_27
+              - name: permit-10.237.101.32_27
+                order: 1
+                action: permit
+                match_rules:
+                  - match-10.237.101.32_27
+
+
+              # - name: export-tn-isovalent-subnets
+              #   match_rules: match-10.237.101.0_27
+
+# Nodes
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 101
+                  router_id: 101.2.1.1
+                - node_id: 102
+                  router_id: 102.2.1.1
+# Interfaces
+              interface_profiles:
+                - name: leaf-101-eth7
+                  description: configured with NAC
+                  interfaces:
+                    - node_id: 101
+                      port: 7
+                      ip: 10.237.99.233/30
+                      mtu: inherit
+                      mac: 10:12:BD:F8:19:FF
+                  ospf:
+                    policy: OSPF_p2p
+
+                - name: leaf-102-eth7
+                  description: configured with NAC
+                  interfaces:
+                    - node_id: 102
+                      port: 7
+                      ip: 10.237.99.237/30
+                      mtu: inherit
+                      mac: 10:22:BD:F8:19:FF
+                  ospf:
+                    policy: OSPF_p2p
+
+                - name: hx-dev-01-fi-a-vlan-8
+                  interfaces:
+                    - node_id: 101
+                      channel: hx-dev-01-fi-a
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.49/29
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     floating_ip: 10.237.99.51/28
+                  ospf:
+                    policy: broadcast
+
+                - name: hx-dev-01-fi-b-vlan-8
+                  interfaces:
+                    - node_id: 102
+                      channel: hx-dev-01-fi-b
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.50/29
+                      mtu: 1500
+                      # floating_svi: true
+                      # paths:
+                      #   - physical_domain: hx-dev-01-vds-02
+                      #     floating_ip: 10.237.99.51/28
+                  ospf:
+                    policy: broadcast
+
+# extEPGs
+          external_endpoint_groups:
+            - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  shared_route_control: true
+
+                - prefix: 0.0.0.0/1
+                  shared_security: true
+                  import_security: true
+
+                - prefix: 128.0.0.0/1
+                  shared_security: true
+                  import_security: true
+
+                - prefix: 10.237.101.0/27
+                  export_route_control: true
+
+                - prefix: 10.237.101.32/27
+                  export_route_control: true
+
+              contracts:
+                consumers:
+                  - permit-to-ftd-management-ftd-mgmt
+                  - permit-to-csr-management-csr-mgmt
+                  - permit-to-csw-management-data-collector
+                  - permit-to-n9000v-management-n9000v-mgmt
+                
+                providers:
+                  - permit-to-code-testing-02.vrf-01-all-external-subnets
+                
+                imported_consumers:
+                  - permit-to-tn-mgmt-inb-mgmt
+                  - permit-to-tn-isovalent-external-subnet
+                  - permit-to-tn-isovalent-node-subnet
+
+                  # - permit-to-tn-adealdag
+                  # - permit-to-tn-adossant
+                  # - permit-to-tn-ajshahid
+                  # - permit-to-tn-conmurph-01
+                  # - permit-to-tn-containers
+                  # - permit-to-tn-demo
+                  # - permit-to-tn-demo-03
+                  # - permit-to-tn-demo-non-vmm-online-boutique-all-services
+                  # - permit-to-tn-demo-online-boutique-frontend-service
+                  # - permit-to-tn-fgandola
+                  # - permit-to-tn-fgandola-applications-development
+                  # - permit-to-tn-movaswan
+                  # - permit-to-tn-ndsouzar
+                  # - permit-to-tn-ngorse
+                  # - permit-to-tn-rotaplin
+                  # - permit-to-tn-roxadiaz
+                  # - permit-to-tn-rwhitear
+                  # - permit-to-tn-sgioia
+                  # - permit-to-tn-ssharman
+                  # - permit-to-tn-ssharman-applications-development
+                  # - permit-to-tn-ssharman-applications-production
+                  # - permit-to-tn-ssharman-firewalls-ftd-mgmt
+                  # - permit-to-tn-ssharman-online-boutique-hx
+                  # - permit-to-tn-ssharman-online-boutique-sa-frontend-service
+
+            - name: core-services-subnets
+              subnets:
+                - prefix: 10.237.96.0/28
+                  shared_security: true
+                  import_security: true
+
+                - prefix: 10.237.96.4/30
+                  shared_security: true
+                  import_security: true
+
+                - prefix: 10.237.97.128/27
+                  name: core-services
+                  shared_route_control: true
+                  shared_security: true
+                  import_security: true
+
+              contracts:
+                providers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+
+            - name: lab-desktops-subnets
+              subnets:
+                - prefix: 10.237.97.160/28
+                  name: lab-desktops
+                  shared_security: true
+                  import_security: true
+
+              contracts:
+                consumers:
+                  - permit-to-ftd-management-ftd-mgmt
+                  - permit-to-csr-management-csr-mgmt
+                  - permit-to-csw-management-data-collector
+                  - permit-to-n9000v-management-n9000v-mgmt
+                providers:
+                  - permit-from-lab-desktops
+
+# Bridge domains
+      # bridge_domains:
+      #   - name: 6.6.6.0_24
+      #     description: pbr redirect
+      #     alias: internal-vrf-01
+      #     unknown_unicast: proxy
+      #     vrf: vrf-01
+      #     subnets:
+      #       - ip: 6.6.6.1/24
+      #         public: false
+      #         shared: false
+      #         nd_ra_prefix: false
+
+# Application Profiles
+      # application_profiles:
+      #   - name: csr-management
+      #     managed: true
+      #     endpoint_groups:
+      #       - name: csr-mgmt
+      #         bridge_domain: 10.237.100.0_24
+      #         vmware_vmm_domains:
+      #           - name: hx-dev-01-vds-01
+      #             deployment_immediacy: immediate
+      #             resolution_immediacy: immediate
+      #         contracts:
+      #           providers:
+      #             - permit-to-csr-management-csr-mgmt
+
+      #   - name: csw-management
+      #     managed: true
+      #     endpoint_groups:
+      #       - name: data-collector
+      #         bridge_domain: 10.237.100.0_24
+      #         vmware_vmm_domains:
+      #           - name: hx-dev-01-vds-01
+      #             deployment_immediacy: immediate
+      #             resolution_immediacy: immediate
+      #         contracts:
+      #           providers:
+      #             - permit-to-csw-management-data-collector
+
+      #   - name: n9000v-management
+      #     managed: true
+      #     endpoint_groups:
+      #       - name: n9000v-mgmt
+      #         bridge_domain: 10.237.100.0_24
+      #         vmware_vmm_domains:
+      #           - name: hx-dev-01-vds-01
+      #             deployment_immediacy: immediate
+      #             resolution_immediacy: immediate
+      #         contracts:
+      #           providers:
+      #             - permit-to-n9000v-management-n9000v-mgmt
+
+      #   - name: ftd-management
+      #     managed: true
+      #     endpoint_groups:
+      #       - name: ftd-diagnostic
+      #         bridge_domain: 10.237.100.0_24
+      #         vmware_vmm_domains:
+      #           - name: hx-dev-01-vds-01
+      #             deployment_immediacy: immediate
+      #             resolution_immediacy: immediate
+      #         physical_domains:
+      #           - hx-dev-01-vds-02
+      #         static_ports:
+      #           - channel: "hx-dev-01-fi-a"
+      #             vlan: 7
+      #             node_id: 101
+      #             deployment_immediacy: immediate
+      #           - channel: "hx-dev-01-fi-b"
+      #             vlan: 7
+      #             node_id: 102
+      #             deployment_immediacy: immediate
+      #         contracts:
+      #           consumers:
+      #             - permit-to-csw-management-data-collector
+
+      #       - name: ftd-mgmt
+      #         bridge_domain: 10.237.100.0_24
+      #         vmware_vmm_domains:
+      #           - name: hx-dev-01-vds-01
+      #             deployment_immediacy: immediate
+      #             resolution_immediacy: immediate
+      #         physical_domains:
+      #           - hx-dev-01-vds-02
+      #         static_ports:
+      #           - channel: "hx-dev-01-fi-a"
+      #             vlan: 6
+      #             node_id: 101
+      #             deployment_immediacy: immediate
+      #           - channel: "hx-dev-01-fi-b"
+      #             vlan: 6
+      #             node_id: 102
+      #             deployment_immediacy: immediate
+      #         contracts:
+      #           providers:
+      #             - permit-to-ftd-management-ftd-mgmt

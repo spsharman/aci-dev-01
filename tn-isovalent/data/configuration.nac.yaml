@@ -326,7 +326,7 @@ apic:
           endpoint_groups:      
             - name: '10.237.100.0_24'
               alias: common.vrf-01
-              bridge_domain: '10.237.100.x_24'
+              bridge_domain: '10.237.100.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: false
