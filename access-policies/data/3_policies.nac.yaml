@@ -102,7 +102,7 @@ apic:
           - demo-02.vrf-01
           - demo-03.vrf-01
           - demo-05.vrf-01
-          - demo.vrf-01
+          - demo-06.vrf-01
           - isovalent.vrf-01
           - shared-services.vrf-01
           - shared-services.vrf-01-static-routes

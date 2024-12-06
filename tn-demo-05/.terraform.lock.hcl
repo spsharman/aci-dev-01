@@ -3,7 +3,7 @@
 
 provider "registry.terraform.io/ciscodevnet/aci" {
   version     = "2.15.0"
-  constraints = ">= 2.0.0, >= 2.6.0, >= 2.13.2, >= 2.15.0"
+  constraints = ">= 2.0.0, >= 2.6.0, >= 2.6.1"
   hashes = [
     "h1:1KNQy+3Y7h7dI3ORPK/M/iC/cOTlOerMilyJ/t/bYcY=",
     "zh:022af4a894d8ed040ff0b8bf61c178dc4200f840d9562b3059badbe57f475246",

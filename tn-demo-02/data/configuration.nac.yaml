@@ -1,11 +1,14 @@
-
+#
+# This tenant is used for testing different EPG route leaking scenarios. 
+#
+# VRF-01 (external), VRF-02 (internal), VRF-03 (internal).
+#
 ---
 apic:
   tenants:
-    - name: demo-02
-      description: Routable IP range 10.0.61-62.x
+    - name: demo-01
+      description: Routable IP range 10.0.51-52.x
 
-# Policies
       policies:
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
@@ -13,18 +16,76 @@ apic:
             providers:
               - ip: 10.237.97.133
                 type: external_epg
-                tenant: demo-02
-                l3out: demo-02.vrf-01-ospf-area-0.0.0.1
+                tenant: demo-01
+                l3out: demo-01.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: all-external-subnets
 
-        # route_tag_policies:
-        #   - name: demo-02.vrf-01
-        #     tag: 102
+      services:
+# Define redirection policy
+        redirect_policies:
+          - name: redirect-to-ftdv-02-adapter-8-gig-0-5
+            l3_destinations:
+              - ip: 6.6.6.11
+                mac: 00:50:56:A1:0A:C5
 
-        #   - name: demo-02.vrf-02
-        #     tag: 1002
+# Define imported L4-7 device
+#         imported_l4l7_devices:
+#           - name: ftdv-02-adapter-8-gig-0-5
+#             tenant: shared-services
 
-# Filters
+# Define L4-7 device            
+        # l4l7_devices:
+        #   - name: ftdv-02-adapter-8-gig-0-5
+        #     vmware_vmm_domain: ucsc-c220m5-vds-01
+        #     context_aware: single-Context
+        #     type: VIRTUAL
+        #     function: GoTo
+        #     service_type: FW
+        #     trunking: false
+        #     concrete_devices:
+        #       - name: ftdv-02-adapter-8-gig-0-5
+        #         vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+        #         vm_name: ftdv72_82-02.uktme.cisco.com
+        #         interfaces:
+        #           - name: gig-0-5
+        #             vnic_name: Network adapter 8
+        #     logical_interfaces:
+        #       - name: gig-0-5
+        #         concrete_interfaces:
+        #           - device: ftdv-02-adapter-8-gig-0-5
+        #             interface_name: gig-0-5
+
+# Define L4-7 service graph template
+        # service_graph_templates:
+        #   - name: ftdv-02-adapter-8-gig-0-5
+        #     template_type: FW_ROUTED
+        #     redirect: true
+        #     share_encapsulation: false
+        #     device:
+        #       tenant: shared-services
+        #       name: ftdv-02-adapter-8-gig-0-5
+        #     consumer:
+        #       direct_connect: false
+        #     provider:
+        #       direct_connect: true
+
+# Define L4-7 device selection policy
+        # device_selection_policies:
+        #   - contract: any
+        #     service_graph_template: ftdv-02-adapter-8-gig-0-5
+        #     consumer:
+        #       redirect_policy:
+        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
+        #       logical_interface: gig-0-5
+        #       bridge_domain:
+        #         name: 6.6.6.0_24
+        #     provider:
+        #       redirect_policy:
+        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
+        #       logical_interface: gig-0-5
+        #       bridge_domain:
+        #         name: 6.6.6.0_24
+
       filters:
         - name: 'icmp'
           entries:
@@ -36,7 +97,8 @@ apic:
             - name: 'permit-src-any-dst-any'
               ethertype: unspecified
 
-# Contracts
+      # imported_contracts:
+
       contracts:
         - name: intra-tenant
           scope: tenant
@@ -45,132 +107,131 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
-        # - name: permit-to-tn-demo-02
-        #   scope: tenant
-        #   subjects:
-        #     - name: redirect
-        #       filters:
-        #         - filter: permit-src-any-dst-any
-        #       service_graph: ftdv-02-adapter-8-gig-0-5
-        - name: permit-intra-esg
-          description: permits intra-esg any/any
-          scope: context
+        - name: permit-to-epg-10.0.51.0_24
+          scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-esg-10.0.61.0_24
+        - name: permit-to-epg-10.0.52.0_24
           scope: tenant
           subjects:
-            - name: redirect
-              filters:
+            - name: permit-src-any-dst-any
+              filters: 
                 - filter: permit-src-any-dst-any
-              # service_graph: ftdv-02-adapter-9-gig-0-6
 
-        - name: permit-to-esg-10.0.62.0_24
+        - name: permit-to-all-external-subnets
           scope: tenant
           subjects:
-            - name: redirect
-              filters:
+            - name: permit-src-any-dst-any
+              filters: 
                 - filter: permit-src-any-dst-any
 
-# VRFs
       vrfs:
         - name: vrf-01
-          description: configured with NAC - external vrf for tn-demo-02
+          description: configured with NAC - external vrf for tn-demo-01
           alias: external-vrf
-          # transit_route_tag_policy: demo-02.vrf-01
-
-          leaked_external_prefixes:
-            - prefix: 0.0.0.0/0
-              destinations:
-                - tenant: demo-02
-                  vrf: vrf-02
-                  description: Leaked to tn-demo-02:vrf-02
+          # leaked_external_prefixes:
+          #   - prefix: 0.0.0.0/0
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-02
+          #         description: Leaked to tn-demo-01:vrf-02
+          #       - tenant: demo-01
+          #         vrf: vrf-03
+          #         description: Leaked to tn-demo-01:vrf-03
 
         - name: vrf-02
-          description: configured with NAC - internal vrf for tn-demo-02
-          alias: internal-vrf
-          # transit_route_tag_policy: demo-02.vrf-02
+          description: configured with NAC - internal vrf for tn-demo-01
+          alias: internal-vrf-02
           contracts:
             providers: 
-              - intra-tenant
+              # - intra-tenant
             consumers:
-              - intra-tenant
-          leaked_internal_prefixes:
-            - prefix: 10.0.61.0/24
-              public: true
-              destinations:
-                - tenant: demo-02
-                  vrf: vrf-01
-                  public: true
-                  description: Leaked to demo-02:vrf-01 and advertised externally
-            - prefix: 10.0.62.0/24
-              public: true
-              destinations:
-                - tenant: demo-02
-                  vrf: vrf-01
-                  public: true
-                  description: Leaked to demo-02:vrf-01 and advertised externally
+              # - intra-tenant
+          # leaked_internal_prefixes:
+          #   - prefix: 10.0.51.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to demo-01:vrf-01 and advertised externally
 
-#L3out
+        - name: vrf-03
+          description: configured with NAC - internal vrf for tn-demo-01
+          alias: internal-vrf-03
+          contracts:
+            providers: 
+              # - intra-tenant
+            consumers:
+              # - intra-tenant
+          # leaked_internal_prefixes:
+          #   - prefix: 10.0.52.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: demo-01
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to demo-01:vrf-01 and advertised externally
+
       l3outs:
-        - name: demo-02.vrf-01-ospf-area-0.0.0.1
+        - name: demo-01.vrf-01-ospf-area-0.0.0.1
           description: configured with NAC
           alias: external-vrf
           vrf: vrf-01
-          domain: demo-02.vrf-01
+          domain: demo-01.vrf-01
           ospf:
             area: 0.0.0.1
             area_type: regular
 
-# Node Profiles
           node_profiles:
             - name: border-leafs
               nodes:
                 - node_id: 101
-                  router_id: 101.2.12.1
+                  router_id: 101.2.11.1
                 - node_id: 102
-                  router_id: 102.2.12.1
+                  router_id: 102.2.11.1
 
-# Interface Profiles                       
               interface_profiles:
-                - name: hx-dev-01-fi-a-vlan-10
+                - name: hx-dev-01-fi-a-vlan-9
                   interfaces:
                     - node_id: 101
                       channel: hx-dev-01-fi-a
-                      vlan: 10
+                      vlan: 9
                       svi: true
-                      ip: 10.237.99.73/29
+                      ip: 10.237.99.65/29
                       mtu: 1500
                       # floating_svi: true
                       # paths:
                       #   - physical_domain: hx-dev-01-vds-02
-                      #     floating_ip: 10.237.99.75/29
+                      #     # floating_ip: 10.237.99.67/29
                   ospf:
                     policy: broadcast
 
-                - name: hx-dev-01-fi-b-vlan-10
+                - name: hx-dev-01-fi-b-vlan-9
                   interfaces:
                     - node_id: 102
                       channel: hx-dev-01-fi-b
-                      vlan: 10
+                      vlan: 9
                       svi: true
-                      ip: 10.237.99.74/29
+                      ip: 10.237.99.66/29
                       mtu: 1500
                       # floating_svi: true
                       # paths:
                       #   - physical_domain: hx-dev-01-vds-02
-                      #     floating_ip: 10.237.99.75/29
+                      #     floating_ip: 10.237.99.67/29
                   ospf:
                     policy: broadcast
-# External EPGs                   
+
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
-                # - prefix: 0.0.0.0/0
-                #   shared_route_control: true
+                - prefix: 0.0.0.0/0
+                  shared_route_control: true
+                  shared_security: false
+                  import_security: false
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -180,14 +241,15 @@ apic:
 
               contracts:
                 consumers:
-                  - permit-to-esg-10.0.61.0_24
-                  - permit-to-esg-10.0.62.0_24
+                  - permit-to-epg-10.0.51.0_24
+                  - permit-to-epg-10.0.52.0_24
+                providers:
+                  - permit-to-all-external-subnets
 
-# Bridge Domains
       bridge_domains:
         - name: 6.6.6.0_24
           description: PBR subnet
-          alias: internal-vrf
+          alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
@@ -197,164 +259,78 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 10.0.61.0_24
-          alias: internal-vrf
+        - name: 10.0.51.0_24
+          alias: internal-vrf-02
           unknown_unicast: proxy
           vrf: vrf-02
-          subnets:
-            - ip: 10.0.61.1/24
+          # subnets:
+          #   - ip: 10.0.51.1/24
               # public: true
               # private: false
               # shared: true
-              nd_ra_prefix: false
+              # nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.0.62.0_24
-          alias: internal-vrf
+        - name: 10.0.52.0_24
+          alias: internal-vrf-03
           unknown_unicast: proxy
-          vrf: vrf-02
-          subnets:
-            - ip: 10.0.62.1/24
+          vrf: vrf-03
+          # subnets:
+          #   - ip: 10.0.52.1/24
               # public: true
               # private: false
               # shared: true
-              nd_ra_prefix: false
+              # nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-# Application Profiles
       application_profiles:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
           endpoint_groups:
-            - name: '10.0.61.0_24'
-              bridge_domain: 10.0.61.0_24
-              physical_domains:
-                - "ucsc-c220m5-vds-01"
-              intra_epg_isolation: true
-              proxy_arp: true
-              static_ports:
-                - node_id: 101
-                  port: 29
-                  vlan: 3015
-                  primary_vlan: 3014
+            - name: '10.0.51.0_24'
+              alias: internal-vrf-02
+              bridge_domain: 10.0.51.0_24
+              subnets:
+                - ip: 10.0.51.1/24
+                  public: true
+                  private: false
+                  shared: true
+                  igmp_querier: false
+                  nd_ra_prefix: true
+                  no_default_gateway: false
+              vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
                   deployment_immediacy: immediate
-                - node_id: 102
-                  port: 29
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 30
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 30
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 31
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 31
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 32
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 32
-                  vlan: 3015
-                  primary_vlan: 3014
-                  deployment_immediacy: immediate
-
-            - name: '10.0.62.0_24'
-              bridge_domain: 10.0.62.0_24
-              physical_domains:
-                - "ucsc-c220m5-vds-01"
-              intra_epg_isolation: true
-              proxy_arp: true
-              static_ports:
-                - node_id: 101
-                  port: 29
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 29
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 30
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 30
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 31
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 31
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 101
-                  port: 32
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-                - node_id: 102
-                  port: 32
-                  vlan: 3017
-                  primary_vlan: 3016
-                  deployment_immediacy: immediate
-
-# ESGs
-        - name: epg-matched-esg
-          endpoint_security_groups:
-            - name: 10.0.61.0_24
-              # description: 
-              vrf: vrf-02
-              shutdown: false
-              intra_esg_isolation: true
-              epg_selectors:               
-                - application_profile: network-segments
-                  endpoint_group: 10.0.61.0_24
+                  resolution_immediacy: immediate
+                  # primary_vlan: 1243
+                  # secondary_vlan: 1244
               contracts:
-                # consumers:
-                # imported_consumers:
                 providers:
-                  - permit-to-esg-10.0.61.0_24
-                intra_esgs:
-                  - permit-intra-esg
+                  - permit-to-epg-10.0.51.0_24
 
-            - name: 10.0.62.0_24
-              # description: 
-              vrf: vrf-02
-              shutdown: false
-              intra_esg_isolation: true
-              epg_selectors:
-                - application_profile: network-segments
-                  endpoint_group: 10.0.62.0_24
+            - name: '10.0.52.0_24'
+              alias: internal-vrf-03
+              bridge_domain: 10.0.52.0_24
+              subnets:
+                - ip: 10.0.52.1/24
+                  public: true
+                  private: false
+                  shared: true
+                  igmp_querier: false
+                  nd_ra_prefix: true
+                  no_default_gateway: false
+              vmware_vmm_domains:
+                # - name: 'ucsc-c220m5-vds-01'
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  # primary_vlan: 1245
+                  # secondary_vlan: 1246  
               contracts:
-                # consumers:
-                # imported_consumers:
                 providers:
-                  - permit-to-esg-10.0.62.0_24
-                intra_esgs:
-                  - permit-intra-esg
+                  - permit-to-epg-10.0.52.0_24

@@ -60,9 +60,6 @@ apic:
         security_domains:
           - conmurph
 
-      - name: demo.vrf-01
-        vlan_pool: hx-dev-01-vds-02
-
       - name: demo-01.vrf-01
         vlan_pool: hx-dev-01-vds-02
 
@@ -73,6 +70,9 @@ apic:
         vlan_pool: hx-dev-01-vds-02
 
       - name: demo-05.vrf-01
+        vlan_pool: hx-dev-01-vds-02
+
+      - name: demo-06.vrf-01
         vlan_pool: hx-dev-01-vds-02
 
       - name: isovalent.vrf-01
