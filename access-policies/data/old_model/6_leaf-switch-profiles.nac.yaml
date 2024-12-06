@@ -4,22 +4,22 @@ apic:
 
 # Leaf switch profile
     leaf_switch_profiles:
-      - name: aci-dev-01-leaf-101
+      - name: aci-dev-01-pod-01-leaf-1101
         selectors:
-          - name: leaf-101
+          - name: aci-dev-01-pod-01-leaf-1101
             node_blocks:
-              - name: leaf-101
-                from: 101
-                to: 101
+              - name: aci-dev-01-pod-01-leaf-1101
+                from: 1101
+                to: 1101
         interface_profiles:
-          - aci-dev-01-leaf-101
+          - aci-dev-01-pod-01-leaf-1101
 
-      - name: aci-dev-01-leaf-102
+      - name: aci-dev-01-pod-01-leaf-1102
         selectors:
-          - name: leaf-102
+          - name: aci-dev-01-pod-01-leaf-1102
             node_blocks:
-              - name: leaf-102
-                from: 102
-                to: 102
+              - name: aci-dev-01-pod-01-leaf-1102
+                from: 1102
+                to: 1102
         interface_profiles:
-          - aci-dev-01-leaf-102
+          - aci-dev-01-pod-01-leaf-1102

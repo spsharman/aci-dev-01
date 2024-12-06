@@ -21,21 +21,21 @@ apic:
 
       - name: ucs-c220m5-vds-01
         type: access
-        aaep: ucs-c220m5-vds-01
+        aaep: vlans-allowed-to-ucs-c220m5-vds-01
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
 # Port channel
       - name: hx-dev-01-fi-a
         type: pc
-        aaep: hyperflex
+        aaep: vlans-allowed-to-hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
       - name: hx-dev-01-fi-b
         type: pc
-        aaep: hyperflex
+        aaep: vlans-allowed-to-hyperflex
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
@@ -43,7 +43,7 @@ apic:
 # Virtual port channel
       - name: vpc_to_ftd-4112-01-ccl
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
@@ -51,7 +51,7 @@ apic:
 
       - name: vpc_to_ftd-4112-01-mgmt
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
@@ -59,7 +59,7 @@ apic:
 
       - name: vpc_to_ftd-4112-02-ccl
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
@@ -67,7 +67,7 @@ apic:
 
       - name: vpc_to_ftd-4112-02-mgmt
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
@@ -75,7 +75,7 @@ apic:
 
       - name: vpc_to_ftd-4112-cluster-data-01
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
@@ -83,15 +83,50 @@ apic:
 
       - name: vpc_to_ftd-4112-cluster-data-02
         type: vpc
-        aaep: firewalls
+        aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-node-01
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-node-02
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-node-03
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-node-04
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-node-05
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
       - name: vpc_to_rack_L11-tor
         type: vpc
-        aaep: vpc_to_rack_L11-tor
+        aaep: vlans-allowed-to-rack_L11-tor
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active

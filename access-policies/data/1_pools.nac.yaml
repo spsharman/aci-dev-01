@@ -4,7 +4,7 @@ apic:
 
 # VLAN pools  
     vlan_pools:
-      - name: container-nodes
+      - name: isovalent-nodes
         allocation: static
         ranges:
           - from: 16
@@ -57,9 +57,6 @@ apic:
       - name: hx-dev-01-vds-01
         allocation: dynamic
         ranges:
-          - from: 4
-            allocation: static
-            description: multisite ipn peering
           - from: 1001
             to: 1100
             description: dynamic vlans for VMM integration
@@ -236,8 +233,6 @@ apic:
             description: ftdv-01-eth5-gig-0-4
           - from: 15
             description: undocumented
-          - from: 16
-            description: nkt workloads
           - from: 17
             to: 18
             description: primary/secondary PVLANs

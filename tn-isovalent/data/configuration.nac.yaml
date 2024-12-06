@@ -139,16 +139,16 @@ apic:
           node_profiles:
             - name: border-leafs
               nodes:
-                - node_id: 101
+                - node_id: 1101
                   router_id: 101.2.1.1
                   
-                - node_id: 102
+                - node_id: 1102
                   router_id: 102.2.1.1
 
               interface_profiles:
-                - name: hx-dev-01-fi-a-vlan-16                  
+                - name: hx-dev-01-fi-a-vlan-16
                   interfaces:
-                    - node_id: 101
+                    - node_id: 1101
                       channel: hx-dev-01-fi-a
                       vlan: 16
                       floating_svi: true
@@ -180,10 +180,13 @@ apic:
                           admin_state: true
                           as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp.uktme.cisco.com
+                      scope: tenant
 
                 - name: hx-dev-01-fi-b-vlan-16
                   interfaces:
-                    - node_id: 102
+                    - node_id: 1102
                       channel: hx-dev-01-fi-b
                       vlan: 16
                       floating_svi: true
@@ -215,53 +218,56 @@ apic:
                           admin_state: true
                           as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp.uktme.cisco.com
+                      scope: tenant
+                      
+                # - name: vpc_to_r28-tor
+                #   interfaces:
+                #     - node_id: 1101
+                #       ip: 10.237.101.1/27
+                #       ip_shared: 10.237.101.4/27
+                #       vlan: 16
+                #       floating_svi: true
+                #       channel: vpc_to_r28-tor
+                #       paths:
+                #         - physical_domain: container-nodes
+                #           floating_ip: 10.237.101.3/27
+                #       mtu: 1500
 
-                - name: vpc_to_r28-tor
-                  interfaces:
-                    - node_id: 101
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      vlan: 16
-                      floating_svi: true
-                      channel: vpc_to_r28-tor
-                      paths:
-                        - physical_domain: container-nodes
-                          floating_ip: 10.237.101.3/27
-                      mtu: 1500
+                #     - node_id: 1102
+                #       ip: 10.237.101.2/27
+                #       ip_shared: 10.237.101.4/27
+                #       vlan: 16
+                #       floating_svi: true
+                #       channel: vpc_to_r28-tor
+                #       paths:
+                #         - physical_domain: container-nodes
+                #           floating_ip: 10.237.101.3/27
+                #       mtu: 1500
 
-                    - node_id: 102
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      vlan: 16
-                      floating_svi: true
-                      channel: vpc_to_r28-tor
-                      paths:
-                        - physical_domain: container-nodes
-                          floating_ip: 10.237.101.3/27
-                      mtu: 1500
-
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
+                #       bgp_peers:
+                #         - ip: 10.237.101.0/27
+                #           remote_as: 65051
+                #           local_as: 65151
+                #           allow_self_as: false
+                #           as_override: true
+                #           disable_peer_as_check: true
+                #           next_hop_self: false
+                #           send_community: false
+                #           send_ext_community: false
+                #           allowed_self_as_count: 3
+                #           bfd: false
+                #           disable_connected_check: false
+                #           ttl: 1
+                #           remove_all_private_as: false
+                #           remove_private_as: false
+                #           replace_private_as_with_local_as: false
+                #           unicast_address_family: true
+                #           multicast_address_family: false
+                #           admin_state: true
+                #           as_propagate: no-prepend
+                #           peer_prefix_policy: cilium-cni
 
           external_endpoint_groups:
             - name: node-subnet

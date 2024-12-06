@@ -18,6 +18,33 @@ apic:
                 l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: all-external-subnets
 
+        ospf_interface_policies:
+          - name: OSPF_p2p
+            cost: unspecified
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: false
+            bfd: false
+            hello_interval: 10
+            dead_interval: 40
+            network_type: p2p
+            priority: 1
+            lsa_retransmit_interval: 5
+            lsa_transmit_delay: 1
+
+          - name: broadcast
+            cost: unspecified
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: false
+            bfd: false
+            hello_interval: 10
+            dead_interval: 40
+            network_type: bcast
+            priority: 1
+            lsa_retransmit_interval: 5
+            lsa_transmit_delay: 1
+
         match_rules:
           - name: match-10.237.101.0_27
             description: matches Isovalent node subnets
@@ -205,7 +232,7 @@ apic:
       imported_contracts:
         - name: permit-to-tn-mgmt-inb-mgmt
           tenant: mgmt
-          contract: permit_to_inb-mgmt
+          contract: permit-to-inb-mgmt
 
         - name: permit-to-tn-isovalent-external-subnet
           tenant: isovalent
@@ -306,16 +333,16 @@ apic:
           node_profiles:
             - name: border-leafs
               nodes:
-                - node_id: 101
+                - node_id: 1101
                   router_id: 101.2.1.1
-                - node_id: 102
+                - node_id: 1102
                   router_id: 102.2.1.1
 # Interfaces
               interface_profiles:
                 - name: leaf-101-eth7
                   description: configured with NAC
                   interfaces:
-                    - node_id: 101
+                    - node_id: 1101
                       port: 7
                       ip: 10.237.99.233/30
                       mtu: inherit
@@ -326,7 +353,7 @@ apic:
                 - name: leaf-102-eth7
                   description: configured with NAC
                   interfaces:
-                    - node_id: 102
+                    - node_id: 1102
                       port: 7
                       ip: 10.237.99.237/30
                       mtu: inherit
@@ -336,7 +363,7 @@ apic:
 
                 - name: hx-dev-01-fi-a-vlan-8
                   interfaces:
-                    - node_id: 101
+                    - node_id: 1101
                       channel: hx-dev-01-fi-a
                       vlan: 8
                       svi: true
@@ -351,7 +378,7 @@ apic:
 
                 - name: hx-dev-01-fi-b-vlan-8
                   interfaces:
-                    - node_id: 102
+                    - node_id: 1102
                       channel: hx-dev-01-fi-b
                       vlan: 8
                       svi: true
@@ -534,11 +561,11 @@ apic:
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 7
-                  node_id: 101
+                  node_id: 1101
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
                   vlan: 7
-                  node_id: 102
+                  node_id: 1102
                   deployment_immediacy: immediate
               contracts:
                 consumers:
@@ -555,11 +582,11 @@ apic:
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 6
-                  node_id: 101
+                  node_id: 1101
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
                   vlan: 6
-                  node_id: 102
+                  node_id: 1102
                   deployment_immediacy: immediate
               contracts:
                 providers:

@@ -43,46 +43,46 @@ apic:
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 992
-                  node_id: 101
+                  node_id: 1101
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
                   vlan: 992
-                  node_id: 102
+                  node_id: 1102
                   deployment_immediacy: immediate
                 - channel: "vpc_to_rack_L11-tor"
                   vlan: 992
-                  node_id: 101
-                  node2_id: 102
+                  node_id: 1101
+                  node2_id: 1102
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 29
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 29
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 30
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 30
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 31
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 31
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 32
                   vlan: 992
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 32
                   vlan: 992
                   deployment_immediacy: immediate
@@ -94,11 +94,11 @@ apic:
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 987
-                  node_id: 101
+                  node_id: 1101
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
                   vlan: 987
-                  node_id: 102
+                  node_id: 1102
                   deployment_immediacy: immediate
 
             - name: "vmotion"
@@ -109,41 +109,41 @@ apic:
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 986
-                  node_id: 101
+                  node_id: 1101
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
                   vlan: 986
-                  node_id: 102
+                  node_id: 1102
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 29
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 29
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 30
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 30
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 31
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 31
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 32
                   vlan: 986
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 32
                   vlan: 986
                   deployment_immediacy: immediate
@@ -153,35 +153,35 @@ apic:
               physical_domains:
                 - "ucsc-c220m5-vds-01"
               static_ports:
-                - node_id: 101
+                - node_id: 1101
                   port: 29
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 29
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 30
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 30
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 31
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 31
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 101
+                - node_id: 1101
                   port: 32
                   vlan: 3002
                   deployment_immediacy: immediate
-                - node_id: 102
+                - node_id: 1102
                   port: 32
                   vlan: 3002
                   deployment_immediacy: immediate

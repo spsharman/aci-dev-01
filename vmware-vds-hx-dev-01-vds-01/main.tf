@@ -14,15 +14,16 @@ provider "aci" {
 }
 
 module "aci" {
+    # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
   source  = "netascode/nac-aci/aci"
   version = ">=0.8.1"
 
-  yaml_directories = ["data"]
+  yaml_directories = ["data", "data/git-ignored"]
 
   manage_access_policies    = false
-  manage_fabric_policies    = false
+  manage_fabric_policies    = true
   manage_pod_policies       = false
-  manage_node_policies      = true
+  manage_node_policies      = false
   manage_interface_policies = false
-  manage_tenants            = true
+  manage_tenants            = false
 }

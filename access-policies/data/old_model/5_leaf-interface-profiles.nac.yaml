@@ -4,8 +4,8 @@ apic:
 
 # Leaf interface profile
     leaf_interface_profiles:
-# aci-dev-01-leaf-101
-      - name: aci-dev-01-leaf-101
+# aci-dev-01-pod-01-leaf-1101
+      - name: aci-dev-01-pod-01-leaf-1101
         selectors:
           - name: fabric-inband-mgmt
             policy_group: fabric-inband-mgmt
@@ -119,8 +119,8 @@ apic:
                 from_port: 45
                 to_port: 45
 
-# aci-dev-01-leaf-102
-      - name: aci-dev-01-leaf-102
+# aci-dev-01-pod-01-leaf-1102
+      - name: aci-dev-01-pod-01-leaf-1102
         selectors:
           - name: fabric-inband-mgmt
             policy_group: fabric-inband-mgmt

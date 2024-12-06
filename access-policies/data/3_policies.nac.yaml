@@ -6,12 +6,21 @@ apic:
       mode: explicit
       groups:
         - id: 1
-          name: aci-dev-01-leaf-101-and-aci-dev-01-leaf-102
-          switch_1: 101
-          switch_2: 102
+          name: aci-dev-01-pod-01-leaf-1101-and-leaf-1102
+          switch_1: 1101
+          switch_2: 1102
 
 # Interface policies
   access_policies:
+    mcp:
+      action: true
+      admin_state: true
+      frequency_sec: 2
+      initial_delay: 180
+      loop_detection: 3
+      per_vlan: true
+      key: cisco
+
     interface_policies:
       cdp_policies:
         - name: cdp-enabled
@@ -47,30 +56,41 @@ apic:
           fast_select_standby: true
           load_defer: false
           symmetric_hash: false
+
         - name: mac-pinning
           mode: mac-pin
 
+        - name: lacp-active-2960
+          mode: active
+          min_links: 1
+          max_links: 2
+          suspend_individual: false
+          graceful_convergence: false
+          fast_select_standby: false
+
 # Global policies
     aaeps:
-      - name: container-nodes
+      - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
-          - container-nodes
+          - isovalent-nodes
+        routed_domains:
+          - isovalent.vrf-01
 
       - name: mgmt_inb
         infra_vlan: false
         physical_domains:
           - mgmt_inb
 
-      - name: firewalls
+      - name: vlans-allowed-to-firewalls
         physical_domains:
           - firewalls
 
-      - name: hyperflex
+      - name: vlans-allowed-to-hyperflex
         infra_vlan: false
         physical_domains:
-          - container-nodes
           - hx-dev-01-vds-02
           - hyperflex
+          - isovalent-nodes
 
         routed_domains:
           - ajshahid.vrf-01
@@ -78,7 +98,6 @@ apic:
           - conmurph-01.vrf-02
           - conmurph-02.vrf-01
           - conmurph-02.vrf-02
-          - containers.vrf-01
           - demo-01.vrf-01
           - demo-02.vrf-01
           - demo-03.vrf-01
@@ -101,11 +120,11 @@ apic:
         routed_domains:
           - shared-services.vrf-01
 
-      - name: ucs-c220m5-vds-01
+      - name: vlans-allowed-to-ucs-c220m5-vds-01
         physical_domains:
           - ucsc-c220m5-vds-01
 
-      - name: vpc_to_rack_L11-tor
+      - name: vlans-allowed-to-rack_L11-tor
         # routed_domains:
         #   - mgmt_inb
         physical_domains:

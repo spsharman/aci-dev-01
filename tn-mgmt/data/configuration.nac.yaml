@@ -43,8 +43,7 @@
 apic:
   tenants:
     - name: mgmt
-      managed: false
-
+      managed: true
 # Policies
       policies:
         dhcp_relay_policies:
@@ -66,7 +65,7 @@ apic:
 
 # Contracts
       contracts:
-        - name: permit-to-tn-mgmt-inb-mgmt
+        - name: permit-to-inb-mgmt
           scope: global
           subjects:
             - name: permit-src-any-dst-any
@@ -76,7 +75,7 @@ apic:
 # Imported contracts
       imported_contracts:
         - name: permit-to-shared-services.vrf-01-all-external-subnets
-          tenant: mgmt
+          tenant: shared-services
           contract: permit-to-shared-services.vrf-01-all-external-subnets
 
 # VRFs
@@ -97,6 +96,15 @@ apic:
               shared: true
               nd_ra_prefix: false
 
+      # inb_endpoint_groups:
+      #   - name: mgmt-inb
+      #     vlan: 3966
+      #     bridge_domain: inb
+      #     contracts:
+      #       providers:
+      #         - permit-to-tn-mgmt-inb-mgmt
+
+
 # Application Profiles
       application_profiles:
         - name: mgmt_inb
@@ -114,4 +122,4 @@ apic:
                   virtual: false
               contracts:
                 providers:
-                  - permit-to-tn-mgmt-inb-mgmt
+                  - permit-to-inb-mgmt

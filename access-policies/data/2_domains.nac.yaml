@@ -4,8 +4,8 @@ apic:
 
 # Physical Domains
     physical_domains:
-      - name: container-nodes
-        vlan_pool: container-nodes
+      - name: isovalent-nodes
+        vlan_pool: isovalent-nodes
 
       - name: dmz
         vlan_pool: external-switches
@@ -60,9 +60,6 @@ apic:
         security_domains:
           - conmurph
 
-      - name: containers.vrf-01
-        vlan_pool: hx-dev-01-vds-02
-
       - name: demo.vrf-01
         vlan_pool: hx-dev-01-vds-02
 
@@ -79,7 +76,7 @@ apic:
         vlan_pool: hx-dev-01-vds-02
 
       - name: isovalent.vrf-01
-        vlan_pool: hx-dev-01-vds-02
+        vlan_pool: isovalent-nodes
 
       - name: multisite
         vlan_pool: hx-dev-01-vds-02

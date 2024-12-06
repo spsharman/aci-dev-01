@@ -128,6 +128,16 @@ apic:
           unknown_ipv6_multicast: flood
           limit_ip_learn_to_subnets: true
 
+        - name: vlan-3004
+          vrf: common.vrf-01
+          unicast_routing: false
+          description: "64.103.45.0/27 - gateway on Production fabric"
+          arp_flooding: true
+          multi_destination_flooding: bd-flood
+          unknown_unicast: flood
+          unknown_ipv4_multicast: flood
+          unknown_ipv6_multicast: flood
+          limit_ip_learn_to_subnets: true
 
         - name: vlan-992
           description: "ESX management with gateway on Production fabric"
