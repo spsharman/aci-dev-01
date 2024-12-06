@@ -96,14 +96,13 @@ apic:
               shared: true
               nd_ra_prefix: false
 
-      # inb_endpoint_groups:
-      #   - name: mgmt-inb
-      #     vlan: 3966
-      #     bridge_domain: inb
-      #     contracts:
-      #       providers:
-      #         - permit-to-tn-mgmt-inb-mgmt
-
+      inb_endpoint_groups:
+        - name: mgmt-inb
+          vlan: 3966
+          bridge_domain: inb
+          contracts:
+            providers:
+              - permit-to-inb-mgmt
 
 # Application Profiles
       application_profiles:
