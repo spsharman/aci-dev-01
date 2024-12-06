@@ -476,6 +476,8 @@ apic:
                 providers:
                   - permit-from-core-services
                   - permit-to-core-services
+                imported_consumers:
+                  - permit-to-tn-mgmt-inb-mgmt
 
             - name: lab-desktops-subnets
               subnets:

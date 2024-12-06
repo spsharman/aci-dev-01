@@ -11,7 +11,7 @@ apic:
             policy_group: fabric-inband-mgmt
             port_blocks:
               - name: block-1
-                description: configured by NAC
+                description: apic-01 eth2/1
                 from_port: 48
                 to_port: 48
 
@@ -126,7 +126,7 @@ apic:
             policy_group: fabric-inband-mgmt
             port_blocks:
               - name: block-1
-                description: configured by NAC
+                description: apic-01 eth2/2
                 from_port: 48
                 to_port: 48
 

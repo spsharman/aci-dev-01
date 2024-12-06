@@ -29,6 +29,7 @@ apic:
             dvs_version: 6.6
             statistics: true
             credential_policy: aci-dev-01
+            mgmt_epg: inb
         uplinks:
           - id: 1
             name: uplink1
