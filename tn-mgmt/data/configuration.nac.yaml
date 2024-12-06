@@ -97,7 +97,7 @@ apic:
               nd_ra_prefix: false
 
       inb_endpoint_groups:
-        - name: mgmt-inb
+        - name: inb
           vlan: 3966
           bridge_domain: inb
           contracts:

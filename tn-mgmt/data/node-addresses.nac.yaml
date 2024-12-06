@@ -1,7 +1,7 @@
 ---
 apic:
   node_policies:
-    inb_endpoint_group: mgmt-inb
+    inb_endpoint_group: inb
     nodes:
       - id: 1
         pod: 1
