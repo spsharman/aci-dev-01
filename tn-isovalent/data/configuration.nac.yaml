@@ -7,7 +7,7 @@
 apic:
   tenants:
     - name: isovalent
-      description: Routable IP range TBC
+      description: Routable IP range 10.237.101.0/26
       security_domains:
         - isovalent
 
