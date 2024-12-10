@@ -197,9 +197,9 @@ apic:
                           multicast_address_family: true
                           admin_state: true
                           as_propagate: none
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp.uktme.cisco.com
-                      scope: tenant
+                  # dhcp_labels:
+                  #   - dhcp_relay_policy: dhcp.uktme.cisco.com
+                  #     scope: tenant
 
                 - name: hx-dev-01-fi-b-vlan-34
                   interfaces:
@@ -230,9 +230,9 @@ apic:
                           multicast_address_family: true
                           admin_state: true
                           as_propagate: none
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp.uktme.cisco.com
-                      scope: tenant
+                  # dhcp_labels:
+                  #   - dhcp_relay_policy: dhcp.uktme.cisco.com
+                  #     scope: tenant
 
           external_endpoint_groups:
             - name: all-external-subnets
