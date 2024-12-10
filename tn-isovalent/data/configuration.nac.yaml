@@ -11,6 +11,7 @@ apic:
       security_domains:
         - isovalent
 
+# Policies
       policies:
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
@@ -54,6 +55,7 @@ apic:
             description: BGP best path policy for cilium cni
             control_type: multi-path-relax
 
+# Filters
       filters:
         - name: 'icmp'
           entries:
@@ -65,19 +67,7 @@ apic:
             - name: 'permit-src-any-dst-any'
               ethertype: unspecified
 
-      imported_contracts:
-        - name: permit-from-lab-desktops
-          tenant: shared-services
-          contract: permit-from-lab-desktops
-
-        - name: 'permit-from-core-services'
-          tenant: shared-services
-          contract: permit-from-core-services
-
-        - name: 'permit-to-core-services'
-          tenant: shared-services
-          contract: permit-to-core-services
-          
+# Contracts
       contracts:
         - name: intra-tenant
           scope: context
@@ -100,6 +90,25 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
+# Imported contracts
+      imported_contracts:
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: 'permit-to-shared-services.vrf-01-all-external-subnets'
+          tenant: shared-services
+          contract: permit-to-shared-services.vrf-01-all-external-subnets
+
+# VRFs
       vrfs:
         - name: vrf-01
           description: configured with NAC
@@ -124,11 +133,16 @@ apic:
             ipv4_address_family_context_policy: cilium-cni
           contracts:
             providers: 
-              # - intra-tenant
+              - intra-tenant
             consumers:
-              # - intra-tenant
+              - intra-tenant
             imported_consumers:
+                - permit-to-shared-services.vrf-01-all-external-subnets
+                - permit-to-core-services
+                - permit-from-core-services
+                - permit-from-lab-desktops
 
+# L3Outs
       l3outs:
         - name: isovalent.vrf-01-bgp-AS-65152
           description: configured with NAC
@@ -222,6 +236,46 @@ apic:
                     - dhcp_relay_policy: dhcp.uktme.cisco.com
                       scope: tenant
                       
+                - name: vpc_to_isovalent-node-01
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      channel: vpc_to_isovalent-node-01
+                      vlan: 16
+                      floating_svi: true
+                      paths:
+                        - floating_ip: 10.237.101.3/27
+                          physical_domain: isovalent-nodes
+                      ip: 10.237.101.1/27
+                      ip_b: 10.237.101.2/27
+                      ip_shared: 10.237.101.4/27
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.237.101.0/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp.uktme.cisco.com
+                      scope: tenant
+
                 # - name: vpc_to_r28-tor
                 #   interfaces:
                 #     - node_id: 1101
@@ -326,32 +380,118 @@ apic:
                 consumers:
                   - permit-to-node-subnet
 
+# Bridge domains
+      bridge_domains:
+        - name: 10.237.101.64_28
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.101.65/28
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+# Application Profiles
       application_profiles:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
-          endpoint_groups:      
-            - name: '10.237.100.0_24'
-              alias: common.vrf-01
-              bridge_domain: '10.237.100.0_24'
+          endpoint_groups:
+            - name: '10.237.101.64_28'
+              bridge_domain: '10.237.101.64_28'
+              physical_domains:
+                - isovalent-nodes
+              static_ports:
+                # - channel: vpc_to_isovalent-node-01
+                #   mode: untagged
+                #   vlan: 15
+                #   node_id: 1101
+                #   node2_id: 1102
+                #   deployment_immediacy: immediate
+
+                - channel: vpc_to_isovalent-node-02
+                  mode: untagged
+                  vlan: 15
+                  node_id: 1101
+                  node2_id: 1102
+                  deployment_immediacy: immediate
+
+                # - node_id: 1101
+                #   port: 21
+                #   mode: untagged
+                #   vlan: 15
+                #   deployment_immediacy: immediate
+                # - node_id: 1102
+                #   port: 21
+                #   mode: untagged
+                #   vlan: 15
+                #   deployment_immediacy: immediate
+                # - node_id: 1101
+                  # port: 22
+                  # mode: untagged
+                  # vlan: 15
+                #   deployment_immediacy: immediate
+                # - node_id: 1102
+                #   port: 22
+                #   mode: untagged
+                  # vlan: 15
+                  # deployment_immediacy: immediate
+                - node_id: 1101
+                  port: 23
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
+                - node_id: 1102
+                  port: 23
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
+                - node_id: 1101
+                  port: 24
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
+                - node_id: 1102
+                  port: 24
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
+                - node_id: 1101
+                  port: 25
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
+                - node_id: 1102
+                  port: 25
+                  mode: untagged
+                  vlan: 15
+                  deployment_immediacy: immediate
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: false
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-
-        - name: 'network-security-groups'
-          description: 'ESGs are used to define security groups' 
-          endpoint_security_groups:
-            - name: epg-10.237.100.0_24
-              vrf: common.vrf-01
-              shutdown: false
-              intra_esg_isolation: false
-              preferred_group: false
-              epg_selectors:
-                - tenant: isovalent
-                  application_profile: 'network-segments'
-                  endpoint_group: '10.237.100.0_24'
               contracts:
                 consumers:
                   - permit-to-external-subnet
                   - permit-to-node-subnet
+
+        # - name: 'network-security-groups'
+        #   description: 'ESGs are used to define security groups' 
+        #   endpoint_security_groups:
+        #     - name: epg-10.237.100.0_24
+        #       vrf: common.vrf-01
+        #       shutdown: false
+        #       intra_esg_isolation: false
+        #       preferred_group: false
+        #       epg_selectors:
+        #         - application_profile: 'network-segments'
+        #           endpoint_group: '10.237.100.0_24'
+        #       contracts:
+        #         consumers:
+        #           - permit-to-external-subnet
+        #           - permit-to-node-subnet
