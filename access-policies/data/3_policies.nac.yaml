@@ -60,7 +60,7 @@ apic:
         - name: mac-pinning
           mode: mac-pin
 
-        - name: lacp-active-2960
+        - name: lacp-active-isovalent-nodes
           mode: active
           min_links: 1
           max_links: 2
@@ -73,8 +73,8 @@ apic:
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
           - isovalent-nodes
-        routed_domains:
-          - isovalent.vrf-01
+        # routed_domains:
+        #   - isovalent.vrf-01
 
       - name: mgmt_inb
         infra_vlan: false

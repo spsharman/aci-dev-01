@@ -7,6 +7,8 @@ apic:
       - name: isovalent-nodes
         allocation: static
         ranges:
+          - from: 15
+            description: bare metal nodes
           - from: 16
             description: L3out to isovalent.vrf-01
 
@@ -231,8 +233,8 @@ apic:
             description: ftdv-01-eth5-gig-0-3
           - from: 14
             description: ftdv-01-eth5-gig-0-4
-          - from: 15
-            description: undocumented
+          - from: 16
+            description: L3out to isovalent.vrf-01
           - from: 17
             to: 18
             description: primary/secondary PVLANs

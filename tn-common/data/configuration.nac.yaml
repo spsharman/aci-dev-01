@@ -18,7 +18,8 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
+                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: all-external-subnets
 
 # Filters
@@ -60,40 +61,27 @@ apic:
 # VRFs
       vrfs:
         - name: common.vrf-01
-          leaked_internal_prefixes:
-            - prefix: 10.237.100.0/24
-              public: true
-              destinations:
-                - tenant: shared-services
-                  vrf: vrf-01
-                  description: Leaked to shared-services:vrf-01 and advertised externally
+          # leaked_internal_prefixes:
+          #   - prefix: 10.237.100.0/24
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
                 
-                - tenant: isovalent
-                  vrf: vrf-01
-                  description: Leaked to isovalent:vrf-01
+          #       - tenant: isovalent
+          #         vrf: vrf-01
+          #         description: Leaked to isovalent:vrf-01
 
-          contracts:
-            imported_consumers:
-              - permit-from-core-services
-              - permit-to-core-services
-              - permit-from-lab-desktops
-              - permit-to-shared-services.vrf-01-all-external-subnets
+          # contracts:
+          #   imported_consumers:
+          #     - permit-from-core-services
+          #     - permit-to-core-services
+          #     - permit-from-lab-desktops
+          #     - permit-to-shared-services.vrf-01-all-external-subnets
 
 # Bridge Domains
       bridge_domains:
-        - name: 10.237.100.0_24
-          description: Shared corporate subnet
-          unknown_unicast: proxy
-          vrf: common.vrf-01
-          subnets:
-            - ip: 10.237.100.1/24
-              public: true
-              shared: true
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant
-
         - name: vlan-3001
           description: "64.103.44.48/28 - gateway on Production fabric"
           vrf: common.vrf-01
@@ -115,7 +103,6 @@ apic:
           unknown_ipv4_multicast: flood
           unknown_ipv6_multicast: flood
           limit_ip_learn_to_subnets: true
-
 
         - name: vlan-3003
           vrf: common.vrf-01

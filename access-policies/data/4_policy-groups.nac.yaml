@@ -12,6 +12,12 @@ apic:
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
+      - name: isovalent-nodes
+        type: access
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+
       - name: shared-services.vrf-01-ospf-area-0.0.0.1
         type: access
         aaep: shared-services.vrf-01-ospf-area-0.0.0.1

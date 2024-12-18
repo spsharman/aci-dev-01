@@ -20,71 +20,28 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 l3out: shared-services.vrf-01-bgp-as-64801
+                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-hx-dev-01-fi-a-vlan-16
+          - name: dhcp-k8s-bare-metal-nodes
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
+                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-hx-dev-01-fi-b-vlan-16
+          - name: dhcp-k8s-virtual-machine-nodes
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-01
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-02
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-03
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-04
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-05
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
+                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
                 external_endpoint_group: core-services-subnets
 
         bgp_timer_policies:
@@ -209,7 +166,7 @@ apic:
 # L3Outs
       l3outs:
         - name: isovalent.vrf-01-bgp-AS-65152
-          description: configured with NAC
+          description: Floating L3out to Isovalent K8s environment
           alias: external-vrf
           vrf: vrf-01
           domain: isovalent.vrf-01
@@ -224,10 +181,59 @@ apic:
                   router_id: 102.2.1.1
 
               interface_profiles:
-                - name: hx-dev-01-fi-a-vlan-16
+                - name: bare-metal-nodes
                   interfaces:
                     - node_id: 1101
-                      channel: hx-dev-01-fi-a
+                      mode: regular
+                      vlan: 16
+                      floating_svi: true
+                      paths:
+                        - floating_ip: 10.237.101.3/27
+                          physical_domain: isovalent-nodes
+                      ip: 10.237.101.1/27
+                      ip_shared: 10.237.101.4/27
+                      mtu: 1500
+
+                    - node_id: 1102
+                      mode: regular
+                      vlan: 16
+                      floating_svi: true
+                      paths:
+                        - floating_ip: 10.237.101.3/27
+                          physical_domain: isovalent-nodes
+                      ip: 10.237.101.2/27
+                      ip_shared: 10.237.101.4/27
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.237.101.0/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni                  
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp-k8s-bare-metal-nodes
+                      scope: tenant
+
+                - name: virtual-machine-nodes
+                  interfaces:
+                    - node_id: 1101
+                      mode: regular
                       vlan: 16
                       floating_svi: true
                       paths:
@@ -236,36 +242,9 @@ apic:
                       ip: 10.237.101.1/27
                       ip_shared: 10.237.101.4/27
                       mtu: 1500
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-hx-dev-01-fi-a-vlan-16
-                      scope: tenant
 
-                - name: hx-dev-01-fi-b-vlan-16
-                  interfaces:
                     - node_id: 1102
-                      channel: hx-dev-01-fi-b
+                      mode: regular
                       vlan: 16
                       floating_svi: true
                       paths:
@@ -297,261 +276,7 @@ apic:
                           as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
                   dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-hx-dev-01-fi-b-vlan-16
-                      scope: tenant
-                      
-                - name: vpc_to_isovalent-node-01
-                  interfaces:
-                    - node_id: 1101
-                      channel: vpc_to_isovalent-node-01
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-
-                    - node_id: 1102
-                      channel: vpc_to_isovalent-node-01
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-01
-                      scope: tenant
-
-                - name: vpc_to_isovalent-node-02
-                  interfaces:
-                    - node_id: 1101
-                      channel: vpc_to_isovalent-node-02
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-
-                    - node_id: 1102
-                      channel: vpc_to_isovalent-node-02
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500                      
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-02
-                      scope: tenant
-
-                - name: vpc_to_isovalent-node-03
-                  interfaces:
-                    - node_id: 1101
-                      channel: vpc_to_isovalent-node-03
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-
-                    - node_id: 1102
-                      channel: vpc_to_isovalent-node-03
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500                      
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-03
-                      scope: tenant
-
-                - name: vpc_to_isovalent-node-04
-                  interfaces:
-                    - node_id: 1101
-                      channel: vpc_to_isovalent-node-04
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-
-                    - node_id: 1102
-                      channel: vpc_to_isovalent-node-04
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500                      
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-4
-                      scope: tenant
-
-                - name: vpc_to_isovalent-node-05
-                  interfaces:
-                    - node_id: 1101
-                      channel: vpc_to_isovalent-node-05
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-                    - node_id: 1102
-                      channel: vpc_to_isovalent-node-05
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500                      
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-5
+                    - dhcp_relay_policy: dhcp-k8s-virtual-machine-nodes
                       scope: tenant
 
           external_endpoint_groups:
