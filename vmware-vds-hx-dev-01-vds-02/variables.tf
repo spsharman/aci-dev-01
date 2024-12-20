@@ -17,7 +17,7 @@ variable "vcenter_url" {
 variable "datacenter_name" {
   type        = string
   description = "The name of the datacenter"
-  default     = "UKTME"
+  default     = "ACI"
 }
 
 # Distributed Virtual Switch Name

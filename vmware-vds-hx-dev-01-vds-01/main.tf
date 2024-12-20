@@ -1,3 +1,5 @@
+# Need to modify .terraform/modules/aci/defaults/defaults.yaml 
+# Set apic/fabric_policies/global_settings/overlapping_vlan_validation: false
 terraform {
   required_providers {
     aci = {

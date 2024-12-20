@@ -25,8 +25,8 @@ apic:
         vcenters:
           - name: hx-dev-01-vc01.uktme.cisco.com
             hostname_ip: 10.237.97.150
-            datacenter: UKTME
-            dvs_version: 6.6
+            datacenter: ACI
+            dvs_version: "6.6"
             statistics: true
             credential_policy: aci-dev-01
             mgmt_epg: inb
