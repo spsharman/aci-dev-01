@@ -143,7 +143,7 @@ apic:
       vrfs:
         - name: vrf-01
           description: configured with NAC
-          # alias: internal-vrf-01
+          alias: external-vrf
 
           contracts:
             providers:
@@ -247,8 +247,8 @@ apic:
 # Bridge Domains
       bridge_domains:
         - name: 6.6.6.0_24
-          description: PBR subnet
-          # alias: internal-vrf-01
+          description: PBR subnet, not advertised - local to VRF
+          alias: vrf-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
@@ -257,14 +257,13 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 10.0.1.0_24
-          # alias: internal-vrf-01
+        - name: 10.1.1.0_27
+          alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
             - ip: 10.0.1.1/24
               public: true
-              # private: false
               shared: false
               nd_ra_prefix: false
           l3outs:
@@ -272,14 +271,13 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.0.2.0_24
-          # alias: internal-vrf-01
+        - name: 10.1.1.32_27
+          alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.0.2.1/24
+            - ip: 10.1.1.33/27
               public: true
-              # private: false
               shared: false
               nd_ra_prefix: false
           l3outs:
@@ -287,14 +285,13 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.0.3.0_24
-          # alias: internal-vrf-01
+        - name: 10.1.1.64_27
+          alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.0.3.1/24
+            - ip: 10.1.1.65/27
               public: true
-              # private: false
               shared: false
               nd_ra_prefix: false
           l3outs:
@@ -302,29 +299,13 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.0.4.0_24
-          # alias: internal-vrf-01
+        - name: 10.1.1.96_27
+          alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.0.4.1/24
+            - ip: 10.1.1.97/27
               public: true
-              # private: false
-              shared: false
-              nd_ra_prefix: false
-          l3outs:
-            - demo-01.vrf-01-bgp-AS-65151
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-        - name: 10.0.5.0_24
-          # alias: internal-vrf-01
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.0.5.1/24
-              public: true
-              # private: false
               shared: false
               nd_ra_prefix: false
           l3outs:
@@ -346,9 +327,9 @@ apic:
             #       deployment_immediacy: immediate
             #       resolution_immediacy: immediate
 
-            - name: '10.0.1.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.1.0_24'
+            - name: '10.1.1.0_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.1.0_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1243
@@ -357,9 +338,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
       
-            - name: '10.0.2.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.2.0_24'
+            - name: '10.1.1.32_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.1.32_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1245
@@ -368,9 +349,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
         
-            - name: '10.0.3.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.3.0_24'
+            - name: '10.1.1.64_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.1.64_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1247
@@ -379,9 +360,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
     
-            - name: '10.0.4.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.4.0_24'
+            - name: '10.1.1.96_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.1.96_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1249
@@ -389,17 +370,6 @@ apic:
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-
-            - name: '10.0.5.0_24'
-              # alias: internal-vrf-01
-              bridge_domain: '10.0.5.0_24'
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1251
-                  secondary_vlan: 1252
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate 
 
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
@@ -411,12 +381,10 @@ apic:
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.0.1.0_24'
+                  endpoint_group: '10.1.1.0_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.0.2.0_24'
+                  endpoint_group: '10.1.1.32_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.0.3.0_24'
+                  endpoint_group: '10.1.1.64_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.0.4.0_24'
-                - application_profile: 'network-segments'
-                  endpoint_group: '10.0.5.0_24'
+                  endpoint_group: '10.1.1.96_27'
