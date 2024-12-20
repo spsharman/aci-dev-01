@@ -1,0 +1,205 @@
+# ---
+# apic:
+#   tenants:
+#     - name: shared-services
+#       managed: true
+
+# L3out
+#       l3outs:
+#         - name: shared-services.vrf-01-ospf-area-0.0.0.1
+#           description: configured with NAC
+#           vrf: vrf-01
+#           domain: shared-services.vrf-01
+#           ospf:
+#             area: 0.0.0.1
+#             area_type: regular
+#           export_route_map:
+#             name: export-tn-isovalent-subnets
+#             type: combinable
+#             contexts:
+#               - name: permit-10.237.101.0_27
+#                 order: 0
+#                 action: permit
+#                 match_rules:
+#                   - match-10.237.101.0_27
+#               - name: permit-10.237.101.32_27
+#                 order: 1
+#                 action: permit
+#                 match_rules:
+#                   - match-10.237.101.32_27
+
+# # Nodes
+#           node_profiles:
+#             - name: border-leafs
+#               nodes:
+#                 - node_id: 1101
+#                   router_id: 101.2.1.1
+#                 - node_id: 1102
+#                   router_id: 102.2.1.1
+# # Interfaces
+#               interface_profiles:
+#                 - name: leaf-1101-eth7
+#                   description: core-01 eth1/7
+#                   interfaces:
+#                     - node_id: 1101
+#                       port: 7
+#                       ip: 10.237.99.233/30
+#                       mtu: inherit
+#                       mac: 10:12:BD:F8:19:FF
+#                   ospf:
+#                     policy: OSPF_p2p
+
+#                 - name: leaf-1101-eth8
+#                   description: core-02 eth1/8
+#                   interfaces:
+#                     - node_id: 1101
+#                       port: 8
+#                       ip: 10.237.96.255/31
+#                       mtu: inherit
+#                       mac: 10:12:BD:F8:19:FF
+#                   ospf:
+#                     policy: OSPF_p2p
+
+#                 - name: leaf-1102-eth7
+#                   description: core-02 eth1/7
+#                   interfaces:
+#                     - node_id: 1102
+#                       port: 7
+#                       ip: 10.237.99.237/30
+#                       mtu: inherit
+#                       mac: 10:22:BD:F8:19:FF
+#                   ospf:
+#                     policy: OSPF_p2p
+
+#                 - name: leaf-1102-eth8
+#                   description: core-01 eth1/8
+#                   interfaces:
+#                     - node_id: 1102
+#                       port: 8
+#                       ip: 10.237.96.251/31
+#                       mtu: inherit
+#                       mac: 10:12:BD:F8:19:FF
+#                   ospf:
+#                     policy: OSPF_p2p
+
+#                 - name: hx-dev-01-fi-a-vlan-8
+#                   interfaces:
+#                     - node_id: 1101
+#                       channel: hx-dev-01-fi-a
+#                       vlan: 8
+#                       svi: true
+#                       ip: 10.237.99.49/29
+#                       mtu: 1500
+#                       # floating_svi: true
+#                       # paths:
+#                       #   - physical_domain: hx-dev-01-vds-02
+#                       #     floating_ip: 10.237.99.51/28
+#                   ospf:
+#                     policy: broadcast
+
+#                 - name: hx-dev-01-fi-b-vlan-8
+#                   interfaces:
+#                     - node_id: 1102
+#                       channel: hx-dev-01-fi-b
+#                       vlan: 8
+#                       svi: true
+#                       ip: 10.237.99.50/29
+#                       mtu: 1500
+#                       # floating_svi: true
+#                       # paths:
+#                       #   - physical_domain: hx-dev-01-vds-02
+#                       #     floating_ip: 10.237.99.51/28
+#                   ospf:
+#                     policy: broadcast
+
+# # extEPGs
+#           external_endpoint_groups:
+#             - name: all-external-subnets
+#               subnets:
+#                 - prefix: 0.0.0.0/0
+#                   import_security: false
+#                   shared_route_control: true
+
+#                 - prefix: 0.0.0.0/1
+#                   shared_security: true
+#                   import_security: true
+
+#                 - prefix: 128.0.0.0/1
+#                   shared_security: true
+#                   import_security: true
+
+#                 - prefix: 10.237.101.0/27
+#                   export_route_control: true
+#                   import_security: false
+
+#                 - prefix: 10.237.101.32/27
+#                   export_route_control: true
+#                   import_security: false
+
+#               contracts:
+#                 consumers:
+#                   - permit-to-ftd-management-ftd-mgmt
+#                   - permit-to-csr-management-csr-mgmt
+#                   - permit-to-csw-management-data-collector
+#                   - permit-to-n9000v-management-n9000v-mgmt
+#                 providers:
+#                   - permit-to-shared-services.vrf-01-all-external-subnets
+#                 imported_consumers:
+#                   - permit-to-tn-mgmt-inb-mgmt
+#                   - permit-to-tn-isovalent-external-subnet
+#                   - permit-to-tn-isovalent-node-subnet
+
+#                   # - permit-to-tn-adealdag
+#                   # - permit-to-tn-adossant
+#                   # - permit-to-tn-ajshahid
+#                   # - permit-to-tn-conmurph-01
+#                   # - permit-to-tn-containers
+#                   # - permit-to-tn-demo
+#                   # - permit-to-tn-demo-03
+#                   # - permit-to-tn-demo-non-vmm-online-boutique-all-services
+#                   # - permit-to-tn-demo-online-boutique-frontend-service
+#                   # - permit-to-tn-fgandola
+#                   # - permit-to-tn-fgandola-applications-development
+#                   # - permit-to-tn-movaswan
+#                   # - permit-to-tn-ndsouzar
+#                   # - permit-to-tn-ngorse
+#                   # - permit-to-tn-rotaplin
+#                   # - permit-to-tn-roxadiaz
+#                   # - permit-to-tn-rwhitear
+#                   # - permit-to-tn-sgioia
+#                   # - permit-to-tn-ssharman
+#                   # - permit-to-tn-ssharman-applications-development
+#                   # - permit-to-tn-ssharman-applications-production
+#                   # - permit-to-tn-ssharman-firewalls-ftd-mgmt
+#                   # - permit-to-tn-ssharman-online-boutique-hx
+#                   # - permit-to-tn-ssharman-online-boutique-sa-frontend-service
+
+#             - name: core-services-subnets
+#               subnets:
+#                 - prefix: 10.237.97.128/27
+#                   name: core-services
+#                   shared_route_control: true
+#                   shared_security: true
+#                   import_security: true
+#               contracts:
+#                 providers:
+#                   - permit-from-core-services
+#                   - permit-to-core-services
+#                 imported_consumers:
+#                   - permit-to-tn-mgmt-inb-mgmt
+
+#             - name: lab-desktops-subnets
+#               subnets:
+#                 - prefix: 10.237.97.160/28
+#                   name: lab-desktops
+#                   shared_route_control: true
+#                   shared_security: true
+#                   import_security: true
+#               contracts:
+#                 consumers:
+#                   - permit-to-ftd-management-ftd-mgmt
+#                   - permit-to-csr-management-csr-mgmt
+#                   - permit-to-csw-management-data-collector
+#                   - permit-to-n9000v-management-n9000v-mgmt
+#                 providers:
+#                   - permit-from-lab-desktops
