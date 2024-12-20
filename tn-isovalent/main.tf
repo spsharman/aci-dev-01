@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      version = ">=2.13.2"
+      # version = ">=2.13.2"
     }
   }
 }
@@ -15,10 +15,10 @@ provider "aci" {
 
 module "aci" {
   source  = "netascode/nac-aci/aci"
-  version = ">=0.8.1"
+  # version = ">=0.8.1"
 
-  # yaml_directories = ["data"]
-  yaml_directories = ["test-02"]
+  # yaml_directories = ["svi"]
+  yaml_directories = ["floating-svi"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false
