@@ -148,13 +148,13 @@ apic:
                 from_port: 21
                 to_port: 21
 
-          - name: vpc_to_isovalent-node-02
-            policy_group: vpc_to_isovalent-node-02
-            port_blocks:
-              - name: block-1
-                description: isovalent-node-02
-                from_port: 22
-                to_port: 22              
+          # - name: vpc_to_isovalent-node-02
+          #   policy_group: vpc_to_isovalent-node-02
+          #   port_blocks:
+          #     - name: block-1
+          #       description: isovalent-node-02
+          #       from_port: 22
+          #       to_port: 22              
 
           # - name: vpc_to_isovalent-node-03
           #   policy_group: vpc_to_isovalent-node-03
@@ -332,13 +332,13 @@ apic:
                 from_port: 21
                 to_port: 21
 
-          - name: vpc_to_isovalent-node-02
-            policy_group: vpc_to_isovalent-node-02
-            port_blocks:
-              - name: block-1
-                description: isovalent-node-02
-                from_port: 22
-                to_port: 22              
+          # - name: vpc_to_isovalent-node-02
+          #   policy_group: vpc_to_isovalent-node-02
+          #   port_blocks:
+          #     - name: block-1
+          #       description: isovalent-node-02
+          #       from_port: 22
+          #       to_port: 22              
 
           # - name: vpc_to_isovalent-node-03
           #   policy_group: vpc_to_isovalent-node-03
