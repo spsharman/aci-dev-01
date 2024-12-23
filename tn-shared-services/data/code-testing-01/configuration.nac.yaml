@@ -61,6 +61,10 @@ apic:
                 from_length: 32
                 to_length: 32
 
+        route_tag_policies:
+          - name: shared-services.vrf-01
+            tag: 4290166600
+
 # Filters
       filters:
         - name: 'icmp'
@@ -339,6 +343,44 @@ apic:
                   log: false
                   no_stats: false
 
+        - name: permit-to-all-external-subnets-bgp-as-64801
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+        - name: permit-to-all-external-subnets-ospf-area-0.0.0.0
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
 # Imported contracts
       imported_contracts:
         - name: permit-to-tn-mgmt-inb-mgmt
@@ -358,52 +400,13 @@ apic:
         - name: vrf-01
           description: external connectivity
           alias: external-vrf
+          transit_route_tag_policy: shared-services.vrf-01
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
-                - tenant: ajshahid
-                  vrf: vrf-01
-                  description: Leaked to tn-ajshahid:vrf-01
-
                 - tenant: common
                   vrf: common.vrf-01
                   description: Leaked to tn-common:common.vrf-01
-
-                - tenant: demo-01
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-01:vrf-01
-
-                - tenant: demo-02
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-02:vrf-01
-
-                - tenant: demo-03
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-03:vrf-01
-
-                - tenant: demo-04
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-04:vrf-01
-
-                - tenant: demo-non-vmm
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-non-vmm:vrf-01
-
-                - tenant: fgandola
-                  vrf: vrf-01
-                  description: Leaked to tn-fgandola:vrf-01
-
-                - tenant: rotaplin
-                  vrf: vrf-01
-                  description: Leaked to tn-rotaplin:vrf-01
-
-                - tenant: rwhitear
-                  vrf: vrf-01
-                  description: Leaked to tn-rwhitear:vrf-01
-
-                - tenant: ssharman
-                  vrf: vrf-01
-                  description: Leaked to tn-ssharman:vrf-01
 
           contracts:
             consumers:
@@ -449,14 +452,14 @@ apic:
             - name: border-leafs
               nodes:
                 - node_id: 1101
-                  router_id: 101.2.1.1
+                  router_id: 101.1.0.1
                   router_id_as_loopback: false
-                  loopback: 10.237.96.22
+                  loopback: 10.237.96.22/32
 
                 - node_id: 1102
-                  router_id: 102.2.1.1
+                  router_id: 102.1.0.2
                   router_id_as_loopback: false
-                  loopback: 10.237.96.23
+                  loopback: 10.237.96.23/32
 
 # Interfaces
               interface_profiles:
@@ -630,6 +633,9 @@ apic:
                 - prefix: 0.0.0.0/0
                   import_security: false
                   shared_route_control: true
+                  export_route_control: true
+                  aggregate_export_route_control: true
+                  name: route-control-only
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -639,17 +645,39 @@ apic:
                   shared_security: true
                   import_security: true
 
+                - prefix: 10.1.1.0/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.1.1.32/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.1.1.64/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.1.1.96/27
+                  import_security: true
+                  name: demo-01
+
                 - prefix: 10.237.99.48/29
                   export_route_control: true
                   import_security: false
+                  name: csr1kv-gig2
 
-                - prefix: 10.237.101.0/27
+                - prefix: 10.237.99.56/29
                   export_route_control: true
                   import_security: false
+                  name: csr1kv-gig3
 
-                - prefix: 10.237.101.32/27
-                  export_route_control: true
-                  import_security: false
+                # - prefix: 10.237.101.0/27
+                #   export_route_control: true
+                #   import_security: false
+
+                # - prefix: 10.237.101.32/27
+                #   export_route_control: true
+                #   import_security: false
 
               contracts:
                 consumers:
@@ -659,6 +687,8 @@ apic:
                   - permit-to-n9000v-management-n9000v-mgmt
                 providers:
                   - permit-to-shared-services.vrf-01-all-external-subnets
+                  - permit-to-all-external-subnets-bgp-as-64801
+
                 imported_consumers:
                   - permit-to-tn-mgmt-inb-mgmt
                   - permit-to-tn-isovalent-external-subnet
@@ -733,9 +763,14 @@ apic:
             - name: border-leafs
               nodes:
                 - node_id: 1101
-                  router_id: 101.2.1.1
+                  router_id: 101.1.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.26/32
+
                 - node_id: 1102
-                  router_id: 102.2.1.1
+                  router_id: 102.1.0.2
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.27/32
 
 # Interfaces
               interface_profiles:
@@ -766,9 +801,25 @@ apic:
 # extEPGs
           external_endpoint_groups:
             - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  import_route_control: false
+                  export_route_control: true
+                  shared_route_control: false
+                  import_security: false
+                  shared_security: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  ospf_route_summarization: false
+
+                # - prefix: 10.237.99.48/29
+                #   name: csr1kv-peering-gig2
+                #   import_security: true
+
               contracts:
                 consumers: 
-                  - permit-to-shared-services.vrf-01-all-external-subnets
+                  - permit-to-all-external-subnets-bgp-as-64801
+
 # Bridge domains
       bridge_domains:
         - name: 6.6.6.0_24
