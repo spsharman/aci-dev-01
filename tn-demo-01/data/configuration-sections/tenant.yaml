@@ -1,0 +1,10 @@
+#
+# This tenant is used for route leaking from VRF-01 (external) to VRF-02 (internal).
+#
+# Route leaking is also implemented between VRF-02 and VRF-03
+#
+---
+apic:
+  tenants:
+    - name: demo-01
+      description: Routable IP range 10.0.51-52.x

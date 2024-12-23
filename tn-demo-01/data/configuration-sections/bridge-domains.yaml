@@ -1,0 +1,44 @@
+---
+apic:
+  tenants:
+    - name: demo-01
+####################################################################            
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              private: true
+              shared: false
+              nd_ra_prefix: false
+####################################################################      
+        - name: 10.0.51.0_24
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 10.0.51.1/24
+              # public: true
+              # private: false
+              # shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+####################################################################      
+        - name: 10.0.52.0_24
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 10.0.52.1/24
+              # public: true
+              # private: false
+              # shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+####################################################################      
