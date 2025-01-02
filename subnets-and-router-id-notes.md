@@ -10,9 +10,9 @@
 
 ## VRF Route Distinguishers on core routers
 
-VRF management: RD 64800:0
-VRF core:       RD 64800:1
-VRF ixn:        RD 64800:2
+VRF management: RD 64800:1
+VRF core:       RD 64800:2
+VRF ixn:        RD 64800:3
 
 ## Router IDs
 
