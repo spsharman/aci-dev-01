@@ -2,10 +2,17 @@
 
 ## Subnet allocation
 
+10.0.0.0 IXN
 10.1.0.0 ACI
 10.2.0.0 Hyperfabric
 10.3.0.0 VXLAN
 10.4.0.0 K8's isovalent
+
+## VRF Route Distinguishers on core routers
+
+VRF management: RD 64800:0
+VRF core:       RD 64800:1
+VRF ixn:        RD 64800:2
 
 ## Router IDs
 
