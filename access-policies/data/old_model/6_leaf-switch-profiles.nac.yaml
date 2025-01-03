@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf switch profile
+# Leaf switch profiles
     leaf_switch_profiles:
       - name: aci-dev-01-pod-01-leaf-1101
         selectors:
@@ -23,3 +23,25 @@ apic:
                 to: 1102
         interface_profiles:
           - aci-dev-01-pod-01-leaf-1102
+
+# Spine switch profiles
+    spine_switch_profiles:
+      - name: aci-dev-01-pod-01-spine-1201
+        selectors:
+          - name: aci-dev-01-pod-01-spine-1201
+            node_blocks:
+              - name: aci-dev-01-pod-01-spine-1201
+                from: 1201
+                to: 1201
+        interface_profiles:
+          - aci-dev-01-pod-01-spine-1201
+
+      - name: aci-dev-01-pod-01-spine-1202
+        selectors:
+          - name: aci-dev-01-pod-01-spine-1202
+            node_blocks:
+              - name: aci-dev-01-pod-01-spine-1202
+                from: 1202
+                to: 1202
+        interface_profiles:
+          - aci-dev-01-pod-01-spine-1202

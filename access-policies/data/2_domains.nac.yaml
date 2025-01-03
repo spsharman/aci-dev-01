@@ -78,6 +78,9 @@ apic:
       - name: isovalent.vrf-01
         vlan_pool: isovalent-nodes
 
+      - name: infra.vrf-overlay-1
+        vlan_pool: infra-multipod-overlay-1
+
       - name: multisite
         vlan_pool: hx-dev-01-vds-02
 

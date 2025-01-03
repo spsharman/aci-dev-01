@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Interface policy groups
+# Leaf interface policy groups
     leaf_interface_policy_groups:
 
 # Access port
@@ -18,9 +18,9 @@ apic:
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
-      - name: shared-services.vrf-01-ospf-area-0.0.0.1
+      - name: shared-services.vrf-01
         type: access
-        aaep: shared-services.vrf-01-ospf-area-0.0.0.1
+        aaep: shared-services.vrf-01
         cdp_policy: cdp-enabled
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
@@ -136,3 +136,10 @@ apic:
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
+
+# Spine interface policy groups
+
+    spine_interface_policy_groups:
+      - name: infra-multipod-overlay-1      
+        aaep: infra-multipod-overlay-1
+        cdp_policy: cdp-enabled

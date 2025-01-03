@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf interface profile
+# Leaf interface profiles
     leaf_interface_profiles:
 # aci-dev-01-pod-01-leaf-1101
       - name: aci-dev-01-pod-01-leaf-1101
@@ -107,8 +107,8 @@ apic:
                 from_port: 25
                 to_port: 25
 
-          - name: shared-services.vrf-01-ospf-area-0.0.0.1
-            policy_group: shared-services.vrf-01-ospf-area-0.0.0.1
+          - name: shared-services.vrf-01
+            policy_group: shared-services.vrf-01
             port_blocks:
               - name: block-1
                 description: core-01 e1/7
@@ -291,8 +291,8 @@ apic:
                 from_port: 25
                 to_port: 25
 
-          - name: shared-services.vrf-01-ospf-area-0.0.0.1
-            policy_group: shared-services.vrf-01-ospf-area-0.0.0.1
+          - name: shared-services.vrf-01
+            policy_group: shared-services.vrf-01
             port_blocks:
               - name: block-1
                 description: core-02 eth1/7
@@ -371,3 +371,33 @@ apic:
                 description: rack-L11-tor g1/0/48
                 from_port: 45
                 to_port: 45
+
+# Spine inteface profiles:
+    spine_interface_profiles:
+      - name: aci-dev-01-pod-01-spine-1201
+        selectors:
+          - name: infra-multipod-overlay-1
+            policy_group: infra-multipod-overlay-1
+            port_blocks:
+              - name: block-1
+                description: core-01 eth1/49
+                from_port: 49
+                to_port: 49
+              - name: block-2
+                description: core-02 eth1/49
+                from_port: 50
+                to_port: 50
+
+      - name: aci-dev-01-pod-01-spine-1202
+        selectors:
+          - name: infra-multipod-overlay-1
+            policy_group: infra-multipod-overlay-1
+            port_blocks:
+              - name: block-1
+                description: core-01 eth1/50
+                from_port: 49
+                to_port: 49
+              - name: block-2
+                description: core-02 eth1/50
+                from_port: 50
+                to_port: 50
