@@ -1,0 +1,268 @@
+# Notes:
+
+---
+apic:
+  tenants:
+    - name: infra
+      managed: true
+
+# Policies
+      # policies:
+      #   dhcp_relay_policies:
+      #     - name: dhcp.uktme.cisco.com
+      #       description: "dhcp.uktme.cisco.com"
+      #       providers:
+      #         - ip: 10.237.97.133
+      #           type: external_epg
+      #           tenant: shared-services
+      #           # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+      #           l3out: shared-services.vrf-01-bgp-as-64801
+      #           external_endpoint_group: all-external-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: permit-to-infra.overlay-1-all-external-subnets
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+# VRFs
+      vrfs:
+        - name: overlay-1
+          description: mpod connectivity
+          # alias: external-vrf
+
+# L3out
+      l3outs:
+
+# L3out BGP
+        - name: infra.overlay-1-bgp-as-65051
+          description: configured with NAC
+          vrf: overlay-1
+          domain: infra.vrf-overlay-1
+
+# extEPGs
+          external_endpoint_groups:
+            - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  import_security: false
+                  shared_route_control: false
+
+                - prefix: 0.0.0.0/1
+                  shared_security: false
+                  import_security: true
+
+                - prefix: 128.0.0.0/1
+                  shared_security: false
+                  import_security: true
+
+              contracts:
+                providers:
+                  - permit-to-infra.overlay-1-all-external-subnets
+
+# Nodes
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 1201
+                  router_id: 10.0.0.22
+                  router_id_as_loopback: false
+                  loopback: 10.0.0.24
+
+                - node_id: 1202
+                  router_id: 10.0.0.23
+                  router_id_as_loopback: false
+                  loopback: 10.0.0.25
+
+# Interfaces
+              interface_profiles:
+                - name: spine-1201-eth49
+                  description: to core-01 eth1/49
+                  interfaces:
+                    - node_id: 1201
+                      port: 49
+                      ip: 10.0.0.27/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.0.0.26/32
+                          description: core-01 eth1/49
+                          remote_as: 64800
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: spine-1201-eth50
+                  description: to core-02 eth1/49
+                  interfaces:
+                    - node_id: 1201
+                      port: 50
+                      ip: 10.0.0.31/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.0.0.30/32
+                          description: core-02 eth1/49
+                          remote_as: 64800
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: spine-1202-eth49
+                  description: to core-01 eth1/50
+                  interfaces:
+                    - node_id: 1202
+                      port: 49
+                      ip: 10.0.0.29/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.0.0.28/32
+                          description: core-01 eth1/50
+                          remote_as: 64800
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: spine-1202-eth50
+                  description: to core-02 eth1/50
+                  interfaces:
+                    - node_id: 1202
+                      port: 50
+                      ip: 10.0.0.33/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.0.0.32/32
+                          description: core-02 eth1/50
+                          remote_as: 64800
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+# Configures > Infra > Policies > Fabric Ext Connection Policies
+  fabric_policies:
+    external_connectivity_policy:
+      name: ixn
+      site_id: 0
+      fabric_id: 1
+      routing_profiles:
+        - name: ixn_to_aci-dev-01-pod-01-spine-1201
+          subnets:
+            - 10.0.0.26/31
+            - 10.0.0.30/31
+
+        - name: ixn_to_aci-dev-01-pod-01-spine-1202
+          subnets:
+            - 10.0.0.28/31
+            - 10.0.0.32/31
+
+        - name: ixn_to_aci-dev-01-pod-01-spine-2201
+          subnets:
+            - 10.0.0.38/31
+            - 10.0.0.42/31
+
+        - name: ixn_to_aci-dev-01-pod-01-spine-2202
+          subnets:
+            - 10.0.0.40/31
+            - 10.0.0.44/31
+
+# Configures > Fabric > Inventory > Pod Fabric Setup Policy
+  pod_policies:
+    pods:
+      - id: 1
+        policy: default
+        tep_pool: 10.1.0.0/16
+        data_plane_tep: 10.0.1.2/32
+        unicast_tep: 10.0.1.3/32
+        external_tep_pools:
+          - prefix: 10.0.1.0/24
+            reserved_address_count: 3 
+
+      - id: 2
+        policy: default
+        tep_pool: 10.2.0.0/16
+        data_plane_tep: 10.0.2.2/32
+        unicast_tep: 10.0.2.3/32
+        external_tep_pools:
+          - prefix: 10.0.2.0/24
+            reserved_address_count: 3 
