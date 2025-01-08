@@ -3,6 +3,7 @@ apic:
   node_policies:
     inb_endpoint_group: inb
     nodes:
+# Pod 1
       - id: 1
         pod: 1
         role: apic
@@ -22,7 +23,7 @@ apic:
         set_role: false
         oob_address: 10.237.102.68/27
         oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.227/29
+        inb_address: 10.237.96.227/28
         inb_gateway: 10.237.96.225
 
       - id: 1102
@@ -33,7 +34,7 @@ apic:
         set_role: false
         oob_address: 10.237.102.69/27
         oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.228/29
+        inb_address: 10.237.96.228/28
         inb_gateway: 10.237.96.225
 
       - id: 1201
@@ -44,7 +45,7 @@ apic:
         set_role: false
         oob_address: 10.237.102.66/27
         oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.229/29
+        inb_address: 10.237.96.229/28
         inb_gateway: 10.237.96.225
 
       - id: 1202
@@ -55,5 +56,27 @@ apic:
         set_role: false
         oob_address: 10.237.102.67/27
         oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.230/29
+        inb_address: 10.237.96.230/28
+        inb_gateway: 10.237.96.225
+# Pod 2
+      - id: 2201
+        pod: 2
+        role: spine
+        name: aci-dev-01-pod-02-spine-2201
+        serial_number: FDO22032N0X
+        set_role: false
+        oob_address: 10.237.102.98/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.233/28
+        inb_gateway: 10.237.96.225
+
+      - id: 2202
+        pod: 2
+        role: spine
+        name: aci-dev-01-pod-02-spine-2202
+        serial_number: FEO222129SA
+        set_role: false
+        oob_address: 10.237.102.99/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.234/28
         inb_gateway: 10.237.96.225

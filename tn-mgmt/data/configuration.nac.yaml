@@ -92,7 +92,7 @@ apic:
           unknown_unicast: proxy
           vrf: inb
           subnets:
-            - ip: 10.237.96.225/29
+            - ip: 10.237.96.225/28
               public: true
               shared: true
               nd_ra_prefix: false
@@ -115,7 +115,7 @@ apic:
               physical_domains:
                 - mgmt_inb
               subnets:
-                - ip: 10.237.96.225/29
+                - ip: 10.237.96.225/28
                   public: true
                   shared: true
                   no_default_gateway: false
