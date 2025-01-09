@@ -20,7 +20,7 @@ module "aci" {
   # yaml_directories = ["data"]
   yaml_directories = ["data"]
 
-  manage_access_policies    = false
+  manage_access_policies    = true
   manage_fabric_policies    = true
   manage_pod_policies       = true
   manage_node_policies      = false
