@@ -338,6 +338,45 @@ apic:
 # svi end
 
 # svi start
+                # - name: vpc_to_isovalent-node-02          # this creates a single interface profile for the vpc
+                #   interfaces:
+                #     - node_id: 1101                       
+                #       node2_id: 1102                      
+                #       svi: true                           
+                #       channel: vpc_to_isovalent-node-02   
+                #       mode: regular                       
+                #       vlan: 16                            
+                #       ip_a: 10.237.101.1/27               
+                #       ip_b: 10.237.101.2/27               
+                #       ip_shared: 10.237.101.4/27
+                #       bgp_peers:
+                #         - ip: 10.237.101.0/27
+                #           remote_as: 65051
+                #           local_as: 65151
+                #           allow_self_as: false
+                #           as_override: true
+                #           disable_peer_as_check: true
+                #           next_hop_self: false
+                #           send_community: false
+                #           send_ext_community: false
+                #           allowed_self_as_count: 3
+                #           bfd: false
+                #           disable_connected_check: false
+                #           ttl: 1
+                #           remove_all_private_as: false
+                #           remove_private_as: false
+                #           replace_private_as_with_local_as: false
+                #           unicast_address_family: true
+                #           multicast_address_family: false
+                #           admin_state: true
+                #           as_propagate: no-prepend
+                #           peer_prefix_policy: cilium-cni
+                #   dhcp_labels:
+                #     - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-02
+                #       scope: tenant
+# svi end
+
+# svi start
                 - name: virtual-machine-nodes             # this creates a single interface profile for both port channels
                   interfaces:
                     - node_id: 1101                       
