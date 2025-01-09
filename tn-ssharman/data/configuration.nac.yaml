@@ -1,0 +1,311 @@
+#
+# This tenant is used for testing different EPG route leaking scenarios. 
+#
+---
+apic:
+  tenants:
+    - name: ssharman
+      description: 10.237.99.160/28, 10.237.99.176/28
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# Service
+      # services:
+# Define redirection policy
+        # redirect_policies:
+        #   - name: redirect-to-ftdv-02-adapter-8-gig-0-5
+        #     l3_destinations:
+        #       - ip: 6.6.6.11
+        #         mac: 00:50:56:A1:0A:C5
+
+# Define imported L4-7 device
+#         imported_l4l7_devices:
+#           - name: ftdv-02-adapter-8-gig-0-5
+#             tenant: shared-services
+
+# Define L4-7 device            
+        # l4l7_devices:
+        #   - name: ftdv-02-adapter-8-gig-0-5
+        #     vmware_vmm_domain: ucsc-c220m5-vds-01
+        #     context_aware: single-Context
+        #     type: VIRTUAL
+        #     function: GoTo
+        #     service_type: FW
+        #     trunking: false
+        #     concrete_devices:
+        #       - name: ftdv-02-adapter-8-gig-0-5
+        #         vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+        #         vm_name: ftdv72_82-02.uktme.cisco.com
+        #         interfaces:
+        #           - name: gig-0-5
+        #             vnic_name: Network adapter 8
+        #     logical_interfaces:
+        #       - name: gig-0-5
+        #         concrete_interfaces:
+        #           - device: ftdv-02-adapter-8-gig-0-5
+        #             interface_name: gig-0-5
+
+# Define L4-7 service graph template
+        # service_graph_templates:
+        #   - name: ftdv-02-adapter-8-gig-0-5
+        #     template_type: FW_ROUTED
+        #     redirect: true
+        #     share_encapsulation: false
+        #     device:
+        #       tenant: shared-services
+        #       name: ftdv-02-adapter-8-gig-0-5
+        #     consumer:
+        #       direct_connect: false
+        #     provider:
+        #       direct_connect: true
+
+# Define L4-7 device selection policy
+        # device_selection_policies:
+        #   - contract: any
+        #     service_graph_template: ftdv-02-adapter-8-gig-0-5
+        #     consumer:
+        #       redirect_policy:
+        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
+        #       logical_interface: gig-0-5
+        #       bridge_domain:
+        #         name: 6.6.6.0_24
+        #     provider:
+        #       redirect_policy:
+        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
+        #       logical_interface: gig-0-5
+        #       bridge_domain:
+        #         name: 6.6.6.0_24
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-tenant
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: intra-esg
+          description: intra ESG contract for monitoring
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-vzAny
+          description: vzAny is contract Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-from-vzAny
+          description: vzAny is contract Consumer
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+# Imported contracts
+      imported_contracts:
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: 'permit-to-all-external-subnets-bgp-as-64801'
+          tenant: shared-services
+          contract: permit-to-all-external-subnets-bgp-as-64801
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf
+          contracts:
+            imported_consumers:
+              - permit-to-core-services
+              - permit-from-core-services
+              - permit-from-lab-desktops
+
+          # leaked_internal_prefixes:
+          #   - prefix: 10.237.99.160/28
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+            # - prefix: 10.237.99.176/28
+            #   public: true
+            #   destinations:
+            #     - tenant: shared-services
+            #       vrf: vrf-01
+            #       public: true
+            #       description: Leaked to shared-services:vrf-01 and advertised externally
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          alias: vrf-local-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
+        - name: 10.237.99.160_28
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.99.161/28
+              public: true
+              shared: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.237.99.176_28
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.99.177/28
+              public: true
+              shared: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '10.237.99.160_28'
+              alias: corporate-subnet
+              bridge_domain: '10.237.99.160_28'
+              physical_domains:
+                - isovalent-nodes
+              static_ports:
+                - pod_id: 2
+                  node_id: 2101
+                  vlan: 15
+                  port: 1
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2102
+                  vlan: 15
+                  port: 1
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2101
+                  vlan: 15
+                  port: 2
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2102
+                  vlan: 15
+                  port: 2
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2101
+                  vlan: 15
+                  port: 3
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2102
+                  vlan: 15
+                  port: 3
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2101
+                  vlan: 15
+                  port: 4
+                  mode: untagged
+                  deployment_immediacy: immediate
+
+                - pod_id: 2
+                  node_id: 2102
+                  vlan: 15
+                  port: 4
+                  mode: untagged
+                  deployment_immediacy: immediate
+              contracts:
+                imported_consumers:
+                  - permit-to-all-external-subnets-bgp-as-64801
+
+            # - name: '10.237.99.176_28'
+            #   alias: lab-local-subnet
+            #   bridge_domain: '10.237.99.176_28'
+
+        
+
+
+        # - name: 'network-security-groups'
+        #   description: 'ESGs are used to define security groups' 
+        #   endpoint_security_groups:
+        #     - name: all-epgs
+        #       vrf: vrf-01
+        #       shutdown: false
+        #       intra_esg_isolation: false
+        #       preferred_group: false
+        #       epg_selectors:
+        #         - application_profile: 'network-segments'
+        #           endpoint_group: '10.1.1.0_27'
+        #         - application_profile: 'network-segments'
+        #           endpoint_group: '10.1.1.32_27'
+        #         - application_profile: 'network-segments'
+        #           endpoint_group: '10.1.1.64_27'
+        #         - application_profile: 'network-segments'
+        #           endpoint_group: '10.1.1.96_27'
+        #       contracts:
+        #         consumers:
+        #           - permit-to-all-external-subnets
