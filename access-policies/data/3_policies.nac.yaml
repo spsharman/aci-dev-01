@@ -76,10 +76,6 @@ apic:
         routed_domains:
           - isovalent.vrf-01
 
-      - name: infra-multipod-overlay-1
-        routed_domains:
-          - infra.vrf-overlay-1
-
       - name: mgmt_inb
         infra_vlan: false
         physical_domains:

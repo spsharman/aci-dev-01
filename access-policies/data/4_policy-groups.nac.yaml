@@ -136,10 +136,3 @@ apic:
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
-
-# Spine interface policy groups
-
-    spine_interface_policy_groups:
-      - name: infra-multipod-overlay-1      
-        aaep: infra-multipod-overlay-1
-        cdp_policy: cdp-enabled

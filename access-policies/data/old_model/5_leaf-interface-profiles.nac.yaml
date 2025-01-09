@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf interface profiles
+# Leaf interface profiles - Pod 1
     leaf_interface_profiles:
 # aci-dev-01-pod-01-leaf-1101
       - name: aci-dev-01-pod-01-leaf-1101
@@ -372,32 +372,47 @@ apic:
                 from_port: 45
                 to_port: 45
 
-# Spine inteface profiles:
-    spine_interface_profiles:
-      - name: aci-dev-01-pod-01-spine-1201
+# Leaf interface profiles - Pod 2
+      - name: aci-dev-01-pod-02-leaf-2101
         selectors:
-          - name: infra-multipod-overlay-1
-            policy_group: infra-multipod-overlay-1
+          - name: isovalent-nodes
+            policy_group: isovalent-nodes
             port_blocks:
               - name: block-1
-                description: core-01 eth1/49
-                from_port: 49
-                to_port: 49
+                description: interface eth1/1
+                from_port: 1
+                to_port: 1
               - name: block-2
-                description: core-02 eth1/49
-                from_port: 50
-                to_port: 50
+                description: interface eth1/2
+                from_port: 2
+                to_port: 2
+              - name: block-3
+                description: interface eth1/3
+                from_port: 3
+                to_port: 3
+              - name: block-4
+                description: interface eth1/4
+                from_port: 4
+                to_port: 4
 
-      - name: aci-dev-01-pod-01-spine-1202
+      - name: aci-dev-01-pod-02-leaf-2102
         selectors:
-          - name: infra-multipod-overlay-1
-            policy_group: infra-multipod-overlay-1
+          - name: isovalent-nodes
+            policy_group: isovalent-nodes
             port_blocks:
               - name: block-1
-                description: core-01 eth1/50
-                from_port: 49
-                to_port: 49
+                description: interface eth1/1
+                from_port: 1
+                to_port: 1
               - name: block-2
-                description: core-02 eth1/50
-                from_port: 50
-                to_port: 50
+                description: interface eth1/2
+                from_port: 2
+                to_port: 2
+              - name: block-3
+                description: interface eth1/3
+                from_port: 3
+                to_port: 3
+              - name: block-4
+                description: interface eth1/4
+                from_port: 4
+                to_port: 4
