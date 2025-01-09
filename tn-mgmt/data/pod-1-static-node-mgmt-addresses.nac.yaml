@@ -1,0 +1,60 @@
+---
+apic:
+  node_policies:
+    inb_endpoint_group: inb
+    nodes:
+# Pod 1
+      - id: 1
+        pod: 1
+        role: apic
+        name: aci-dev-01-apic-01
+        serial_number: FCH2214V0P6
+        set_role: false
+        oob_address: 64.103.44.66/27
+        oob_gateway: 64.103.44.65
+        inb_address: 10.237.96.226/29
+        inb_gateway: 10.237.96.225
+
+      - id: 1201
+        pod: 1
+        role: spine
+        name: aci-dev-01-pod-01-spine-1201
+        serial_number: FDO221938J4
+        set_role: false
+        oob_address: 10.237.102.66/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.229/28
+        inb_gateway: 10.237.96.225
+
+      - id: 1202
+        pod: 1
+        role: spine
+        name: aci-dev-01-pod-01-spine-1202
+        serial_number: FDO221938JK
+        set_role: false
+        oob_address: 10.237.102.67/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.230/28
+        inb_gateway: 10.237.96.225
+
+      - id: 1101
+        pod: 1
+        role: leaf
+        name: aci-dev-01-pod-01-leaf-1101
+        serial_number: FDO22130VGK
+        set_role: false
+        oob_address: 10.237.102.68/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.231/28
+        inb_gateway: 10.237.96.225
+
+      - id: 1102
+        pod: 1
+        role: leaf
+        name: aci-dev-01-pod-01-leaf-1102
+        serial_number: FDO22050E83
+        set_role: false
+        oob_address: 10.237.102.69/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.232/28
+        inb_gateway: 10.237.96.225

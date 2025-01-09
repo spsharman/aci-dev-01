@@ -15,28 +15,6 @@ apic:
         inb_address: 10.237.96.226/29
         inb_gateway: 10.237.96.225
 
-      - id: 1101
-        pod: 1
-        role: leaf
-        name: aci-dev-01-pod-01-leaf-1101
-        serial_number: FDO22130VGK
-        set_role: false
-        oob_address: 10.237.102.68/27
-        oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.227/28
-        inb_gateway: 10.237.96.225
-
-      - id: 1102
-        pod: 1
-        role: leaf
-        name: aci-dev-01-pod-01-leaf-1102
-        serial_number: FDO22050E83
-        set_role: false
-        oob_address: 10.237.102.69/27
-        oob_gateway: 10.237.102.65
-        inb_address: 10.237.96.228/28
-        inb_gateway: 10.237.96.225
-
       - id: 1201
         pod: 1
         role: spine
@@ -58,6 +36,29 @@ apic:
         oob_gateway: 10.237.102.65
         inb_address: 10.237.96.230/28
         inb_gateway: 10.237.96.225
+
+      - id: 1101
+        pod: 1
+        role: leaf
+        name: aci-dev-01-pod-01-leaf-1101
+        serial_number: FDO22130VGK
+        set_role: false
+        oob_address: 10.237.102.68/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.231/28
+        inb_gateway: 10.237.96.225
+
+      - id: 1102
+        pod: 1
+        role: leaf
+        name: aci-dev-01-pod-01-leaf-1102
+        serial_number: FDO22050E83
+        set_role: false
+        oob_address: 10.237.102.69/27
+        oob_gateway: 10.237.102.65
+        inb_address: 10.237.96.232/28
+        inb_gateway: 10.237.96.225
+
 # Pod 2
       - id: 2201
         pod: 2
@@ -79,4 +80,26 @@ apic:
         oob_address: 10.237.102.99/27
         oob_gateway: 10.237.102.97
         inb_address: 10.237.96.234/28
+        inb_gateway: 10.237.96.225
+
+      - id: 2101
+        pod: 2
+        role: leaf
+        name: aci-dev-01-pod-02-leaf-2101
+        serial_number: FDO222722YL
+        set_role: false
+        oob_address: 10.237.102.100/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.235/28
+        inb_gateway: 10.237.96.225
+
+      - id: 2102
+        pod: 2
+        role: leaf
+        name: aci-dev-01-pod-02-leaf-2102
+        serial_number: FDO222724C4
+        set_role: false
+        oob_address: 10.237.102.101/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.236/28
         inb_gateway: 10.237.96.225
