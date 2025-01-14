@@ -1,7 +1,6 @@
-# Manual steps
+# Notes:
 
-# Add BGP protocol profile to node profiles
-# Add secondary IP addresses to floating L3out
+# Need to enable the secondary address for DHCP
 
 ---
 apic:
@@ -24,7 +23,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-virtual-machine-nodes
+          - name: dhcp-k8s-bm-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -34,8 +33,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-
-          - name: dhcp-l3out-hx-dev-01-fi-a-vlan-16
+          - name: dhcp-k8s-bm-pod-2
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -45,7 +43,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-hx-dev-01-fi-b-vlan-16
+          - name: dhcp-k8s-vm-hx-dev-01-fi-a-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -55,47 +53,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-vpc_to_isovalent-node-01
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-02
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-03
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-04
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-05
+          - name: dhcp-k8s-vm-hx-dev-01-fi-b-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -246,6 +204,17 @@ apic:
                   aggregate_shared_route_control: false
                   bgp_route_summarization: false
                   ospf_route_summarization: false
+                - prefix: 10.237.101.64/27
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
               contracts:
                 providers:
                   - permit-to-node-subnet
@@ -290,92 +259,19 @@ apic:
 
 # Nodes
           node_profiles:
-            - name: border-leafs
+            - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
-                  router_id: 101.2.1.1                  
+                  router_id: 101.1.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 1
+
                 - node_id: 1102
-                  router_id: 102.2.1.1
+                  router_id: 102.1.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 1
 
               interface_profiles:
-# svi start
-                - name: vpc_to_isovalent-node-01          # this creates a single interface profile for the vpc
-                  interfaces:
-                    - node_id: 1101                       
-                      node2_id: 1102                      
-                      svi: true                           
-                      channel: vpc_to_isovalent-node-01   
-                      mode: regular                       
-                      vlan: 16                            
-                      ip_a: 10.237.101.1/27               
-                      ip_b: 10.237.101.2/27               
-                      ip_shared: 10.237.101.4/27
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-01
-                      scope: tenant
-# svi end
-
-# svi start
-                # - name: vpc_to_isovalent-node-02          # this creates a single interface profile for the vpc
-                #   interfaces:
-                #     - node_id: 1101                       
-                #       node2_id: 1102                      
-                #       svi: true                           
-                #       channel: vpc_to_isovalent-node-02   
-                #       mode: regular                       
-                #       vlan: 16                            
-                #       ip_a: 10.237.101.1/27               
-                #       ip_b: 10.237.101.2/27               
-                #       ip_shared: 10.237.101.4/27
-                #       bgp_peers:
-                #         - ip: 10.237.101.0/27
-                #           remote_as: 65051
-                #           local_as: 65151
-                #           allow_self_as: false
-                #           as_override: true
-                #           disable_peer_as_check: true
-                #           next_hop_self: false
-                #           send_community: false
-                #           send_ext_community: false
-                #           allowed_self_as_count: 3
-                #           bfd: false
-                #           disable_connected_check: false
-                #           ttl: 1
-                #           remove_all_private_as: false
-                #           remove_private_as: false
-                #           replace_private_as_with_local_as: false
-                #           unicast_address_family: true
-                #           multicast_address_family: false
-                #           admin_state: true
-                #           as_propagate: no-prepend
-                #           peer_prefix_policy: cilium-cni
-                #   dhcp_labels:
-                #     - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-02
-                #       scope: tenant
-# svi end
-
 # svi start
                 - name: virtual-machine-nodes             # this creates a single interface profile for both port channels
                   interfaces:
@@ -439,64 +335,461 @@ apic:
                           as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
                   dhcp_labels:
-                    - dhcp_relay_policy: dhcp-k8s-virtual-machine-nodes
+                    - dhcp_relay_policy: dhcp-k8s-vm-hx-dev-01-fi-a-pod-1
+                    - dhcp_relay_policy: dhcp-k8s-vm-hx-dev-01-fi-b-pod-1
+                      scope: tenant
+# svi end
+
+# svi start
+                - name: bare-metal-nodes          # this creates a single interface profile for the vpc
+                  interfaces:
+                    - node_id: 1101                       
+                      node2_id: 1102                      
+                      svi: true                           
+                      channel: vpc_to_c220m5-1G-isovalent-node-01   
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.65/27               
+                      ip_b: 10.237.101.66/27               
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 1101                       
+                      node2_id: 1102                      
+                      svi: true                           
+                      channel: vpc_to_c220m5-1G-isovalent-node-02   
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.65/27               
+                      ip_b: 10.237.101.66/27               
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 1101                       
+                      node2_id: 1102                      
+                      svi: true                           
+                      channel: vpc_to_c220m5-1G-isovalent-node-03   
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.65/27               
+                      ip_b: 10.237.101.66/27               
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 1101                       
+                      node2_id: 1102                      
+                      svi: true                           
+                      channel: vpc_to_c220m5-1G-isovalent-node-04 
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.65/27               
+                      ip_b: 10.237.101.66/27               
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 1101                       
+                      node2_id: 1102                      
+                      svi: true                           
+                      channel: vpc_to_c220m5-1G-isovalent-node-05
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.65/27               
+                      ip_b: 10.237.101.66/27               
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp-k8s-bm-pod-1
+                      scope: tenant
+# svi end
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  router_id: 101.2.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2102
+                  router_id: 102.2.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2103
+                  router_id: 101.2.0.5
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2104
+                  router_id: 102.2.0.5
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+              interface_profiles:
+                - name: bare-metal-nodes
+                  interfaces:
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-06
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-07
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27 
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-08
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-09
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-10
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-11
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp-k8s-bm-pod-2
                       scope: tenant
 # svi end
 
 # Bridge domains
-      bridge_domains:
-        - name: 10.237.101.64_28
-          description: corporate subnet
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.101.65/28
-              public: true
-              shared: true
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant
+#       bridge_domains:
+#         - name: 10.237.101.64_28
+#           description: corporate subnet
+#           alias: corporate-subnet
+#           unknown_unicast: proxy
+#           vrf: vrf-01
+#           subnets:
+#             - ip: 10.237.101.65/28
+#               public: true
+#               shared: true
+#               nd_ra_prefix: false
+#           dhcp_labels:
+#             - dhcp_relay_policy: dhcp.uktme.cisco.com
+#               scope: tenant
 
-# Application Profiles
-      application_profiles:
-        - name: 'network-segments'
-          description: EPGs provide the VLAN backing for application workloads
-          endpoint_groups:
-            - name: '10.237.101.64_28'
-              bridge_domain: '10.237.101.64_28'
-              physical_domains:
-                - isovalent-nodes
-              # static_ports:
-                # - channel: vpc_to_isovalent-node-01
-                #   mode: regular
-                #   vlan: 15
-                #   node_id: 1101
-                #   node2_id: 1102
-                #   deployment_immediacy: immediate
+# # Application Profiles
+#       application_profiles:
+#         - name: 'network-segments'
+#           description: EPGs provide the VLAN backing for application workloads
+#           endpoint_groups:
+#             - name: '10.237.101.64_28'
+#               bridge_domain: '10.237.101.64_28'
+#               physical_domains:
+#                 - isovalent-nodes
+#               # static_ports:
+#                 # - channel: vpc_to_c220m5-1G-isovalent-node-01
+#                 #   mode: regular
+#                 #   vlan: 15
+#                 #   node_id: 1101
+#                 #   node2_id: 1102
+#                 #   deployment_immediacy: immediate
 
-                # - node_id: 1101
-                #   port: 21
-                #   mode: untagged
-                #   vlan: 15
-                #   deployment_immediacy: immediate
+#                 # - node_id: 1101
+#                 #   port: 21
+#                 #   mode: untagged
+#                 #   vlan: 15
+#                 #   deployment_immediacy: immediate
 
-                # - node_id: 1102
-                #   port: 21
-                #   mode: untagged
-                #   vlan: 15
-                #   deployment_immediacy: immediate
+#                 # - node_id: 1102
+#                 #   port: 21
+#                 #   mode: untagged
+#                 #   vlan: 15
+#                 #   deployment_immediacy: immediate
 
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  u_segmentation: false
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-              contracts:
-                consumers:
-                  - permit-to-external-subnet
-                  - permit-to-node-subnet
+#               vmware_vmm_domains:
+#                 - name: 'hx-dev-01-vds-01'
+#                   u_segmentation: false
+#                   deployment_immediacy: immediate
+#                   resolution_immediacy: immediate
+#               contracts:
+#                 consumers:
+#                   - permit-to-external-subnet
+#                   - permit-to-node-subnet
 
         # - name: 'network-security-groups'
         #   description: 'ESGs are used to define security groups' 

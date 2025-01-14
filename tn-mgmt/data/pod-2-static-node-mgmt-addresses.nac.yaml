@@ -47,3 +47,25 @@ apic:
         oob_gateway: 10.237.102.97
         inb_address: 10.237.96.236/28
         inb_gateway: 10.237.96.225
+
+      - id: 2103
+        pod: 2
+        role: leaf
+        name: aci-dev-01-pod-02-leaf-2103
+        serial_number: FDO222724AU
+        set_role: false
+        oob_address: 10.237.102.105/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.237/28
+        inb_gateway: 10.237.96.225
+
+      - id: 2104
+        pod: 2
+        role: leaf
+        name: aci-dev-01-pod-02-leaf-2104
+        serial_number: FDO222723NV
+        set_role: false
+        oob_address: 10.237.102.106/27
+        oob_gateway: 10.237.102.97
+        inb_address: 10.237.96.238/28
+        inb_gateway: 10.237.96.225

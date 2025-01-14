@@ -31,3 +31,7 @@ VRF ixn:        RD 64800:3
 
 101.1.0.4 isovalent Node-1101 BGP Router ID as loopback
 102.1.0.4 isovalent Node-1102 BGP Router ID as loopback
+101.2.0.4 isovalent Node-2101 BGP Router ID as loopback
+102.2.0.4 isovalent Node-2102 BGP Router ID as loopback
+101.2.0.5 isovalent Node-2103 BGP Router ID as loopback
+102.2.0.5 isovalent Node-2104 BGP Router ID as loopback

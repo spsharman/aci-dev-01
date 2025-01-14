@@ -307,8 +307,8 @@ apic:
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC
+                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
+                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.1/27
                       ip_shared: 10.237.101.4/27
                       mtu: 1500
@@ -342,8 +342,8 @@ apic:
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC
+                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
+                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.2/27
                       ip_shared: 10.237.101.4/27
                       mtu: 1500
@@ -384,8 +384,8 @@ apic:
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC
+                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
+                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.1/27
                       ip_shared: 10.237.101.4/27
                       bgp_peers:
@@ -418,8 +418,8 @@ apic:
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC
+                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
+                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.2/27
                       ip_shared: 10.237.101.4/27
                       bgp_peers:
