@@ -83,29 +83,29 @@ apic:
                 from_port: 2
                 to_port: 2
 
-          - name: isovalent-nodes
-            policy_group: isovalent-nodes
-            port_blocks:
-              # - name: block-1
-              #   description: interface eth1/21
-              #   from_port: 21
-              #   to_port: 21
-              # - name: block-2
-              #   description: interface eth1/22
-              #   from_port: 22
-              #   to_port: 22
-              - name: block-3
-                description: interface eth1/23
-                from_port: 23
-                to_port: 23
-              - name: block-4
-                description: interface eth1/24
-                from_port: 24
-                to_port: 24
-              - name: block-5
-                description: interface eth1/25
-                from_port: 25
-                to_port: 25
+          # - name: isovalent-nodes
+          #   policy_group: isovalent-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/21
+          #       from_port: 21
+          #       to_port: 21
+          #     - name: block-2
+          #       description: interface eth1/22
+          #       from_port: 22
+          #       to_port: 22
+          #     - name: block-3
+          #       description: interface eth1/23
+          #       from_port: 23
+          #       to_port: 23
+          #     - name: block-4
+          #       description: interface eth1/24
+          #       from_port: 24
+          #       to_port: 24
+          #     - name: block-5
+          #       description: interface eth1/25
+          #       from_port: 25
+          #       to_port: 25
 
           - name: shared-services.vrf-01
             policy_group: shared-services.vrf-01
@@ -140,45 +140,45 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_isovalent-node-01
-            policy_group: vpc_to_isovalent-node-01
+          - name: vpc_to_c220m5-1G-isovalent-node-01
+            policy_group: vpc_to_c220m5-1G-isovalent-node-01
             port_blocks:
               - name: block-1
                 description: isovalent-node-01
                 from_port: 21
                 to_port: 21
 
-          # - name: vpc_to_isovalent-node-02
-          #   policy_group: vpc_to_isovalent-node-02
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-02
-          #       from_port: 22
-          #       to_port: 22              
+          - name: vpc_to_c220m5-1G-isovalent-node-02
+            policy_group: vpc_to_c220m5-1G-isovalent-node-02
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-02
+                from_port: 22
+                to_port: 22              
 
-          # - name: vpc_to_isovalent-node-03
-          #   policy_group: vpc_to_isovalent-node-03
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-03
-          #       from_port: 23
-          #       to_port: 23
+          - name: vpc_to_c220m5-1G-isovalent-node-03
+            policy_group: vpc_to_c220m5-1G-isovalent-node-03
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-03
+                from_port: 23
+                to_port: 23
 
-          # - name: vpc_to_isovalent-node-04
-          #   policy_group: vpc_to_isovalent-node-04
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-04
-          #       from_port: 24
-          #       to_port: 24
+          - name: vpc_to_c220m5-1G-isovalent-node-04
+            policy_group: vpc_to_c220m5-1G-isovalent-node-04
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-04
+                from_port: 24
+                to_port: 24
 
-          # - name: vpc_to_isovalent-node-05
-          #   policy_group: vpc_to_isovalent-node-05
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-05
-          #       from_port: 25
-          #       to_port: 25
+          - name: vpc_to_c220m5-1G-isovalent-node-05
+            policy_group: vpc_to_c220m5-1G-isovalent-node-05
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-05
+                from_port: 25
+                to_port: 25
 
           - name: vpc_to_rack-L11-tor
             policy_group: vpc_to_rack_L11-tor
@@ -267,29 +267,29 @@ apic:
                 from_port: 2
                 to_port: 2
 
-          - name: isovalent-nodes
-            policy_group: isovalent-nodes
-            port_blocks:
-              # - name: block-1
-              #   description: interface eth1/21
-              #   from_port: 21
-              #   to_port: 21
-              # - name: block-2
-              #   description: interface eth1/22
-              #   from_port: 22
-              #   to_port: 22
-              - name: block-3
-                description: interface eth1/23
-                from_port: 23
-                to_port: 23
-              - name: block-4
-                description: interface eth1/24
-                from_port: 24
-                to_port: 24
-              - name: block-5
-                description: interface eth1/25
-                from_port: 25
-                to_port: 25
+          # - name: isovalent-nodes
+          #   policy_group: isovalent-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/21
+          #       from_port: 21
+          #       to_port: 21
+          #     - name: block-2
+          #       description: interface eth1/22
+          #       from_port: 22
+          #       to_port: 22
+          #     - name: block-3
+          #       description: interface eth1/23
+          #       from_port: 23
+          #       to_port: 23
+          #     - name: block-4
+          #       description: interface eth1/24
+          #       from_port: 24
+          #       to_port: 24
+          #     - name: block-5
+          #       description: interface eth1/25
+          #       from_port: 25
+          #       to_port: 25
 
           - name: shared-services.vrf-01
             policy_group: shared-services.vrf-01
@@ -324,45 +324,45 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_isovalent-node-01
-            policy_group: vpc_to_isovalent-node-01
+          - name: vpc_to_c220m5-1G-isovalent-node-01
+            policy_group: vpc_to_c220m5-1G-isovalent-node-01
             port_blocks:
               - name: block-1
                 description: isovalent-node-01
                 from_port: 21
                 to_port: 21
 
-          # - name: vpc_to_isovalent-node-02
-          #   policy_group: vpc_to_isovalent-node-02
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-02
-          #       from_port: 22
-          #       to_port: 22              
+          - name: vpc_to_c220m5-1G-isovalent-node-02
+            policy_group: vpc_to_c220m5-1G-isovalent-node-02
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-02
+                from_port: 22
+                to_port: 22              
 
-          # - name: vpc_to_isovalent-node-03
-          #   policy_group: vpc_to_isovalent-node-03
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-03
-          #       from_port: 23
-          #       to_port: 23
+          - name: vpc_to_c220m5-1G-isovalent-node-03
+            policy_group: vpc_to_c220m5-1G-isovalent-node-03
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-03
+                from_port: 23
+                to_port: 23
 
-          # - name: vpc_to_isovalent-node-04
-          #   policy_group: vpc_to_isovalent-node-04
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-04
-          #       from_port: 24
-          #       to_port: 24
+          - name: vpc_to_c220m5-1G-isovalent-node-04
+            policy_group: vpc_to_c220m5-1G-isovalent-node-04
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-04
+                from_port: 24
+                to_port: 24
 
-          # - name: vpc_to_isovalent-node-05
-          #   policy_group: vpc_to_isovalent-node-05
-          #   port_blocks:
-          #     - name: block-1
-          #       description: isovalent-node-05
-          #       from_port: 25
-          #       to_port: 25
+          - name: vpc_to_c220m5-1G-isovalent-node-05
+            policy_group: vpc_to_c220m5-1G-isovalent-node-05
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-05
+                from_port: 25
+                to_port: 25
 
           - name: vpc_to_rack_L11-tor
             policy_group: vpc_to_rack_L11-tor
@@ -373,46 +373,235 @@ apic:
                 to_port: 45
 
 # Leaf interface profiles - Pod 2
+
+# aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2101
         selectors:
-          - name: isovalent-nodes
-            policy_group: isovalent-nodes
+          # - name: isovalent-nodes
+          #   policy_group: isovalent-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/1
+          #       from_port: 1
+          #       to_port: 1
+          #     - name: block-2
+          #       description: interface eth1/2
+          #       from_port: 2
+          #       to_port: 2
+          #     - name: block-3
+          #       description: interface eth1/3
+          #       from_port: 3
+          #       to_port: 3
+          #     - name: block-4
+          #       description: interface eth1/4
+          #       from_port: 4
+          #       to_port: 4
+
+          - name: vpc_to_c220m3-1G-isovalent-node-06
+            policy_group: vpc_to_c220m3-1G-isovalent-node-06
             port_blocks:
               - name: block-1
-                description: interface eth1/1
+                description: isovalent-node-06
                 from_port: 1
                 to_port: 1
-              - name: block-2
-                description: interface eth1/2
+
+          - name: vpc_to_c220m3-1G-isovalent-node-07
+            policy_group: vpc_to_c220m3-1G-isovalent-node-07
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-07
                 from_port: 2
                 to_port: 2
-              - name: block-3
-                description: interface eth1/3
+
+          - name: vpc_to_c220m3-1G-isovalent-node-08
+            policy_group: vpc_to_c220m3-1G-isovalent-node-08
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-08
                 from_port: 3
                 to_port: 3
-              - name: block-4
-                description: interface eth1/4
-                from_port: 4
-                to_port: 4
 
+# aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2102
         selectors:
-          - name: isovalent-nodes
-            policy_group: isovalent-nodes
+          # - name: isovalent-nodes
+          #   policy_group: isovalent-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/1
+          #       from_port: 1
+          #       to_port: 1
+          #     - name: block-2
+          #       description: interface eth1/2
+          #       from_port: 2
+          #       to_port: 2
+          #     - name: block-3
+          #       description: interface eth1/3
+          #       from_port: 3
+          #       to_port: 3
+          #     - name: block-4
+          #       description: interface eth1/4
+          #       from_port: 4
+          #       to_port: 4
+
+          - name: vpc_to_c220m3-1G-isovalent-node-06
+            policy_group: vpc_to_c220m3-1G-isovalent-node-06
             port_blocks:
               - name: block-1
-                description: interface eth1/1
+                description: isovalent-node-06
                 from_port: 1
                 to_port: 1
-              - name: block-2
-                description: interface eth1/2
+
+          - name: vpc_to_c220m3-1G-isovalent-node-07
+            policy_group: vpc_to_c220m3-1G-isovalent-node-07
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-07
                 from_port: 2
                 to_port: 2
-              - name: block-3
-                description: interface eth1/3
+
+          - name: vpc_to_c220m3-1G-isovalent-node-08
+            policy_group: vpc_to_c220m3-1G-isovalent-node-08
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-08
                 from_port: 3
                 to_port: 3
-              - name: block-4
-                description: interface eth1/4
-                from_port: 4
-                to_port: 4
+
+# aci-dev-01-pod-02-leaf-2103
+      - name: aci-dev-01-pod-02-leaf-2103
+        selectors:
+          # - name: ssharman-ubuntu-nodes
+          #   policy_group: ssharman-ubuntu-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/1
+          #       from_port: 1
+          #       to_port: 1
+
+          #     - name: block-2
+          #       description: interface eth1/2    
+          #       from_port: 2
+          #       to_port: 2
+
+          #     - name: block-3
+          #       description: interface eth1/3
+          #       from_port: 3
+          #       to_port: 3
+
+          # - name: vpc_to_ssharman-ubuntu-01
+          #   policy_group: vpc_to_ssharman-ubuntu-01
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 01
+          #       from_port: 1
+          #       to_port: 1
+
+          # - name: vpc_to_ssharman-ubuntu-02
+          #   policy_group: vpc_to_ssharman-ubuntu-02
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 02
+          #       from_port: 2
+          #       to_port: 2
+
+          # - name: vpc_to_ssharman-ubuntu-03
+          #   policy_group: vpc_to_ssharman-ubuntu-03
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 03
+          #       from_port: 3
+          #       to_port: 3
+
+          - name: vpc_to_c220m5-10G-isovalent-node-09
+            policy_group: vpc_to_c220m5-10G-isovalent-node-09
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-09
+                from_port: 1
+                to_port: 1
+
+          - name: vpc_to_c220m5-10G-isovalent-node-10
+            policy_group: vpc_to_c220m5-10G-isovalent-node-10
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-10
+                from_port: 2
+                to_port: 2
+
+          - name: vpc_to_c220m5-10G-isovalent-node-11
+            policy_group: vpc_to_c220m5-10G-isovalent-node-11
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-11
+                from_port: 3
+                to_port: 3
+
+# aci-dev-01-pod-02-leaf-2104
+      - name: aci-dev-01-pod-02-leaf-2104
+        selectors:
+          # - name: ssharman-ubuntu-nodes
+          #   policy_group: ssharman-ubuntu-nodes
+          #   port_blocks:
+          #     - name: block-1
+          #       description: interface eth1/1
+          #       from_port: 1
+          #       to_port: 1
+
+          #     - name: block-2
+          #       description: interface eth1/2
+          #       from_port: 2
+          #       to_port: 2
+
+          #     - name: block-3
+          #       description: interface eth1/3
+          #       from_port: 3
+          #       to_port: 3
+
+          # - name: vpc_to_ssharman-ubuntu-01
+          #   policy_group: vpc_to_ssharman-ubuntu-01
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 01
+          #       from_port: 1
+          #       to_port: 1
+
+          # - name: vpc_to_ssharman-ubuntu-02
+          #   policy_group: vpc_to_ssharman-ubuntu-02
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 02
+          #       from_port: 2
+          #       to_port: 2
+
+          # - name: vpc_to_ssharman-ubuntu-03
+          #   policy_group: vpc_to_ssharman-ubuntu-03
+          #   port_blocks:
+          #     - name: block-1
+          #       description: ssharman ubuntu 03
+          #       from_port: 3
+          #       to_port: 3
+
+          - name: vpc_to_c220m5-10G-isovalent-node-09
+            policy_group: vpc_to_c220m5-10G-isovalent-node-09
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-09
+                from_port: 1
+                to_port: 1
+
+          - name: vpc_to_c220m5-10G-isovalent-node-10
+            policy_group: vpc_to_c220m5-10G-isovalent-node-10
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-10
+                from_port: 2
+                to_port: 2
+
+          - name: vpc_to_c220m5-10G-isovalent-node-11
+            policy_group: vpc_to_c220m5-10G-isovalent-node-11
+            port_blocks:
+              - name: block-1
+                description: isovalent-node-11
+                from_port: 3
+                to_port: 3

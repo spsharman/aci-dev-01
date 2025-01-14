@@ -10,6 +10,16 @@ apic:
           switch_1: 1101
           switch_2: 1102
 
+        - id: 2
+          name: aci-dev-01-pod-02-leaf-2101-and-leaf-2102
+          switch_1: 2101
+          switch_2: 2102
+
+        - id: 3
+          name: aci-dev-01-pod-02-leaf-2103-and-leaf-2104
+          switch_1: 2103
+          switch_2: 2104
+
 # Interface policies
   access_policies:
     mcp:
@@ -32,6 +42,17 @@ apic:
       l2_policies:
         - name: port-local-vlans
           vlan_scope: portlocal
+
+      link_level_policies:
+        - name: speed-1G
+          speed: "1G"
+          auto: true
+          fec_mode: inherit
+
+        - name: speed-10G
+          speed: "10G"
+          auto: true
+          fec_mode: inherit
 
       lldp_policies:
         - name: lldp-enabled
@@ -67,6 +88,7 @@ apic:
           suspend_individual: false
           graceful_convergence: false
           fast_select_standby: false
+
 
 # Global policies
     aaeps:
@@ -131,3 +153,7 @@ apic:
           - dmz
           - external-switches
           - hyperflex
+
+      - name: vlans-allowed-to-ssharman-ubuntu-nodes
+        physical_domains:
+          - ssharman-ubuntu-nodes

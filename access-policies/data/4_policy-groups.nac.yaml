@@ -25,6 +25,12 @@ apic:
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
 
+      - name: ssharman-ubuntu-nodes
+        type: access
+        aaep: vlans-allowed-to-ssharman-ubuntu-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+
       - name: ucs-c220m5-vds-01
         type: access
         aaep: vlans-allowed-to-ucs-c220m5-vds-01
@@ -95,37 +101,90 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_isovalent-node-01
+      - name: vpc_to_c220m5-1G-isovalent-node-01
         type: vpc
         aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_isovalent-node-02
+      - name: vpc_to_c220m5-1G-isovalent-node-02
         type: vpc
         aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_isovalent-node-03
+      - name: vpc_to_c220m5-1G-isovalent-node-03
         type: vpc
         aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_isovalent-node-04
+      - name: vpc_to_c220m5-1G-isovalent-node-04
         type: vpc
         aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_isovalent-node-05
+      - name: vpc_to_c220m5-1G-isovalent-node-05
         type: vpc
         aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m3-1G-isovalent-node-06
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m3-1G-isovalent-node-07
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m3-1G-isovalent-node-08
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-1G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m5-10G-isovalent-node-09
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-10G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m5-10G-isovalent-node-10
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-10G
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_c220m5-10G-isovalent-node-11
+        type: vpc
+        aaep: vlans-allowed-to-isovalent-nodes
+        link_level_policy: speed-10G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
@@ -136,3 +195,28 @@ apic:
         cdp_policy: cdp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
+
+      # - name: vpc_to_ssharman-ubuntu-01
+      #   type: vpc
+      #   aaep: vlans-allowed-to-ssharman-ubuntu-nodes
+      #   link_level_policy: speed-10G
+      #   lldp_policy: lldp-enabled
+      #   l2_policy: port-local-vlans
+      #   port_channel_policy: lacp-active
+
+      # - name: vpc_to_ssharman-ubuntu-02
+      #   type: vpc
+      #   aaep: vlans-allowed-to-ssharman-ubuntu-nodes
+      #   link_level_policy: speed-10G
+      #   lldp_policy: lldp-enabled
+      #   l2_policy: port-local-vlans
+      #   port_channel_policy: lacp-active
+
+      # - name: vpc_to_ssharman-ubuntu-03
+      #   type: vpc
+      #   aaep: vlans-allowed-to-ssharman-ubuntu-nodes
+      #   link_level_policy: speed-10G
+      #   lldp_policy: lldp-enabled
+      #   l2_policy: port-local-vlans
+      #   port_channel_policy: lacp-active
+        
