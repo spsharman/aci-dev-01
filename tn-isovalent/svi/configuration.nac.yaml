@@ -284,7 +284,7 @@ apic:
                       ip_shared: 10.237.101.4/27          
                       bgp_peers:
                         - ip: 10.237.101.0/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -314,7 +314,7 @@ apic:
                       ip_shared: 10.237.101.4/27          
                       bgp_peers:
                         - ip: 10.237.101.0/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -354,7 +354,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -386,7 +386,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -418,7 +418,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -450,7 +450,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -482,7 +482,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -545,7 +545,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -578,7 +578,7 @@ apic:
                       ip_shared: 10.237.101.77/27 
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -611,7 +611,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -644,7 +644,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -677,7 +677,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -710,7 +710,7 @@ apic:
                       ip_shared: 10.237.101.77/27
                       bgp_peers:
                         - ip: 10.237.101.64/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
