@@ -23,6 +23,9 @@ VRF ixn:        RD 64800:3
 101.1.0.1 shared-services:vrf-01  Node-1101 OSPF loopback 10.237.96.27/32 AS-64801
 102.1.0.1 shared-services:vrf-01  Node-1102 OSPF loopback 10.237.96.28/32 AS-64801
 
+101.2.0.1 shared-services:vrf-01  Node-2101 BGP loopback 10.237.96.28/32 AS-64801
+102.2.0.1 shared-services:vrf-01  Node-2102 BGP loopback 10.237.96.29/32 AS-64801
+
 101.1.0.2 demo-01 Node-1101 OSPF Router ID as loopback
 102.1.0.2 demo-01 Node-1102 OSPF Router ID as loopback
 
@@ -35,3 +38,4 @@ VRF ixn:        RD 64800:3
 102.2.0.4 isovalent Node-2102 BGP Router ID as loopback
 101.2.0.5 isovalent Node-2103 BGP Router ID as loopback
 102.2.0.5 isovalent Node-2104 BGP Router ID as loopback
+

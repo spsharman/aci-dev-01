@@ -61,6 +61,10 @@ apic:
                 from_length: 32
                 to_length: 32
 
+        route_tag_policies:
+          - name: shared-services.vrf-01
+            tag: 4290166600
+
 # Filters
       filters:
         - name: 'icmp'
@@ -339,6 +343,44 @@ apic:
                   log: false
                   no_stats: false
 
+        - name: permit-to-all-external-subnets-bgp-as-64801
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+        - name: permit-to-all-external-subnets-ospf-area-0.0.0.0
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
 # Imported contracts
       imported_contracts:
         - name: permit-to-tn-mgmt-inb-mgmt
@@ -358,52 +400,13 @@ apic:
         - name: vrf-01
           description: external connectivity
           alias: external-vrf
+          transit_route_tag_policy: shared-services.vrf-01
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
-                - tenant: ajshahid
-                  vrf: vrf-01
-                  description: Leaked to tn-ajshahid:vrf-01
-
                 - tenant: common
                   vrf: common.vrf-01
                   description: Leaked to tn-common:common.vrf-01
-
-                - tenant: demo-01
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-01:vrf-01
-
-                - tenant: demo-02
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-02:vrf-01
-
-                - tenant: demo-03
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-03:vrf-01
-
-                - tenant: demo-04
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-04:vrf-01
-
-                - tenant: demo-non-vmm
-                  vrf: vrf-01
-                  description: Leaked to tn-demo-non-vmm:vrf-01
-
-                - tenant: fgandola
-                  vrf: vrf-01
-                  description: Leaked to tn-fgandola:vrf-01
-
-                - tenant: rotaplin
-                  vrf: vrf-01
-                  description: Leaked to tn-rotaplin:vrf-01
-
-                - tenant: rwhitear
-                  vrf: vrf-01
-                  description: Leaked to tn-rwhitear:vrf-01
-
-                - tenant: ssharman
-                  vrf: vrf-01
-                  description: Leaked to tn-ssharman:vrf-01
 
           contracts:
             consumers:
@@ -446,62 +449,19 @@ apic:
 
 # Nodes
           node_profiles:
-            - name: border-leafs
-              bgp_peers:
-                - ip: 10.237.96.16/32
-                  remote_as: 64800  
-                  local_as: 64801
-                  allow_self_as: false
-                  as_override: true
-                  disable_peer_as_check: true
-                  next_hop_self: false
-                  send_community: false
-                  send_ext_community: false
-                  allowed_self_as_count: 3
-                  bfd: false
-                  disable_connected_check: false
-                  ttl: 2
-                  remove_all_private_as: false
-                  remove_private_as: false
-                  replace_private_as_with_local_as: false
-                  unicast_address_family: true
-                  multicast_address_family: false
-                  admin_state: true
-                  as_propagate: no-prepend
-                  # peer_prefix_policy: cilium-cni
-
-                - ip: 10.237.96.17/32
-                  remote_as: 64800  
-                  local_as: 64801
-                  allow_self_as: false
-                  as_override: true
-                  disable_peer_as_check: true
-                  next_hop_self: false
-                  send_community: false
-                  send_ext_community: false
-                  allowed_self_as_count: 3
-                  bfd: false
-                  disable_connected_check: false
-                  ttl: 2
-                  remove_all_private_as: false
-                  remove_private_as: false
-                  replace_private_as_with_local_as: false
-                  unicast_address_family: true
-                  multicast_address_family: false
-                  admin_state: true
-                  as_propagate: no-prepend
-                  # peer_prefix_policy: cilium-cni
-              
+            - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
-                  router_id: 101.2.1.1
+                  pod_id: 1
+                  router_id: 101.1.0.1
                   router_id_as_loopback: false
-                  loopback: 10.237.96.22
+                  loopback: 10.237.96.22/32
 
                 - node_id: 1102
-                  router_id: 102.2.1.1
+                  pod_id: 1
+                  router_id: 102.1.0.1
                   router_id_as_loopback: false
-                  loopback: 10.237.96.23
+                  loopback: 10.237.96.23/32
 
 # Interfaces
               interface_profiles:
@@ -513,28 +473,29 @@ apic:
                       ip: 10.237.96.249/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
-                      # bgp_peers:
-                      #   - ip: 10.237.96.16/32
-                      #     remote_as: 64800  
-                      #     local_as: 64801
-                      #     allow_self_as: false
-                      #     as_override: true
-                      #     disable_peer_as_check: true
-                      #     next_hop_self: false
-                      #     send_community: false
-                      #     send_ext_community: false
-                      #     allowed_self_as_count: 3
-                      #     bfd: false
-                      #     disable_connected_check: false
-                      #     ttl: 2
-                      #     remove_all_private_as: false
-                      #     remove_private_as: false
-                      #     replace_private_as_with_local_as: false
-                      #     unicast_address_family: true
-                      #     multicast_address_family: false
-                      #     admin_state: true
-                      #     as_propagate: no-prepend
-                      #     # peer_prefix_policy: cilium-cni
+                      bgp_peers:
+                        - ip: 10.237.96.248/32
+                          description: core-01 eth1/7
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
 
                   # ospf:
                   #   policy: OSPF_p2p
@@ -547,28 +508,29 @@ apic:
                       ip: 10.237.96.255/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
-                      # bgp_peers:
-                      #   - ip: 10.237.96.16/32
-                      #     remote_as: 64800  
-                      #     local_as: 64801
-                      #     allow_self_as: false
-                      #     as_override: true
-                      #     disable_peer_as_check: true
-                      #     next_hop_self: false
-                      #     send_community: false
-                      #     send_ext_community: false
-                      #     allowed_self_as_count: 3
-                      #     bfd: false
-                      #     disable_connected_check: false
-                      #     ttl: 2
-                      #     remove_all_private_as: false
-                      #     remove_private_as: false
-                      #     replace_private_as_with_local_as: false
-                      #     unicast_address_family: true
-                      #     multicast_address_family: false
-                      #     admin_state: true
-                      #     as_propagate: no-prepend
-                      #     # peer_prefix_policy: cilium-cni
+                      bgp_peers:
+                        - ip: 10.237.96.254/32
+                          description: core-02 eth1/8
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
 
                   # ospf: 
                   #   policy: OSPF_p2p
@@ -581,28 +543,29 @@ apic:
                       ip: 10.237.96.253/31
                       mtu: inherit
                       mac: 10:22:BD:F8:19:FF
-                      # bgp_peers:
-                      #   - ip: 10.237.96.17/32
-                      #     remote_as: 64800  
-                      #     local_as: 64801
-                      #     allow_self_as: false
-                      #     as_override: true
-                      #     disable_peer_as_check: true
-                      #     next_hop_self: false
-                      #     send_community: false
-                      #     send_ext_community: false
-                      #     allowed_self_as_count: 3
-                      #     bfd: false
-                      #     disable_connected_check: false
-                      #     ttl: 2
-                      #     remove_all_private_as: false
-                      #     remove_private_as: false
-                      #     replace_private_as_with_local_as: false
-                      #     unicast_address_family: true
-                      #     multicast_address_family: false
-                      #     admin_state: true
-                      #     as_propagate: no-prepend
-                      #     # peer_prefix_policy: cilium-cni
+                      bgp_peers:
+                        - ip: 10.237.96.252/32
+                          description: core-02 eth1/7
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
 
                   # ospf: 
                   #   policy: OSPF_p2p
@@ -615,28 +578,29 @@ apic:
                       ip: 10.237.96.251/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
-                      # bgp_peers:
-                      #   - ip: 10.237.96.16/32
-                      #     remote_as: 64800  
-                      #     local_as: 64801
-                      #     allow_self_as: false
-                      #     as_override: true
-                      #     disable_peer_as_check: true
-                      #     next_hop_self: false
-                      #     send_community: false
-                      #     send_ext_community: false
-                      #     allowed_self_as_count: 3
-                      #     bfd: false
-                      #     disable_connected_check: false
-                      #     ttl: 2
-                      #     remove_all_private_as: false
-                      #     remove_private_as: false
-                      #     replace_private_as_with_local_as: false
-                      #     unicast_address_family: true
-                      #     multicast_address_family: false
-                      #     admin_state: true
-                      #     as_propagate: no-prepend
-                      #     # peer_prefix_policy: cilium-cni
+                      bgp_peers:
+                        - ip: 10.237.96.250/32
+                          description: core-01 eth1/8
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
 
                   # ospf: 
                   #   policy: OSPF_p2p
@@ -665,12 +629,164 @@ apic:
 
 # extEPGs
 
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 101.2.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.28/32
+
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 102.2.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.29/32
+
+              interface_profiles:
+                - name: leaf-2101-eth7
+                  description: core-03 eth1/7
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 7
+                      ip: 10.237.96.241/31
+                      mtu: inherit
+                      mac: 10:12:BD:F8:19:FF
+                      bgp_peers:
+                        - ip: 10.237.96.240/32
+                          description: core-03 eth1/7
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2101-eth8
+                  description: core-04 eth1/8
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 8
+                      ip: 10.237.96.247/31
+                      mtu: inherit
+                      mac: 10:12:BD:F8:19:FF
+                      bgp_peers:
+                        - ip: 10.237.96.246/32
+                          description: core-04 eth1/8
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2102-eth7
+                  description: core-04 eth1/7
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 7
+                      ip: 10.237.96.245/31
+                      mtu: inherit
+                      mac: 10:22:BD:F8:19:FF
+                      bgp_peers:
+                        - ip: 10.237.96.244/32
+                          description: core-04 eth1/7
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2102-eth8
+                  description: core-02 eth1/8
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 8
+                      ip: 10.237.96.243/31
+                      mtu: inherit
+                      mac: 10:12:BD:F8:19:FF
+                      bgp_peers:
+                        - ip: 10.237.96.242/32
+                          description: core-03 eth1/8
+                          remote_as: 64800  
+                          local_as: 64801
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+# extEPGs
+
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
                 - prefix: 0.0.0.0/0
                   import_security: false
                   shared_route_control: true
+                  export_route_control: true
+                  aggregate_export_route_control: true
+                  name: route-control-only
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -680,13 +796,39 @@ apic:
                   shared_security: true
                   import_security: true
 
-                - prefix: 10.237.101.0/27
-                  export_route_control: true
-                  import_security: false
+                - prefix: 10.1.1.0/27
+                  import_security: true
+                  name: demo-01
 
-                - prefix: 10.237.101.32/27
+                - prefix: 10.1.1.32/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.1.1.64/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.1.1.96/27
+                  import_security: true
+                  name: demo-01
+
+                - prefix: 10.237.99.48/29
                   export_route_control: true
                   import_security: false
+                  name: csr1kv-gig2
+
+                - prefix: 10.237.99.56/29
+                  export_route_control: true
+                  import_security: false
+                  name: csr1kv-gig3
+
+                # - prefix: 10.237.101.0/27
+                #   export_route_control: true
+                #   import_security: false
+
+                # - prefix: 10.237.101.32/27
+                #   export_route_control: true
+                #   import_security: false
 
               contracts:
                 consumers:
@@ -696,6 +838,8 @@ apic:
                   - permit-to-n9000v-management-n9000v-mgmt
                 providers:
                   - permit-to-shared-services.vrf-01-all-external-subnets
+                  - permit-to-all-external-subnets-bgp-as-64801
+
                 imported_consumers:
                   - permit-to-tn-mgmt-inb-mgmt
                   - permit-to-tn-isovalent-external-subnet
@@ -755,6 +899,79 @@ apic:
                   - permit-to-n9000v-management-n9000v-mgmt
                 providers:
                   - permit-from-lab-desktops
+
+# L3out OSPF
+        - name: shared-services.vrf-01-ospf-area-0.0.0.0
+          description: configured with NAC
+          vrf: vrf-01
+          domain: shared-services.vrf-01
+          ospf:
+            area: 0.0.0.0
+            area_type: regular
+
+# Nodes
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 101.1.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.26/32
+
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 102.1.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.27/32
+
+# Interfaces
+              interface_profiles:
+                - name: hx-dev-01-fi-a-vlan-8
+                  interfaces:
+                    - node_id: 1101
+                      channel: hx-dev-01-fi-a
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.49/29
+                      ip_shared: 10.237.99.51/29
+                      mtu: 1500
+                  ospf:
+                    policy: broadcast
+
+                - name: hx-dev-01-fi-b-vlan-8
+                  interfaces:
+                    - node_id: 1102
+                      channel: hx-dev-01-fi-b
+                      vlan: 8
+                      svi: true
+                      ip: 10.237.99.50/29
+                      ip_shared: 10.237.99.51/29
+                      mtu: 1500
+                  ospf:
+                    policy: broadcast
+
+# extEPGs
+          external_endpoint_groups:
+            - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  import_route_control: false
+                  export_route_control: true
+                  shared_route_control: false
+                  import_security: false
+                  shared_security: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  ospf_route_summarization: false
+
+                # - prefix: 10.237.99.48/29
+                #   name: csr1kv-peering-gig2
+                #   import_security: true
+
+              contracts:
+                consumers: 
+                  - permit-to-all-external-subnets-bgp-as-64801
 
 # Bridge domains
       bridge_domains:
