@@ -293,9 +293,9 @@ apic:
                 imported_consumers:
                   - permit-to-all-external-subnets-bgp-as-64801
 
-            # - name: '10.237.99.176_28'
-            #   alias: lab-local-subnet
-            #   bridge_domain: '10.237.99.176_28'
+            - name: '10.237.99.176_28'
+              alias: lab-local-subnet
+              bridge_domain: '10.237.99.176_28'
 
       
         # - name: 'network-security-groups'
