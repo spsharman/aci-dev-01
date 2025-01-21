@@ -986,13 +986,64 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 10.237.100.0_24
+        - name: 10.237.100.0_27
           description: corporate subnet
           alias: corporate-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.237.100.1/24
+            - ip: 10.237.100.1/27
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          l3outs:
+            # - shared-services.vrf-01-ospf-area-0.0.0.1
+            - shared-services.vrf-01-bgp-as-64801
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.237.100.32_28
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.100.33/28
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          l3outs:
+            # - shared-services.vrf-01-ospf-area-0.0.0.1
+            - shared-services.vrf-01-bgp-as-64801
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.237.100.48_29
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.100.49/29
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          l3outs:
+            # - shared-services.vrf-01-ospf-area-0.0.0.1
+            - shared-services.vrf-01-bgp-as-64801
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.237.100.56_29
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.100.57/29
               public: true
               shared: true
               nd_ra_prefix: false
@@ -1009,7 +1060,7 @@ apic:
           managed: true
           endpoint_groups:
             - name: csr-mgmt
-              bridge_domain: 10.237.100.0_24
+              bridge_domain: 10.237.100.32_28
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
@@ -1022,7 +1073,7 @@ apic:
           managed: true
           endpoint_groups:
             - name: data-collector
-              bridge_domain: 10.237.100.0_24
+              bridge_domain: 10.237.100.48_29
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
@@ -1035,7 +1086,7 @@ apic:
           managed: true
           endpoint_groups:
             - name: n9000v-mgmt
-              bridge_domain: 10.237.100.0_24
+              bridge_domain: 10.237.100.56_29
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
@@ -1048,7 +1099,7 @@ apic:
           managed: true
           endpoint_groups:
             - name: ftd-diagnostic
-              bridge_domain: 10.237.100.0_24
+              bridge_domain: 10.237.100.0_27
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
@@ -1069,7 +1120,7 @@ apic:
                   - permit-to-csw-management-data-collector
 
             - name: ftd-mgmt
-              bridge_domain: 10.237.100.0_24
+              bridge_domain: 10.237.100.0_27
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
