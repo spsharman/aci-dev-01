@@ -1127,15 +1127,30 @@ apic:
                   resolution_immediacy: immediate
               physical_domains:
                 - hx-dev-01-vds-02
+                - firewalls
               static_ports:
                 - channel: "hx-dev-01-fi-a"
-                  vlan: 6
+                  pod_id: 1
                   node_id: 1101
+                  vlan: 10
                   deployment_immediacy: immediate
                 - channel: "hx-dev-01-fi-b"
-                  vlan: 6
+                  pod_id: 1
                   node_id: 1102
+                  vlan: 10
                   deployment_immediacy: immediate
+                # - channel: vpc_to_ftd-4112-01-mgmt
+                #   pod_id: 1
+                #   node_id: 1101
+                #   node2_id: 1102
+                #   vlan: 10
+                #   deployment_immediacy: immediate
+                # - channel: vpc_to_ftd-4112-02-mgmt
+                #   pod_id: 2
+                #   node_id: 2101
+                #   node2_id: 2102
+                #   vlan: 10
+                #   deployment_immediacy: immediate
               contracts:
                 providers:
                   - permit-to-ftd-management-ftd-mgmt

@@ -12,7 +12,7 @@
 apic:
   tenants:
     - name: esx-infrastructure
-      description: Routable IP range 192.168.4.x 
+      description: 192.168.4.0/25, 192.168.4.128/25 
 
       bridge_domains:
         - name: 192.168.4.x_24
