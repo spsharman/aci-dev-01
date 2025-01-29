@@ -182,9 +182,25 @@ apic:
                 - permit-from-core-services
                 - permit-from-lab-desktops
 
+# Bridge domains
+      bridge_domains:
+        - name: 10.237.101.96_28
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.101.97/28
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant                                                              
+
 # L3Outs
       l3outs:
-        - name: isovalent.vrf-01-bgp-AS-65152
+        - name: isovalent.vrf-01-bgp-AS-65151
           description: L3out SVI to Isovalent K8s environment
           alias: external-vrf
           vrf: vrf-01
@@ -736,60 +752,45 @@ apic:
                       scope: tenant
 # svi end
 
-# Bridge domains
-#       bridge_domains:
-#         - name: 10.237.101.64_28
-#           description: corporate subnet
-#           alias: corporate-subnet
-#           unknown_unicast: proxy
-#           vrf: vrf-01
-#           subnets:
-#             - ip: 10.237.101.65/28
-#               public: true
-#               shared: true
-#               nd_ra_prefix: false
-#           dhcp_labels:
-#             - dhcp_relay_policy: dhcp.uktme.cisco.com
-#               scope: tenant
 
-# # Application Profiles
-#       application_profiles:
-#         - name: 'network-segments'
-#           description: EPGs provide the VLAN backing for application workloads
-#           endpoint_groups:
-#             - name: '10.237.101.64_28'
-#               bridge_domain: '10.237.101.64_28'
-#               physical_domains:
-#                 - isovalent-nodes
-#               # static_ports:
-#                 # - channel: vpc_to_c220m5-1G-isovalent-node-01
-#                 #   mode: regular
-#                 #   vlan: 15
-#                 #   node_id: 1101
-#                 #   node2_id: 1102
-#                 #   deployment_immediacy: immediate
+# Application Profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:
+            - name: '10.237.101.96_28'
+              bridge_domain: '10.237.101.96_28'
+              # physical_domains:
+              #   - isovalent-nodes
+              # static_ports:
+                # - channel: vpc_to_c220m5-1G-isovalent-node-01
+                #   mode: regular
+                #   vlan: 15
+                #   node_id: 1101
+                #   node2_id: 1102
+                #   deployment_immediacy: immediate
 
-#                 # - node_id: 1101
-#                 #   port: 21
-#                 #   mode: untagged
-#                 #   vlan: 15
-#                 #   deployment_immediacy: immediate
+                # - node_id: 1101
+                #   port: 21
+                #   mode: untagged
+                #   vlan: 15
+                #   deployment_immediacy: immediate
 
-#                 # - node_id: 1102
-#                 #   port: 21
-#                 #   mode: untagged
-#                 #   vlan: 15
-#                 #   deployment_immediacy: immediate
+                # - node_id: 1102
+                #   port: 21
+                #   mode: untagged
+                #   vlan: 15
+                #   deployment_immediacy: immediate
 
-#               vmware_vmm_domains:
-#                 - name: 'hx-dev-01-vds-01'
-#                   u_segmentation: false
-#                   deployment_immediacy: immediate
-#                   resolution_immediacy: immediate
-#               contracts:
-#                 consumers:
-#                   - permit-to-external-subnet
-#                   - permit-to-node-subnet
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                consumers:
+                  - permit-to-external-subnet
+                  - permit-to-node-subnet
 
         # - name: 'network-security-groups'
         #   description: 'ESGs are used to define security groups' 
