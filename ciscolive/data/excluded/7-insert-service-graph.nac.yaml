@@ -1,0 +1,21 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - adds filters
+# - adds contracts
+#
+---
+apic:
+  tenants:
+    - name: demo
+
+# Contracts
+      contracts:
+        - name: permit-to-cart-svc
+          scope: context
+          subjects:
+            - name: redirect
+              service_graph: ftdv-01-adapter-6-gig-0-3
+              filters:
+                - filter: 'tcp-src-any-dst-80'
+

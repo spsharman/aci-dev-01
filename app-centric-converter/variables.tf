@@ -23,7 +23,7 @@ variable "apic_url" {
 
 # Name of tenant that contains your applications
 variable "tenant" {
-  default = "demo-03"
+  default = "demo"
 }
 
 # Name of VRF containing IP addresses associated with your applications
@@ -38,7 +38,7 @@ variable "esg" {
 
 # Name of EXISTING contract to provide any-any communication through vzAny
 variable "permit-any-contract" {
-  default = "permit-to-all-applications"
+  default = "permit-to-online-boutique"
 }
 
 # Name of each application profile
@@ -81,37 +81,3 @@ variable "ips" {
      },
    }
  }
-
-#   default = {
-#     "10.0.71.51" = {
-#       app = "production"
-#     },
-#     "10.0.71.52" = {
-#       app = "production"
-#     },
-#     "10.0.71.53" = {
-#       app = "production"
-#     },
-#     "10.0.72.51" = {
-#       app = "production"
-#     },
-#     "10.0.72.52" = {
-#       app = "pre-production"
-#     },
-#     "10.0.72.53" = {
-#       app = "pre-production"
-#     },
-#     "10.0.73.51" = {
-#       app = "pre-production"
-#     },
-#     "10.0.73.52" = {
-#       app = "pre-production"
-#     },
-#     "10.0.73.53" = {
-#       app = "pre-production"
-#     },
-#     "10.0.73.54" = {
-#       app = "pre-production"
-#     },
-#   }
-# }

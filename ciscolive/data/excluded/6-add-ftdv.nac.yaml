@@ -1,0 +1,84 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - adds FTD and associated policies
+# - adds exported contracts
+#
+---
+apic:
+  tenants:
+    - name: demo
+
+# Policies
+      policies:
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-01-adapter-6-gig-0-3
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-6-gig-0-3
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-3
+                    vnic_name: Network adapter 6
+            logical_interfaces:
+              - name: gig-0-3
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-6-gig-0-3
+                    interface_name: gig-0-3
+
+        redirect_policies:
+          - name: redirect-to-ftdv-01-adapter-6-gig-0-3
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:08:E3:D4:E5:F6
+                redirect_health_group: ftdv-01-adapter-6-gig-0-3
+
+        redirect_health_groups:
+          - name: ftdv-01-adapter-6-gig-0-3
+
+        service_graph_templates:
+          - name: ftdv-01-adapter-6-gig-0-3
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: demo
+              name: ftdv-01-adapter-6-gig-0-3
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-01-adapter-6-gig-0-3
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-6-gig-0-3
+              logical_interface: gig-0-3
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-6-gig-0-3
+              logical_interface: gig-0-3
+              bridge_domain:
+                name: 6.6.6.0_24
+
+

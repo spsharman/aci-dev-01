@@ -1,0 +1,51 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - application profile for the 'online-boutique' application, endpoints allocated by IP address
+# - contract for the 'online-boutique' application
+#
+---
+apic:
+  tenants:
+    - name: demo
+
+# Policies
+
+# Filters
+
+# Contracts
+      contracts:
+        - name: permit-to-online-boutique-all-services
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+# Imported contracts
+
+# VRFs
+
+# Bridge Domains
+
+# Application profiles
+      application_profiles:
+        - name: 'online-boutique'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-online-boutique-all-services
+              ip_subnet_selectors:
+                - value: 192.168.150.100/32
+                - value: 192.168.151.100/32
+                - value: 192.168.151.101/32
+                - value: 192.168.152.100/32
+                - value: 192.168.153.155/32
+                - value: 192.168.155.155/32
+                - value: 192.168.156.155/32

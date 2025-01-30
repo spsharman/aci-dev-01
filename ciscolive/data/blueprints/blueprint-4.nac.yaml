@@ -1,3 +1,7 @@
+# Notes:
+#
+# This configuration plan implements blueprint 4
+#
 ---
 apic:
   tenants:
@@ -16,6 +20,76 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-01-adapter-6-gig-0-3
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-6-gig-0-3
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-3
+                    vnic_name: Network adapter 6
+            logical_interfaces:
+              - name: gig-0-3
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-6-gig-0-3
+                    interface_name: gig-0-3
+
+        redirect_policies:
+          - name: redirect-to-ftdv-01-adapter-6-gig-0-3
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:08:E3:D4:E5:F6
+                redirect_health_group: ftdv-01-adapter-6-gig-0-3
+
+        redirect_health_groups:
+          - name: ftdv-01-adapter-6-gig-0-3
+
+        service_graph_templates:
+          - name: ftdv-01-adapter-6-gig-0-3
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: demo
+              name: ftdv-01-adapter-6-gig-0-3
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-01-adapter-6-gig-0-3
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-6-gig-0-3
+              logical_interface: gig-0-3
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-6-gig-0-3
+              logical_interface: gig-0-3
+              bridge_domain:
+                name: 6.6.6.0_24
+
 # Filters
       filters:
         - name: 'icmp'
@@ -23,10 +97,17 @@ apic:
             - name: 'icmp'
               protocol: icmp
 
-        - name: 'permit-src-any-dst-any'
+        - name: 'src-any-dst-any'
           entries:
-            - name: 'permit-src-any-dst-any'
+            - name: 'src-any-dst-any'
               ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-6379'
+          entries:
+            - name: 'tcp-src-any-dst-6379'
+              protocol: tcp
+              destination_from_port: 6379
+              destination_to_port: 6379
 
 # Contracts
       contracts:
@@ -36,7 +117,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters: 
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: intra-esg
           description: intra ESG contract for monitoring
@@ -44,7 +125,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-to-vzAny
           description: vzAny is contract Provider
@@ -52,7 +133,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-from-vzAny
           description: vzAny is contract Consumer
@@ -60,7 +141,22 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
+
+        - name: permit-to-online-boutique-all-services
+          scope: global
+          subjects:
+            - name: redirect
+              service_graph: ftdv-01-adapter-6-gig-0-3
+              filters:
+                - filter: 'src-any-dst-any'
+
+        - name: permit-to-databases-redis
+          scope: context
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-any-dst-6379'
 
 # Imported contracts
       imported_contracts:
@@ -94,6 +190,42 @@ apic:
               - permit-to-core-services
               - permit-from-core-services
               - permit-from-lab-desktops
+          leaked_internal_prefixes:
+            - prefix: 192.168.150.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.151.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.152.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.153.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.154.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.155.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.156.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
 
 # Bridge Domains
       bridge_domains:
@@ -195,8 +327,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1201
+                  secondary_vlan: 1202  
                   u_segmentation: true
 
             - name: '192.168.151.0_24'
@@ -206,8 +338,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1203
+                  secondary_vlan: 1204  
                   u_segmentation: true
 
             - name: '192.168.152.0_24'
@@ -217,8 +349,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1205
+                  secondary_vlan: 1206  
                   u_segmentation: true
 
             - name: '192.168.153.0_24'
@@ -228,8 +360,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1207
+                  secondary_vlan: 1208  
                   u_segmentation: true
 
             - name: '192.168.154.0_24'
@@ -239,8 +371,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1209
+                  secondary_vlan: 1210
                   u_segmentation: true
 
             - name: '192.168.155.0_24'
@@ -250,8 +382,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1211
+                  secondary_vlan: 1212  
                   u_segmentation: true
 
             - name: '192.168.156.0_24'
@@ -261,8 +393,8 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1213
+                  secondary_vlan: 1214  
                   u_segmentation: true
 
         - name: 'network-security-groups'
@@ -288,13 +420,51 @@ apic:
                   endpoint_group: '192.168.155.0_24'
                 - application_profile: 'network-segments'
                   endpoint_group: '192.168.156.0_24'
+
+        - name: 'online-boutique'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: true
+              preferred_group: false
               contracts:
+                providers:
+                  - permit-to-online-boutique-all-services
                 consumers:
-                  - permit-to-all-external-subnets
+                  - permit-to-databases-redis
+              ip_subnet_selectors:
+                - value: 192.168.150.100/32
+                - value: 192.168.151.100/32
+                - value: 192.168.151.101/32
+                - value: 192.168.151.150/32
+                - value: 192.168.152.100/32
+                - value: 192.168.152.152/32
+                - value: 192.168.153.155/32
+                - value: 192.168.154.152/32
+                - value: 192.168.155.155/32
+                - value: 192.168.156.150/32
 
+        - name: 'databases'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: redis
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-databases-redis
+              ip_subnet_selectors:
+                - value: 192.168.156.155/32
 
-# Need to define the correct PVLANs on the VMM domain
-# Need to show the VLAN pool
-# Need to remove the contract to the ESG
-# Backup core routers
-# Check core routers failover
+# Imported contracts
+    - name: shared-services
+      managed: false
+
+      imported_contracts:
+        - name: permit-to-tn-demo-online-boutique-all-services
+          tenant: demo
+          contract: permit-to-online-boutique-all-services

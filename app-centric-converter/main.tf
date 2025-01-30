@@ -20,12 +20,6 @@ terraform {
   }
 }
 
-# provider "aci" {
-#   username = var.credentials.apic_username
-#   password = var.credentials.apic_password
-#   url      = var.credentials.apic_url
-# }
-
 provider "aci" {
   username = var.apic_username
   password = var.apic_password

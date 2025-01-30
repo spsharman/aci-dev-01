@@ -1,0 +1,131 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - updates EPGs to enable uSegmenation
+# - creates a single ESG security zone for all EPGs
+#
+---
+apic:
+  tenants:
+    - name: demo
+
+# Policies
+
+# Filters
+
+# Contracts
+
+# Imported contracts
+
+# VRFs
+
+# Bridge Domains
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.150.0_24'
+              # alias:
+              bridge_domain: '192.168.150.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1201
+                  secondary_vlan: 1202  
+                  u_segmentation: true
+
+            - name: '192.168.151.0_24'
+              # alias:
+              bridge_domain: '192.168.151.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1203
+                  secondary_vlan: 1204  
+                  u_segmentation: true
+
+            - name: '192.168.152.0_24'
+              # alias:
+              bridge_domain: '192.168.152.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1205
+                  secondary_vlan: 1206  
+                  u_segmentation: true
+
+            - name: '192.168.153.0_24'
+              # alias:
+              bridge_domain: '192.168.153.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1207
+                  secondary_vlan: 1208  
+                  u_segmentation: true
+
+            - name: '192.168.154.0_24'
+              # alias:
+              bridge_domain: '192.168.154.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1209
+                  secondary_vlan: 1210
+                  u_segmentation: true
+
+            - name: '192.168.155.0_24'
+              # alias:
+              bridge_domain: '192.168.155.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1211
+                  secondary_vlan: 1212  
+                  u_segmentation: true
+
+            - name: '192.168.156.0_24'
+              # alias:
+              bridge_domain: '192.168.156.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1213
+                  secondary_vlan: 1214  
+                  u_segmentation: true
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-epgs
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.150.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.151.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.152.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.153.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.154.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.155.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.156.0_24'
+
+
+

@@ -1,0 +1,59 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - adds filters
+# - adds contracts
+#
+---
+apic:
+  tenants:
+    - name: demo
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+# TCP
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+        - name: 'tcp-src-any-dst-7070'
+          entries:
+            - name: 'tcp-src-any-dst-7070'
+              protocol: tcp
+              destination_from_port: 7070
+              destination_to_port: 7070
+# UDP
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+# Contracts
+      contracts:
+        - name: permit-to-cart-svc
+          scope: context
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: 'tcp-src-any-dst-443'
+                - filter: 'tcp-src-any-dst-7070'
+                - filter: 'udp-src-any-dst-53'
+                - filter: icmp
+
+

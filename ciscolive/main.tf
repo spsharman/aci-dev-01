@@ -15,8 +15,18 @@ provider "aci" {
 module "aci" {
   source  = "netascode/nac-aci/aci"
 
-  yaml_directories = ["data/base-build"]
-  # yaml_directories = ["data/single-esg-for-all-epgs"]
+  yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
+
+  # yaml_files = ["data/blueprints/blueprint-1.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-2.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-3.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-4.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-5.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-6.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-7.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-8.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-9.nac.yaml"]
+  # yaml_files = ["data/blueprints/blueprint-10.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false

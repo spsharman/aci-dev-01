@@ -1,3 +1,7 @@
+# Notes:
+#
+# This configuration plan implements blueprint 3
+#
 ---
 apic:
   tenants:
@@ -23,10 +27,17 @@ apic:
             - name: 'icmp'
               protocol: icmp
 
-        - name: 'permit-src-any-dst-any'
+        - name: 'src-any-dst-any'
           entries:
-            - name: 'permit-src-any-dst-any'
+            - name: 'src-any-dst-any'
               ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-6379'
+          entries:
+            - name: 'tcp-src-any-dst-6379'
+              protocol: tcp
+              destination_from_port: 6379
+              destination_to_port: 6379
 
 # Contracts
       contracts:
@@ -36,7 +47,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters: 
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: intra-esg
           description: intra ESG contract for monitoring
@@ -44,7 +55,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-to-vzAny
           description: vzAny is contract Provider
@@ -52,7 +63,7 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-from-vzAny
           description: vzAny is contract Consumer
@@ -60,7 +71,21 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters:
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
+
+        - name: permit-to-online-boutique-all-services
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-databases-redis
+          scope: context
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-any-dst-6379'
 
 # Imported contracts
       imported_contracts:
@@ -94,6 +119,42 @@ apic:
               - permit-to-core-services
               - permit-from-core-services
               - permit-from-lab-desktops
+          leaked_internal_prefixes:
+            - prefix: 192.168.150.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.151.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.152.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.153.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.154.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.155.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.156.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
 
 # Bridge Domains
       bridge_domains:
@@ -195,6 +256,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1201
+                  secondary_vlan: 1202  
+                  u_segmentation: true
 
             - name: '192.168.151.0_24'
               # alias:
@@ -203,6 +267,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1203
+                  secondary_vlan: 1204  
+                  u_segmentation: true
 
             - name: '192.168.152.0_24'
               # alias:
@@ -211,6 +278,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1205
+                  secondary_vlan: 1206  
+                  u_segmentation: true
 
             - name: '192.168.153.0_24'
               # alias:
@@ -219,6 +289,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1207
+                  secondary_vlan: 1208  
+                  u_segmentation: true
 
             - name: '192.168.154.0_24'
               # alias:
@@ -227,6 +300,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1209
+                  secondary_vlan: 1210
+                  u_segmentation: true
 
             - name: '192.168.155.0_24'
               # alias:
@@ -235,6 +311,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1211
+                  secondary_vlan: 1212  
+                  u_segmentation: true
 
             - name: '192.168.156.0_24'
               # alias:
@@ -243,5 +322,78 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1213
+                  secondary_vlan: 1214  
+                  u_segmentation: true
 
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-epgs
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.150.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.151.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.152.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.153.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.154.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.155.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '192.168.156.0_24'
 
+        - name: 'online-boutique'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-online-boutique-all-services
+                consumers:
+                  - permit-to-databases-redis
+              ip_subnet_selectors:
+                - value: 192.168.150.100/32
+                - value: 192.168.151.100/32
+                - value: 192.168.151.101/32
+                - value: 192.168.151.150/32
+                - value: 192.168.152.100/32
+                - value: 192.168.152.152/32
+                - value: 192.168.153.155/32
+                - value: 192.168.154.152/32
+                - value: 192.168.155.155/32
+                - value: 192.168.156.150/32
+
+        - name: 'databases'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: redis
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-databases-redis
+              ip_subnet_selectors:
+                - value: 192.168.156.155/32
+
+# Imported contracts
+    - name: shared-services
+      managed: false
+
+      imported_contracts:
+        - name: permit-to-tn-demo-online-boutique-all-services
+          tenant: demo
+          contract: permit-to-online-boutique-all-services

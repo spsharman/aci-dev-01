@@ -1,0 +1,62 @@
+# Notes:
+#
+# This configuration plan implements the following changes:
+# - adds prefix leaking
+# - adds exported contracts
+#
+---
+apic:
+  tenants: 
+    - name: demo
+      vrfs:
+        - name: vrf-01
+          leaked_internal_prefixes:
+            - prefix: 192.168.150.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.150.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.151.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.152.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.153.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.154.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.155.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 192.168.156.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+
+    - name: shared-services
+      managed: false
+
+# Imported contracts
+      imported_contracts:
+        - name: permit-to-tn-demo-cart-svc
+          tenant: demo
+          contract: permit-to-cart-svc
