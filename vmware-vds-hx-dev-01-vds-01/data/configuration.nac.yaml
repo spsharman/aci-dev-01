@@ -14,7 +14,7 @@ apic:
           enhanced_lags:
             - name: enhanced-lacp
               mode: active
-              lb_mode: src-dst-ip
+              lb_mode: src-port-id
               num_links: 2
           # netflow_exporter_policy: VMM-EXPORTER1
           # enhanced_lags:
