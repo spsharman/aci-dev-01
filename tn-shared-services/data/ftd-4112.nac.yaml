@@ -25,6 +25,64 @@ apic:
                   - device: ftd-4112-cluster
                     interface_name: data
 
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-mpod-cluster
+                interfaces:
+                  - name: ftd-4112-01-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
+                    pod_id: 2
+                    node_id: 2101
+                    node2_id: 2102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 12
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+          # - name: ftd-4112-one-arm-L3-mpod-cluster-fgandola
+          #   physical_domain: firewalls
+          #   context_aware: single-Context
+          #   type: PHYSICAL
+          #   function: GoTo
+          #   service_type: FW
+          #   trunking: false
+          #   concrete_devices:
+          #     - name: ftd-4112-mpod-cluster
+          #       interfaces:
+          #         - name: ftd-4112-01-data-01
+          #           pod_id: 1
+          #           node_id: 1101
+          #           node2_id: 1102
+          #           channel: vpc_to_ftd-4112-01-data-01
+          #         - name: ftd-4112-02-data-01
+          #           pod_id: 2
+          #           node_id: 2101
+          #           node2_id: 2102
+          #           channel: vpc_to_ftd-4112-02-data-01
+          #   logical_interfaces:
+          #     - name: data
+          #       vlan: 13
+          #       concrete_interfaces:
+          #         - device: ftd-4112-mpod-cluster
+          #           interface_name: ftd-4112-01-data-01
+          #         - device: ftd-4112-mpod-cluster
+          #           interface_name: ftd-4112-02-data-01
+
           - name: ftd-4112-two-arm-L3
             physical_domain: firewalls
             context_aware: single-Context

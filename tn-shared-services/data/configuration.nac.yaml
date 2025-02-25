@@ -19,6 +19,28 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: all-external-subnets
 
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+        match_rules:
+          - name: match-10.237.101.0_27
+            description: matches Isovalent node subnets
+            prefixes:
+              - ip: 10.237.101.0/27
+                aggregate: false
+
+          - name: match-10.237.101.32_27
+            description: matches Isovalent external subnets
+            prefixes:
+              - ip: 10.237.101.32/27
+                aggregate: true
+                from_length: 32
+                to_length: 32
+
         ospf_interface_policies:
           - name: OSPF_p2p
             cost: unspecified
@@ -46,24 +68,48 @@ apic:
             lsa_retransmit_interval: 5
             lsa_transmit_delay: 1
 
-        match_rules:
-          - name: match-10.237.101.0_27
-            description: matches Isovalent node subnets
-            prefixes:
-              - ip: 10.237.101.0/27
-                aggregate: false
-
-          - name: match-10.237.101.32_27
-            description: matches Isovalent external subnets
-            prefixes:
-              - ip: 10.237.101.32/27
-                aggregate: true
-                from_length: 32
-                to_length: 32
-
         route_tag_policies:
           - name: shared-services.vrf-01
             tag: 4290166600
+
+      services:
+        redirect_policies:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
+            pod_aware: false
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:00:00:00:00:10
+
+        service_graph_templates:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: shared-services
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
 
 # Filters
       filters:
@@ -185,6 +231,13 @@ apic:
 
 # Contracts
       contracts:
+        - name: permit-to-apic-simulators-apic-mgmt
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
         - name: permit-to-csr-management-csr-mgmt
           scope: context
           subjects:
@@ -386,14 +439,6 @@ apic:
         - name: permit-to-tn-mgmt-inb-mgmt
           tenant: mgmt
           contract: permit-to-inb-mgmt
-
-        - name: permit-to-tn-isovalent-external-subnet
-          tenant: isovalent
-          contract: permit-to-external-subnet
-
-        - name: permit-to-tn-isovalent-node-subnet
-          tenant: isovalent
-          contract: permit-to-node-subnet
 
 # VRFs
       vrfs:
@@ -832,6 +877,7 @@ apic:
 
               contracts:
                 consumers:
+                  - permit-to-apic-simulators-apic-mgmt
                   - permit-to-ftd-management-ftd-mgmt
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
@@ -842,7 +888,8 @@ apic:
 
                 imported_consumers:
                   - permit-to-tn-mgmt-inb-mgmt
-                  - permit-to-tn-isovalent-external-subnet
+                  - permit-to-tn-isovalent-egress-subnet
+                  - permit-to-tn-isovalent-ingress-subnet
                   - permit-to-tn-isovalent-node-subnet
 
                   # - permit-to-tn-adealdag
@@ -975,6 +1022,17 @@ apic:
 
 # Bridge domains
       bridge_domains:
+        - name: 1.1.0.0_16
+          description: ftd cluster subnet
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 1.1.1.254/16
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
         - name: 6.6.6.0_24
           description: pbr redirect
           alias: lab-subnet
@@ -1056,6 +1114,19 @@ apic:
 
 # Application Profiles
       application_profiles:
+        - name: apic-simulators
+          managed: true
+          endpoint_groups:
+            - name: apic-mgmt
+              bridge_domain: 10.237.100.32_28
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-apic-simulators-apic-mgmt
+
         - name: csr-management
           managed: true
           endpoint_groups:
@@ -1139,18 +1210,40 @@ apic:
                   node_id: 1102
                   vlan: 10
                   deployment_immediacy: immediate
-                # - channel: vpc_to_ftd-4112-01-mgmt
-                #   pod_id: 1
-                #   node_id: 1101
-                #   node2_id: 1102
-                #   vlan: 10
-                #   deployment_immediacy: immediate
-                # - channel: vpc_to_ftd-4112-02-mgmt
-                #   pod_id: 2
-                #   node_id: 2101
-                #   node2_id: 2102
-                #   vlan: 10
-                #   deployment_immediacy: immediate
+                - channel: vpc_to_ftd-4112-01-mgmt
+                  pod_id: 1
+                  node_id: 1101
+                  node2_id: 1102
+                  mode: untagged
+                  vlan: 10
+                  deployment_immediacy: immediate
+                - channel: vpc_to_ftd-4112-02-mgmt
+                  pod_id: 2
+                  node_id: 2101
+                  node2_id: 2102
+                  mode: untagged
+                  vlan: 10
+                  deployment_immediacy: immediate
               contracts:
                 providers:
                   - permit-to-ftd-management-ftd-mgmt
+
+            - name: ftd-ccl
+              bridge_domain: 1.1.0.0_16
+              physical_domains:
+                - firewalls
+              static_ports:
+                - channel: vpc_to_ftd-4112-01-ccl
+                  pod_id: 1
+                  node_id: 1101
+                  node2_id: 1102
+                  mode: untagged
+                  vlan: 11
+                  deployment_immediacy: immediate
+                - channel: vpc_to_ftd-4112-02-ccl
+                  pod_id: 2
+                  node_id: 2101
+                  node2_id: 2102
+                  mode: untagged
+                  vlan: 11
+                  deployment_immediacy: immediate
