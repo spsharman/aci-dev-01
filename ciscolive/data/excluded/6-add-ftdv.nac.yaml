@@ -46,7 +46,7 @@ apic:
             ip_sla_policy: icmp-aggressive-timers
             l3_destinations:
               - ip: 6.6.6.10
-                mac: 00:08:E3:D4:E5:F6
+                mac: 00:50:56:A1:CF:6C
                 redirect_health_group: ftdv-01-adapter-6-gig-0-3
 
         redirect_health_groups:

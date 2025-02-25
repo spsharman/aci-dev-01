@@ -57,6 +57,6 @@ apic:
 
 # Imported contracts
       imported_contracts:
-        - name: permit-to-tn-demo-cart-svc
+        - name: permit-to-tn-demo-online-boutique-all-services
           tenant: demo
-          contract: permit-to-cart-svc
+          contract: permit-to-online-boutique-all-services

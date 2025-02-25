@@ -30,12 +30,12 @@ apic:
               destination_from_port: 443
               destination_to_port: 443
 
-        - name: 'tcp-src-any-dst-7070'
+        - name: 'tcp-src-any-dst-8080'
           entries:
-            - name: 'tcp-src-any-dst-7070'
+            - name: 'tcp-src-any-dst-8080'
               protocol: tcp
-              destination_from_port: 7070
-              destination_to_port: 7070
+              destination_from_port: 8080
+              destination_to_port: 8080
 # UDP
         - name: 'udp-src-any-dst-53'
           entries:
@@ -46,14 +46,14 @@ apic:
 
 # Contracts
       contracts:
-        - name: permit-to-cart-svc
-          scope: context
+        - name: permit-to-online-boutique-all-services
+          scope: global
           subjects:
             - name: tcp
               filters: 
-                - filter: 'tcp-src-any-dst-443'
-                - filter: 'tcp-src-any-dst-7070'
-                - filter: 'udp-src-any-dst-53'
+                - filter: 'tcp-src-any-dst-80'
+                - filter: 'tcp-src-any-dst-8080'
+            - name: icmp
+              filters:
                 - filter: icmp
-
 

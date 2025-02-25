@@ -11,11 +11,15 @@ apic:
 
 # Contracts
       contracts:
-        - name: permit-to-cart-svc
-          scope: context
+        - name: permit-to-online-boutique-all-services
+          scope: global
           subjects:
-            - name: redirect
+            - name: tcp
+              service_graph: ftdv-01-adapter-6-gig-0-3
+              filters: 
+                - filter: 'tcp-src-any-dst-80'
+                - filter: 'tcp-src-any-dst-8080'
+            - name: icmp
               service_graph: ftdv-01-adapter-6-gig-0-3
               filters:
-                - filter: 'tcp-src-any-dst-80'
-
+                - filter: icmp
