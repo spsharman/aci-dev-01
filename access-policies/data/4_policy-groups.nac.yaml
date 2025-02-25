@@ -85,7 +85,7 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_ftd-4112-cluster-data-01
+      - name: vpc_to_ftd-4112-01-data-01
         type: vpc
         aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled
@@ -93,7 +93,7 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_ftd-4112-cluster-data-02
+      - name: vpc_to_ftd-4112-02-data-01
         type: vpc
         aaep: vlans-allowed-to-firewalls
         cdp_policy: cdp-enabled

@@ -15,29 +15,29 @@ apic:
                 from_port: 48
                 to_port: 48
 
-          # - name: ftd-4112-01-mgmt
-          #   policy_group: vpc_to_ftd-4112-01-mgmt
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/1
-          #       from_port: 11
-          #       to_port: 11
+          - name: ftd-4112-01-mgmt
+            policy_group: vpc_to_ftd-4112-01-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/1
+                from_port: 11
+                to_port: 11
 
-          # - name: ftd-4112-01-ccl
-          #   policy_group: vpc_to_ftd-4112-01-ccl
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/3
-          #       from_port: 12
-          #       to_port: 12
+          - name: ftd-4112-01-ccl
+            policy_group: vpc_to_ftd-4112-01-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/3
+                from_port: 12
+                to_port: 12
 
-          # - name: ftd-4112-01-cluster-data-01
-          #   policy_group: vpc_to_ftd-4112-cluster-data-01
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/5
-          #       from_port: 13
-          #       to_port: 13
+          - name: ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/5
+                from_port: 13
+                to_port: 13
 
           # - name: ftd-4112-01-cluster-data-02
           #   policy_group: vpc_to_ftd-4112-cluster-data-02
@@ -175,29 +175,29 @@ apic:
                 from_port: 48
                 to_port: 48
 
-          # - name: ftd-4112-01-mgmt
-          #   policy_group: vpc_to_ftd-4112-01-mgmt
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/2
-          #       from_port: 11
-          #       to_port: 11
+          - name: ftd-4112-01-mgmt
+            policy_group: vpc_to_ftd-4112-01-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/2
+                from_port: 11
+                to_port: 11
 
-          # - name: ftd-4112-01-ccl
-          #   policy_group: vpc_to_ftd-4112-01-ccl
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/4
-          #       from_port: 12
-          #       to_port: 12
+          - name: ftd-4112-01-ccl
+            policy_group: vpc_to_ftd-4112-01-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/4
+                from_port: 12
+                to_port: 12
 
-          # - name: ftd-4112-01-cluster-data-01
-          #   policy_group: vpc_to_ftd-4112-cluster-data-01
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-01 e1/6
-          #       from_port: 13
-          #       to_port: 13
+          - name: ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-01 e1/6
+                from_port: 13
+                to_port: 13
 
           # - name: ftd-4112-01-cluster-data-02
           #   policy_group: vpc_to_ftd-4112-cluster-data-02
@@ -386,29 +386,29 @@ apic:
                 from_port: 3
                 to_port: 3
 
-          # - name: ftd-4112-02-mgmt
-          #   policy_group: vpc_to_ftd-4112-02-mgmt
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/1
-          #       from_port: 11
-          #       to_port: 11
+          - name: ftd-4112-02-mgmt
+            policy_group: vpc_to_ftd-4112-02-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/1
+                from_port: 11
+                to_port: 11
 
-          # - name: ftd-4112-02-ccl
-          #   policy_group: vpc_to_ftd-4112-02-ccl
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/3
-          #       from_port: 12
-          #       to_port: 12
+          - name: ftd-4112-02-ccl
+            policy_group: vpc_to_ftd-4112-02-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/3
+                from_port: 12
+                to_port: 12
 
-          # - name: ftd-4112-02-cluster-data-01
-          #   policy_group: vpc_to_ftd-4112-cluster-data-01
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/5
-          #       from_port: 13
-          #       to_port: 13
+          - name: ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/5
+                from_port: 13
+                to_port: 13
 
           # - name: ftd-4112-02-cluster-data-02
           #   policy_group: vpc_to_ftd-4112-cluster-data-02
@@ -478,29 +478,29 @@ apic:
                 from_port: 3
                 to_port: 3
 
-          # - name: ftd-4112-02-mgmt
-          #   policy_group: vpc_to_ftd-4112-02-mgmt
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/2
-          #       from_port: 11
-          #       to_port: 11
+          - name: ftd-4112-02-mgmt
+            policy_group: vpc_to_ftd-4112-02-mgmt
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/2
+                from_port: 11
+                to_port: 11
 
-          # - name: ftd-4112-02-ccl
-          #   policy_group: vpc_to_ftd-4112-02-ccl
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/4
-          #       from_port: 12
-          #       to_port: 12
+          - name: ftd-4112-02-ccl
+            policy_group: vpc_to_ftd-4112-02-ccl
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/4
+                from_port: 12
+                to_port: 12
 
-          # - name: ftd-4112-02-cluster-data-01
-          #   policy_group: vpc_to_ftd-4112-cluster-data-01
-          #   port_blocks:
-          #     - name: block-1
-          #       description: ftd-4112-02 e1/6
-          #       from_port: 13
-          #       to_port: 13
+          - name: ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                description: ftd-4112-02 e1/6
+                from_port: 13
+                to_port: 13
 
           # - name: ftd-4112-02-cluster-data-02
           #   policy_group: vpc_to_ftd-4112-cluster-data-02
