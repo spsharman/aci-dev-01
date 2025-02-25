@@ -5,6 +5,23 @@
 ---
 apic:
   tenants:
+# The shared-services tenant is unmanaged, the following contracts are exported
+    - name: shared-services
+      managed: false
+      imported_contracts:
+        - name: permit-to-tn-isovalent-egress-subnet
+          tenant: isovalent
+          contract: permit-to-egress-subnet
+
+        - name: permit-to-tn-isovalent-ingress-subnet
+          tenant: isovalent
+          contract: permit-to-ingress-subnet
+
+        - name: permit-to-tn-isovalent-node-subnet
+          tenant: isovalent
+          contract: permit-to-node-subnet
+
+# The isovalent tenant is managed
     - name: isovalent
       description: 10.237.101.0/26
       security_domains:
@@ -95,6 +112,76 @@ apic:
             description: BGP best path policy for cilium cni
             control_type: multi-path-relax
 
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-01-adapter-7-gig-0-4
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-7-gig-0-4
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-4
+                    vnic_name: Network adapter 7
+            logical_interfaces:
+              - name: gig-0-4
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-7-gig-0-4
+                    interface_name: gig-0-4
+
+        redirect_policies:
+          - name: redirect-to-ftdv-01-adapter-7-gig-0-4
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:50:56:A1:1C:2B
+                redirect_health_group: ftdv-01-adapter-7-gig-0-4
+
+        redirect_health_groups:
+          - name: ftdv-01-adapter-7-gig-0-4
+
+        service_graph_templates:
+          - name: ftdv-01-adapter-7-gig-0-4
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: isovalent
+              name: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24
+
 # Filters
       filters:
         - name: 'icmp'
@@ -104,8 +191,29 @@ apic:
 
         - name: 'permit-src-any-dst-any'
           entries:
-            - name: 'permit-src-any-dst-any'
+            - name: 'src-any-dst-any'
               ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-4240'
+          entries:
+            - name: 'tcp-src-any-dst-4240'
+              protocol: tcp
+              destination_from_port: 4240
+              destination_to_port: 4240
+
+        - name: 'tcp-src-any-dst-6443'
+          entries:
+            - name: 'tcp-src-any-dst-6443'
+              protocol: tcp
+              destination_from_port: 6443
+              destination_to_port: 6443
 
 # Contracts
       contracts:
@@ -116,19 +224,44 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-node-subnet
+        - name: permit-to-egress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-external-subnet
+        - name: permit-to-ingress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: permit-src-any-dst-any
+
+        - name: permit-to-node-subnet
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-pod-subnet
+          description: Allow HTTP and ICMP keepalives between pods
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+            - name: tcp
+              filters: 
+                - filter: 'tcp-src-any-dst-4240'
+
+        - name: permit-to-nginx-subnet-10.237.101.96_28
+          scope: context
+          subjects:
+            - name: permit-tcp-src-any-dst-80
+              filters: 
+                - filter: 'tcp-src-any-dst-80'
 
 # Imported contracts
       imported_contracts:
@@ -153,29 +286,36 @@ apic:
         - name: vrf-01
           description: configured with NAC
           alias: external-vrf
-          leaked_external_prefixes:
-            - prefix: 10.237.101.32/27
-              from_prefix_length: 32
-              to_prefix_length: 32
-              destinations:
-                - tenant: common
-                  vrf: common.vrf-01
-                  description: Leaked to common:common.vrf-01
-            - prefix: 10.237.101.0/27
-              # from_prefix_length: 0
-              # to_prefix_length: 0
-              destinations:
-                - tenant: common
-                  vrf: common.vrf-01
-                  description: Leaked to common:common.vrf-01
+          # leaked_external_prefixes:
+          #   - prefix: 10.237.101.32/28
+          #     from_prefix_length: 32
+          #     to_prefix_length: 32
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
+          #   - prefix: 10.237.101.48/28
+          #     from_prefix_length: 32
+          #     to_prefix_length: 32
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
+          #   - prefix: 10.237.101.0/27
+          #     from_prefix_length: 0
+          #     to_prefix_length: 0
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
           bgp:
             timer_policy: cilium-cni
             ipv4_address_family_context_policy: cilium-cni
           contracts:
-            providers: 
-              - intra-tenant
-            consumers:
-              - intra-tenant
+            # providers: 
+            #   - intra-tenant
+            # consumers:
+            #   - intra-tenant
             imported_consumers:
                 - permit-to-shared-services.vrf-01-all-external-subnets
                 - permit-to-core-services
@@ -184,6 +324,15 @@ apic:
 
 # Bridge domains
       bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
         - name: 10.237.101.96_28
           description: corporate subnet
           alias: corporate-subnet
@@ -205,9 +354,10 @@ apic:
           alias: external-vrf
           vrf: vrf-01
           domain: isovalent.vrf-01
+# External EPGs
           external_endpoint_groups:
             - name: node-subnet
-              description: node subnet range
+              description: node subnet
               subnets:
                 - prefix: 10.237.101.0/27
                   import_route_control: false
@@ -234,11 +384,13 @@ apic:
               contracts:
                 providers:
                   - permit-to-node-subnet
+                consumers:
+                  - permit-to-pod-subnet
 
-            - name: external-subnet
-              description: external subnet range
+            - name: ingress-subnet
+              description: ingress subnet
               subnets:
-                - prefix: 10.237.101.32/27
+                - prefix: 10.237.101.32/28
                   import_route_control: false
                   export_route_control: false
                   shared_route_control: true
@@ -253,10 +405,32 @@ apic:
                 #   export_route_control: true
               contracts:
                 providers:
-                  - permit-to-external-subnet
+                  - permit-to-ingress-subnet
+
+            - name: egress-subnet
+              description: egress subnet
+              subnets:
+                - prefix: 10.237.101.48/28
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: true
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+                # - prefix: 10.237.100.0/24
+                #   export_route_control: true
+              contracts:
+                # providers:
+                #   - permit-to-egress-subnet
+                consumers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
 
             - name: pod-subnet
-              description: pod subnet range
+              description: pod subnet
               subnets:
                 - prefix: 10.1.0.0/16
                   import_route_control: false
@@ -270,6 +444,8 @@ apic:
                   bgp_route_summarization: false
                   ospf_route_summarization: false
               contracts:
+                providers:
+                  - permit-to-pod-subnet
                 consumers:
                   - permit-to-node-subnet
 
@@ -787,23 +963,21 @@ apic:
                   u_segmentation: false
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: nginx-subnet-10.237.101.96_28
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.237.101.96_28'
               contracts:
                 consumers:
-                  - permit-to-external-subnet
+                  - permit-to-ingress-subnet
                   - permit-to-node-subnet
-
-        # - name: 'network-security-groups'
-        #   description: 'ESGs are used to define security groups' 
-        #   endpoint_security_groups:
-        #     - name: epg-10.237.100.0_24
-        #       vrf: common.vrf-01
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       preferred_group: false
-        #       epg_selectors:
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.237.100.0_24'
-        #       contracts:
-        #         consumers:
-        #           - permit-to-external-subnet
-        #           - permit-to-node-subnet
+                providers:
+                  - permit-to-nginx-subnet-10.237.101.96_28

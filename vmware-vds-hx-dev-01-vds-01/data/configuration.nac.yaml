@@ -10,7 +10,7 @@ apic:
         vswitch:
           cdp_policy: cdp-enabled
           lldp_policy: lldp-enabled
-          port_channel_policy: lacp-active
+          port_channel_policy: mac-pinning
           enhanced_lags:
             - name: enhanced-lacp
               mode: active

@@ -1,12 +1,24 @@
 # Deployment notes
 
-## Subnet allocation
+## Lab local subnet allocation
 
 10.0.0.0 IXN
 10.1.0.0 ACI
 10.2.0.0 Hyperfabric
 10.3.0.0 VXLAN
 10.4.0.0 K8's isovalent
+
+## BGP AS numbers
+
+65101 - VXLAN
+64714 - dCloud
+65090 - hyperfabric L09
+65051 - aci-dev-01 overlay-1
+65151 - aci-dev-01 isovalent:vrf-01
+65160 - hyperfabric L16
+65252 - isovalent k8s nodes
+64800 - core
+64801 - aci-dev-01 shared-services:vrf-01 
 
 ## VRF Route Distinguishers on core routers
 
