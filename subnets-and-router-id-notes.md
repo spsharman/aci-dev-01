@@ -2,11 +2,48 @@
 
 ## Lab local subnet allocation
 
-10.0.0.0 IXN
-10.1.0.0 ACI
-10.2.0.0 Hyperfabric
-10.3.0.0 VXLAN
-10.4.0.0 K8's isovalent
+- 10.0.0.0 IXN
+- 10.1.0.0 ACI DEV 01 Infra
+  - 10.1.0.0/16 ACI DEV 01 Pod 1 TEP Pool VRF overlay-1
+  - 10.2.0.0/16 ACI DEV 01 Pod 2 TEP Pool VRF overlay-1
+- 10.1.1.0 ACI DEV 01
+  - 10.1.1.0/27 tn-demo-01
+  - 10.1.1.32/27 tn-demo-01
+  - 10.1.1.64/27 tn-demo-01
+  - 10.1.1.96/27 tn-demo-01
+- 10.1.2.0 ACI DEV 01
+  - 10.1.2.0/27 tn-demo-02
+  - 10.1.2.32/27 tn-demo-02
+  - 10.1.2.64/27 tn-demo-02
+  - 10.1.2.96/27 tn-demo-02
+- 10.1.3.0 ACI DEV 01
+  - 10.1.3.0/27 tn-demo-03
+  - 10.1.3.32/27 tn-demo-03
+  - 10.1.3.64/27 tn-demo-03
+  - 10.1.3.96/27 tn-demo-03
+- 10.1.4.0 ACI DEV 01
+  - 10.1.4.0/27 tn-demo-04
+  - 10.1.4.32/27 tn-demo-04
+  - 10.1.4.64/27 tn-demo-04
+  - 10.1.4.96/27 tn-demo-04
+- 10.1.5.0 ACI DEV 01
+  - 10.1.5.0/27 tn-demo-05
+  - 10.1.5.32/27 tn-demo-05
+  - 10.1.5.64/27 tn-demo-05
+  - 10.1.5.96/27 tn-demo-05
+- 10.1.6.0 ACI DEV 01
+  - 10.1.6.0/27 tn-demo-06
+  - 10.1.6.32/27 tn-demo-06
+  - 10.1.6.64/27 tn-demo-06
+  - 10.1.6.96/27 tn-demo-06
+- 10.1.10.0 ACI DEV 01
+  - 10.1.10.0/27 tn-fgandola
+  - 10.1.10.32/27 tn-fgandola
+  - 10.1.10.64/27 tn-fgandola
+  - 10.1.10.96/27 tn-fgandola
+- 10.2.0.0 Hyperfabric
+- 10.3.0.0 VXLAN
+- 10.4.0.0 K8's isovalent
 
 ## BGP AS numbers
 
@@ -19,6 +56,7 @@
 65252 - isovalent k8s nodes
 64800 - core
 64801 - aci-dev-01 shared-services:vrf-01 
+64802 - dCloud vPod
 
 ## VRF Route Distinguishers on core routers
 

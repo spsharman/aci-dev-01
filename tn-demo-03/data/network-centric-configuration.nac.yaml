@@ -1,0 +1,226 @@
+
+---
+apic:
+  tenants:
+    - name: demo-03
+      description: 10.1.3.0/24
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: permit-intra-esg
+          description: permits intra-esg any/any
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+      imported_contracts:
+        - name: permit-from-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: permit-to-shared-services.vrf-01-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-shared-services.vrf-01-all-external-subnets
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf
+          contracts:
+            providers: 
+              - intra-vrf
+            consumers:
+              - intra-vrf
+            imported_consumers:
+              - permit-to-core-services
+              - permit-from-core-services
+              - permit-from-lab-desktops
+              - permit-to-shared-services.vrf-01-all-external-subnets              
+          # leaked_internal_prefixes:
+          #   - prefix: 10.1.3.0/27
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 10.1.3.32/27
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 10.1.3.64/27
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+          #   - prefix: 10.1.3.96/27
+          #     public: true
+          #     destinations:
+          #       - tenant: shared-services
+          #         vrf: vrf-01
+          #         public: true
+          #         description: Leaked to shared-services:vrf-01 and advertised externally
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 10.1.3.0_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+          subnets:
+            - ip: 10.1.3.1/27
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.3.32_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+          subnets:
+            - ip: 10.1.3.33/27
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.3.64_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+          subnets:
+            - ip: 10.1.3.65/27
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.3.96_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+          subnets:
+            - ip: 10.1.3.97/27
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '10.1.3.0_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.3.0_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1209
+                  # secondary_vlan: 1210  
+                  # u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+      
+            - name: '10.1.3.32_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.3.32_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1211
+                  # secondary_vlan: 1212  
+                  # u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+        
+            - name: '10.1.3.64_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.3.64_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1213
+                  # secondary_vlan: 1214 
+                  # u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+    
+            - name: '10.1.3.96_27'
+              alias: lab-local-subnet
+              bridge_domain: '10.1.3.96_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  # primary_vlan: 1215
+                  # secondary_vlan: 1216 
+                  # u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate

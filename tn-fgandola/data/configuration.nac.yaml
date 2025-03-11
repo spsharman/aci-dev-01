@@ -1,21 +1,36 @@
 #
-# This tenant is primarily used for firewall testing
-#
-#
-              # vmware_vmm_domains:
-                # - name: 'ucsc-c220m5-vds-01'
-                # - name: 'hx-dev-01-vds-01'
-                  # primary_vlan: 1243
-                  # secondary_vlan: 1244  
-#
-# 
+# Notes:
 #
 ---
 apic:
+  fabric_policies:
+    aaa:
+      security_domains:
+        - name: fgandola
+          restricted_rbac_domain: false
+      users:
+        - username: fgandola
+          password: C1sco123
+          domains:
+            - name: all
+              roles:
+                - name: admin
+                  privilege_type: read
+            - name: common
+              roles:
+                - name: admin
+                  privilege_type: read
+            - name: fgandola
+              roles:
+                - name: admin
+                  privilege_type: write
+
   tenants:
     - name: fgandola
       managed: true
-      description: Routable IP range 192.168.151-155.x
+      description: 10.1.10.0/24
+      security_domains:
+        - fgandola
 
       policies:
         dhcp_relay_policies:
@@ -25,7 +40,7 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
         ip_sla_policies:
@@ -348,10 +363,6 @@ apic:
           tenant: shared-services
           contract: permit-to-core-services
 
-        - name: permit-to-shared-services-ftd-management-ftd-mgmt
-          tenant: shared-services
-          contract: permit-to-ftd-management-ftd-mgmt
-
         - name: permit-from-lab-desktops
           tenant: shared-services
           contract: permit-from-lab-desktops
@@ -359,7 +370,6 @@ apic:
         - name: permit-to-shared-services.vrf-01-all-external-subnets
           tenant: shared-services
           contract: permit-to-shared-services.vrf-01-all-external-subnets
-
 
       contracts:
           - name: inter-epg
@@ -400,7 +410,7 @@ apic:
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-to-esg-192.168.151.0_24
+          - name: permit-to-esg-10.1.10.0_27
             scope: context
             subjects:
               - name: redirect
@@ -408,7 +418,7 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-192.168.152.0_24
+          - name: permit-to-esg-10.1.10.32_27
             scope: context
             subjects:
               - name: redirect
@@ -459,17 +469,22 @@ apic:
               - permit-from-lab-desktops
               - permit-to-shared-services.vrf-01-all-external-subnets
           leaked_internal_prefixes:
-            - prefix: 192.168.151.0/24
+            - prefix: 10.1.10.0/27
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 192.168.152.0/24
+            - prefix: 10.1.10.32/27
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 192.168.153.0/24
+            - prefix: 10.1.10.64/27
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.1.10.96/27
               public: true
               destinations:
                 - tenant: shared-services
@@ -509,60 +524,48 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 192.168.151.0_24
+        - name: 10.1.10.0_27
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.151.1/24
+            - ip: 10.1.10.1/27
               public: true
               shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 192.168.152.0_24
+        - name: 10.1.10.32_27
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.152.1/24
+            - ip: 10.1.10.33/27
               public: true
               shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 192.168.153.0_24
+        - name: 10.1.10.64_27
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.153.1/24
+            - ip: 10.1.10.65/27
               public: true
               shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 192.168.154.0_24
+        - name: 10.1.10.96_27
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 192.168.154.1/24
-              public: true
-              shared: true
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-        - name: 192.168.155.0_24
-          alias: internal-vrf-01
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 192.168.155.1/24
+            - ip: 10.1.10.97/27
               public: true
               shared: true
               nd_ra_prefix: false
@@ -613,58 +616,58 @@ apic:
                 intra_esgs:
                   - intra-esg-production
 
-        - name: 'firewalls'
-          endpoint_groups:
-            - name: ftd-ccl
-              alias: internal-vrf-01
-              bridge_domain: 1.1.1.0_24
-              physical_domains:
-                - firewalls
-              static_ports:
-                - channel: "vpc_to_ftd-4112-01-ccl"
-                  node_id: 101
-                  node2_id: 102
-                  vlan: 11
-                  mode: untagged
-                  deployment_immediacy: immediate
-                - channel: "vpc_to_ftd-4112-02-ccl"
-                  node_id: 101
-                  node2_id: 102
-                  vlan: 11
-                  mode: untagged
-                  deployment_immediacy: immediate
+        # - name: 'firewalls'
+        #   endpoint_groups:
+        #     - name: ftd-ccl
+        #       alias: internal-vrf-01
+        #       bridge_domain: 1.1.1.0_24
+        #       physical_domains:
+        #         - firewalls
+        #       static_ports:
+        #         - channel: "vpc_to_ftd-4112-01-ccl"
+        #           node_id: 101
+        #           node2_id: 102
+        #           vlan: 11
+        #           mode: untagged
+        #           deployment_immediacy: immediate
+        #         - channel: "vpc_to_ftd-4112-02-ccl"
+        #           node_id: 101
+        #           node2_id: 102
+        #           vlan: 11
+        #           mode: untagged
+        #           deployment_immediacy: immediate
 
-            - name: ftd-mgmt
-              alias: internal-vrf-01
-              bridge_domain: 10.237.100.x_24
-              physical_domains:
-                - firewalls
-              static_ports:
-                - channel: "vpc_to_ftd-4112-01-mgmt"
-                  node_id: 101
-                  node2_id: 102
-                  vlan: 10
-                  mode: untagged
-                  deployment_immediacy: immediate
-                - channel: "vpc_to_ftd-4112-02-mgmt"
-                  node_id: 101
-                  node2_id: 102
-                  vlan: 10
-                  mode: untagged
-                  deployment_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-tn-fgandola
-                imported_consumers:
-                  - permit-to-shared-services-ftd-management-ftd-mgmt
+        #     - name: ftd-mgmt
+        #       alias: internal-vrf-01
+        #       bridge_domain: 10.237.100.x_24
+        #       physical_domains:
+        #         - firewalls
+        #       static_ports:
+        #         - channel: "vpc_to_ftd-4112-01-mgmt"
+        #           node_id: 101
+        #           node2_id: 102
+        #           vlan: 10
+        #           mode: untagged
+        #           deployment_immediacy: immediate
+        #         - channel: "vpc_to_ftd-4112-02-mgmt"
+        #           node_id: 101
+        #           node2_id: 102
+        #           vlan: 10
+        #           mode: untagged
+        #           deployment_immediacy: immediate
+        #       contracts:
+        #         providers:
+        #           - permit-to-tn-fgandola
+        #         imported_consumers:
+        #           - permit-to-shared-services-ftd-management-ftd-mgmt
 
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads - no contracts on EPGs
           endpoint_groups:      
-            - name: '192.168.151.0_24'
+            - name: '10.1.10.0_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '192.168.151.0_24'
+              bridge_domain: '10.1.10.0_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -673,10 +676,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.152.0_24'
+            - name: '10.1.10.32_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '192.168.152.0_24'
+              bridge_domain: '10.1.10.32_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -685,10 +688,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '192.168.153.0_24'
+            - name: '10.1.10.64_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '192.168.153.0_24'
+              bridge_domain: '10.1.10.64_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -697,10 +700,22 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
+            - name: '10.1.10.96_27'
+              description: no contracts on this EPG, use ESGs for contracts
+              alias: internal-vrf-01
+              bridge_domain: '10.1.10.64_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: true
+                  primary_vlan: 1217
+                  secondary_vlan: 1218
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
-            - name: epg-192.168.151.0_24
+            - name: epg-10.1.10.0_27
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
@@ -708,31 +723,29 @@ apic:
               contracts:
                 consumers:
                   - inter-esg
-                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-esg-10.1.10.32_27
                 providers:
-                  - permit-to-esg-192.168.151.0_24
+                  - permit-to-esg-10.1.10.0_27
               epg_selectors:
-                - tenant: fgandola
-                  application_profile: 'network-segments'
-                  endpoint_group: '192.168.151.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.10.0_27'
 
-            - name: epg-192.168.152.0_24
+            - name: epg-10.1.10.32_27
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
               contracts:
                 consumers:
-                  - permit-to-esg-192.168.151.0_24
+                  - permit-to-esg-10.1.10.0_27
                 providers:
                   - inter-esg
-                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-esg-10.1.10.32_27
               epg_selectors:
-                - tenant: fgandola
-                  application_profile: 'network-segments'
-                  endpoint_group: '192.168.152.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.10.32_27'
 
-            - name: epg-192.168.153.0_24
+            - name: epg-10.1.10.64_27
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
@@ -741,6 +754,17 @@ apic:
                 consumers:
                   - inter-esg
               epg_selectors:
-                - tenant: fgandola
-                  application_profile: 'network-segments'
-                  endpoint_group: '192.168.153.0_24'
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.10.64_27'
+
+            - name: epg-10.1.10.96_27
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                consumers:
+                  - inter-esg
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.10.96_27'

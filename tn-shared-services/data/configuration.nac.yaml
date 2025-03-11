@@ -335,6 +335,11 @@ apic:
                   priority: default
                   log: false
                   no_stats: false
+                - filter: 'tcp-src-any-dst-80'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
 
             - name: udp
               filters:
@@ -452,6 +457,9 @@ apic:
                 - tenant: common
                   vrf: common.vrf-01
                   description: Leaked to tn-common:common.vrf-01
+                - tenant: demo-03
+                  vrf: vrf-01
+                  description: Leaked to tn-demo-03:vrf-01
 
           contracts:
             consumers:

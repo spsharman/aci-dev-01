@@ -14,7 +14,7 @@
 apic:
   tenants:
     - name: demo-02
-      description: Routable IP range 10.0.1-5.x
+      description: 10.1.2.0/24
 # Policies
       policies:
         dhcp_relay_policies:
@@ -257,7 +257,7 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 10.1.1.0_27
+        - name: 10.1.2.0_27
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
@@ -271,12 +271,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.32_27
+        - name: 10.1.2.32_27
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.1.33/27
+            - ip: 10.1.2.33/27
               public: true
               shared: false
               nd_ra_prefix: false
@@ -285,12 +285,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.64_27
+        - name: 10.1.2.64_27
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.1.65/27
+            - ip: 10.1.2.65/27
               public: true
               shared: false
               nd_ra_prefix: false
@@ -299,12 +299,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.96_27
+        - name: 10.1.2.96_27
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.1.97/27
+            - ip: 10.1.2.97/27
               public: true
               shared: false
               nd_ra_prefix: false
@@ -327,46 +327,46 @@ apic:
             #       deployment_immediacy: immediate
             #       resolution_immediacy: immediate
 
-            - name: '10.1.1.0_27'
+            - name: '10.1.2.0_27'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.0_27'
+              bridge_domain: '10.1.2.0_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1243
-                  secondary_vlan: 1244  
+                  primary_vlan: 1201
+                  secondary_vlan: 1202  
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
       
-            - name: '10.1.1.32_27'
+            - name: '10.1.2.32_27'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.32_27'
+              bridge_domain: '10.1.2.32_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1245
-                  secondary_vlan: 1246  
+                  primary_vlan: 1203
+                  secondary_vlan: 1204  
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
         
-            - name: '10.1.1.64_27'
+            - name: '10.1.2.64_27'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.64_27'
+              bridge_domain: '10.1.2.64_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1247
-                  secondary_vlan: 1248 
+                  primary_vlan: 1205
+                  secondary_vlan: 1206 
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
     
-            - name: '10.1.1.96_27'
+            - name: '10.1.2.96_27'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.96_27'
+              bridge_domain: '10.1.2.96_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1249
-                  secondary_vlan: 1250 
+                  primary_vlan: 1207
+                  secondary_vlan: 1208 
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
@@ -381,10 +381,10 @@ apic:
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.0_27'
+                  endpoint_group: '10.1.2.0_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.32_27'
+                  endpoint_group: '10.1.2.32_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.64_27'
+                  endpoint_group: '10.1.2.64_27'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.96_27'
+                  endpoint_group: '10.1.2.96_27'

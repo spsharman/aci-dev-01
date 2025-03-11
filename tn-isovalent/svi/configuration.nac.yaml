@@ -208,12 +208,26 @@ apic:
               destination_from_port: 4240
               destination_to_port: 4240
 
+        - name: 'tcp-src-any-dst-4444'
+          entries:
+            - name: 'tcp-src-any-dst-4444'
+              protocol: tcp
+              destination_from_port: 4444
+              destination_to_port: 4444
+
         - name: 'tcp-src-any-dst-6443'
           entries:
             - name: 'tcp-src-any-dst-6443'
               protocol: tcp
               destination_from_port: 6443
               destination_to_port: 6443
+
+        - name: 'tcp-src-any-dst-19765'
+          entries:
+            - name: 'tcp-src-any-dst-19765'
+              protocol: tcp
+              destination_from_port: 19765
+              destination_to_port: 19765
 
 # Contracts
       contracts:
@@ -259,9 +273,11 @@ apic:
         - name: permit-to-nginx-subnet-10.237.101.96_28
           scope: context
           subjects:
-            - name: permit-tcp-src-any-dst-80
+            - name: tcp
               filters: 
                 - filter: 'tcp-src-any-dst-80'
+                - filter: 'tcp-src-any-dst-4444'
+                - filter: 'tcp-src-any-dst-19765'
 
 # Imported contracts
       imported_contracts:
