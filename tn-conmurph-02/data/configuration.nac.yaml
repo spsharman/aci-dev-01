@@ -10,9 +10,9 @@ apic:
           restricted_rbac_domain: false
 
   tenants:
-    - name: conmurph-01
-      managed: true
-      description: 10.1.12.0/24
+    - name: conmurph-02
+      managed: true    
+      description: 10.1.13.0/24
       security_domains:
         - conmurph
 
