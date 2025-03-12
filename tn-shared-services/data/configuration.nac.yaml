@@ -457,9 +457,15 @@ apic:
                 - tenant: common
                   vrf: common.vrf-01
                   description: Leaked to tn-common:common.vrf-01
+                - tenant: cgrabows
+                  vrf: vrf-01
+                  description: Leaked to tn-cgrabows:vrf-01
                 - tenant: demo-03
                   vrf: vrf-01
                   description: Leaked to tn-demo-03:vrf-01
+                - tenant: fgandola
+                  vrf: vrf-01
+                  description: Leaked to tn-fgandola:vrf-01
 
           contracts:
             consumers:
