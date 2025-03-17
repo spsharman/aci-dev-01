@@ -3,28 +3,6 @@
 #
 ---
 apic:
-  fabric_policies:
-    aaa:
-      security_domains:
-        - name: cgrabows
-          restricted_rbac_domain: false
-      users:
-        - username: cgrabows
-          password: C1sco123
-          domains:
-            - name: all
-              roles:
-                - name: admin
-                  privilege_type: read
-            - name: common
-              roles:
-                - name: admin
-                  privilege_type: read
-            - name: cgrabows
-              roles:
-                - name: admin
-                  privilege_type: write
-
   tenants:
     - name: cgrabows
       managed: true
@@ -654,7 +632,7 @@ apic:
             - name: '10.1.11.96_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.11.64_27'
+              bridge_domain: '10.1.11.96_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true

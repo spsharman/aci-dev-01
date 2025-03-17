@@ -56,6 +56,11 @@
   - 10.1.13.32/27 tn-conmurph-02
   - 10.1.13.64/27 tn-conmurph-02
   - 10.1.13.96/27 tn-conmurph-02
+- 10.1.14.0 ACI DEV 01
+  - 10.1.14.0/27 tn-ssharman
+  - 10.1.14.32/27 tn-ssharman
+  - 10.1.14.64/27 tn-ssharman
+  - 10.1.14.96/27 tn-ssharman
 
 - 10.2.0.0 Hyperfabric
 
