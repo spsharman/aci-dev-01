@@ -600,8 +600,8 @@ apic:
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
-                  primary_vlan: 1219
-                  secondary_vlan: 1220
+                  primary_vlan: 1255
+                  secondary_vlan: 1256
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
@@ -612,8 +612,8 @@ apic:
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
-                  primary_vlan: 1221
-                  secondary_vlan: 1222 
+                  primary_vlan: 1257
+                  secondary_vlan: 1258 
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
@@ -624,8 +624,8 @@ apic:
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
-                  primary_vlan: 1223
-                  secondary_vlan: 1224
+                  primary_vlan: 1259
+                  secondary_vlan: 1260
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
@@ -636,8 +636,8 @@ apic:
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
-                  primary_vlan: 1225
-                  secondary_vlan: 1226
+                  primary_vlan: 1261
+                  secondary_vlan: 1262
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 

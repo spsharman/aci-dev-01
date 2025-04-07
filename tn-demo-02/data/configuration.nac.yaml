@@ -332,8 +332,8 @@ apic:
               bridge_domain: '10.1.2.0_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1201
-                  secondary_vlan: 1202  
+                  primary_vlan: 1223
+                  secondary_vlan: 1224  
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
@@ -343,8 +343,8 @@ apic:
               bridge_domain: '10.1.2.32_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1203
-                  secondary_vlan: 1204  
+                  primary_vlan: 1225
+                  secondary_vlan: 1226  
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
@@ -354,8 +354,8 @@ apic:
               bridge_domain: '10.1.2.64_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1205
-                  secondary_vlan: 1206 
+                  primary_vlan: 1227
+                  secondary_vlan: 1228 
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
@@ -365,8 +365,8 @@ apic:
               bridge_domain: '10.1.2.96_27'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
-                  primary_vlan: 1207
-                  secondary_vlan: 1208 
+                  primary_vlan: 1229
+                  secondary_vlan: 1230 
                   u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
