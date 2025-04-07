@@ -18,8 +18,7 @@ module "aci" {
   source  = "netascode/nac-aci/aci"
   version = ">=0.8.1"
 
-  yaml_directories = ["data", "data/old_model"]
-  # yaml_directories = ["data", "data/new_model"]
+  yaml_directories = ["data"]
 
   manage_access_policies    = true
   manage_fabric_policies    = false
