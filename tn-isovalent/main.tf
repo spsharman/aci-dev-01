@@ -17,8 +17,11 @@ module "aci" {
   source  = "netascode/nac-aci/aci"
   # version = ">=0.8.1"
 
-  yaml_directories = ["svi"]
+  # yaml_directories = ["svi"]
   # yaml_directories = ["floating-svi"]
+  # yaml_files = ["svi/configuration.nac.yaml"]
+  yaml_files = ["floating-svi/configuration.nac.yaml"]
+
 
   manage_access_policies    = false
   manage_fabric_policies    = false

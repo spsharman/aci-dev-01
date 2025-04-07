@@ -994,6 +994,5 @@ apic:
               contracts:
                 consumers:
                   - permit-to-ingress-subnet
-                  - permit-to-node-subnet
                 providers:
                   - permit-to-nginx-subnet-10.237.101.96_28

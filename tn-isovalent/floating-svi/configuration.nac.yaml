@@ -1,13 +1,29 @@
-# Manual steps
+# Notes:
 
-# Add BGP protocol profile to node profiles
-# Add secondary IP addresses to floating L3out
+# Need to enable the secondary address for DHCP
 
 ---
 apic:
   tenants:
+# The shared-services tenant is unmanaged, the following contracts are exported
+    - name: shared-services
+      managed: false
+      imported_contracts:
+        - name: permit-to-tn-isovalent-egress-subnet
+          tenant: isovalent
+          contract: permit-to-egress-subnet
+
+        - name: permit-to-tn-isovalent-ingress-subnet
+          tenant: isovalent
+          contract: permit-to-ingress-subnet
+
+        - name: permit-to-tn-isovalent-node-subnet
+          tenant: isovalent
+          contract: permit-to-node-subnet
+
+# The isovalent tenant is managed
     - name: isovalent
-      description: Routable IP range 10.237.101.0/26
+      description: 10.237.101.0/26
       security_domains:
         - isovalent
 
@@ -24,7 +40,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-virtual-machine-nodes
+          - name: dhcp-k8s-bm-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -34,7 +50,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-hx-dev-01-fi-a-vlan-16
+          - name: dhcp-k8s-bm-pod-2
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -44,7 +60,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-hx-dev-01-fi-b-vlan-16
+          - name: dhcp-k8s-vm-hx-dev-01-fi-a-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -54,47 +70,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-          - name: dhcp-l3out-vpc_to_isovalent-node-01
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-02
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-03
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-04
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-          - name: dhcp-l3out-vpc_to_isovalent-node-05
+          - name: dhcp-k8s-vm-hx-dev-01-fi-b-pod-1
             description: "dhcp.uktme.cisco.com"
             providers:
               - ip: 10.237.97.133
@@ -136,6 +112,76 @@ apic:
             description: BGP best path policy for cilium cni
             control_type: multi-path-relax
 
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-01-adapter-7-gig-0-4
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-7-gig-0-4
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-4
+                    vnic_name: Network adapter 7
+            logical_interfaces:
+              - name: gig-0-4
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-7-gig-0-4
+                    interface_name: gig-0-4
+
+        redirect_policies:
+          - name: redirect-to-ftdv-01-adapter-7-gig-0-4
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:50:56:A1:1C:2B
+                redirect_health_group: ftdv-01-adapter-7-gig-0-4
+
+        redirect_health_groups:
+          - name: ftdv-01-adapter-7-gig-0-4
+
+        service_graph_templates:
+          - name: ftdv-01-adapter-7-gig-0-4
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: isovalent
+              name: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: redirect-to-ftdv-01-adapter-7-gig-0-4
+              logical_interface: gig-0-4
+              bridge_domain:
+                name: 6.6.6.0_24
+
 # Filters
       filters:
         - name: 'icmp'
@@ -145,8 +191,43 @@ apic:
 
         - name: 'permit-src-any-dst-any'
           entries:
-            - name: 'permit-src-any-dst-any'
+            - name: 'src-any-dst-any'
               ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-4240'
+          entries:
+            - name: 'tcp-src-any-dst-4240'
+              protocol: tcp
+              destination_from_port: 4240
+              destination_to_port: 4240
+
+        - name: 'tcp-src-any-dst-4444'
+          entries:
+            - name: 'tcp-src-any-dst-4444'
+              protocol: tcp
+              destination_from_port: 4444
+              destination_to_port: 4444
+
+        - name: 'tcp-src-any-dst-6443'
+          entries:
+            - name: 'tcp-src-any-dst-6443'
+              protocol: tcp
+              destination_from_port: 6443
+              destination_to_port: 6443
+
+        - name: 'tcp-src-any-dst-19765'
+          entries:
+            - name: 'tcp-src-any-dst-19765'
+              protocol: tcp
+              destination_from_port: 19765
+              destination_to_port: 19765
 
 # Contracts
       contracts:
@@ -157,19 +238,46 @@ apic:
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-node-subnet
+        - name: permit-to-egress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: permit-src-any-dst-any
 
-        - name: permit-to-external-subnet
+        - name: permit-to-ingress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: permit-src-any-dst-any
+
+        - name: permit-to-node-subnet
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-pod-subnet
+          description: Allow HTTP and ICMP keepalives between pods
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+            - name: tcp
+              filters: 
+                - filter: 'tcp-src-any-dst-4240'
+
+        - name: permit-to-nginx-subnet-10.237.101.96_28
+          scope: context
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: 'tcp-src-any-dst-80'
+                - filter: 'tcp-src-any-dst-4444'
+                - filter: 'tcp-src-any-dst-19765'
 
 # Imported contracts
       imported_contracts:
@@ -194,47 +302,91 @@ apic:
         - name: vrf-01
           description: configured with NAC
           alias: external-vrf
-          leaked_external_prefixes:
-            - prefix: 10.237.101.32/27
-              from_prefix_length: 32
-              to_prefix_length: 32
-              destinations:
-                - tenant: common
-                  vrf: common.vrf-01
-                  description: Leaked to common:common.vrf-01
-            - prefix: 10.237.101.0/27
-              # from_prefix_length: 0
-              # to_prefix_length: 0
-              destinations:
-                - tenant: common
-                  vrf: common.vrf-01
-                  description: Leaked to common:common.vrf-01
+          # leaked_external_prefixes:
+          #   - prefix: 10.237.101.32/28
+          #     from_prefix_length: 32
+          #     to_prefix_length: 32
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
+          #   - prefix: 10.237.101.48/28
+          #     from_prefix_length: 32
+          #     to_prefix_length: 32
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
+          #   - prefix: 10.237.101.0/27
+          #     from_prefix_length: 0
+          #     to_prefix_length: 0
+          #     destinations:
+          #       - tenant: common
+          #         vrf: common.vrf-01
+          #         description: Leaked to common:common.vrf-01
           bgp:
             timer_policy: cilium-cni
             ipv4_address_family_context_policy: cilium-cni
           contracts:
-            providers: 
-              - intra-tenant
-            consumers:
-              - intra-tenant
+            # providers: 
+            #   - intra-tenant
+            # consumers:
+            #   - intra-tenant
             imported_consumers:
                 - permit-to-shared-services.vrf-01-all-external-subnets
                 - permit-to-core-services
                 - permit-from-core-services
                 - permit-from-lab-desktops
 
+# Bridge domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
+        - name: 10.237.101.96_28
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.101.97/28
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant                                                              
+
 # L3Outs
       l3outs:
-        - name: isovalent.vrf-01-bgp-AS-65152
-          description: L3out Floating SVI to Isovalent K8s environment
+        - name: isovalent.vrf-01-bgp-AS-65151
+          description: L3out SVI to Isovalent K8s environment
           alias: external-vrf
           vrf: vrf-01
           domain: isovalent.vrf-01
+# External EPGs
           external_endpoint_groups:
             - name: node-subnet
-              description: node subnet range
+              description: node subnet
               subnets:
                 - prefix: 10.237.101.0/27
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+                - prefix: 10.237.101.64/27
                   import_route_control: false
                   export_route_control: false
                   shared_route_control: true
@@ -248,11 +400,13 @@ apic:
               contracts:
                 providers:
                   - permit-to-node-subnet
+                consumers:
+                  - permit-to-pod-subnet
 
-            - name: external-subnet
-              description: external subnet range
+            - name: ingress-subnet
+              description: ingress subnet
               subnets:
-                - prefix: 10.237.101.32/27
+                - prefix: 10.237.101.32/28
                   import_route_control: false
                   export_route_control: false
                   shared_route_control: true
@@ -267,10 +421,32 @@ apic:
                 #   export_route_control: true
               contracts:
                 providers:
-                  - permit-to-external-subnet
+                  - permit-to-ingress-subnet
+
+            - name: egress-subnet
+              description: egress subnet
+              subnets:
+                - prefix: 10.237.101.48/28
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: true
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+                # - prefix: 10.237.100.0/24
+                #   export_route_control: true
+              contracts:
+                # providers:
+                #   - permit-to-egress-subnet
+                consumers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
 
             - name: pod-subnet
-              description: pod subnet range
+              description: pod subnet
               subnets:
                 - prefix: 10.1.0.0/16
                   import_route_control: false
@@ -284,113 +460,41 @@ apic:
                   bgp_route_summarization: false
                   ospf_route_summarization: false
               contracts:
+                providers:
+                  - permit-to-pod-subnet
                 consumers:
                   - permit-to-node-subnet
 
 # Nodes
           node_profiles:
-            - name: border-leafs
+            - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
-                  router_id: 101.1.0.4                
+                  router_id: 101.1.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 1
+
                 - node_id: 1102
                   router_id: 102.1.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 1
 
               interface_profiles:
 # floating svi start
-                - name: vpc_to_isovalent-node-01              # this creates a single interface profile for the vpc, with 2x anchor nodes
-                  interfaces:
-                    - node_id: 1101
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
-                      ip: 10.237.101.1/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-
-                    - node_id: 1102
-                      mode: regular
-                      vlan: 16
-                      floating_svi: true
-                      paths:
-                        - floating_ip: 10.237.101.3/27
-                          physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
-                      ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
-                      mtu: 1500
-                      bgp_peers:
-                        - ip: 10.237.101.0/27
-                          remote_as: 65051
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-l3out-vpc_to_isovalent-node-01
-                      scope: tenant
-# floating svi end
-
-# floating svi start
-                - name: virtual-machine-nodes                 # this creates a single interface profile for both port channels, with 2x anchor nodes
+                - name: virtual-machine-nodes             # this creates a single interface profile for both port channels
                   interfaces:
                     - node_id: 1101                       
                       mode: regular                       
-                      vlan: 16
                       floating_svi: true
+                      vlan: 16
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.1/27
                       ip_shared: 10.237.101.4/27
                       bgp_peers:
                         - ip: 10.237.101.0/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -413,18 +517,16 @@ apic:
 
                     - node_id: 1102                       
                       mode: regular                       
-                      vlan: 16
                       floating_svi: true
+                      vlan: 16
                       paths:
                         - floating_ip: 10.237.101.3/27
                           physical_domain: isovalent-nodes
-                          # vlan: 16                          # not implemented in NAC - creates a secondary floating IP
-                          # ip_shared: 10.237.101.4/27        # not implemented in NAC - creates a secondary floating IP
                       ip: 10.237.101.2/27
-                      ip_shared: 10.237.101.4/27
+                      ip_shared: 10.237.101.4/27        
                       bgp_peers:
                         - ip: 10.237.101.0/27
-                          remote_as: 65051
+                          remote_as: 65252
                           local_as: 65151
                           allow_self_as: false
                           as_override: true
@@ -445,37 +547,296 @@ apic:
                           as_propagate: no-prepend
                           peer_prefix_policy: cilium-cni
                   dhcp_labels:
-                    - dhcp_relay_policy: dhcp-k8s-virtual-machine-nodes
-                      scope: tenant
+                    - dhcp_relay_policy: dhcp-k8s-vm-hx-dev-01-fi-a-pod-1
+                    - dhcp_relay_policy: dhcp-k8s-vm-hx-dev-01-fi-b-pod-1
 # floating svi end
 
-# Bridge domains
-      bridge_domains:
-        - name: 10.237.101.64_28
-          description: corporate subnet
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.101.65/28
-              public: true
-              shared: true
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant
+# svi start
+                - name: bare-metal-nodes          # this creates a single interface profile for the vpc
+                  interfaces:
+                    - node_id: 1101                                           
+                      floating_svi: true
+                      vlan: 17
+                      paths:
+                        - floating_ip: 10.237.101.67/27
+                          physical_domain: isovalent-nodes
+                      ip: 10.237.101.65/27
+                      ip_shared: 10.237.101.77/27
+
+                    - node_id: 1102                                           
+                      floating_svi: true
+                      vlan: 17
+                      paths:
+                        - floating_ip: 10.237.101.67/27
+                          physical_domain: isovalent-nodes
+                      ip: 10.237.101.66/27
+                      ip_shared: 10.237.101.77/27
+
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp-k8s-bm-pod-1
+# svi end
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  router_id: 101.2.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2102
+                  router_id: 102.2.0.4
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2103
+                  router_id: 101.2.0.5
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+                - node_id: 2104
+                  router_id: 102.2.0.5
+                  # router_id_as_loopback: false
+                  pod_id: 2
+
+              interface_profiles:
+                - name: bare-metal-nodes
+                  interfaces:
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-06
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-07
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27 
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2101                       
+                      node2_id: 2102
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m3-1G-isovalent-node-08
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.69/27               
+                      ip_b: 10.237.101.70/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-09
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-10
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                    - node_id: 2103                       
+                      node2_id: 2104
+                      pod_id: 2
+                      svi: true                           
+                      channel: vpc_to_c220m5-10G-isovalent-node-11
+                      mode: regular                       
+                      vlan: 17                            
+                      ip_a: 10.237.101.73/27               
+                      ip_b: 10.237.101.74/27
+                      ip_shared: 10.237.101.77/27
+                      bgp_peers:
+                        - ip: 10.237.101.64/27
+                          remote_as: 65252
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni
+
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp-k8s-bm-pod-2
+# svi end
+
 
 # Application Profiles
       application_profiles:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
           endpoint_groups:
-            - name: '10.237.101.64_28'
-              bridge_domain: '10.237.101.64_28'
-              physical_domains:
-                - isovalent-nodes
+            - name: '10.237.101.96_28'
+              bridge_domain: '10.237.101.96_28'
+              # physical_domains:
+              #   - isovalent-nodes
               # static_ports:
-                # - channel: vpc_to_isovalent-node-01
+                # - channel: vpc_to_c220m5-1G-isovalent-node-01
                 #   mode: regular
                 #   vlan: 15
                 #   node_id: 1101
@@ -499,23 +860,20 @@ apic:
                   u_segmentation: false
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: nginx-subnet-10.237.101.96_28
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.237.101.96_28'
               contracts:
                 consumers:
-                  - permit-to-external-subnet
-                  - permit-to-node-subnet
-
-        # - name: 'network-security-groups'
-        #   description: 'ESGs are used to define security groups' 
-        #   endpoint_security_groups:
-        #     - name: epg-10.237.100.0_24
-        #       vrf: common.vrf-01
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       preferred_group: false
-        #       epg_selectors:
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.237.100.0_24'
-        #       contracts:
-        #         consumers:
-        #           - permit-to-external-subnet
-        #           - permit-to-node-subnet
+                  - permit-to-ingress-subnet
+                providers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
