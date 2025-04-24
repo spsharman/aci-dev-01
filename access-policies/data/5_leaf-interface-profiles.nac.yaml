@@ -83,8 +83,8 @@ apic:
           #       from_port: 25
           #       to_port: 25
 
-          - name: shared-services.vrf-01
-            policy_group: shared-services.vrf-01
+          - name: routed-interfaces-to-core
+            policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
                 description: core-01 e1/7
@@ -243,8 +243,8 @@ apic:
           #       from_port: 25
           #       to_port: 25
 
-          - name: shared-services.vrf-01
-            policy_group: shared-services.vrf-01
+          - name: routed-interfaces-to-core
+            policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
                 description: core-02 eth1/7
@@ -349,8 +349,8 @@ apic:
           #       from_port: 4
           #       to_port: 4
 
-          - name: shared-services.vrf-01
-            policy_group: shared-services.vrf-01
+          - name: routed-interfaces-to-core
+            policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
                 description: core-03 e1/7
@@ -441,8 +441,8 @@ apic:
           #       from_port: 4
           #       to_port: 4
 
-          - name: shared-services.vrf-01
-            policy_group: shared-services.vrf-01
+          - name: routed-interfaces-to-core
+            policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
                 description: core-04 eth1/7

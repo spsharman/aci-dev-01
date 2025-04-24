@@ -38,6 +38,8 @@ apic:
         security_domains:
           - ajshahid.vrf-01
 
+      - name: BRKDCN-2959.vrf-01
+
       - name: conmurph-01.vrf-01
         vlan_pool: hx-dev-01-vds-02
         security_domains:

@@ -92,16 +92,25 @@ apic:
 
 # Global policies
     aaeps:
+      - name: mgmt_inb
+        infra_vlan: false
+        physical_domains:
+          - mgmt_inb
+
+      - name: multisite
+        routed_domains:
+          - multisite
+
+      - name: routed-interfaces-to-core
+        routed_domains:
+          - shared-services.vrf-01
+          - BRKDCN-2959.vrf-01
+
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
           - isovalent-nodes
         routed_domains:
           - isovalent.vrf-01
-
-      - name: mgmt_inb
-        infra_vlan: false
-        physical_domains:
-          - mgmt_inb
 
       - name: vlans-allowed-to-firewalls
         physical_domains:
@@ -133,14 +142,6 @@ apic:
 
         vmware_vmm_domains:
           - hx-dev-01-vds-01
-
-      - name: multisite
-        routed_domains:
-          - multisite
-
-      - name: shared-services.vrf-01
-        routed_domains:
-          - shared-services.vrf-01
 
       - name: vlans-allowed-to-ucs-c220m5-vds-01
         physical_domains:

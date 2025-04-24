@@ -18,9 +18,9 @@ apic:
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
 
-      - name: shared-services.vrf-01
+      - name: routed-interfaces-to-core
         type: access
-        aaep: shared-services.vrf-01
+        aaep: routed-interfaces-to-core
         cdp_policy: cdp-enabled
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
