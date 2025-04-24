@@ -153,6 +153,36 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
+        - name: 10.1.3.0_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+
+
+        - name: 10.1.3.32_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+
+
+        - name: 10.1.3.64_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+
+
+        - name: 10.1.3.96_27
+          alias: internal-vrf
+          vrf: vrf-01
+          unknown_unicast: flood
+          multi_destination_flooding: encap-flood
+
+
+
+
 # Application profiles
       application_profiles:
         - name: 'network-segments'

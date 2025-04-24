@@ -80,6 +80,7 @@
 - 64800 - core
 - 64801 - aci-dev-01 shared-services:vrf-01 
 - 64802 - dCloud vPod
+- 64803 - BRKDCN-2959
 
 ## VRF Route Distinguishers on core routers
 
@@ -112,3 +113,7 @@
 - 101.2.0.5 isovalent Node-2103 BGP Router ID as loopback
 - 102.2.0.5 isovalent Node-2104 BGP Router ID as loopback
 
+- 101.1.0.6 BRKDCN-2959 Node-1101 BGP Router ID as loopback
+- 102.1.0.6 BRKDCN-2959 Node-1102 BGP Router ID as loopback
+- 101.2.0.6 BRKDCN-2959 Node-2101 BGP Router ID as loopback
+- 102.2.0.6 BRKDCN-2959 Node-2102 BGP Router ID as loopback

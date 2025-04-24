@@ -524,11 +524,13 @@ apic:
 
 # Interfaces
               interface_profiles:
-                - name: leaf-1101-eth7
-                  description: core-01 eth1/7
+                - name: leaf-1101-eth7.10
+                  description: core-01 eth1/7.10
                   interfaces:
                     - node_id: 1101
                       port: 7
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.249/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -559,11 +561,13 @@ apic:
                   # ospf:
                   #   policy: OSPF_p2p
 
-                - name: leaf-1101-eth8
-                  description: core-02 eth1/8
+                - name: leaf-1101-eth8.10
+                  description: core-02 eth1/8.10
                   interfaces:
                     - node_id: 1101
                       port: 8
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.255/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -594,11 +598,13 @@ apic:
                   # ospf: 
                   #   policy: OSPF_p2p
 
-                - name: leaf-1102-eth7
-                  description: core-02 eth1/7
+                - name: leaf-1102-eth7.10
+                  description: core-02 eth1/7.10
                   interfaces:
                     - node_id: 1102
                       port: 7
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.253/31
                       mtu: inherit
                       mac: 10:22:BD:F8:19:FF
@@ -629,11 +635,13 @@ apic:
                   # ospf: 
                   #   policy: OSPF_p2p
 
-                - name: leaf-1102-eth8
-                  description: core-01 eth1/8
+                - name: leaf-1102-eth8.10
+                  description: core-01 eth1/8.10
                   interfaces:
                     - node_id: 1102
                       port: 8
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.251/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -703,12 +711,14 @@ apic:
                   loopback: 10.237.96.29/32
 
               interface_profiles:
-                - name: leaf-2101-eth7
+                - name: leaf-2101-eth7.10
                   description: core-03 eth1/7
                   interfaces:
                     - node_id: 2101
                       pod_id: 2
                       port: 7
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.241/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -736,12 +746,14 @@ apic:
                           as_propagate: no-prepend
                           # peer_prefix_policy: cilium-cni
 
-                - name: leaf-2101-eth8
+                - name: leaf-2101-eth8.10
                   description: core-04 eth1/8
                   interfaces:
                     - node_id: 2101
                       pod_id: 2
                       port: 8
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.247/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -769,12 +781,14 @@ apic:
                           as_propagate: no-prepend
                           # peer_prefix_policy: cilium-cni
 
-                - name: leaf-2102-eth7
+                - name: leaf-2102-eth7.10
                   description: core-04 eth1/7
                   interfaces:
                     - node_id: 2102
                       pod_id: 2
                       port: 7
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.245/31
                       mtu: inherit
                       mac: 10:22:BD:F8:19:FF
@@ -802,12 +816,14 @@ apic:
                           as_propagate: no-prepend
                           # peer_prefix_policy: cilium-cni
 
-                - name: leaf-2102-eth8
+                - name: leaf-2102-eth8.10
                   description: core-02 eth1/8
                   interfaces:
                     - node_id: 2102
                       pod_id: 2
                       port: 8
+                      vlan: 10
+                      svi: false
                       ip: 10.237.96.243/31
                       mtu: inherit
                       mac: 10:12:BD:F8:19:FF
@@ -994,8 +1010,8 @@ apic:
                       channel: hx-dev-01-fi-a
                       vlan: 8
                       svi: true
-                      ip: 10.237.99.49/29
-                      ip_shared: 10.237.99.51/29
+                      ip: 10.237.99.49/28
+                      ip_shared: 10.237.99.51/28
                       mtu: 1500
                   ospf:
                     policy: broadcast
@@ -1006,8 +1022,8 @@ apic:
                       channel: hx-dev-01-fi-b
                       vlan: 8
                       svi: true
-                      ip: 10.237.99.50/29
-                      ip_shared: 10.237.99.51/29
+                      ip: 10.237.99.50/28
+                      ip_shared: 10.237.99.51/28
                       mtu: 1500
                   ospf:
                     policy: broadcast

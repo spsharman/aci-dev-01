@@ -189,7 +189,7 @@ apic:
             - name: 'icmp'
               protocol: icmp
 
-        - name: 'permit-src-any-dst-any'
+        - name: 'src-any-dst-any'
           entries:
             - name: 'src-any-dst-any'
               ethertype: unspecified
@@ -236,21 +236,21 @@ apic:
           subjects:
             - name: permit-src-any-dst-any
               filters: 
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-to-egress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-to-ingress-subnet
           scope: global
           subjects:
             - name: permit-src-any-dst-any
               filters: 
-                - filter: permit-src-any-dst-any
+                - filter: src-any-dst-any
 
         - name: permit-to-node-subnet
           scope: global
