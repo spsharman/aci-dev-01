@@ -1,0 +1,3 @@
+apic_username = "USERNAME"
+apic_password = "PASSWORD"
+apic_url      = "https://64.103.44.66"

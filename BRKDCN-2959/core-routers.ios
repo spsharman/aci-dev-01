@@ -1,0 +1,157 @@
+! core 1
+interface Ethernet1/7.12
+  description aci-dev-01 1101/1/7.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.41/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+  interface Ethernet1/8.12
+  description aci-dev-01 1102/1/8.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.47/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.40
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.46
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+! core 2
+interface Ethernet1/7.12
+  description aci-dev-01 1102/1/7.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.45/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+  interface Ethernet1/8.12
+  description aci-dev-01 1101/1/8.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.43/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.44
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.42
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+! core 3
+interface Ethernet1/7.12
+  description aci-dev-01 2101/1/7.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.49/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+  interface Ethernet1/8.12
+  description aci-dev-01 2102/1/8.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.55/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.48
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.54
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+! core 4
+interface Ethernet1/7.12
+  description aci-dev-01 2102/1/7.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.53/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+  interface Ethernet1/8.12
+  description aci-dev-01 2101/1/8.12
+  mtu 9000
+  encapsulation dot1q 12
+  vrf member core
+  ip address 10.237.97.51/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.52
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.50
+      remote-as 64803
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.12
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always

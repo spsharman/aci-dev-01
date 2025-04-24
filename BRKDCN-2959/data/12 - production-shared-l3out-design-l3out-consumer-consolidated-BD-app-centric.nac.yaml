@@ -1,0 +1,213 @@
+# Notes:
+#
+#
+---
+apic:
+# Imported contract to shared-services
+  tenants:
+    - name: shared-services
+      managed: false
+      contracts:
+        - name: permit-from-application-01-to-all-ext-subnets
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-from-application-02-to-all-ext-subnets
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-from-application-03-to-all-ext-subnets
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+      imported_contracts:
+        - name: permit-from-all-ext-subnets-to-application-01
+          tenant: BRKDCN-2959
+          contract: permit-from-all-ext-subnets-to-application-01
+
+        - name: permit-from-all-ext-subnets-to-application-02
+          tenant: BRKDCN-2959
+          contract: permit-from-all-ext-subnets-to-application-02
+
+        - name: permit-from-all-ext-subnets-to-application-03
+          tenant: BRKDCN-2959
+          contract: permit-from-all-ext-subnets-to-application-03
+
+# Tenant
+    - name: BRKDCN-2959
+      description: Shared L3out extEPG is consumer, consolidated BD, app centric
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+          - name: permit-src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
+
+        - name: permit-from-all-ext-subnets-to-application-01
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-from-all-ext-subnets-to-application-02
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-from-all-ext-subnets-to-application-03
+          description: unidirectional contract
+          scope: global
+          subjects:
+          - name: permit-src-any-dst-any
+            reverse_filter_ports: false
+            consumer_to_provider:
+              filters: 
+                - filter: src-any-dst-any
+
+      imported_contracts:
+        - name: permit-from-application-01-to-all-ext-subnets
+          tenant: shared-services
+          contract: permit-from-application-01-to-all-ext-subnets
+
+        - name: permit-from-application-02-to-all-ext-subnets
+          tenant: shared-services
+          contract: permit-from-application-02-to-all-ext-subnets
+
+        - name: permit-from-application-03-to-all-ext-subnets
+          tenant: shared-services
+          contract: permit-from-application-03-to-all-ext-subnets
+
+# VRFs  
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: production-inside
+          contracts:
+            providers:
+              - intra-vrf
+            consumers:
+              - intra-vrf
+
+# Bridge Domains
+      bridge_domains:
+        - name: production-subnets
+          # alias: production-subnets
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.10.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+
+            - ip: 192.168.11.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+
+            - ip: 192.168.12.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+
+# Application profiles
+      application_profiles:
+        - name: 'application-01'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: 'all-services'
+              # alias:
+              bridge_domain: 'production-subnets'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-from-all-ext-subnets-to-application-01
+                imported_consumers:
+                  - permit-from-application-01-to-all-ext-subnets
+
+        - name: 'application-02'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: 'all-services'
+              # alias:
+              bridge_domain: 'production-subnets'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-from-all-ext-subnets-to-application-02
+                imported_consumers:
+                  - permit-from-application-02-to-all-ext-subnets
+
+        - name: 'application-03'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: 'all-services'
+              # alias:
+              bridge_domain: 'production-subnets'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-from-all-ext-subnets-to-application-03
+                imported_consumers:
+                  - permit-from-application-03-to-all-ext-subnets

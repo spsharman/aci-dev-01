@@ -1,0 +1,183 @@
+# Notes:
+#
+#
+---
+apic:
+# Imported contract to shared-services
+  tenants:
+    - name: shared-services
+      managed: false
+
+      imported_contracts:
+        - name: permit-to-BRKDCN-2959-192.168.10.0_24
+          tenant: BRKDCN-2959
+          contract: permit-to-192.168.10.0_24
+
+        - name: permit-to-BRKDCN-2959-192.168.11.0_24
+          tenant: BRKDCN-2959
+          contract: permit-to-192.168.11.0_24
+
+        - name: permit-to-BRKDCN-2959-192.168.12.0_24
+          tenant: BRKDCN-2959
+          contract: permit-to-192.168.12.0_24
+
+# Tenant
+    - name: BRKDCN-2959
+      description: Shared L3out extEPG is consumer
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-192.168.10.0_24
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-192.168.11.0_24
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-192.168.12.0_24
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: production-inside
+          contracts:
+            providers:
+              - intra-vrf
+            consumers:
+              - intra-vrf
+
+# Bridge Domains
+      bridge_domains:
+        - name: 192.168.10.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.10.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.11.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.11.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.12.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.12.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.10.0_24'
+              # alias:
+              bridge_domain: '192.168.10.0_24'
+              subnets:
+                - ip: 192.168.10.1/24
+                  public: true
+                  shared: true
+                  no_default_gateway: true
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-192.168.10.0_24
+
+            - name: '192.168.11.0_24'
+              # alias:
+              bridge_domain: '192.168.11.0_24'
+              subnets:
+                - ip: 192.168.11.1/24
+                  public: true
+                  shared: true
+                  no_default_gateway: true
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-192.168.11.0_24
+
+            - name: '192.168.12.0_24'
+              # alias:
+              bridge_domain: '192.168.12.0_24'
+              subnets:
+                - ip: 192.168.12.1/24
+                  public: true
+                  shared: true
+                  no_default_gateway: true
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-192.168.12.0_24
