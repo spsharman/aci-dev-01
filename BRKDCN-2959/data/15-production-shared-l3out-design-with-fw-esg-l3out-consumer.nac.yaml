@@ -1,0 +1,334 @@
+# Notes:
+#
+#
+---
+apic:
+# Imported contract to shared-services
+  tenants:
+    - name: shared-services
+      managed: false
+
+      imported_contracts:
+        - name: permit-to-BRKDCN-2959-application-01-all-services
+          tenant: BRKDCN-2959
+          contract: permit-to-application-01-all-services
+
+        - name: permit-to-BRKDCN-2959-application-02-all-services
+          tenant: BRKDCN-2959
+          contract: permit-to-application-02-all-services
+
+        - name: permit-to-BRKDCN-2959-application-03-all-services
+          tenant: BRKDCN-2959
+          contract: permit-to-application-03-all-services
+
+# Tenant
+    - name: BRKDCN-2959
+      description: Shared L3out extEPG is consumer
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+        # ip_sla_policies:
+        #   - name: icmp-aggressive-timers
+        #     description: This policy sends a icmp ping every 1 second
+        #     frequency: 1
+        #     multiplier: 3
+        #     sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-mpod-cluster
+                interfaces:
+                  - name: ftd-4112-01-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
+                    pod_id: 2
+                    node_id: 2101
+                    node2_id: 2102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 14
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+        redirect_policies:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
+            # ip_sla_policy: icmp-aggressive-timers
+            pod_aware: false
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:00:00:00:00:14
+                # redirect_health_group: ftd-4112-one-arm-L3-mpod-cluster
+
+        # redirect_health_groups:
+        #   - name: ftd-4112-one-arm-L3-mpod-cluster
+
+        service_graph_templates:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: BRKDCN-2959
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-01-all-services
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-02-all-services
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-03-all-services
+          description: EPG is contract provider
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: production-inside
+          leaked_internal_prefixes:
+            - prefix: 192.168.10.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+            - prefix: 192.168.11.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+            - prefix: 192.168.12.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+                  description: Leaked to shared-services:vrf-01 and advertised externally
+          contracts:
+            providers:
+              - intra-vrf
+            consumers:
+              - intra-vrf
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          alias: pbr-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 192.168.10.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.10.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.11.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.11.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.12.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 192.168.12.1/24
+              public: true # not required when using ESG route leaking under the VRF
+              shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.10.0_24'
+              # alias:
+              bridge_domain: '192.168.10.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1239
+                  secondary_vlan: 1240  
+                  u_segmentation: true
+
+            - name: '192.168.11.0_24'
+              # alias:
+              bridge_domain: '192.168.11.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1241
+                  secondary_vlan: 1242  
+                  u_segmentation: true
+
+            - name: '192.168.12.0_24'
+              # alias:
+              bridge_domain: '192.168.12.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1243
+                  secondary_vlan: 1244  
+                  u_segmentation: true
+
+        - name: 'application-01'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-01-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.10/32
+                - value: 192.168.11.10/32
+                - value: 192.168.12.10/32
+                - value: 192.168.12.11/32
+
+        - name: 'application-02'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-02-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.20/32
+                - value: 192.168.11.20/32
+                - value: 192.168.11.21/32
+                - value: 192.168.12.20/32
+
+        - name: 'application-03'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-03-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.30/32
+                - value: 192.168.11.30/32
+                - value: 192.168.12.30/32
+                - value: 192.168.12.31/32
+

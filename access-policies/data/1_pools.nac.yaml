@@ -45,12 +45,22 @@ apic:
             role: external
           - from: 12
             to: 12
-            description: firepower data-01
+            description: firepower data-01 - shared-services
             allocation: inherit
             role: external
           - from: 13
             to: 13
-            description: firepower data-02
+            description: firepower data-02 - shared-services
+            allocation: inherit
+            role: external
+          - from: 14
+            to: 14
+            description: firepower data-01 - BRKDCN-2959
+            allocation: inherit
+            role: external
+          - from: 15
+            to: 15
+            description: firepower data-02 - BRKDCN-2959
             allocation: inherit
             role: external
 
@@ -139,19 +149,19 @@ apic:
           - from: 1239
             to: 1240
             allocation: static
-            description: tn-demo-04 PVLANs
+            description: tn-BRKDCN-2959 PVLANs
           - from: 1241
             to: 1242
             allocation: static
-            description: tn-demo-04 PVLANs
+            description: tn-BRKDCN-2959 PVLANs
           - from: 1243
             to: 1244
             allocation: static
-            description: tn-demo-04 PVLANs
+            description: tn-BRKDCN-2959 PVLANs
           - from: 1245
             to: 1246
             allocation: static
-            description: tn-demo-04 PVLANs
+            description: tn-BRKDCN-2959 PVLANs
           - from: 1247
             to: 1248
             allocation: static

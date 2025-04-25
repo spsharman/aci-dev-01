@@ -1,11 +1,11 @@
-# Notes:
+# Notes: When PVLANs are configured you're not able to ping BD without workloads on the EPG
 #
 #
 ---
 apic:
   tenants:
     - name: BRKDCN-2959
-      description: Dual VRF, L3out extEPG is consumer
+      description: single VRF with ESG per application
 
 # Policies
       policies:
@@ -41,25 +41,25 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-192.168.10.0_24
+        - name: permit-to-application-01-all-services
           description: EPG is contract provider
-          scope: tenant
+          scope: context
           subjects:
             - name: permit-src-any-dst-any
               filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-192.168.11.0_24
+        - name: permit-to-application-02-all-services
           description: EPG is contract provider
-          scope: tenant
+          scope: context
           subjects:
             - name: permit-src-any-dst-any
               filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-192.168.12.0_24
+        - name: permit-to-application-03-all-services
           description: EPG is contract provider
-          scope: tenant
+          scope: context
           subjects:
             - name: permit-src-any-dst-any
               filters:
@@ -69,11 +69,7 @@ apic:
       vrfs:
         - name: vrf-01
           description: configured with NAC
-          alias: production-outside
-
-        - name: vrf-02
-          description: configured with NAC
-          alias: production-inside
+          alias: production-vrf
           contracts:
             providers:
               - intra-vrf
@@ -391,66 +387,53 @@ apic:
           external_endpoint_groups:
             - name: all-ext-subnets
               subnets:
-                - prefix: 0.0.0.0/0
-                  shared_route_control: true
-
                 - prefix: 0.0.0.0/1
                   import_security: true
-                  shared_security: true
 
                 - prefix: 128.0.0.0/1
                   import_security: true
-                  shared_security: true
 
               contracts:
                 consumers:
-                  - permit-to-192.168.10.0_24
-                  - permit-to-192.168.11.0_24
-                  - permit-to-192.168.12.0_24
-
-            - name: lab-desktops-subnets
-              subnets:
-                - prefix: 10.237.97.160/28
-                  name: lab-desktops
-                  shared_route_control: true
-                  shared_security: true
-                  import_security: true
-              contracts:
-                consumers:
-                  - permit-to-192.168.10.0_24
+                  - permit-to-application-01-all-services
+                  - permit-to-application-02-all-services
+                  - permit-to-application-03-all-services
 
 # Bridge Domains
       bridge_domains:
         - name: 192.168.10.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-to-core
           subnets:
             - ip: 192.168.10.1/24
               public: true # not required when using ESG route leaking under the VRF
-              shared: true # not required when using ESG route leaking under the VRF
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
         - name: 192.168.11.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-to-core
           subnets:
             - ip: 192.168.11.1/24
               public: true # not required when using ESG route leaking under the VRF
-              shared: true # not required when using ESG route leaking under the VRF
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
         - name: 192.168.12.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-to-core
           subnets:
             - ip: 192.168.12.1/24
               public: true # not required when using ESG route leaking under the VRF
-              shared: true # not required when using ESG route leaking under the VRF
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -462,47 +445,83 @@ apic:
             - name: '192.168.10.0_24'
               # alias:
               bridge_domain: '192.168.10.0_24'
-              subnets:
-                - ip: 192.168.10.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-192.168.10.0_24
+                  primary_vlan: 1239
+                  secondary_vlan: 1240  
+                  u_segmentation: true
 
             - name: '192.168.11.0_24'
               # alias:
               bridge_domain: '192.168.11.0_24'
-              subnets:
-                - ip: 192.168.11.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-192.168.11.0_24
+                  primary_vlan: 1241
+                  secondary_vlan: 1242  
+                  u_segmentation: true
 
             - name: '192.168.12.0_24'
               # alias:
               bridge_domain: '192.168.12.0_24'
-              subnets:
-                - ip: 192.168.12.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1243
+                  secondary_vlan: 1244  
+                  u_segmentation: true
+
+        - name: 'application-01'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
               contracts:
                 providers:
-                  - permit-to-192.168.12.0_24
+                  - permit-to-application-01-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.10/32
+                - value: 192.168.11.10/32
+                - value: 192.168.12.10/32
+                - value: 192.168.12.11/32
+
+        - name: 'application-02'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-02-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.20/32
+                - value: 192.168.11.20/32
+                - value: 192.168.11.21/32
+                - value: 192.168.12.20/32
+
+        - name: 'application-03'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-03-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.30/32
+                - value: 192.168.11.30/32
+                - value: 192.168.12.30/32
+                - value: 192.168.12.31/32

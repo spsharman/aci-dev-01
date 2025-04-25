@@ -5,7 +5,7 @@
 apic:
   tenants:
     - name: BRKDCN-2959
-      description: Current network design - L3out provider to vzAny
+      description: Current network design - L3out consumer to vzAny
 
 # Policies
       policies:
