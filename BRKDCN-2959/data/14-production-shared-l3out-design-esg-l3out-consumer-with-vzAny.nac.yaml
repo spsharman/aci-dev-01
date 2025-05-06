@@ -83,6 +83,23 @@ apic:
               filters:
                 - filter: src-any-dst-any
 
+      imported_contracts:
+        - name: deny-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: deny-to-all-external-subnets
+
+        - name: deny-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: deny-to-lab-desktops
+
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-to-lab-desktops
+
 # VRFs
       vrfs:
         - name: vrf-01
@@ -115,6 +132,10 @@ apic:
               - intra-vrf
             consumers:
               - intra-vrf
+            imported_consumers:
+              - deny-to-shared-services-all-external-subnets
+              - deny-to-shared-services-lab-desktops
+              - permit-to-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:

@@ -502,6 +502,7 @@ apic:
               subnets:
                 - prefix: 0.0.0.0/0
                   shared_route_control: true
+                  import_security: false
 
                 - prefix: 0.0.0.0/1
                   import_security: true

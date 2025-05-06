@@ -23,7 +23,7 @@ apic:
 
 # Tenant
     - name: BRKDCN-2959
-      description: Shared L3out extEPG is consumer
+      description: Shared L3out extEPG is consumer, consolidated BD, network centric
 
 # Policies
       policies:
@@ -83,6 +83,19 @@ apic:
               filters:
                 - filter: src-any-dst-any
 
+      imported_contracts:
+        - name: deny-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: deny-to-all-external-subnets
+
+        - name: deny-to-shared-services-core-services
+          tenant: shared-services
+          contract: deny-to-core-services
+
+        - name: deny-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: deny-to-lab-desktops
+
 # VRFs
       vrfs:
         - name: vrf-01
@@ -93,41 +106,28 @@ apic:
               - intra-vrf
             consumers:
               - intra-vrf
+            imported_consumers:
+              - deny-to-shared-services-all-external-subnets
+              - deny-to-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:
-        - name: 192.168.10.0_24
-          alias: production-subnet
+        - name: production-subnets
+          # alias: production-subnets
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
             - ip: 192.168.10.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 192.168.11.0_24
-          alias: production-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
             - ip: 192.168.11.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 192.168.12.0_24
-          alias: production-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
             - ip: 192.168.12.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
 # Application profiles
       application_profiles:
@@ -136,7 +136,7 @@ apic:
           endpoint_groups:      
             - name: '192.168.10.0_24'
               # alias:
-              bridge_domain: '192.168.10.0_24'
+              bridge_domain: 'production-subnets'
               subnets:
                 - ip: 192.168.10.1/24
                   public: true
@@ -152,7 +152,7 @@ apic:
 
             - name: '192.168.11.0_24'
               # alias:
-              bridge_domain: '192.168.11.0_24'
+              bridge_domain: 'production-subnets'
               subnets:
                 - ip: 192.168.11.1/24
                   public: true
@@ -168,7 +168,7 @@ apic:
 
             - name: '192.168.12.0_24'
               # alias:
-              bridge_domain: '192.168.12.0_24'
+              bridge_domain: 'production-subnets'
               subnets:
                 - ip: 192.168.12.1/24
                   public: true

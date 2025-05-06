@@ -43,9 +43,29 @@ apic:
                 - filter: src-any-dst-any
 
       imported_contracts:
-        - name: permit-to-all-external-subnets-bgp-as-64801
+        - name: deny-to-shared-services-all-external-subnets
           tenant: shared-services
-          contract: permit-to-all-external-subnets-bgp-as-64801
+          contract: deny-to-all-external-subnets
+
+        - name: deny-to-shared-services-core-services
+          tenant: shared-services
+          contract: deny-to-core-services
+
+        - name: deny-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: deny-to-lab-desktops
+
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-to-lab-desktops
 
 # VRFs
       vrfs:
@@ -58,7 +78,12 @@ apic:
             consumers:
               - intra-vrf
             imported_consumers:
-              - permit-to-all-external-subnets-bgp-as-64801
+              - deny-to-shared-services-all-external-subnets
+              - deny-to-shared-services-core-services
+              - deny-to-shared-services-lab-desktops
+              - permit-to-shared-services-all-external-subnets
+              - permit-to-shared-services-core-services
+              - permit-to-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:

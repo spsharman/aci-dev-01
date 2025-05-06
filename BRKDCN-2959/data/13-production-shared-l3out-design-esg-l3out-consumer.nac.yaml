@@ -9,15 +9,15 @@ apic:
       managed: false
 
       imported_contracts:
-        - name: permit-to-tn-BRKDCN-2959-application-01-all-services
+        - name: permit-to-BRKDCN-2959-application-01-all-services
           tenant: BRKDCN-2959
           contract: permit-to-application-01-all-services
 
-        - name: permit-to-tn-BRKDCN-2959-application-02-all-services
+        - name: permit-to-BRKDCN-2959-application-02-all-services
           tenant: BRKDCN-2959
           contract: permit-to-application-02-all-services
 
-        - name: permit-to-tn-BRKDCN-2959-application-03-all-services
+        - name: permit-to-BRKDCN-2959-application-03-all-services
           tenant: BRKDCN-2959
           contract: permit-to-application-03-all-services
 
@@ -36,87 +36,6 @@ apic:
                 tenant: shared-services
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
-
-        # ip_sla_policies:
-        #   - name: icmp-aggressive-timers
-        #     description: This policy sends a icmp ping every 1 second
-        #     frequency: 1
-        #     multiplier: 3
-        #     sla_type: icmp
-
-# Services
-      services:
-        l4l7_devices:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            physical_domain: firewalls
-            context_aware: single-Context
-            type: PHYSICAL
-            function: GoTo
-            service_type: FW
-            trunking: false
-            concrete_devices:
-              - name: ftd-4112-mpod-cluster
-                interfaces:
-                  - name: ftd-4112-01-data-01
-                    pod_id: 1
-                    node_id: 1101
-                    node2_id: 1102
-                    channel: vpc_to_ftd-4112-01-data-01
-                  - name: ftd-4112-02-data-01
-                    pod_id: 2
-                    node_id: 2101
-                    node2_id: 2102
-                    channel: vpc_to_ftd-4112-02-data-01
-            logical_interfaces:
-              - name: data
-                vlan: 14
-                concrete_interfaces:
-                  - device: ftd-4112-mpod-cluster
-                    interface_name: ftd-4112-01-data-01
-                  - device: ftd-4112-mpod-cluster
-                    interface_name: ftd-4112-02-data-01
-
-        redirect_policies:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            anycast: true
-            # ip_sla_policy: icmp-aggressive-timers
-            pod_aware: false
-            l3_destinations:
-              - ip: 6.6.6.10
-                mac: 00:00:00:00:00:14
-                # redirect_health_group: ftd-4112-one-arm-L3-mpod-cluster
-
-        # redirect_health_groups:
-        #   - name: ftd-4112-one-arm-L3-mpod-cluster
-
-        service_graph_templates:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            template_type: FW_ROUTED
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: BRKDCN-2959
-              name: ftd-4112-one-arm-L3-mpod-cluster
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
-
-        device_selection_policies:
-          - contract: any
-            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
-            consumer:
-              redirect_policy:
-                name: ftd-4112-one-arm-L3-mpod-cluster
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: ftd-4112-one-arm-L3-mpod-cluster
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
 
 # Filters
       filters:
@@ -169,10 +88,6 @@ apic:
           tenant: shared-services
           contract: deny-to-all-external-subnets
 
-        - name: deny-to-shared-services-core-services
-          tenant: shared-services
-          contract: deny-to-core-services
-
         - name: deny-to-shared-services-lab-desktops
           tenant: shared-services
           contract: deny-to-lab-desktops
@@ -181,17 +96,9 @@ apic:
           tenant: shared-services
           contract: permit-to-all-external-subnets
 
-        - name: permit-from-shared-services-core-services
+        - name: permit-to-shared-services-lab-desktops
           tenant: shared-services
-          contract: permit-from-core-services
-
-        - name: permit-to-shared-services-core-services
-          tenant: shared-services
-          contract: permit-to-core-services
-
-        - name: permit-from-shared-services-lab-desktops
-          tenant: shared-services
-          contract: permit-from-lab-desktops
+          contract: permit-to-lab-desktops
 
 # VRFs
       vrfs:
@@ -227,22 +134,10 @@ apic:
               - intra-vrf
             imported_consumers:
               - deny-to-shared-services-all-external-subnets
-              - deny-to-shared-services-core-services
               - deny-to-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:
-        - name: 6.6.6.0_24
-          description: pbr redirect
-          alias: pbr-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 6.6.6.1/24
-              public: false
-              shared: false
-              nd_ra_prefix: false
-
         - name: 192.168.10.0_24
           alias: production-subnet
           unknown_unicast: proxy

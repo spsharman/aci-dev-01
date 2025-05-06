@@ -33,6 +33,39 @@ apic:
 
 # Contracts
       contracts:
+        - name: deny-to-all-external-subnets
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
+        - name: deny-to-core-services
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
+        - name: deny-to-lab-desktops
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
         - name: intra-vrf
           description: vzAny is contract Consumer and Provider
           scope: context
@@ -41,7 +74,15 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-outside
+        - name: permit-to-lab-desktops
+          description: vzAny is contract consumer
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-all-ext-subnets
           description: vzAny is contract consumer
           scope: tenant
           subjects:
@@ -63,7 +104,10 @@ apic:
               - intra-vrf
             consumers:
               - intra-vrf
-              - permit-to-outside
+              - deny-to-all-external-subnets
+              - deny-to-lab-desktops
+              - permit-to-all-ext-subnets
+              - permit-to-lab-desktops
 
 # L3out BGP
       l3outs:
@@ -372,7 +416,6 @@ apic:
                           admin_state: true
                           as_propagate: no-prepend
 
-# extEPGs
           external_endpoint_groups:
             - name: all-ext-subnets
               subnets:
@@ -389,7 +432,20 @@ apic:
 
               contracts:
                 providers:
-                  - permit-to-outside
+                  - deny-to-all-external-subnets
+                  - permit-to-all-ext-subnets
+
+            - name: lab-desktops-subnets
+              subnets:
+                - prefix: 10.237.97.160/28
+                  name: lab-desktops
+                  shared_route_control: true
+                  shared_security: true
+                  import_security: true
+              contracts:
+                providers:
+                  - deny-to-lab-desktops
+                  - permit-to-lab-desktops
 
 # Bridge Domains
       bridge_domains:

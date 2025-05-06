@@ -5,25 +5,8 @@
 apic:
 # Imported contract to shared-services
   tenants:
-    - name: shared-services
-      managed: false
-
-      imported_contracts:
-        - name: permit-to-BRKDCN-2959-192.168.10.0_24
-          tenant: BRKDCN-2959
-          contract: permit-to-192.168.10.0_24
-
-        - name: permit-to-BRKDCN-2959-192.168.11.0_24
-          tenant: BRKDCN-2959
-          contract: permit-to-192.168.11.0_24
-
-        - name: permit-to-BRKDCN-2959-192.168.12.0_24
-          tenant: BRKDCN-2959
-          contract: permit-to-192.168.12.0_24
-
-# Tenant
     - name: BRKDCN-2959
-      description: Shared L3out extEPG is consumer, consolidated BD, network centric
+      description: Shared L3out extEPG is provider
 
 # Policies
       policies:
@@ -59,29 +42,22 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-192.168.10.0_24
-          description: EPG is contract provider
-          scope: global
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: src-any-dst-any
+      imported_contracts:
+        - name: deny-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: deny-to-all-external-subnets
 
-        - name: permit-to-192.168.11.0_24
-          description: EPG is contract provider
-          scope: global
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: src-any-dst-any
+        - name: deny-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: deny-to-lab-desktops
 
-        - name: permit-to-192.168.12.0_24
-          description: EPG is contract provider
-          scope: global
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: src-any-dst-any
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-to-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-to-lab-desktops
 
 # VRFs
       vrfs:
@@ -93,25 +69,46 @@ apic:
               - intra-vrf
             consumers:
               - intra-vrf
+            imported_consumers:
+              - deny-to-shared-services-all-external-subnets
+              - deny-to-shared-services-lab-desktops
+              - permit-to-shared-services-all-external-subnets
+              - permit-to-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:
-        - name: production-subnets
-          # alias: production-subnets
+        - name: 192.168.10.0_24
+          alias: production-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
             - ip: 192.168.10.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
+        - name: 192.168.11.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
             - ip: 192.168.11.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
+        - name: 192.168.12.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
             - ip: 192.168.12.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
 
 # Application profiles
       application_profiles:
@@ -120,48 +117,24 @@ apic:
           endpoint_groups:      
             - name: '192.168.10.0_24'
               # alias:
-              bridge_domain: 'production-subnets'
-              subnets:
-                - ip: 192.168.10.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
+              bridge_domain: '192.168.10.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-192.168.10.0_24
 
             - name: '192.168.11.0_24'
               # alias:
-              bridge_domain: 'production-subnets'
-              subnets:
-                - ip: 192.168.11.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
+              bridge_domain: '192.168.11.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-192.168.11.0_24
 
             - name: '192.168.12.0_24'
               # alias:
-              bridge_domain: 'production-subnets'
-              subnets:
-                - ip: 192.168.12.1/24
-                  public: true
-                  shared: true
-                  no_default_gateway: true
+              bridge_domain: '192.168.12.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-192.168.12.0_24

@@ -4,8 +4,8 @@
 ---
 apic:
   tenants:
-    - name: common
-      managed: false
+    - name: BRKDCN-2959
+      description: Dual VRF, L3out extEPG is consumer
 
 # Policies
       policies:
@@ -15,8 +15,8 @@ apic:
             providers:
               - ip: 10.237.97.133
                 type: external_epg
-                tenant: common
-                l3out: BRKDCN-2959-vrf-01-bgp-to-core
+                tenant: BRKDCN-2959
+                l3out: vrf-01-bgp-to-core
                 external_endpoint_group: all-ext-subnets
 
 # Filters
@@ -33,17 +33,66 @@ apic:
 
 # Contracts
       contracts:
+        - name: deny-to-all-external-subnets
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
+        - name: deny-to-core-services
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
+        - name: deny-to-lab-desktops
+          scope: tenant
+          subjects:
+            - name: deny-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: deny
+                  priority: level1
+                  log: false
+                  no_stats: false
+
         - name: intra-vrf
           description: vzAny is contract Consumer and Provider
-          scope: global
+          scope: context
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-outside
-          description: vzAny is contract consumer
-          scope: global
+        - name: permit-to-192.168.10.0_24
+          description: EPG is contract provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-192.168.11.0_24
+          description: EPG is contract provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-192.168.12.0_24
+          description: EPG is contract provider
+          scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters:
@@ -51,11 +100,11 @@ apic:
 
 # VRFs
       vrfs:
-        - name: BRKDCN-2959-vrf-01
+        - name: vrf-01
           description: configured with NAC
           alias: production-outside
 
-        - name: BRKDCN-2959-vrf-02
+        - name: vrf-02
           description: configured with NAC
           alias: production-inside
           contracts:
@@ -63,13 +112,14 @@ apic:
               - intra-vrf
             consumers:
               - intra-vrf
-              - permit-to-outside
+              - deny-to-all-external-subnets
+              - deny-to-lab-desktops
 
 # L3out BGP
       l3outs:
-        - name: BRKDCN-2959-vrf-01-bgp-to-core
+        - name: vrf-01-bgp-to-core
           description: configured with NAC
-          vrf: BRKDCN-2959-vrf-01
+          vrf: vrf-01
           domain: BRKDCN-2959.vrf-01
 
 # Nodes
@@ -378,6 +428,7 @@ apic:
               subnets:
                 - prefix: 0.0.0.0/0
                   shared_route_control: true
+                  import_security: false
 
                 - prefix: 0.0.0.0/1
                   import_security: true
@@ -386,17 +437,32 @@ apic:
                 - prefix: 128.0.0.0/1
                   import_security: true
                   shared_security: true
-
               contracts:
                 providers:
-                  - permit-to-outside
+                  - deny-to-all-external-subnets
 
+            - name: lab-desktops-subnets
+              subnets:
+                - prefix: 10.237.97.160/28
+                  name: lab-desktops
+                  shared_route_control: true
+                  shared_security: true
+                  import_security: true
+                  
+              contracts:
+                consumers:
+                  - permit-to-192.168.10.0_24
+                  - permit-to-192.168.11.0_24
+                  - permit-to-192.168.12.0_24
+                providers:
+                  - deny-to-lab-desktops
+                  
 # Bridge Domains
       bridge_domains:
         - name: 192.168.10.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: BRKDCN-2959-vrf-02
+          vrf: vrf-02
           subnets:
             - ip: 192.168.10.1/24
               public: true # not required when using ESG route leaking under the VRF
@@ -407,7 +473,7 @@ apic:
         - name: 192.168.11.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: BRKDCN-2959-vrf-02
+          vrf: vrf-02
           subnets:
             - ip: 192.168.11.1/24
               public: true # not required when using ESG route leaking under the VRF
@@ -418,17 +484,13 @@ apic:
         - name: 192.168.12.0_24
           alias: production-subnet
           unknown_unicast: proxy
-          vrf: BRKDCN-2959-vrf-02
+          vrf: vrf-02
           subnets:
             - ip: 192.168.12.1/24
               public: true # not required when using ESG route leaking under the VRF
               shared: true # not required when using ESG route leaking under the VRF
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-# Production tenant
-    - name: BRKDCN-2959
-      description: Dual VRF in common, L3out extEPG is consumer
 
 # Application profiles
       application_profiles:
@@ -447,6 +509,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-192.168.10.0_24
 
             - name: '192.168.11.0_24'
               # alias:
@@ -460,6 +525,9 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              contracts:
+                providers:
+                  - permit-to-192.168.11.0_24
 
             - name: '192.168.12.0_24'
               # alias:
@@ -473,4 +541,6 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-
+              contracts:
+                providers:
+                  - permit-to-192.168.12.0_24
