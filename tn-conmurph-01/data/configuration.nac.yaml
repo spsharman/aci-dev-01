@@ -26,3 +26,20 @@ apic:
                 tenant: shared-services
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
+
+      imported_contracts:
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-from-shared-services-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-from-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops

@@ -117,3 +117,8 @@
 - 102.1.0.6 BRKDCN-2959 Node-1102 BGP Router ID as loopback
 - 101.2.0.6 BRKDCN-2959 Node-2101 BGP Router ID as loopback
 - 102.2.0.6 BRKDCN-2959 Node-2102 BGP Router ID as loopback
+
+- 101.1.0.7 BRKDCN-2959-dmz Node-1101 BGP Router ID as loopback
+- 102.1.0.7 BRKDCN-2959-dmz Node-1102 BGP Router ID as loopback
+- 101.2.0.7 BRKDCN-2959-dmz Node-2101 BGP Router ID as loopback
+- 102.2.0.7 BRKDCN-2959-dmz Node-2102 BGP Router ID as loopback

@@ -63,9 +63,9 @@ variable "access-portgroups" {
   type        = map(number)
   description = "Access Port groups"
   default = {
-    "shared-services.vrf-01-ospf-area-0.0.0.1" = 8
-    "demo-01.vrf-01-ospf-area-0.0.0.1" = 9
-    # "demo-02.vrf-01-ospf-area-0.0.0.1" = 10
+    "shared-services.vrf-01-ospf-area-0.0.0.0" = 8
+    "demo-01.vrf-01-ospf-area-0.0.0.0" = 9
+    "BRKDCN-2959-DMZ.vrf-01-ospf-area-0.0.0.0" = 30
     # "demo-03.vrf-01-bgp-AS-65151" = 11
     "isovalent.vrf-01-bgp-AS-65152" = 16
   }

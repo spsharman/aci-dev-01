@@ -42,21 +42,21 @@ apic:
 
 # Contracts
       imported_contracts:
-        - name: permit-to-core-services
+        - name: common.permit-to-shared-services-all-external-subnets
           tenant: shared-services
-          contract: permit-to-core-services
+          contract: permit-to-all-external-subnets
 
-        - name: permit-from-core-services
+        - name: common.permit-from-shared-services-core-services
           tenant: shared-services
           contract: permit-from-core-services
 
-        - name: permit-from-lab-desktops
+        - name: common.permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: common.permit-from-shared-services-lab-desktops
           tenant: shared-services
           contract: permit-from-lab-desktops
-
-        - name: permit-to-shared-services.vrf-01-all-external-subnets
-          tenant: shared-services
-          contract: permit-to-shared-services.vrf-01-all-external-subnets
 
 # VRFs
       vrfs:

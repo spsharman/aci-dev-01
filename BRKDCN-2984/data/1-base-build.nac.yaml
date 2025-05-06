@@ -76,21 +76,21 @@ apic:
 
 # Imported contracts
       imported_contracts:
-        - name: permit-from-lab-desktops
+        - name: permit-to-shared-services-all-external-subnets
           tenant: shared-services
-          contract: permit-from-lab-desktops
+          contract: permit-to-all-external-subnets
 
-        - name: 'permit-from-core-services'
+        - name: permit-from-shared-services-core-services
           tenant: shared-services
           contract: permit-from-core-services
 
-        - name: 'permit-to-core-services'
+        - name: permit-to-shared-services-core-services
           tenant: shared-services
           contract: permit-to-core-services
 
-        - name: 'permit-to-all-external-subnets-bgp-as-64801'
+        - name: permit-from-shared-services-lab-desktops
           tenant: shared-services
-          contract: permit-to-all-external-subnets-bgp-as-64801
+          contract: permit-from-lab-desktops
 
 # VRFs
       vrfs:
@@ -103,9 +103,9 @@ apic:
             consumers:
               - intra-vrf
             imported_consumers:
-              - permit-to-core-services
-              - permit-from-core-services
-              - permit-from-lab-desktops
+              - permit-from-shared-services-core-services
+              - permit-to-shared-services-core-services
+              - permit-from-shared-services-lab-desktops
 
 # Bridge Domains
       bridge_domains:

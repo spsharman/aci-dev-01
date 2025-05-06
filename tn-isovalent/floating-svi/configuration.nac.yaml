@@ -189,10 +189,10 @@ apic:
             - name: 'icmp'
               protocol: icmp
 
-        - name: 'src-any-dst-any'
+        - name: 'ipv4-src-any-dst-any'
           entries:
-            - name: 'src-any-dst-any'
-              ethertype: unspecified
+            - name: 'ipv4-src-any-dst-any'
+              ethertype: ipv4
 
         - name: 'tcp-src-any-dst-80'
           entries:
@@ -234,30 +234,30 @@ apic:
         - name: intra-tenant
           scope: context
           subjects:
-            - name: permit-src-any-dst-any
+            - name: permit-ipv4-src-any-dst-any
               filters: 
-                - filter: src-any-dst-any
+                - filter: ipv4-src-any-dst-any
 
         - name: permit-to-egress-subnet
           scope: global
           subjects:
-            - name: permit-src-any-dst-any
+            - name: permit-ipv4-src-any-dst-any
               filters: 
-                - filter: src-any-dst-any
+                - filter: ipv4-src-any-dst-any
 
         - name: permit-to-ingress-subnet
           scope: global
           subjects:
-            - name: permit-src-any-dst-any
+            - name: permit-ipv4-src-any-dst-any
               filters: 
-                - filter: src-any-dst-any
+                - filter: ipv4-src-any-dst-any
 
         - name: permit-to-node-subnet
           scope: global
           subjects:
-            - name: permit-src-any-dst-any
+            - name: permit-ipv4-src-any-dst-any
               filters: 
-                - filter: src-any-dst-any
+                - filter: ipv4-src-any-dst-any
 
         - name: permit-to-pod-subnet
           description: Allow HTTP and ICMP keepalives between pods
@@ -278,24 +278,27 @@ apic:
                 - filter: 'tcp-src-any-dst-80'
                 - filter: 'tcp-src-any-dst-4444'
                 - filter: 'tcp-src-any-dst-19765'
+            - name: icmp
+              filters:
+                - filter: icmp
 
 # Imported contracts
       imported_contracts:
-        - name: permit-from-lab-desktops
+        - name: permit-to-shared-services-all-external-subnets
           tenant: shared-services
-          contract: permit-from-lab-desktops
+          contract: permit-to-all-external-subnets
 
-        - name: 'permit-from-core-services'
+        - name: permit-from-shared-services-core-services
           tenant: shared-services
           contract: permit-from-core-services
 
-        - name: 'permit-to-core-services'
+        - name: permit-to-shared-services-core-services
           tenant: shared-services
           contract: permit-to-core-services
 
-        - name: 'permit-to-shared-services.vrf-01-all-external-subnets'
+        - name: permit-from-shared-services-lab-desktops
           tenant: shared-services
-          contract: permit-to-shared-services.vrf-01-all-external-subnets
+          contract: permit-from-lab-desktops
 
 # VRFs
       vrfs:
@@ -333,10 +336,10 @@ apic:
             # consumers:
             #   - intra-tenant
             imported_consumers:
-                - permit-to-shared-services.vrf-01-all-external-subnets
-                - permit-to-core-services
-                - permit-from-core-services
-                - permit-from-lab-desktops
+              - permit-to-shared-services-all-external-subnets
+              - permit-from-shared-services-core-services
+              - permit-to-shared-services-core-services
+              - permit-from-shared-services-lab-desktops
 
 # Bridge domains
       bridge_domains:
@@ -362,6 +365,20 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant                                                              
+
+        - name: 10.237.101.112_28
+          description: corporate subnet
+          alias: corporate-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.237.101.113/28
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant   
 
 # L3Outs
       l3outs:
@@ -833,28 +850,14 @@ apic:
           endpoint_groups:
             - name: '10.237.101.96_28'
               bridge_domain: '10.237.101.96_28'
-              # physical_domains:
-              #   - isovalent-nodes
-              # static_ports:
-                # - channel: vpc_to_c220m5-1G-isovalent-node-01
-                #   mode: regular
-                #   vlan: 15
-                #   node_id: 1101
-                #   node2_id: 1102
-                #   deployment_immediacy: immediate
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
 
-                # - node_id: 1101
-                #   port: 21
-                #   mode: untagged
-                #   vlan: 15
-                #   deployment_immediacy: immediate
-
-                # - node_id: 1102
-                #   port: 21
-                #   mode: untagged
-                #   vlan: 15
-                #   deployment_immediacy: immediate
-
+            - name: '10.237.101.112_28'
+              bridge_domain: '10.237.101.112_28'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: false
@@ -876,4 +879,16 @@ apic:
                 consumers:
                   - permit-to-ingress-subnet
                 providers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
+
+            - name: node-backend-subnet-10.237.101.112_28
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.237.101.112_28'
+              contracts:
+                consumers:
                   - permit-to-nginx-subnet-10.237.101.96_28
