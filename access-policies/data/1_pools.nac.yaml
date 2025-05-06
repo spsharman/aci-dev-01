@@ -50,17 +50,32 @@ apic:
             role: external
           - from: 13
             to: 13
-            description: firepower data-02 - shared-services
+            description: firepower data-02 - tn-shared-services
             allocation: inherit
             role: external
           - from: 14
             to: 14
-            description: firepower data-01 - BRKDCN-2959
+            description: firepower data-01 - tn-BRKDCN-2959
             allocation: inherit
             role: external
           - from: 15
             to: 15
-            description: firepower data-02 - BRKDCN-2959
+            description: firepower data-01 - tn-BRKDCN-2959-DMZ-outside
+            allocation: inherit
+            role: external
+          - from: 16
+            to: 16
+            description: firepower data-01 - tn-BRKDCN-2959-DMZ-inside
+            allocation: inherit
+            role: external
+          - from: 18
+            to: 18
+            description: firepower data-01 - tn-fgandola
+            allocation: inherit
+            role: external
+          - from: 20
+            to: 20
+            description: firepower data-01 - tn-ssharman
             allocation: inherit
             role: external
 
@@ -210,6 +225,9 @@ apic:
             to: 1270
             allocation: static
             description: tn-fgandola PVLANs
+          - from: 3000
+            allocation: static
+            description: tn-BRKDCN-2959-DMZ L3out to FTDv
           - from: 3001
             allocation: static
             description: public ip range 64.103.44.48/28
@@ -232,7 +250,7 @@ apic:
           - from: 9
             description: tn-demo-01 L3out to csr1kv
           - from: 10
-            description: tn-demo-02 L3out to csr1kv
+            description: tn-BRKDCN-2959-DMZ L3out to FTDv
           - from: 11
             description: tn-demo-05 L3out to csr1kv
           - from: 12

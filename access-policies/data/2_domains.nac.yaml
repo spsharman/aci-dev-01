@@ -40,6 +40,9 @@ apic:
 
       - name: BRKDCN-2959.vrf-01
 
+      - name: BRKDCN-2959-DMZ.vrf-01
+        vlan_pool: hx-dev-01-vds-02
+
       - name: conmurph-01.vrf-01
         vlan_pool: hx-dev-01-vds-02
         security_domains:
@@ -86,14 +89,11 @@ apic:
       - name: multisite
         vlan_pool: hx-dev-01-vds-02
 
-      - name: shared-services.vrf-01
+      - name: shared-services.vrf-01-bgp-core
         vlan_pool: hx-dev-01-vds-02
 
-      - name: shared-services.vrf-01-static-routes
+      - name: shared-services.vrf-01-ospf-csr1kv
         vlan_pool: hx-dev-01-vds-02
 
-      - name: shared-services.vrf-02
-        vlan_pool: hx-dev-01-vds-02
-
-      - name: shared-services.vrf-03
-        vlan_pool: hx-dev-01-vds-02
+      - name: shared-services.vrf-01-static-ftd-4112
+        vlan_pool: firewalls

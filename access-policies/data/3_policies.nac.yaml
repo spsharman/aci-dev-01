@@ -103,7 +103,7 @@ apic:
 
       - name: routed-interfaces-to-core
         routed_domains:
-          - shared-services.vrf-01
+          - shared-services.vrf-01-bgp-core
           - BRKDCN-2959.vrf-01
 
       - name: vlans-allowed-to-isovalent-nodes
@@ -115,6 +115,8 @@ apic:
       - name: vlans-allowed-to-firewalls
         physical_domains:
           - firewalls
+        routed_domains:
+          - shared-services.vrf-01-static-ftd-4112
 
       - name: vlans-allowed-to-hyperflex
         infra_vlan: false
@@ -122,9 +124,9 @@ apic:
           - hx-dev-01-vds-02
           - hyperflex
           - isovalent-nodes
-
         routed_domains:
           - ajshahid.vrf-01
+          - BRKDCN-2959-DMZ.vrf-01
           - conmurph-01.vrf-01
           - conmurph-01.vrf-02
           - conmurph-02.vrf-01
@@ -135,10 +137,8 @@ apic:
           - demo-05.vrf-01
           - demo-06.vrf-01
           - isovalent.vrf-01
-          - shared-services.vrf-01
-          - shared-services.vrf-01-static-routes
-          - shared-services.vrf-02
-          - shared-services.vrf-03
+          - shared-services.vrf-01-bgp-core
+          - shared-services.vrf-01-ospf-csr1kv
 
         vmware_vmm_domains:
           - hx-dev-01-vds-01
