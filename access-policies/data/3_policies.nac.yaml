@@ -138,10 +138,17 @@ apic:
           - demo-06.vrf-01
           - isovalent.vrf-01
           - shared-services.vrf-01-bgp-core
-          - shared-services.vrf-01-ospf-csr1kv
+          - shared-services.vrf-01-ospf-area-0.0.0.0
 
         vmware_vmm_domains:
           - hx-dev-01-vds-01
+
+      - name: vlans-allowed-to-ucs-c220m3-vds-01
+        physical_domains:
+          - ucsc-c220m3-vds-01
+        routed_domains:
+          - BRKDCN-2959-DMZ.vrf-01
+          - shared-services.vrf-01-ospf-area-0.0.0.0
 
       - name: vlans-allowed-to-ucs-c220m5-vds-01
         physical_domains:

@@ -4,15 +4,12 @@ apic:
 
 # VLAN pools  
     vlan_pools:
-      - name: isovalent-nodes
+      - name: BRKDCN-2959-DMZ
         allocation: static
         ranges:
-          - from: 15
-            description: bare metal nodes
-          - from: 16
-            description: L3out to isovalent.vrf-01
-          - from: 17
-            description: L3out to isovalent.vrf-01
+          - from: 3000
+            allocation: static
+            description: tn-BRKDCN-2959-DMZ L3out to FTDv
 
       - name: external-switches
         allocation: static
@@ -246,7 +243,7 @@ apic:
           - from: 7
             description: ftd-diagnostic
           - from: 8
-            description: shared-services.vrf-01-ospf-area-0.0.0.1
+            description: shared-services.vrf-01-ospf-area-0.0.0.0
           - from: 9
             description: tn-demo-01 L3out to csr1kv
           - from: 10
@@ -307,17 +304,66 @@ apic:
           - from: 992
             description: hx-dev-01 esx management
 
+      - name: isovalent-nodes
+        allocation: static
+        ranges:
+          - from: 15
+            description: bare metal nodes
+          - from: 16
+            description: L3out to isovalent.vrf-01
+          - from: 17
+            description: L3out to isovalent.vrf-01
+
       - name: mgmt_inb
         allocation: static
         ranges:
           - from: 3966
             description: fabric inband management
 
+      - name: shared-services.vrf-01-ospf-area-0.0.0.0
+        allocation: static
+        ranges:
+          - from: 8
+            description: shared-services.vrf-01-ospf-area-0.0.0.0
+
       - name: ssharman-ubuntu-nodes
         allocation: static
         ranges:
           - from: 15
             description: ubuntu bare metal
+
+      - name: ucsc-c220m3-vds-01
+        allocation: static
+        ranges:
+          - from: 8
+            description: shared-services.vrf-01-ospf-area-0.0.0.0
+          - from: 10
+            description: shared-services|ftd-management|ftd-mgmt
+            allocation: static
+          - from: 110
+            description: BRKDCN-2959-DMZ
+            allocation: static
+          - from: 111
+            description: BRKDCN-2959-DMZ
+            allocation: static
+          - from: 112
+            description: BRKDCN-2959-DMZ
+            allocation: static
+          - from: 986
+            description: ucsc-c220m3 vmk1 vmotion
+            allocation: static
+          - from: 992
+            description: ucsc-c220m3 vmk0 esx management
+            allocation: static
+          - from: 1013
+            description: shared-services|ftd-management|ftd-ha
+            allocation: static
+          - from: 1073
+            description: shared-services|csr-management|csr-mgt
+            allocation: static
+          - from: 3000
+            allocation: static
+            description: tn-BRKDCN-2959-DMZ L3out to FTDv
 
       - name: ucsc-c220m5-vds-01
         allocation: static

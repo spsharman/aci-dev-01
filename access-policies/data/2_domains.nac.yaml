@@ -28,6 +28,9 @@ apic:
       - name: ssharman-ubuntu-nodes
         vlan_pool: ssharman-ubuntu-nodes
 
+      - name: ucsc-c220m3-vds-01
+        vlan_pool: ucsc-c220m3-vds-01
+
       - name: ucsc-c220m5-vds-01
         vlan_pool: ucsc-c220m5-vds-01
 
@@ -41,7 +44,7 @@ apic:
       - name: BRKDCN-2959.vrf-01
 
       - name: BRKDCN-2959-DMZ.vrf-01
-        vlan_pool: hx-dev-01-vds-02
+        vlan_pool: BRKDCN-2959-DMZ
 
       - name: conmurph-01.vrf-01
         vlan_pool: hx-dev-01-vds-02
@@ -92,8 +95,8 @@ apic:
       - name: shared-services.vrf-01-bgp-core
         vlan_pool: hx-dev-01-vds-02
 
-      - name: shared-services.vrf-01-ospf-csr1kv
-        vlan_pool: hx-dev-01-vds-02
+      - name: shared-services.vrf-01-ospf-area-0.0.0.0
+        vlan_pool: shared-services.vrf-01-ospf-area-0.0.0.0
 
       - name: shared-services.vrf-01-static-ftd-4112
         vlan_pool: firewalls
