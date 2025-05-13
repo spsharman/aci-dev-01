@@ -101,7 +101,6 @@ apic:
                 l3out: brkdcn-2959-dmz.vrf-01-ospf-to-fw
                 name: all-dmz-subnets
 
-
 # Filters
       filters:
         - name: 'icmp'
@@ -158,36 +157,83 @@ apic:
             area_type: regular
 
           node_profiles:
-            - name: border-leafs
+            - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
                   router_id: 101.1.0.7
+                  pod_id: 1
 
                 - node_id: 1102
                   router_id: 102.1.0.7
+                  pod_id: 1
 
               interface_profiles:
-                - name: hx-dev-01-fi-a-vlan-10
+                - name: vrf-01-ospf-to-fw         
                   interfaces:
                     - node_id: 1101
-                      channel: hx-dev-01-fi-a
-                      vlan: 10
-                      svi: true
-                      ip: 10.237.99.73/29
-                      ip_shared: 10.237.99.75/29
+                      pod_id: 1
+                      mode: regular                       
+                      floating_svi: true
+                      vlan: 3000
                       mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.87/28
+                          vmware_vmm_domain: hx-dev-01-vds-01
+                      ip: 10.237.99.81/28
+                      ip_shared: 10.237.99.83/28
+
+                    - node_id: 1102
+                      pod_id: 1
+                      mode: regular                       
+                      floating_svi: true
+                      vlan: 3000
+                      mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.87/28
+                          vmware_vmm_domain: hx-dev-01-vds-01
+                      ip: 10.237.99.82/28
+                      ip_shared: 10.237.99.83/28
+
                   ospf:
                     policy: broadcast
 
-                - name: hx-dev-01-fi-b-vlan-10
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  router_id: 101.2.0.7
+                  pod_id: 2
+
+                - node_id: 2102
+                  router_id: 102.2.0.7
+                  pod_id: 2
+
+              interface_profiles:
+                - name: vrf-01-ospf-to-fw         
                   interfaces:
-                    - node_id: 1102
-                      channel: hx-dev-01-fi-b
-                      vlan: 10
-                      svi: true
-                      ip: 10.237.99.74/29
-                      ip_shared: 10.237.99.75/29
+                    - node_id: 2101
+                      pod_id: 2
+                      mode: regular                       
+                      floating_svi: true
+                      vlan: 3000
                       mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.87/28
+                          physical_domain: ucsc-c220m3-vds-01
+                      ip: 10.237.99.84/28
+                      ip_shared: 10.237.99.86/28
+
+                    - node_id: 2102
+                      pod_id: 2
+                      mode: regular                       
+                      floating_svi: true
+                      vlan: 3000
+                      mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.87/28
+                          physical_domain: ucsc-c220m3-vds-01
+                      ip: 10.237.99.85/28
+                      ip_shared: 10.237.99.86/28
+
                   ospf:
                     policy: broadcast
 
@@ -242,11 +288,45 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                consumers:
-                  - permit-to-all-dmz-subnets
-                providers:
-                  - permit-to-172.16.10.0_24
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '172.16.11.0_24'
               # alias:
@@ -255,9 +335,45 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              contracts:
-                consumers:
-                  - permit-to-172.16.10.0_24
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '172.16.12.0_24'
               # alias:
@@ -266,3 +382,42 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S

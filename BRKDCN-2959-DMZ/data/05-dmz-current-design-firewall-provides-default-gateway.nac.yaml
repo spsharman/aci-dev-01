@@ -1,0 +1,174 @@
+# Notes:
+#
+#
+---
+apic:
+  tenants:
+    - name: BRKDCN-2959-DMZ
+      description: Current network design - firewall provides default gateway
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: dmz-vrf
+
+# Bridge Domains
+      bridge_domains:
+        - name: 172.16.10.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+        - name: 172.16.11.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+        - name: 172.16.12.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '172.16.10.0_24'
+              # alias:
+              bridge_domain: '172.16.10.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+
+            - name: '172.16.11.0_24'
+              # alias:
+              bridge_domain: '172.16.11.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+
+            - name: '172.16.12.0_24'
+              # alias:
+              bridge_domain: '172.16.12.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S

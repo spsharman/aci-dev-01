@@ -37,12 +37,12 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-        # ip_sla_policies:
-        #   - name: icmp-aggressive-timers
-        #     description: This policy sends a icmp ping every 1 second
-        #     frequency: 1
-        #     multiplier: 3
-        #     sla_type: icmp
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
 
 # Services
       services:
