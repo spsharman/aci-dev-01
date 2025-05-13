@@ -1,0 +1,113 @@
+        - name: shared-services.vrf-01-static-ftd-4112
+          description: configured with NAC
+          vrf: vrf-01
+          domain: shared-services.vrf-01-static-ftd-4112
+
+          nodes:
+            - node_id: 1101
+              pod_id: 1
+              router_id: 101.1.0.1
+
+            - node_id: 1102
+              pod_id: 1
+              router_id: 102.1.0.1
+
+              interfaces:
+                - node_id: 1101
+                  node2_id: 1102
+                  channel: vpc_to_ftd-4112-01-data-01
+                  mode: regular
+                  vlan: 15
+                  svi: true
+                  ip_a: 10.237.101.49/28
+                  ip_b: 10.237.101.50/28
+                  ip_shared: 10.237.101.51/28
+                  mtu: 1500
+
+            - node_id: 2101
+              pod_id: 2
+              router_id: 101.2.0.1
+
+            - node_id: 2102
+              pod_id: 2
+              router_id: 102.2.0.1
+
+              interfaces:
+                - node_id: 2101
+                  node2_id: 2102
+                  channel: vpc_to_ftd-4112-02-data-01
+                  mode: regular
+                  vlan: 15
+                  svi: true
+                  ip_a: 10.237.101.55/28
+                  ip_b: 10.237.101.56/28
+                  ip_shared: 10.237.101.57/28
+                  mtu: 1500
+
+# extEPGs
+          external_endpoint_groups:
+            - name: unconfigured
+
+#########################################################
+
+        - name: shared-services.vrf-01-static-ftd-4112
+          description: configured with NAC
+          vrf: vrf-01
+          domain: shared-services.vrf-01-static-ftd-4112
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 101.1.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.22/32
+
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 102.1.0.1
+                  router_id_as_loopback: false
+                  loopback: 10.237.96.23/32
+
+# Interfaces
+              interface_profiles:
+                - name: vpc_to_ftd-4112-01
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      channel: vpc_to_ftd-4112-01-data-01
+                      mode: regular
+                      vlan: 15
+                      svi: true
+                      ip_a: 10.237.99.81/29
+                      ip_b: 10.237.99.82/29
+                      # ip_shared: 10.237.99.85/29
+                      mtu: 1500
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 101.2.0.1
+
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 102.2.0.1
+
+              interface_profiles:
+                - name: vpc_to_ftd-4112-02
+                  interfaces:
+                    - node_id: 2101
+                      node2_id: 2102
+                      channel: vpc_to_ftd-4112-02-data-01
+                      mode: regular
+                      vlan: 15
+                      svi: true
+                      ip_a: 10.237.99.83/29
+                      ip_b: 10.237.99.84/29
+                      # ip_shared: 10.237.99.85/29
+                      mtu: 1500
+
+# extEPGs
+          external_endpoint_groups:
+            - name: unconfigured
