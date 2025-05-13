@@ -40,6 +40,7 @@ apic:
               physical_domains:
                 - "hyperflex"
                 - "ucsc-c220m5-vds-01"
+                - "ucsc-c220m3-vds-01"
               static_ports:
                 - channel: "hx-dev-01-fi-a"
                   vlan: 992
@@ -87,6 +88,44 @@ apic:
                   vlan: 992
                   deployment_immediacy: immediate
 
+# Pod 2
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 992
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 992
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 992
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 992
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 992
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 992
+                  description: UCSC-C220-M3 - FCH1910V17S
+                  deployment_immediacy: immediate
+
             - name: "hx-storage"
               bridge_domain: 192.168.4.x_24
               physical_domains:
@@ -105,6 +144,7 @@ apic:
               bridge_domain: 192.168.4.x_24
               physical_domains:
                 - "hyperflex"
+                - "ucsc-c220m3-vds-01"
                 - "ucsc-c220m5-vds-01"
               static_ports:
                 - channel: "hx-dev-01-fi-a"
@@ -147,6 +187,45 @@ apic:
                   port: 32
                   vlan: 986
                   deployment_immediacy: immediate
+
+# Pod 2
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 986
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 986
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 986
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 986
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 986
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 986
+                  description: UCSC-C220-M3 - FCH1910V17S
+                  deployment_immediacy: immediate
+
 
             - name: "ip-storage"
               bridge_domain: 192.168.4.x_24
