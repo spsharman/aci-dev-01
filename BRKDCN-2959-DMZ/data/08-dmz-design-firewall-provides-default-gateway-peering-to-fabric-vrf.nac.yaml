@@ -5,7 +5,7 @@
 apic:
   tenants:
     - name: BRKDCN-2959-DMZ
-      description: Current network design - firewall provides default gateway
+      description: Fabric VRF peering to firewall
 
 # Policies
       policies:
@@ -53,11 +53,11 @@ apic:
 
 #L3out
       l3outs:
-        - name: brkdcn-2959-dmz.vrf-01-ospf-to-fw
+        - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
           description: configured with NAC
           alias: dmz-vrf
           vrf: vrf-01
-          domain: BRKDCN-2959-DMZ.vrf-01
+          domain: BRKDCN-2959-DMZ.vrf-01-ospf-peering
           ospf:
             area: 0.0.0.0
             area_type: regular
@@ -74,7 +74,7 @@ apic:
                   pod_id: 1
 
               interface_profiles:
-                - name: vrf-01-ospf-to-fw         
+                - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering         
                   interfaces:
                     - node_id: 1101
                       pod_id: 1
@@ -83,10 +83,11 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.81/28
-                      ip_shared: 10.237.99.83/28
+                      ip_shared: 10.237.99.86/28
+                      
 
                     - node_id: 1102
                       pod_id: 1
@@ -95,10 +96,10 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.82/28
-                      ip_shared: 10.237.99.83/28
+                      ip_shared: 10.237.99.86/28
 
                   ospf:
                     policy: broadcast
@@ -114,7 +115,7 @@ apic:
                   pod_id: 2
 
               interface_profiles:
-                - name: vrf-01-ospf-to-fw         
+                - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering       
                   interfaces:
                     - node_id: 2101
                       pod_id: 2
@@ -123,9 +124,9 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
+                        - floating_ip: 10.237.99.85/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.84/28
+                      ip: 10.237.99.83/28
                       ip_shared: 10.237.99.86/28
 
                     - node_id: 2102
@@ -135,9 +136,9 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
+                        - floating_ip: 10.237.99.85/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.85/28
+                      ip: 10.237.99.84/28
                       ip_shared: 10.237.99.86/28
 
                   ospf:
@@ -147,10 +148,8 @@ apic:
             - name: all-dmz-subnets
               subnets:
                 - prefix: 0.0.0.0/1
-                  shared_security: true
 
                 - prefix: 128.0.0.0/1
-                  shared_security: true
 
               contracts:
                 providers:

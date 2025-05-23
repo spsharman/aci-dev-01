@@ -4,6 +4,9 @@ apic:
 
 # Physical Domains
     physical_domains:
+      - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
+        vlan_pool: BRKDCN-2959-DMZ.vrf-01-ospf-peering
+        
       - name: isovalent-nodes
         vlan_pool: isovalent-nodes
 

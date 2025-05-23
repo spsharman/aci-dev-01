@@ -124,6 +124,7 @@ apic:
           - hx-dev-01-vds-02
           - hyperflex
           - isovalent-nodes
+          - BRKDCN-2959-DMZ.vrf-01-ospf-peering
         routed_domains:
           - ajshahid.vrf-01
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
@@ -146,6 +147,7 @@ apic:
       - name: vlans-allowed-to-ucs-c220m3-vds-01
         physical_domains:
           - ucsc-c220m3-vds-01
+          - BRKDCN-2959-DMZ.vrf-01-ospf-peering
         routed_domains:
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
           - shared-services.vrf-01-ospf-peering
