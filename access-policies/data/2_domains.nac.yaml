@@ -43,8 +43,8 @@ apic:
 
       - name: BRKDCN-2959.vrf-01
 
-      - name: BRKDCN-2959-DMZ.vrf-01
-        vlan_pool: BRKDCN-2959-DMZ
+      - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
+        vlan_pool: BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
       - name: conmurph-01.vrf-01
         vlan_pool: hx-dev-01-vds-02
@@ -95,8 +95,8 @@ apic:
       - name: shared-services.vrf-01-bgp-core
         vlan_pool: hx-dev-01-vds-02
 
-      - name: shared-services.vrf-01-ospf-area-0.0.0.0
-        vlan_pool: shared-services.vrf-01-ospf-area-0.0.0.0
+      - name: shared-services.vrf-01-ospf-peering
+        vlan_pool: shared-services.vrf-01-ospf-peering
 
       - name: shared-services.vrf-01-static-ftd-4112
         vlan_pool: firewalls

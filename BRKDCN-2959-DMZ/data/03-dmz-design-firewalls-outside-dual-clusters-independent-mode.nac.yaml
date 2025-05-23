@@ -5,7 +5,7 @@
 apic:
   tenants:
     - name: BRKDCN-2959-DMZ
-      description: Single VRF, firewall cluster for N/S or E/W
+      description: Independant mode firewall cluster per pod, host route advertisement
 
 # Policies
       policies:
@@ -16,80 +16,12 @@ apic:
             mtu_ignore: false
             advertise_subnet: false
             bfd: false
-            hello_interval: 10
-            dead_interval: 40
+            hello_interval: 1
+            dead_interval: 4
             network_type: bcast
             priority: 1
-            lsa_retransmit_interval: 5
+            lsa_retransmit_interval: 3
             lsa_transmit_delay: 1
-
-      services:
-        l4l7_devices:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            physical_domain: firewalls
-            context_aware: single-Context
-            type: PHYSICAL
-            function: GoTo
-            service_type: FW
-            trunking: false
-            concrete_devices:
-              - name: ftd-4112-mpod-cluster
-                interfaces:
-                  - name: ftd-4112-01-data-01
-                    pod_id: 1
-                    node_id: 1101
-                    node2_id: 1102
-                    channel: vpc_to_ftd-4112-01-data-01
-                  - name: ftd-4112-02-data-01
-                    pod_id: 2
-                    node_id: 2101
-                    node2_id: 2102
-                    channel: vpc_to_ftd-4112-02-data-01
-            logical_interfaces:
-              - name: data
-                vlan: 16
-                concrete_interfaces:
-                  - device: ftd-4112-mpod-cluster
-                    interface_name: ftd-4112-01-data-01
-                  - device: ftd-4112-mpod-cluster
-                    interface_name: ftd-4112-02-data-01
-
-        redirect_policies:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            anycast: true
-            pod_aware: false
-            l3_destinations:
-              - ip: 6.6.6.10
-                mac: 00:00:00:00:00:16
-
-        service_graph_templates:
-          - name: ftd-4112-one-arm-L3-mpod-cluster
-            template_type: FW_ROUTED
-            redirect: true
-            share_encapsulation: false
-            device:
-              tenant: BRKDCN-2959-DMZ
-              name: ftd-4112-one-arm-L3-mpod-cluster
-            consumer:
-              direct_connect: false
-            provider:
-              direct_connect: true
-
-        device_selection_policies:
-          - contract: any
-            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
-            consumer:
-              redirect_policy:
-                name: ftd-4112-one-arm-L3-mpod-cluster
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
-            provider:
-              redirect_policy:
-                name: ftd-4112-one-arm-L3-mpod-cluster
-              logical_interface: data
-              bridge_domain:
-                name: 6.6.6.0_24
 
 # Filters
       filters:
@@ -105,15 +37,6 @@ apic:
 
 # Contracts
       contracts:
-        - name: intra-vrf
-          description: vzAny is contract Consumer and Provider
-          scope: context
-          subjects:
-            - name: redirect
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
-              filters: 
-                - filter: src-any-dst-any
-
         - name: permit-to-all-dmz-subnets
           description: allows traffic to all dmz subnets
           scope: context
@@ -129,17 +52,17 @@ apic:
           alias: dmz-vrf
           contracts:
             providers:
-              - intra-vrf
+              - permit-to-all-dmz-subnets
             consumers:
-              - intra-vrf
+              - permit-to-all-dmz-subnets
 
 #L3out
       l3outs:
-        - name: brkdcn-2959-dmz.vrf-01-ospf-to-fw
+        - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
           description: configured with NAC
           alias: dmz-vrf
           vrf: vrf-01
-          domain: BRKDCN-2959-DMZ.vrf-01
+          domain: BRKDCN-2959-DMZ.vrf-01-ospf-peering
           ospf:
             area: 0.0.0.0
             area_type: regular
@@ -156,7 +79,7 @@ apic:
                   pod_id: 1
 
               interface_profiles:
-                - name: vrf-01-ospf-to-fw         
+                - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering         
                   interfaces:
                     - node_id: 1101
                       pod_id: 1
@@ -165,10 +88,11 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.81/28
-                      ip_shared: 10.237.99.83/28
+                      ip_shared: 10.237.99.86/28
+                      
 
                     - node_id: 1102
                       pod_id: 1
@@ -177,13 +101,17 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.82/28
-                      ip_shared: 10.237.99.83/28
+                      ip_shared: 10.237.99.86/28
 
                   ospf:
                     policy: broadcast
+                    ospf_interface_profile_name: pod-01
+                    auth_type: simple
+                    auth_key: pod-01
+                    auth_key_id: 1
 
             - name: border-leafs-pod-2
               nodes:
@@ -196,7 +124,7 @@ apic:
                   pod_id: 2
 
               interface_profiles:
-                - name: vrf-01-ospf-to-fw         
+                - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering       
                   interfaces:
                     - node_id: 2101
                       pod_id: 2
@@ -205,9 +133,9 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
+                        - floating_ip: 10.237.99.85/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.84/28
+                      ip: 10.237.99.83/28
                       ip_shared: 10.237.99.86/28
 
                     - node_id: 2102
@@ -217,40 +145,27 @@ apic:
                       vlan: 3000
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.87/28
+                        - floating_ip: 10.237.99.85/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.85/28
+                      ip: 10.237.99.84/28
                       ip_shared: 10.237.99.86/28
 
                   ospf:
                     policy: broadcast
+                    ospf_interface_profile_name: pod-02
+                    auth_type: simple
+                    auth_key: pod-02
+                    auth_key_id: 1
 
           external_endpoint_groups:
             - name: all-dmz-subnets
               subnets:
                 - prefix: 0.0.0.0/1
-                  shared_security: true
 
                 - prefix: 128.0.0.0/1
-                  shared_security: true
-
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets
 
 # Bridge Domains
       bridge_domains:
-        - name: 6.6.6.0_24
-          description: pbr redirect
-          alias: lab-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 6.6.6.1/24
-              public: false
-              shared: false
-              nd_ra_prefix: false
-
         - name: 172.16.10.0_24
           alias: dmz-subnet
           vrf: vrf-01
@@ -259,7 +174,7 @@ apic:
               public: true
           advertise_host_routes: true
           l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
+            - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
         - name: 172.16.11.0_24
           alias: dmz-subnet
@@ -269,7 +184,7 @@ apic:
               public: true
           advertise_host_routes: true
           l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
+            - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
         - name: 172.16.12.0_24
           alias: dmz-subnet
@@ -279,7 +194,7 @@ apic:
               public: true
           advertise_host_routes: true
           l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
+            - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
 # Application profiles
       application_profiles:
@@ -332,9 +247,6 @@ apic:
                   vlan: 110
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets
 
             - name: '172.16.11.0_24'
               # alias:
@@ -382,9 +294,6 @@ apic:
                   vlan: 111
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets
 
             - name: '172.16.12.0_24'
               # alias:
@@ -432,6 +341,3 @@ apic:
                   vlan: 112
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets

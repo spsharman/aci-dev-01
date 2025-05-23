@@ -41,6 +41,28 @@ apic:
                 from_length: 32
                 to_length: 32
 
+          - name: match-172.16.10.0_24
+            description: matches BRKDCN-2959-DMZ subnets
+            prefixes:
+              - ip: 172.16.10.0/24
+                aggregate: true
+                to_length: 32
+
+          - name: match-172.16.11.0_24
+            description: matches BRKDCN-2959-DMZ subnets
+            prefixes:
+              - ip: 172.16.11.0/24
+                aggregate: true
+                from_length: 32
+                to_length: 32
+                
+          - name: match-172.16.12.0_24
+            description: matches BRKDCN-2959-DMZ subnets
+            prefixes:
+              - ip: 172.16.12.0/24
+                aggregate: true
+                to_length: 32
+
         ospf_interface_policies:
           - name: OSPF_p2p
             cost: unspecified
@@ -61,11 +83,11 @@ apic:
             mtu_ignore: false
             advertise_subnet: false
             bfd: false
-            hello_interval: 10
-            dead_interval: 40
+            hello_interval: 1
+            dead_interval: 4
             network_type: bcast
             priority: 1
-            lsa_retransmit_interval: 5
+            lsa_retransmit_interval: 3
             lsa_transmit_delay: 1
 
         route_tag_policies:
@@ -376,6 +398,28 @@ apic:
                   log: false
                   no_stats: false
 
+        - name: permit-to-all-BRKDCN-2959-subnets
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+        - name: permit-to-all-BRKDCN-2959-DMZ-subnets
+          scope: global
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
         - name: permit-to-all-external-subnets
           scope: global
           subjects:
@@ -631,12 +675,6 @@ apic:
                   vrf: vrf-01
                   description: Leaked to tn-fgandola:vrf-01
 
-          contracts:
-            consumers:
-              - permit-from-core-services
-              - permit-from-lab-desktops
-              - permit-to-core-services
-
 # L3out
       l3outs:
 
@@ -647,7 +685,7 @@ apic:
           domain: shared-services.vrf-01-bgp-core
 
           export_route_map:
-            name: export-tn-isovalent-subnets
+            name: export-subnets
             type: combinable
             contexts:
               - name: permit-10.237.101.0_27
@@ -660,6 +698,21 @@ apic:
                 action: permit
                 match_rules:
                   - match-10.237.101.32_27
+              - name: permit-172.16.10.0_24
+                order: 2
+                action: permit
+                match_rules:
+                  - match-172.16.10.0_24
+              - name: permit-172.16.11.0_24
+                order: 3
+                action: permit
+                match_rules:
+                  - match-172.16.11.0_24
+              - name: permit-172.16.12.0_24
+                order: 4
+                action: permit
+                match_rules:
+                  - match-172.16.12.0_24
 
 # Nodes
           node_profiles:
@@ -969,11 +1022,11 @@ apic:
             - name: all-external-subnets
               subnets:
                 - prefix: 0.0.0.0/0
+                  name: route-control-only
                   import_security: false
                   shared_route_control: true
                   export_route_control: true
                   aggregate_export_route_control: true
-                  name: route-control-only
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -999,15 +1052,20 @@ apic:
                   import_security: true
                   name: demo-01
 
-                - prefix: 10.237.99.48/29
-                  export_route_control: true
-                  import_security: false
-                  name: csr1kv-gig2
+                # - prefix: 10.237.99.48/28
+                #   export_route_control: true
+                #   import_security: false
+                #   name: shared-services.vrf-01-ospf-peering
 
-                - prefix: 10.237.99.56/29
-                  export_route_control: true
-                  import_security: false
-                  name: csr1kv-gig3
+                # - prefix: 10.237.99.80/28
+                #   export_route_control: true
+                #   import_security: false
+                #   name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
+
+                # - prefix: 10.237.99.56/29
+                #   export_route_control: true
+                #   import_security: false
+                #   name: csr1kv-gig3
 
                 # - prefix: 10.237.101.0/27
                 #   export_route_control: true
@@ -1024,6 +1082,8 @@ apic:
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
                   - permit-to-n9000v-management-n9000v-mgmt
+                  - permit-to-all-BRKDCN-2959-DMZ-subnets
+
                 providers:
                   - deny-to-all-external-subnets
                   - permit-to-all-external-subnets
@@ -1033,24 +1093,40 @@ apic:
                   - permit-to-tn-isovalent-egress-subnet
                   - permit-to-tn-isovalent-ingress-subnet
                   - permit-to-tn-isovalent-node-subnet
+                  # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
 
             - name: core-services-subnets
               subnets:
+                - prefix: 0.0.0.0/0
+                  name: route-control-only
+                  import_security: false
+                  export_route_control: true
+                  aggregate_export_route_control: true
+
                 - prefix: 10.237.97.128/27
                   name: core-services
                   shared_route_control: true
                   shared_security: true
                   import_security: true
               contracts:
+                consumers:
+                  - permit-to-all-BRKDCN-2959-DMZ-subnets
                 providers:
                   - deny-to-core-services
                   - permit-from-core-services
                   - permit-to-core-services
                 imported_consumers:
                   - permit-to-tn-mgmt-inb-mgmt
+                  # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
 
             - name: lab-desktops-subnets
               subnets:
+                - prefix: 0.0.0.0/0
+                  name: route-control-only
+                  import_security: false
+                  export_route_control: true
+                  aggregate_export_route_control: true
+                  
                 - prefix: 10.237.97.160/28
                   name: lab-desktops
                   shared_route_control: true
@@ -1062,15 +1138,18 @@ apic:
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
                   - permit-to-n9000v-management-n9000v-mgmt
+                  - permit-to-all-BRKDCN-2959-DMZ-subnets
+                imported_consumers:
+                  # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
                 providers:
                   - deny-to-lab-desktops
                   - permit-from-lab-desktops
 
 # L3out OSPF
-        - name: shared-services.vrf-01-ospf-area-0.0.0.0
+        - name: shared-services.vrf-01-ospf-peering
           description: configured with NAC
           vrf: vrf-01
-          domain: shared-services.vrf-01-ospf-area-0.0.0.0
+          domain: shared-services.vrf-01-ospf-peering
           ospf:
             area: 0.0.0.0
             area_type: regular
@@ -1093,29 +1172,60 @@ apic:
 
 # Interfaces
               interface_profiles:
-                - name: hx-dev-01-fi-a-vlan-8
+                - name: shared-services.vrf-01-ospf-peering
                   interfaces:
                     - node_id: 1101
-                      channel: hx-dev-01-fi-a
+                      pod_id: 1
+                      floating_svi: true
                       vlan: 8
-                      svi: true
+                      mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.53/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.49/28
-                      ip_shared: 10.237.99.51/28
-                      mtu: 1500
-                  ospf:
-                    policy: broadcast
+                      ip_shared: 10.237.99.54/28
 
-                - name: hx-dev-01-fi-b-vlan-8
-                  interfaces:
                     - node_id: 1102
-                      channel: hx-dev-01-fi-b
+                      pod_id: 1
+                      floating_svi: true
                       vlan: 8
-                      svi: true
-                      ip: 10.237.99.50/28
-                      ip_shared: 10.237.99.51/28
                       mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.53/28
+                          physical_domain: hx-dev-01-vds-02
+                      ip: 10.237.99.50/28
+                      ip_shared: 10.237.99.54/28
+
                   ospf:
                     policy: broadcast
+                    # ospf_interface_profile_name: pod-01
+                    # auth_type: simple
+                    # auth_key: pod-01
+                    # auth_key_id: 1
+
+                # - name: shared-services.vrf-01-ospf-peering-fi-a
+                #   interfaces:
+                #     - node_id: 1101
+                #       channel: hx-dev-01-fi-a
+                #       vlan: 8
+                #       svi: true
+                #       ip: 10.237.99.49/28
+                #       ip_shared: 10.237.99.54/28
+                #       mtu: 1500
+                #   ospf:
+                #     policy: broadcast
+
+                # - name: shared-services.vrf-01-ospf-peering-fi-b
+                #   interfaces:
+                #     - node_id: 1102
+                #       channel: hx-dev-01-fi-b
+                #       vlan: 8
+                #       svi: true
+                #       ip: 10.237.99.50/28
+                #       ip_shared: 10.237.99.54/28
+                #       mtu: 1500
+                #   ospf:
+                #     policy: broadcast
 
 
 #########
@@ -1135,7 +1245,7 @@ apic:
 
 # Interfaces
               interface_profiles:
-                - name: vrf-01-ospf-to-fw         
+                - name: shared-services.vrf-01-ospf-peering      
                   interfaces:
                     - node_id: 2101
                       pod_id: 2
@@ -1144,10 +1254,10 @@ apic:
                       vlan: 8
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.57/28
+                        - floating_ip: 10.237.99.53/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.55/28
-                      ip_shared: 10.237.99.58/28
+                      ip: 10.237.99.51/28
+                      ip_shared: 10.237.99.54/28
 
                     - node_id: 2102
                       pod_id: 2
@@ -1156,37 +1266,112 @@ apic:
                       vlan: 8
                       mtu: 1500
                       paths:
-                        - floating_ip: 10.237.99.57/28
+                        - floating_ip: 10.237.99.53/28
                           physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.56/28
-                      ip_shared: 10.237.99.58/28
+                      ip: 10.237.99.52/28
+                      ip_shared: 10.237.99.54/28
 
                   ospf:
                     policy: broadcast
+                    # ospf_interface_profile_name: pod-02
+                    # auth_type: simple
+                    # auth_key: pod-02
+                    # auth_key_id: 1
+
+                  # interfaces:
+                  #   - node_id: 2101
+                  #     pod_id: 2
+                  #     port: 1
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.51/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500
+                  #   - node_id: 2101
+                  #     pod_id: 2
+                  #     port: 2
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.51/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500   
+                  #   - node_id: 2101
+                  #     pod_id: 2
+                  #     port: 3
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.51/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500        
+
+                  #   - node_id: 2102
+                  #     pod_id: 2
+                  #     port: 1
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.52/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500
+                  #   - node_id: 2102
+                  #     pod_id: 2
+                  #     port: 2
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.52/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500   
+                  #   - node_id: 2102
+                  #     pod_id: 2
+                  #     port: 3
+                  #     vlan: 8
+                  #     svi: true
+                  #     ip: 10.237.99.52/28
+                  #     ip_shared: 10.237.99.54/28
+                  #     mtu: 1500            
+                  # ospf:
+                  #   policy: broadcast
 
 
 #########
 # extEPGs
           external_endpoint_groups:
-            - name: all-external-subnets
+            - name: BRKDCN-2959-subnets
               subnets:
                 - prefix: 0.0.0.0/0
-                  import_route_control: false
-                  export_route_control: true
-                  shared_route_control: false
+                  name: Advertise-to-BRKDCN-2959
                   import_security: false
-                  shared_security: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  ospf_route_summarization: false
-
-                # - prefix: 10.237.99.48/29
-                #   name: csr1kv-peering-gig2
-                #   import_security: true
-
+                  export_route_control: true
+                - prefix: 192.168.10.0/24
+                  name: BRKDCN-2959
+                  import_security: true
+                - prefix: 192.168.11.0/24
+                  name: BRKDCN-2959
+                  import_security: true
+                - prefix: 192.168.12.0/24
+                  name: BRKDCN-2959
+                  import_security: true
               contracts:
-                consumers: 
-                  - permit-to-all-external-subnets
+                providers:
+                  - permit-to-all-BRKDCN-2959-subnets
+
+            - name: BRKDCN-2959-DMZ-subnets
+              subnets:
+                - prefix: 0.0.0.0/0
+                  name: Advertise-to-BRKDCN-2959-DMZ
+                  import_security: false
+                  export_route_control: true
+                - prefix: 172.16.10.0/24
+                  name: BRKDCN-2959-DMZ
+                  import_security: true
+                - prefix: 172.16.11.0/24
+                  name: BRKDCN-2959-DMZ
+                  import_security: true
+                - prefix: 172.16.12.0/24
+                  name: BRKDCN-2959-DMZ
+                  import_security: true
+              contracts:
+                providers:
+                  - permit-to-all-BRKDCN-2959-DMZ-subnets
 
 # Bridge domains
       bridge_domains:
@@ -1294,6 +1479,10 @@ apic:
               contracts:
                 providers:
                   - permit-to-apic-simulators-apic-mgmt
+                consumers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
         - name: csr-management
           managed: true
@@ -1346,6 +1535,10 @@ apic:
               contracts:
                 providers:
                   - permit-to-csr-management-csr-mgmt
+                consumers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
         - name: csw-management
           managed: true
@@ -1359,6 +1552,10 @@ apic:
               contracts:
                 providers:
                   - permit-to-csw-management-data-collector
+                consumers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
         - name: n9000v-management
           managed: true
@@ -1372,6 +1569,10 @@ apic:
               contracts:
                 providers:
                   - permit-to-n9000v-management-n9000v-mgmt
+                consumers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
         - name: ftd-management
           managed: true
@@ -1396,6 +1597,9 @@ apic:
               contracts:
                 consumers:
                   - permit-to-csw-management-data-collector
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
             - name: ftd-mgmt
               bridge_domain: 10.237.100.0_27
@@ -1471,6 +1675,10 @@ apic:
               contracts:
                 providers:
                   - permit-to-ftd-management-ftd-mgmt
+                consumers:
+                  - permit-from-core-services
+                  - permit-to-core-services
+                  - permit-from-lab-desktops
 
             - name: ftd-ccl
               bridge_domain: 1.1.0.0_16

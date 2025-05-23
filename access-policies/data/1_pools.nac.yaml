@@ -4,7 +4,7 @@ apic:
 
 # VLAN pools  
     vlan_pools:
-      - name: BRKDCN-2959-DMZ
+      - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         allocation: static
         ranges:
           - from: 3000
@@ -243,7 +243,7 @@ apic:
           - from: 7
             description: ftd-diagnostic
           - from: 8
-            description: shared-services.vrf-01-ospf-area-0.0.0.0
+            description: shared-services.vrf-01-ospf-peering
           - from: 9
             description: tn-demo-01 L3out to csr1kv
           - from: 10
@@ -293,7 +293,10 @@ apic:
             description: conmurph-l3out-04
           - from: 39
             description: conmurph-l3out-05
-            
+          - from: 3000
+            allocation: static
+            description: tn-BRKDCN-2959-DMZ L3out to FTDv
+
       - name: hyperflex
         allocation: static
         ranges:
@@ -320,11 +323,11 @@ apic:
           - from: 3966
             description: fabric inband management
 
-      - name: shared-services.vrf-01-ospf-area-0.0.0.0
+      - name: shared-services.vrf-01-ospf-peering
         allocation: static
         ranges:
           - from: 8
-            description: shared-services.vrf-01-ospf-area-0.0.0.0
+            description: shared-services.vrf-01-ospf-peering
 
       - name: ssharman-ubuntu-nodes
         allocation: static

@@ -8,16 +8,6 @@ apic:
       description: Current network design - L3out consumer to vzAny
 
 # Policies
-      policies:
-        dhcp_relay_policies:
-          - name: dhcp.uktme.cisco.com
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: BRKDCN-2959
-                l3out: vrf-01-bgp-to-core
-                external_endpoint_group: all-ext-subnets
 
 # Filters
       filters:

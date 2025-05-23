@@ -1,0 +1,375 @@
+# Notes:
+#
+#
+---
+apic:
+  tenants:
+    - name: shared-services
+      managed: false
+      imported_contracts:
+        - name: permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
+          tenant: BRKDCN-2959-DMZ
+          contract: permit-to-all-dmz-subnets
+
+    - name: BRKDCN-2959-DMZ
+      description: Single VRF, firewall cluster for N/S or E/W
+
+# Policies
+      policies:
+        ospf_interface_policies:
+          - name: broadcast
+            cost: unspecified
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: false
+            bfd: false
+            hello_interval: 10
+            dead_interval: 40
+            network_type: bcast
+            priority: 1
+            lsa_retransmit_interval: 5
+            lsa_transmit_delay: 1
+
+      services:
+        l4l7_devices:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-mpod-cluster
+                interfaces:
+                  - name: ftd-4112-01-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
+                    pod_id: 2
+                    node_id: 2101
+                    node2_id: 2102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 16
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+        redirect_policies:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
+            pod_aware: false
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:00:00:00:00:16
+
+        service_graph_templates:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: BRKDCN-2959-DMZ
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'src-any-dst-22'
+          entries:
+            - name: 'src-any-dst-22'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 22
+
+        - name: 'src-any-dst-5201'
+          entries:
+            - name: 'src-any-dst-5201'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 5201
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: redirect
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-all-dmz-subnets
+          description: allows traffic to all dmz subnets
+          scope: global
+          subjects:
+            - name: redirect
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-intra-dmz-traffic
+          description: redirects all intra DMZ subnets to the FTD cluster
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+            - name: redirect
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-5201          
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: dmz-vrf
+          leaked_internal_prefixes:
+            - prefix: 172.16.10.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 172.16.11.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 172.16.12.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          alias: lab-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 172.16.10.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+          subnets:
+            - ip: 172.16.10.1/24
+
+        - name: 172.16.11.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+          subnets:
+            - ip: 172.16.11.1/24
+
+        - name: 172.16.12.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+          subnets:
+            - ip: 172.16.12.1/24
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '172.16.10.0_24'
+              # alias:
+              bridge_domain: '172.16.10.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 110
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 110
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+
+            - name: '172.16.11.0_24'
+              # alias:
+              bridge_domain: '172.16.11.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 111
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 111
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+
+            - name: '172.16.12.0_24'
+              # alias:
+              bridge_domain: '172.16.12.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 112
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 112
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+
+        - name: all-dmz-subnets
+          description: single ESG for all DMZ subnets
+          endpoint_security_groups:
+            - name: all-dmz-subnets
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.10.0_24
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.11.0_24
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.12.0_24
+              contracts:
+                intra_esgs:
+                  - permit-intra-dmz-traffic

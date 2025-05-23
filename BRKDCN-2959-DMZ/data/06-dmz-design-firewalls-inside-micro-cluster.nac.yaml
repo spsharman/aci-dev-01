@@ -4,8 +4,15 @@
 ---
 apic:
   tenants:
+    - name: shared-services
+      managed: false
+      imported_contracts:
+        - name: permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
+          tenant: BRKDCN-2959-DMZ
+          contract: permit-to-all-dmz-subnets
+
     - name: BRKDCN-2959-DMZ
-      description: Two HA firewall pairs outside of fabric, host route advertisement
+      description: Single VRF, micro firewall cluster for applications
 
 # Policies
       policies:
@@ -23,6 +30,97 @@ apic:
             lsa_retransmit_interval: 5
             lsa_transmit_delay: 1
 
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-micro-cluster
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-15-adapter-4-gig-0-1
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: FTDv-ESXi-7.6.0-113-15-pod-01
+                interfaces:
+                  - name: ftdv-15-gig-0-1
+                    vnic_name: Network adapter 4
+
+              - name: ftdv-16-adapter-4-gig-0-1
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: FTDv-ESXi-7.6.0-113-16-pod-01
+                interfaces:
+                  - name: ftdv-16-gig-0-1
+                    vnic_name: Network adapter 4
+
+            logical_interfaces:
+              - name: data
+                concrete_interfaces:
+                  - device: ftdv-15-adapter-4-gig-0-1
+                    interface_name: ftdv-15-gig-0-1
+
+                  - device: ftdv-16-adapter-4-gig-0-1
+                    interface_name: ftdv-16-gig-0-1
+
+        redirect_policies:
+          - name: ftdv-micro-cluster
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                name: ftdv-16
+                mac: 00:50:56:84:4c:27
+                redirect_health_group: ftdv-16
+              - ip: 6.6.6.11
+                name: ftdv-15
+                mac: 00:50:56:84:5d:4c
+                redirect_health_group: ftdv-15
+
+        service_graph_templates:
+          - name: ftdv-micro-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: BRKDCN-2959-DMZ
+              name: ftdv-micro-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-micro-cluster
+            consumer:
+              redirect_policy:
+                name: ftdv-micro-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-micro-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+        redirect_health_groups:
+          - name: ftdv-15
+          - name: ftdv-16
+
+
 # Filters
       filters:
         - name: 'icmp'
@@ -35,158 +133,104 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
+        - name: 'src-any-dst-22'
+          entries:
+            - name: 'src-any-dst-22'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 22
+
+        - name: 'src-any-dst-5201'
+          entries:
+            - name: 'src-any-dst-5201'
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 5201
+
 # Contracts
       contracts:
-        - name: permit-to-all-dmz-subnets
-          description: allows traffic to all dmz subnets
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
           scope: context
           subjects:
-            - name: permit-src-any-dst-any
+            - name: redirect
+              # service_graph: ftd-4112-one-arm-L3-mpod-cluster
               filters: 
                 - filter: src-any-dst-any
+
+        - name: permit-to-all-dmz-subnets
+          description: allows traffic to all dmz subnets
+          scope: global
+          subjects:
+            - name: redirect
+              # service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-intra-dmz-traffic
+          description: redirects all intra DMZ subnets to the FTD cluster
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+            - name: redirect
+              # service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-5201          
 
 # VRFs
       vrfs:
         - name: vrf-01
           description: configured with NAC
           alias: dmz-vrf
-
-#L3out
-      l3outs:
-        - name: brkdcn-2959-dmz.vrf-01-ospf-to-fw
-          description: configured with NAC
-          alias: dmz-vrf
-          vrf: vrf-01
-          domain: BRKDCN-2959-DMZ.vrf-01
-          ospf:
-            area: 0.0.0.0
-            area_type: regular
-
-          node_profiles:
-            - name: border-leafs-pod-1
-              nodes:
-                - node_id: 1101
-                  router_id: 101.1.0.7
-                  pod_id: 1
-
-                - node_id: 1102
-                  router_id: 102.1.0.7
-                  pod_id: 1
-
-              interface_profiles:
-                - name: vrf-01-ospf-to-fw         
-                  interfaces:
-                    - node_id: 1101
-                      pod_id: 1
-                      mode: regular                       
-                      floating_svi: true
-                      vlan: 3000
-                      mtu: 1500
-                      paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
-                      ip: 10.237.99.81/28
-                      ip_shared: 10.237.99.83/28
-
-                    - node_id: 1102
-                      pod_id: 1
-                      mode: regular                       
-                      floating_svi: true
-                      vlan: 3000
-                      mtu: 1500
-                      paths:
-                        - floating_ip: 10.237.99.87/28
-                          vmware_vmm_domain: hx-dev-01-vds-01
-                      ip: 10.237.99.82/28
-                      ip_shared: 10.237.99.83/28
-
-                  ospf:
-                    policy: broadcast
-
-            - name: border-leafs-pod-2
-              nodes:
-                - node_id: 2101
-                  router_id: 101.2.0.7
-                  pod_id: 2
-
-                - node_id: 2102
-                  router_id: 102.2.0.7
-                  pod_id: 2
-
-              interface_profiles:
-                - name: vrf-01-ospf-to-fw         
-                  interfaces:
-                    - node_id: 2101
-                      pod_id: 2
-                      mode: regular                       
-                      floating_svi: true
-                      vlan: 3000
-                      mtu: 1500
-                      paths:
-                        - floating_ip: 10.237.99.87/28
-                          physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.84/28
-                      ip_shared: 10.237.99.86/28
-
-                    - node_id: 2102
-                      pod_id: 2
-                      mode: regular                       
-                      floating_svi: true
-                      vlan: 3000
-                      mtu: 1500
-                      paths:
-                        - floating_ip: 10.237.99.87/28
-                          physical_domain: ucsc-c220m3-vds-01
-                      ip: 10.237.99.85/28
-                      ip_shared: 10.237.99.86/28
-
-                  ospf:
-                    policy: broadcast
-
-          external_endpoint_groups:
-            - name: all-dmz-subnets
-              subnets:
-                - prefix: 0.0.0.0/1
-                  shared_security: true
-
-                - prefix: 128.0.0.0/1
-                  shared_security: true
-
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets
+          leaked_internal_prefixes:
+            - prefix: 172.16.10.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 172.16.11.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
+            - prefix: 172.16.12.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+              public: true
 
 # Bridge Domains
       bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          alias: lab-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
         - name: 172.16.10.0_24
           alias: dmz-subnet
           vrf: vrf-01
           subnets:
             - ip: 172.16.10.1/24
-              public: true
-          advertise_host_routes: true
-          l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
 
         - name: 172.16.11.0_24
           alias: dmz-subnet
           vrf: vrf-01
           subnets:
             - ip: 172.16.11.1/24
-              public: true
-          advertise_host_routes: true
-          l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
 
         - name: 172.16.12.0_24
           alias: dmz-subnet
           vrf: vrf-01
           subnets:
             - ip: 172.16.12.1/24
-              public: true
-          advertise_host_routes: true
-          l3outs:
-            - brkdcn-2959-dmz.vrf-01-ospf-to-fw
 
 # Application profiles
       application_profiles:
@@ -333,3 +377,22 @@ apic:
                   vlan: 112
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
+
+        - name: all-dmz-subnets
+          description: single ESG for all DMZ subnets
+          endpoint_security_groups:
+            - name: all-dmz-subnets
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.10.0_24
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.11.0_24
+                - application_profile: 'network-segments'
+                  endpoint_group: 172.16.12.0_24
+              contracts:
+                intra_esgs:
+                  - permit-intra-dmz-traffic

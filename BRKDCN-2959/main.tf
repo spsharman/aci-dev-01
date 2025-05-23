@@ -32,7 +32,7 @@ module "aci" {
   # yaml_files = ["data/12-production-single-vrf-design-esg-l3out-consumer.nac.yaml"]
   # yaml_files = ["data/13-production-shared-l3out-design-esg-l3out-consumer.nac.yaml"]
   # yaml_files = ["data/14-production-shared-l3out-design-esg-l3out-consumer-with-vzAny.nac.yaml"]
-  yaml_files = ["data/15-production-shared-l3out-design-with-fw-esg-l3out-consumer.nac.yaml"]
+  # yaml_files = ["data/15-production-shared-l3out-design-with-fw-esg-l3out-consumer.nac.yaml"]
   # yaml_files = ["data/16-production-dual-l3out-design-with-fw-esg-l3out-consumer.nac.yaml"]
 
 

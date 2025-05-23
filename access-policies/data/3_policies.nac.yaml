@@ -126,7 +126,7 @@ apic:
           - isovalent-nodes
         routed_domains:
           - ajshahid.vrf-01
-          - BRKDCN-2959-DMZ.vrf-01
+          - BRKDCN-2959-DMZ.vrf-01-ospf-peering
           - conmurph-01.vrf-01
           - conmurph-01.vrf-02
           - conmurph-02.vrf-01
@@ -138,7 +138,7 @@ apic:
           - demo-06.vrf-01
           - isovalent.vrf-01
           - shared-services.vrf-01-bgp-core
-          - shared-services.vrf-01-ospf-area-0.0.0.0
+          - shared-services.vrf-01-ospf-peering
 
         vmware_vmm_domains:
           - hx-dev-01-vds-01
@@ -147,8 +147,8 @@ apic:
         physical_domains:
           - ucsc-c220m3-vds-01
         routed_domains:
-          - BRKDCN-2959-DMZ.vrf-01
-          - shared-services.vrf-01-ospf-area-0.0.0.0
+          - BRKDCN-2959-DMZ.vrf-01-ospf-peering
+          - shared-services.vrf-01-ospf-peering
 
       - name: vlans-allowed-to-ucs-c220m5-vds-01
         physical_domains:

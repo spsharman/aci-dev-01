@@ -18,14 +18,17 @@ module "aci" {
 
   # yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
 
-  # yaml_files = ["data/01-dmz-design-firewall-outside-one-ha-pair-peering-to-fabric-vrf.nac.yaml"]
-  # yaml_files = ["data/02-dmz-design-firewall-outside-two-ha-pairs-peering-to-fabric-vrf.nac.yaml"]
-  yaml_files = ["data/03-dmz-design-firewall-cluster.nac.yaml"]
-  # yaml_files = ["data/04-dmz-design-firewall-cluster-independent-mode.nac.yaml"]
-  # yaml_files = ["data/05-dmz-current-design-firewall-provides-default-gateway.nac.yaml"]
-  # yaml_files = ["data/06-dmz-design-firewall-provides-default-gateway-peering-to-fabric-vrf.nac.yaml"]
-  # yaml_files = ["data/07-dmz-design-initial-bd-peering-to-fabric-vrf.nac.yaml"]
-  # yaml_files = ["data/08-dmz-design-dual-bd-peering-to-fabric-vrf.nac.yaml"]
+  # yaml_files = ["data/01-dmz-design-firewalls-outside-one-ha-pair.nac.yaml"]
+  yaml_files = ["data/02-dmz-design-firewalls-outside-two-ha-pairs.nac.yaml"]
+  # yaml_files = ["data/03-dmz-design-firewalls-outside-dual-clusters-independent-mode.nac.yaml"]
+  # yaml_files = ["data/04-dmz-design-firewalls-outside-single-cluster-independent-mode.nac.yaml"]
+  # yaml_files = ["data/05-dmz-design-firewalls-inside-single-cluster.nac.yaml"]
+  # yaml_files = ["data/06-dmz-design-firewalls-inside-micro-cluster.nac.yaml"]
+
+  # yaml_files = ["data/07-dmz-current-design-firewall-provides-default-gateway.nac.yaml"]
+  # yaml_files = ["data/08-dmz-design-firewall-provides-default-gateway-peering-to-fabric-vrf.nac.yaml"]
+  # yaml_files = ["data/09-dmz-design-initial-bd-peering-to-fabric-vrf.nac.yaml"]
+  # yaml_files = ["data/10-dmz-design-dual-bd-peering-to-fabric-vrf.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false

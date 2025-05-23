@@ -6,21 +6,16 @@ terraform {
     }
   }
 }
-
 provider "aci" {
   username = var.apic_username
   password = var.apic_password
   url      = var.apic_url
 }
-
 module "aci" {
   source  = "netascode/nac-aci/aci"
-  # version = ">=0.8.1"
-
-  # yaml_directories = ["data"]
-  # yaml_directories = ["data/code-testing-01"]
 
   yaml_files = ["data/configuration.nac.yaml"]
+  # yaml_directories = ["data"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false
