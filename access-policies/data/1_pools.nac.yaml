@@ -222,6 +222,22 @@ apic:
             to: 1270
             allocation: static
             description: tn-fgandola PVLANs
+          - from: 1271
+            to: 1272
+            allocation: static
+            description: tn-jorgquin PVLANs
+          - from: 1273
+            to: 1274
+            allocation: static
+            description: tn-jorgquin PVLANs
+          - from: 1275
+            to: 1276
+            allocation: static
+            description: tn-jorgquin PVLANs
+          - from: 1277
+            to: 1278
+            allocation: static
+            description: tn-jorgquin PVLANs
           - from: 3000
             allocation: static
             description: tn-BRKDCN-2959-DMZ L3out to FTDv

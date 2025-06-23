@@ -21,6 +21,9 @@ apic:
         - name: fgandola
           restricted_rbac_domain: false
 
+        - name: jorgquin
+          restricted_rbac_domain: false
+
       users:
         - username: cgrabows
           password: C1sco123
@@ -58,6 +61,22 @@ apic:
                 - name: admin
                   privilege_type: read
             - name: fgandola
+              roles:
+                - name: admin
+                  privilege_type: write
+
+        - username: jorgquin
+          password: C1sco123
+          domains:
+            - name: all
+              roles:
+                - name: admin
+                  privilege_type: read
+            - name: common
+              roles:
+                - name: admin
+                  privilege_type: read
+            - name: jorgquin
               roles:
                 - name: admin
                   privilege_type: write

@@ -674,6 +674,9 @@ apic:
                 - tenant: fgandola
                   vrf: vrf-01
                   description: Leaked to tn-fgandola:vrf-01
+                - tenant: jorgquin
+                  vrf: vrf-01
+                  description: Leaked to tn-jorgquin:vrf-01
 
 # L3out
       l3outs:
@@ -1036,26 +1039,26 @@ apic:
                   shared_security: true
                   import_security: true
 
-                - prefix: 10.1.1.0/27
-                  import_security: true
-                  name: demo-01
+                # - prefix: 10.1.1.0/27
+                #   import_security: true
+                #   name: demo-01
 
-                - prefix: 10.1.1.32/27
-                  import_security: true
-                  name: demo-01
+                # - prefix: 10.1.1.32/27
+                #   import_security: true
+                #   name: demo-01
 
-                - prefix: 10.1.1.64/27
-                  import_security: true
-                  name: demo-01
+                # - prefix: 10.1.1.64/27
+                #   import_security: true
+                #   name: demo-01
 
-                - prefix: 10.1.1.96/27
-                  import_security: true
-                  name: demo-01
+                # - prefix: 10.1.1.96/27
+                #   import_security: true
+                #   name: demo-01
 
-                # - prefix: 10.237.99.48/28
-                #   export_route_control: true
-                #   import_security: false
-                #   name: shared-services.vrf-01-ospf-peering
+                - prefix: 10.237.99.48/28
+                  export_route_control: true
+                  import_security: false
+                  name: shared-services.vrf-01-ospf-peering
 
                 # - prefix: 10.237.99.80/28
                 #   export_route_control: true

@@ -1,0 +1,397 @@
+#
+# Notes: jorgquin
+#
+# aci-vds-pvlan-primary-1271
+# aci-vds-pvlan-isolated-1272
+#
+# aci-vds-pvlan-primary-1273
+# aci-vds-pvlan-isolated-1274
+#
+# aci-vds-pvlan-primary-1275
+# aci-vds-pvlan-isolated-1276
+#
+# aci-vds-pvlan-primary-1277
+# aci-vds-pvlan-isolated-1278
+---
+apic:
+  tenants:
+    - name: jorgquin
+      managed: true
+      description: 10.1.15.0/24
+      security_domains:
+        - jorgquin
+
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-151'
+          entries:
+            - name: 'tcp-src-any-dst-151'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 151
+              destination_to_port: 151
+
+        - name: 'tcp-src-any-dst-152'
+          entries:
+            - name: 'tcp-src-any-dst-152'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 152
+              destination_to_port: 152
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+      imported_contracts:
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-from-shared-services-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-from-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+      contracts:
+          - name: inter-epg
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: inter-esg
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: intra-esg-production
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'icmp'
+                    action: permit
+                  - filter: 'tcp-src-any-dst-22'
+                    action: permit
+
+          - name: permit-to-development
+            description: permit to development applications
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-esg-10.1.15.0_27
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-151'
+                    action: permit
+
+          - name: permit-to-esg-10.1.15.32_27
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-152'
+                    action: permit
+
+          - name: permit-to-esg-10.1.15.64_27
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-esg-10.1.15.96_27
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-production
+            description: permit to production applications
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-tn-jorgquin
+            description: permit to tenant
+            scope: global
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: intra-vrf
+            description: vzAny is contract Provider
+            scope: context
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf-01
+          contracts:
+            consumers:
+              - intra-vrf
+            imported_consumers:
+              - permit-to-shared-services-all-external-subnets
+              - permit-from-shared-services-core-services
+              - permit-to-shared-services-core-services
+              - permit-from-shared-services-lab-desktops
+            providers:
+              - intra-vrf
+          leaked_internal_prefixes:
+            - prefix: 10.1.15.0/27
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.1.15.32/27
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.1.15.64/27
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.1.15.96/27
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet data-01
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+
+        - name: 10.1.15.0_27
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.15.1/27
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.15.32_27
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.15.33/27
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.15.64_27
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.15.65/27
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.1.15.96_27
+          alias: internal-vrf-01
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.15.97/27
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+      application_profiles:
+        - name: 'applications'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: development
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-jorgquin:applications:development
+              contracts:
+                consumers:
+                  - permit-to-production
+
+            - name: production
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              tag_selectors:
+                - key: Function
+                  operator: equals
+                  value: tn-jorgquin:applications:production
+              contracts:
+                providers:
+                  - permit-to-production
+                intra_esgs:
+                  - intra-esg-production
+
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads - no contracts on EPGs
+          endpoint_groups:      
+            - name: '10.1.15.0_27'
+              description: no contracts on this EPG, use ESGs for contracts
+              alias: internal-vrf-01
+              bridge_domain: '10.1.15.0_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: true
+                  primary_vlan: 1271
+                  secondary_vlan: 1272
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.1.15.32_27'
+              description: no contracts on this EPG, use ESGs for contracts
+              alias: internal-vrf-01
+              bridge_domain: '10.1.15.32_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: true
+                  primary_vlan: 1273
+                  secondary_vlan: 1274 
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.1.15.64_27'
+              description: no contracts on this EPG, use ESGs for contracts
+              alias: internal-vrf-01
+              bridge_domain: '10.1.15.64_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: true
+                  primary_vlan: 1275
+                  secondary_vlan: 1276
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.1.15.96_27'
+              description: no contracts on this EPG, use ESGs for contracts
+              alias: internal-vrf-01
+              bridge_domain: '10.1.15.96_27'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: true
+                  primary_vlan: 1277
+                  secondary_vlan: 1278
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: epg-10.1.15.0_27
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.15.0_27'
+
+            - name: epg-10.1.15.32_27
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.15.32_27'
+
+            - name: epg-10.1.15.64_27
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.15.64_27'
+
+            - name: epg-10.1.15.96_27
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: '10.1.15.96_27'
