@@ -147,6 +147,13 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
+          - name: permit-intra-esg-10.1.15.0_27
+            scope: context
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
           - name: permit-to-esg-10.1.15.32_27
             scope: context
             subjects:
@@ -155,6 +162,13 @@ apic:
                   - filter: 'tcp-src-any-dst-152'
                     action: permit
 
+          - name: permit-intra-esg-10.1.15.32_27
+            scope: context
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
           - name: permit-to-esg-10.1.15.64_27
             scope: tenant
             subjects:
@@ -162,8 +176,22 @@ apic:
                 filters:
                   - filter: src-any-dst-any
 
+          - name: permit-intra-esg-10.1.15.64_27
+            scope: context
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
           - name: permit-to-esg-10.1.15.96_27
             scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-intra-esg-10.1.15.96_27
+            scope: context
             subjects:
               - name: src-any-dst-any
                 filters:
@@ -320,6 +348,53 @@ apic:
                   secondary_vlan: 1272
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 1272
+                  primary_vlan: 1271
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 1272
+                  primary_vlan: 1271
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 1272
+                  primary_vlan: 1271
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 1272
+                  primary_vlan: 1271
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 1272
+                  primary_vlan: 1271
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 1272
+                  primary_vlan: 1271
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.32_27'
               description: no contracts on this EPG, use ESGs for contracts
@@ -332,6 +407,53 @@ apic:
                   secondary_vlan: 1274 
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 1274
+                  primary_vlan: 1273
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 1274
+                  primary_vlan: 1273
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 1274
+                  primary_vlan: 1273
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 1274
+                  primary_vlan: 1273
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 1274
+                  primary_vlan: 1273
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 1274
+                  primary_vlan: 1273
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.64_27'
               description: no contracts on this EPG, use ESGs for contracts
@@ -344,6 +466,53 @@ apic:
                   secondary_vlan: 1276
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 1276
+                  primary_vlan: 1275
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 1276
+                  primary_vlan: 1275
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 1276
+                  primary_vlan: 1275
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 1276
+                  primary_vlan: 1275
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 1276
+                  primary_vlan: 1275
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 1276
+                  primary_vlan: 1275
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.96_27'
               description: no contracts on this EPG, use ESGs for contracts
@@ -356,6 +525,53 @@ apic:
                   secondary_vlan: 1278
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+              physical_domains:
+                - ucsc-c220m3-vds-01
+              intra_epg_isolation: true
+              proxy_arp: true
+              static_ports:
+                - node_id: 2101
+                  pod_id: 2
+                  port: 1
+                  vlan: 1278
+                  primary_vlan: 1277
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                - node_id: 2102
+                  pod_id: 2
+                  port: 1
+                  vlan: 1278
+                  primary_vlan: 1277
+                  description: UCSC-C220-M3 - FCH1735V1RG
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 2
+                  vlan: 1278
+                  primary_vlan: 1277
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                - node_id: 2102
+                  pod_id: 2
+                  port: 2
+                  vlan: 1278
+                  primary_vlan: 1277
+                  description: UCSC-C220-M3 - FCH1743V0Y4
+                  deployment_immediacy: immediate
+                - node_id: 2101
+                  pod_id: 2
+                  port: 3
+                  vlan: 1278
+                  primary_vlan: 1277
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
+                - node_id: 2102
+                  pod_id: 2
+                  port: 3
+                  vlan: 1278
+                  primary_vlan: 1277
+                  deployment_immediacy: immediate
+                  description: UCSC-C220-M3 - FCH1910V17S
 
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
@@ -363,35 +579,47 @@ apic:
             - name: epg-10.1.15.0_27
               vrf: vrf-01
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: '10.1.15.0_27'
+              contracts:
+                intra_esgs:
+                  - permit-intra-esg-10.1.15.0_27
 
             - name: epg-10.1.15.32_27
               vrf: vrf-01
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: '10.1.15.32_27'
+              contracts:
+                intra_esgs:
+                  - permit-intra-esg-10.1.15.32_27
 
             - name: epg-10.1.15.64_27
               vrf: vrf-01
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: '10.1.15.64_27'
+              contracts:
+                intra_esgs:
+                  - permit-intra-esg-10.1.15.64_27
 
             - name: epg-10.1.15.96_27
               vrf: vrf-01
               shutdown: false
-              intra_esg_isolation: false
+              intra_esg_isolation: true
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: '10.1.15.96_27'
+              contracts:
+                intra_esgs:
+                  - permit-intra-esg-10.1.15.96_27
