@@ -5,7 +5,7 @@
 apic:
   tenants:
     - name: BRKDCN-2959-DMZ
-      description: Initial BD peering
+      description: Clusters everywhere
 
 # Policies
       policies:
@@ -33,92 +33,109 @@ apic:
 # Services
       services:
         l4l7_devices:
-          - name: ftdv-01-02-HA-pair
-            physical_domain: BRKDCN-2959-DMZ.vrf-01-ospf-peering
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
             context_aware: single-Context
             type: PHYSICAL
             function: GoTo
             service_type: FW
             trunking: false
             concrete_devices:
-              - name: ftdv-01-02-HA-pair
+              - name: ftd-4112-mpod-cluster
                 interfaces:
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-hx-dev-01-fi-a
+                  - name: ftd-4112-01-data-01
                     pod_id: 1
                     node_id: 1101
-                    channel: hx-dev-01-fi-a
-                    vlan: 3000
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-hx-dev-01-fi-b
-                    pod_id: 1
-                    node_id: 1102
-                    channel: hx-dev-01-fi-b
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-1
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
                     pod_id: 2
                     node_id: 2101
-                    port: 1
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-1
-                    pod_id: 2                    
-                    node_id: 2102
-                    port: 1
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-2
-                    pod_id: 2
-                    node_id: 2101
-                    port: 2
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-2
-                    pod_id: 2                    
-                    node_id: 2102
-                    port: 2
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-3
-                    pod_id: 2
-                    node_id: 2101
-                    port: 3
-                  - name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-3
-                    pod_id: 2                    
-                    node_id: 2102
-                    port: 3
+                    node2_id: 2102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 16
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+          - name: ftdv-micro-cluster
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-15-adapter-4-gig-0-1
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: FTDv-ESXi-7.6.0-113-15-pod-01
+                interfaces:
+                  - name: ftdv-15-gig-0-1
+                    vnic_name: Network adapter 4
+
+              - name: ftdv-16-adapter-4-gig-0-1
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: FTDv-ESXi-7.6.0-113-16-pod-01
+                interfaces:
+                  - name: ftdv-16-gig-0-1
+                    vnic_name: Network adapter 4
 
             logical_interfaces:
-              - name: FTDv-inside
-                vlan: 3000
+              - name: data
                 concrete_interfaces:
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-hx-dev-01-fi-a
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-hx-dev-01-fi-b
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-1
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-1
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-2
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-2
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2101-3
-                  - device: ftdv-01-02-HA-pair
-                    interface_name: ftdv-01-02-HA-pair-inside-interface-via-ucs-c220m3-vds-01-2102-3
+                  - device: ftdv-15-adapter-4-gig-0-1
+                    interface_name: ftdv-15-gig-0-1
 
-        redirect_health_groups:
-          - name: ftdv-01-02-HA-pair-inside-interface
+                  - device: ftdv-16-adapter-4-gig-0-1
+                    interface_name: ftdv-16-gig-0-1
 
         redirect_policies:
-          - name: ftdv-01-02-HA-pair-inside-interface
-            ip_sla_policy: icmp-aggressive-timers
-            anycast: false
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
             pod_aware: false
             l3_destinations:
-              - ip: 10.237.99.87
-                mac: de:ad:be:ef:00:21
-                redirect_health_group: ftdv-01-02-HA-pair-inside-interface
+              - ip: 6.6.6.20
+                mac: 00:00:00:00:00:16
+
+          - name: ftdv-micro-cluster
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                name: ftdv-16
+                mac: 00:50:56:84:4c:27
+                redirect_health_group: ftdv-16
+              - ip: 6.6.6.11
+                name: ftdv-15
+                mac: 00:50:56:84:5d:4c
+                redirect_health_group: ftdv-15
 
         service_graph_templates:
-          - name: ftdv-01-02-HA-pair
+          - name: ftd-4112-one-arm-L3-mpod-cluster
             template_type: FW_ROUTED
             redirect: true
             share_encapsulation: false
             device:
               tenant: BRKDCN-2959-DMZ
-              name: ftdv-01-02-HA-pair
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: ftdv-micro-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: BRKDCN-2959-DMZ
+              name: ftdv-micro-cluster
             consumer:
               direct_connect: false
             provider:
@@ -126,24 +143,38 @@ apic:
 
         device_selection_policies:
           - contract: any
-            service_graph_template: ftdv-01-02-HA-pair
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
             consumer:
               redirect_policy:
-                name: ftdv-01-02-HA-pair-inside-interface
-              logical_interface: FTDv-inside
-              l3_destination: true
-              external_endpoint_group:
-                l3out: BRKDCN-2959-DMZ.vrf-01-ospf-peering
-                name: all-dmz-subnets
-
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
             provider:
               redirect_policy:
-                name: ftdv-01-02-HA-pair-inside-interface
-              logical_interface: FTDv-inside
-              l3_destination: true
-              external_endpoint_group:
-                l3out: BRKDCN-2959-DMZ.vrf-01-ospf-peering
-                name: all-dmz-subnets
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-micro-cluster
+            consumer:
+              redirect_policy:
+                name: ftdv-micro-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-micro-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+        redirect_health_groups:
+          - name: ftdv-15
+          - name: ftdv-16
 
 # Filters
       filters:
@@ -157,6 +188,13 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
+        - name: 'tcp-src-any-dst-5201'
+          entries:
+            - name: 'tcp-src-any-dst-5201'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 5201
+
 # Contracts
       contracts:
         - name: intra-vrf
@@ -164,17 +202,48 @@ apic:
           scope: context
           subjects:
             - name: redirect
-              service_graph: ftdv-01-02-HA-pair
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-all-dmz-subnets
+        - name: permit-to-172.16.10.0_24
           description: allows traffic to all dmz subnets
           scope: context
           subjects:
-            - name: permit-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+
+            - name: redirect
+              service_graph: ftdv-micro-cluster
               filters: 
-                - filter: src-any-dst-any
+                - filter: 'tcp-src-any-dst-5201'
+
+        - name: permit-to-172.16.11.0_24
+          description: allows traffic to all dmz subnets
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+
+            - name: redirect
+              service_graph: ftdv-micro-cluster
+              filters: 
+                - filter: 'tcp-src-any-dst-5201'
+
+        - name: permit-to-172.16.12.0_24
+          description: allows traffic to all dmz subnets
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+                
+            - name: redirect
+              service_graph: ftdv-micro-cluster
+              filters: 
+                - filter: 'tcp-src-any-dst-5201'
 
 # VRFs
       vrfs:
@@ -215,25 +284,34 @@ apic:
                     - node_id: 1101
                       pod_id: 1
                       mode: regular                       
-                      svi: true
+                      floating_svi: true
                       vlan: 3000
                       mtu: 1500
-                      channel: hx-dev-01-fi-a
+                      paths:
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.81/28
                       ip_shared: 10.237.99.86/28
                       
+
                     - node_id: 1102
                       pod_id: 1
                       mode: regular                       
-                      svi: true
+                      floating_svi: true
                       vlan: 3000
                       mtu: 1500
-                      channel: hx-dev-01-fi-b
+                      paths:
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: hx-dev-01-vds-02
                       ip: 10.237.99.82/28
                       ip_shared: 10.237.99.86/28
 
                   ospf:
                     policy: broadcast
+                    ospf_interface_profile_name: pod-01
+                    auth_type: simple
+                    auth_key: pod-01
+                    auth_key_id: 1
 
             - name: border-leafs-pod-2
               nodes:
@@ -251,60 +329,33 @@ apic:
                     - node_id: 2101
                       pod_id: 2
                       mode: regular                       
-                      svi: true
-                      port: 1
+                      floating_svi: true
                       vlan: 3000
                       mtu: 1500
-                      ip: 10.237.99.83/28
-                      ip_shared: 10.237.99.86/28
-                    - node_id: 2101
-                      pod_id: 2
-                      mode: regular                       
-                      svi: true
-                      port: 2
-                      vlan: 3000
-                      mtu: 1500
-                      ip: 10.237.99.83/28
-                      ip_shared: 10.237.99.86/28
-                    - node_id: 2101
-                      pod_id: 2
-                      mode: regular                       
-                      svi: true
-                      port: 3
-                      vlan: 3000
-                      mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: ucsc-c220m3-vds-01
                       ip: 10.237.99.83/28
                       ip_shared: 10.237.99.86/28
 
                     - node_id: 2102
                       pod_id: 2
                       mode: regular                       
-                      svi: true
-                      port: 1
+                      floating_svi: true
                       vlan: 3000
                       mtu: 1500
+                      paths:
+                        - floating_ip: 10.237.99.85/28
+                          physical_domain: ucsc-c220m3-vds-01
                       ip: 10.237.99.84/28
                       ip_shared: 10.237.99.86/28
-                    - node_id: 2102
-                      pod_id: 2
-                      mode: regular                       
-                      svi: true
-                      port: 2
-                      vlan: 3000
-                      mtu: 1500
-                      ip: 10.237.99.84/28
-                      ip_shared: 10.237.99.86/28
-                    - node_id: 2102
-                      pod_id: 2
-                      mode: regular                       
-                      svi: true
-                      port: 3
-                      vlan: 3000
-                      mtu: 1500
-                      ip: 10.237.99.84/28
-                      ip_shared: 10.237.99.86/28
+
                   ospf:
                     policy: broadcast
+                    ospf_interface_profile_name: pod-02
+                    auth_type: simple
+                    auth_key: pod-02
+                    auth_key_id: 1
 
           external_endpoint_groups:
             - name: all-dmz-subnets
@@ -313,29 +364,48 @@ apic:
 
                 - prefix: 128.0.0.0/1
 
-              contracts:
-                providers:
-                  - permit-to-all-dmz-subnets
-
 # Bridge Domains
       bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          alias: lab-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
         - name: 172.16.10.0_24
           alias: dmz-subnet
           vrf: vrf-01
-          unknown_unicast: proxy
           subnets:
             - ip: 172.16.10.1/24
               public: true
+          advertise_host_routes: true
           l3outs:
             - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
         - name: 172.16.11.0_24
           alias: dmz-subnet
           vrf: vrf-01
+          subnets:
+            - ip: 172.16.11.1/24
+              public: true
+          advertise_host_routes: true
+          l3outs:
+            - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
         - name: 172.16.12.0_24
           alias: dmz-subnet
           vrf: vrf-01
+          subnets:
+            - ip: 172.16.12.1/24
+              public: true
+          advertise_host_routes: true
+          l3outs:
+            - BRKDCN-2959-DMZ.vrf-01-ospf-peering
 
 # Application profiles
       application_profiles:
@@ -388,6 +458,9 @@ apic:
                   vlan: 110
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
+              contracts:
+                providers:
+                  - permit-to-172.16.10.0_24
 
             - name: '172.16.11.0_24'
               # alias:
@@ -435,6 +508,9 @@ apic:
                   vlan: 111
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
+              contracts:
+                providers:
+                  - permit-to-172.16.11.0_24
 
             - name: '172.16.12.0_24'
               # alias:
@@ -482,3 +558,6 @@ apic:
                   vlan: 112
                   deployment_immediacy: immediate
                   description: UCSC-C220-M3 - FCH1910V17S
+              contracts:
+                providers:
+                  - permit-to-172.16.12.0_24

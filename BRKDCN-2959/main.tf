@@ -19,7 +19,7 @@ module "aci" {
   # yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
 
   # yaml_files = ["data/01-production-current-design-vzAny-allows-open-communication.nac.yaml"]
-  # yaml_files = ["data/02-production-dual-vrf-design-l3out-consumer.nac.yaml"]  
+  yaml_files = ["data/02-production-dual-vrf-design-l3out-consumer.nac.yaml"]  
   # yaml_files = ["data/03-production-dual-vrf-design-l3out-provider.nac.yaml"]
   # yaml_files = ["data/04-production-dual-vrf-invalid-design-l3out-consumer-vzAny-provider.nac.yaml"]
   # yaml_files = ["data/05-production-shared-l3out-design-l3out-consumer.nac.yaml"]

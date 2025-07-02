@@ -27,8 +27,9 @@ module "aci" {
 
   # yaml_files = ["data/07-dmz-current-design-firewall-provides-default-gateway.nac.yaml"]
   # yaml_files = ["data/08-dmz-design-firewall-provides-default-gateway-peering-to-fabric-vrf.nac.yaml"]
-  yaml_files = ["data/09-dmz-design-initial-bd-peering-to-fabric-vrf.nac.yaml"]
+  # yaml_files = ["data/09-dmz-design-initial-bd-peering-to-fabric-vrf.nac.yaml"]
   # yaml_files = ["data/10-dmz-design-dual-bd-peering-to-fabric-vrf.nac.yaml"]
+  yaml_files = ["data/11-dmz-design-firewall-clusters-outside-and-inside.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false
