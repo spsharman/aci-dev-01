@@ -94,6 +94,7 @@ apic:
           - name: shared-services.vrf-01
             tag: 4290166600
 
+# Services
       services:
         l4l7_devices:
           - name: ftd-4112-one-arm-L3
@@ -449,7 +450,12 @@ apic:
                   priority: default
                   log: false
                   no_stats: false
-            
+                - filter: 'tcp-src-443-dst-any'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
             - name: udp
               filters:
                 - filter: 'udp-src-68-dst-any'
@@ -477,6 +483,11 @@ apic:
                   log: false
                   no_stats: false
                 - filter: 'tcp-src-any-dst-80'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+                - filter: 'tcp-src-any-dst-443'
                   action: permit
                   priority: default
                   log: false
