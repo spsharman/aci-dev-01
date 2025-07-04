@@ -333,37 +333,21 @@ apic:
               destination_to_port: 443
 
       imported_contracts:
-        # - name: permit-from-core-services
-        #   tenant: shared-services
-        #   contract: permit-from-core-services
-
-        # - name: permit-to-core-services
-        #   tenant: shared-services
-        #   contract: permit-to-core-services
-
-        # - name: permit-from-lab-desktops
-        #   tenant: shared-services
-        #   contract: permit-from-lab-desktops
-
-        # - name: permit-to-shared-services.vrf-01-all-external-subnets
-        #   tenant: shared-services
-        #   contract: permit-to-shared-services.vrf-01-all-external-subnets
-
         - name: permit-to-shared-services-all-external-subnets
           tenant: shared-services
-          contract: permit-to-all-external-subnets-from-tn-fgandola
+          contract: permit-to-all-external-subnets
 
         - name: permit-from-shared-services-core-services
           tenant: shared-services
-          contract: permit-from-core-services-to-tn-fgandola
+          contract: permit-from-core-services
 
         - name: permit-to-shared-services-core-services
           tenant: shared-services
-          contract: permit-to-core-services-from-tn-fgandola
+          contract: permit-to-core-services
 
         - name: permit-from-shared-services-lab-desktops
           tenant: shared-services
-          contract: permit-from-lab-desktops-to-tn-fgandola
+          contract: permit-from-lab-desktops
 
       contracts:
           - name: inter-epg
@@ -458,7 +442,7 @@ apic:
           alias: internal-vrf-01
           contracts:
             imported_consumers:
-              - permit-to-shared-services.vrf-01-all-external-subnets
+              - permit-to-shared-services-all-external-subnets
               - permit-from-shared-services-core-services
               - permit-to-shared-services-core-services
               - permit-from-shared-services-lab-desktops

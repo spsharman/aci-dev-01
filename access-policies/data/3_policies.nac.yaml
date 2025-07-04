@@ -167,3 +167,10 @@ apic:
       - name: vlans-allowed-to-ssharman-ubuntu-nodes
         physical_domains:
           - ssharman-ubuntu-nodes
+
+    ptp_profiles:
+      - name: aci-dev-01
+        template: telecom
+        announce_interval: -3
+        delay_interval: -4
+        sync_interval: -4
