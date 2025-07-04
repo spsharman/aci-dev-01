@@ -252,6 +252,13 @@ apic:
               filters: 
                 - filter: ipv4-src-any-dst-any
 
+        - name: permit-to-ilb-vip-subnet
+          scope: global
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters: 
+                - filter: ipv4-src-any-dst-any
+
         - name: permit-to-node-subnet
           scope: global
           subjects:
@@ -420,7 +427,7 @@ apic:
                 consumers:
                   - permit-to-pod-subnet
 
-            - name: ingress-subnet
+            - name: ingress-subnet-cluster-1
               description: ingress subnet
               subnets:
                 - prefix: 10.237.101.32/28
@@ -434,13 +441,29 @@ apic:
                   aggregate_shared_route_control: true
                   bgp_route_summarization: false
                   ospf_route_summarization: false
-                # - prefix: 10.237.100.0/24
-                #   export_route_control: true
               contracts:
                 providers:
                   - permit-to-ingress-subnet
 
-            - name: egress-subnet
+            - name: ingress-subnet-cluster-2
+              description: ingress subnet
+              subnets:
+                - prefix: 10.237.101.112/29
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: true
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+              contracts:
+                providers:
+                  - permit-to-ingress-subnet
+
+            - name: egress-subnet-cluster-1
               description: egress subnet
               subnets:
                 - prefix: 10.237.101.48/28
@@ -454,15 +477,47 @@ apic:
                   aggregate_shared_route_control: true
                   bgp_route_summarization: false
                   ospf_route_summarization: false
-                # - prefix: 10.237.100.0/24
-                #   export_route_control: true
               contracts:
-                # providers:
-                #   - permit-to-egress-subnet
                 consumers:
                   - permit-to-nginx-subnet-10.237.101.96_28
 
-            - name: pod-subnet
+            - name: egress-subnet-cluster-2
+              description: egress subnet
+              subnets:
+                - prefix: 10.237.101.120/29
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: true
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+              contracts:
+                consumers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
+
+            - name: ilb-vip-subnet
+              description: ilb vip subnet
+              subnets:
+                - prefix: 10.237.101.128/29
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: true
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+              contracts:
+                providers:
+                  - permit-to-ilb-vip-subnet
+
+            - name: pod-subnet-cluster-1
               description: pod subnet
               subnets:
                 - prefix: 10.1.0.0/16
@@ -470,7 +525,27 @@ apic:
                   export_route_control: false
                   shared_route_control: false
                   import_security: true
-                  shared_security: true
+                  shared_security: false
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+              contracts:
+                providers:
+                  - permit-to-pod-subnet
+                consumers:
+                  - permit-to-node-subnet
+
+            - name: pod-subnet-cluster-2
+              description: pod subnet
+              subnets:
+                - prefix: 10.2.0.0/16
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: false
+                  import_security: true
+                  shared_security: false
                   aggregate_import_route_control: false
                   aggregate_export_route_control: false
                   aggregate_shared_route_control: false
@@ -756,13 +831,13 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.237.101.112_28'
-              bridge_domain: '10.237.101.112_28'
-              vmware_vmm_domains:
-                - name: 'hx-dev-01-vds-01'
-                  u_segmentation: false
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
+            # - name: '10.237.101.112_28'
+            #   bridge_domain: '10.237.101.112_28'
+            #   vmware_vmm_domains:
+            #     - name: 'hx-dev-01-vds-01'
+            #       u_segmentation: false
+            #       deployment_immediacy: immediate
+            #       resolution_immediacy: immediate
 
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
@@ -778,17 +853,18 @@ apic:
               contracts:
                 consumers:
                   - permit-to-ingress-subnet
+                  - permit-to-ilb-vip-subnet
                 providers:
                   - permit-to-nginx-subnet-10.237.101.96_28
 
-            - name: node-backend-subnet-10.237.101.112_28
-              vrf: vrf-01
-              shutdown: false
-              intra_esg_isolation: false
-              preferred_group: false
-              epg_selectors:
-                - application_profile: 'network-segments'
-                  endpoint_group: '10.237.101.112_28'
-              contracts:
-                consumers:
-                  - permit-to-nginx-subnet-10.237.101.96_28
+            # - name: node-backend-subnet-10.237.101.112_28
+            #   vrf: vrf-01
+            #   shutdown: false
+            #   intra_esg_isolation: false
+            #   preferred_group: false
+            #   epg_selectors:
+            #     - application_profile: 'network-segments'
+            #       endpoint_group: '10.237.101.112_28'
+            #   contracts:
+            #     consumers:
+            #       - permit-to-nginx-subnet-10.237.101.96_28
