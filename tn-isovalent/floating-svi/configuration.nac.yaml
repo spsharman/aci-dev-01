@@ -373,19 +373,19 @@ apic:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant                                                              
 
-        - name: 10.237.101.112_28
-          description: corporate subnet
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.101.113/28
-              public: true
-              shared: true
-              nd_ra_prefix: false
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant   
+        # - name: 10.237.101.112_28
+        #   description: corporate subnet
+        #   alias: corporate-subnet
+        #   unknown_unicast: proxy
+        #   vrf: vrf-01
+        #   subnets:
+        #     - ip: 10.237.101.113/28
+        #       public: true
+        #       shared: true
+        #       nd_ra_prefix: false
+        #   dhcp_labels:
+        #     - dhcp_relay_policy: dhcp.uktme.cisco.com
+        #       scope: tenant   
 
 # L3Outs
       l3outs:
