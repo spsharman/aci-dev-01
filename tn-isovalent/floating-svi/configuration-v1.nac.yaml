@@ -13,9 +13,13 @@ apic:
           tenant: isovalent
           contract: permit-to-egress-subnet
 
-        - name: permit-to-tn-isovalent-ingress-subnet
+        - name: permit-to-tn-isovalent-ingress-subnet-cluster-1
           tenant: isovalent
-          contract: permit-to-ingress-subnet
+          contract: permit-to-ingress-subnet-cluster-1
+
+        - name: permit-to-tn-isovalent-ingress-subnet-cluster-2
+          tenant: isovalent
+          contract: permit-to-ingress-subnet-cluster-2
 
         - name: permit-to-tn-isovalent-node-subnet
           tenant: isovalent
@@ -194,6 +198,12 @@ apic:
             - name: 'ipv4-src-any-dst-any'
               ethertype: ipv4
 
+        - name: tcp-src-any-dst-any
+          entries:
+            - name: tcp-src-any-dst-any
+              protocol: tcp
+              destination_to_port: unspecified
+
         - name: 'tcp-src-any-dst-80'
           entries:
             - name: 'tcp-src-any-dst-80'
@@ -229,6 +239,12 @@ apic:
               destination_from_port: 19765
               destination_to_port: 19765
 
+        - name: udp-src-any-dst-any
+          entries:
+            - name: udp-src-any-dst-any
+              protocol: udp
+              destination_to_port: unspecified
+
 # Contracts
       contracts:
         - name: intra-tenant
@@ -245,7 +261,14 @@ apic:
               filters: 
                 - filter: ipv4-src-any-dst-any
 
-        - name: permit-to-ingress-subnet
+        - name: permit-to-ingress-subnet-cluster-1
+          scope: global
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters: 
+                - filter: ipv4-src-any-dst-any
+
+        - name: permit-to-ingress-subnet-cluster-2
           scope: global
           subjects:
             - name: permit-ipv4-src-any-dst-any
@@ -266,8 +289,8 @@ apic:
               filters: 
                 - filter: ipv4-src-any-dst-any
 
-        - name: permit-to-pod-subnet
-          description: Allow HTTP and ICMP keepalives between pods
+        - name: permit-to-pod-subnet-cluster-1
+          description: Allow filtered traffic to pod subnet cluster 1
           scope: context
           subjects:
             - name: icmp
@@ -275,7 +298,24 @@ apic:
                 - filter: icmp
             - name: tcp
               filters: 
-                - filter: 'tcp-src-any-dst-4240'
+                - filter: tcp-src-any-dst-any
+            - name: udp
+              filters:
+                - filter: udp-src-any-dst-any
+
+        - name: permit-to-pod-subnet-cluster-2
+          description: Allow filtered traffic to pod subnet cluster 2
+          scope: context
+          subjects:
+            - name: icmp
+              filters:
+                - filter: icmp
+            - name: tcp
+              filters: 
+                - filter: tcp-src-any-dst-any
+            - name: udp
+              filters:
+                - filter: udp-src-any-dst-any
 
         - name: permit-to-nginx-subnet-10.237.101.96_28
           scope: context
@@ -425,10 +465,13 @@ apic:
                 providers:
                   - permit-to-node-subnet
                 consumers:
-                  - permit-to-pod-subnet
+                  - permit-to-pod-subnet-cluster-1
+                  - permit-to-pod-subnet-cluster-2
+                  - permit-to-ingress-subnet-cluster-1
+                  - permit-to-ingress-subnet-cluster-2
 
             - name: ingress-subnet-cluster-1
-              description: ingress subnet
+              description: ingress subnet cluster 1
               subnets:
                 - prefix: 10.237.101.32/28
                   import_route_control: false
@@ -443,10 +486,10 @@ apic:
                   ospf_route_summarization: false
               contracts:
                 providers:
-                  - permit-to-ingress-subnet
+                  - permit-to-ingress-subnet-cluster-1
 
             - name: ingress-subnet-cluster-2
-              description: ingress subnet
+              description: ingress subnet cluster 2
               subnets:
                 - prefix: 10.237.101.112/29
                   import_route_control: false
@@ -461,7 +504,7 @@ apic:
                   ospf_route_summarization: false
               contracts:
                 providers:
-                  - permit-to-ingress-subnet
+                  - permit-to-ingress-subnet-cluster-2
 
             - name: egress-subnet-cluster-1
               description: egress subnet
@@ -533,9 +576,10 @@ apic:
                   ospf_route_summarization: false
               contracts:
                 providers:
-                  - permit-to-pod-subnet
+                  - permit-to-pod-subnet-cluster-1
                 consumers:
                   - permit-to-node-subnet
+                  - permit-to-pod-subnet-cluster-2
 
             - name: pod-subnet-cluster-2
               description: pod subnet
@@ -553,9 +597,10 @@ apic:
                   ospf_route_summarization: false
               contracts:
                 providers:
-                  - permit-to-pod-subnet
+                  - permit-to-pod-subnet-cluster-2
                 consumers:
                   - permit-to-node-subnet
+                  - permit-to-pod-subnet-cluster-1
 
 # Nodes
           node_profiles:
@@ -692,15 +737,15 @@ apic:
 
             - name: border-leafs-pod-2
               nodes:
-                - node_id: 2101
-                  router_id: 101.2.0.4
-                  # router_id_as_loopback: false
-                  pod_id: 2
+                # - node_id: 2101
+                #   router_id: 101.2.0.4
+                #   # router_id_as_loopback: false
+                #   pod_id: 2
 
-                - node_id: 2102
-                  router_id: 102.2.0.4
-                  # router_id_as_loopback: false
-                  pod_id: 2
+                # - node_id: 2102
+                #   router_id: 102.2.0.4
+                #   # router_id_as_loopback: false
+                #   pod_id: 2
 
                 - node_id: 2103
                   router_id: 101.2.0.5
@@ -714,108 +759,49 @@ apic:
 
               interface_profiles:
                 - name: bare-metal-nodes
-                  interfaces:
-                    - node_id: 2103                       
-                      node2_id: 2104
-                      pod_id: 2
-                      svi: true                           
-                      channel: vpc_to_c220m5-10G-isovalent-node-09
-                      mode: regular                       
-                      vlan: 17                            
-                      ip_a: 10.237.101.73/27               
-                      ip_b: 10.237.101.74/27
-                      ip_shared: 10.237.101.77/27
-                      bgp_peers:
-                        - ip: 10.237.101.64/27
-                          remote_as: 65252
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
+                  # interfaces:
+                  #   - node_id: 2103                                           
+                  #     floating_svi: true
+                      # vlan: 17
+                      # paths:
+                        # - floating_ip: 10.237.101.67/27
+                        #   physical_domain: isovalent-nodes
+                      # ip: 10.237.101.73/27
+                      # ip_shared: 10.237.101.77/27
 
-                    - node_id: 2103                       
-                      node2_id: 2104
-                      pod_id: 2
-                      svi: true                           
-                      channel: vpc_to_c220m5-10G-isovalent-node-10
-                      mode: regular                       
-                      vlan: 17                            
-                      ip_a: 10.237.101.73/27               
-                      ip_b: 10.237.101.74/27
-                      ip_shared: 10.237.101.77/27
-                      bgp_peers:
-                        - ip: 10.237.101.64/27
-                          remote_as: 65252
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
+                    # - node_id: 2104                                           
+                      # floating_svi: true
+                      # vlan: 17
+                      # paths:
+                      #   - floating_ip: 10.237.101.67/27
+                      #     physical_domain: isovalent-nodes
+                      # ip: 10.237.101.74/27
+                      # ip_shared: 10.237.101.77/27
 
-                    - node_id: 2103                       
-                      node2_id: 2104
-                      pod_id: 2
-                      svi: true                           
-                      channel: vpc_to_c220m5-10G-isovalent-node-11
-                      mode: regular                       
-                      vlan: 17                            
-                      ip_a: 10.237.101.73/27               
-                      ip_b: 10.237.101.74/27
-                      ip_shared: 10.237.101.77/27
-                      bgp_peers:
-                        - ip: 10.237.101.64/27
-                          remote_as: 65252
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-
-                  dhcp_labels:
-                    - dhcp_relay_policy: dhcp-k8s-bm-pod-2
+                  #     bgp_peers:
+                  #       - ip: 10.237.101.64/27
+                  #         remote_as: 65252
+                  #         local_as: 65151
+                  #         allow_self_as: false
+                  #         as_override: true
+                  #         disable_peer_as_check: true
+                  #         next_hop_self: false
+                  #         send_community: false
+                  #         send_ext_community: false
+                  #         allowed_self_as_count: 3
+                  #         bfd: false
+                  #         disable_connected_check: false
+                  #         ttl: 1
+                  #         remove_all_private_as: false
+                  #         remove_private_as: false
+                  #         replace_private_as_with_local_as: false
+                  #         unicast_address_family: true
+                  #         multicast_address_family: false
+                  #         admin_state: true
+                  #         as_propagate: no-prepend
+                  #         peer_prefix_policy: cilium-cni
+                  # dhcp_labels:
+                  #   - dhcp_relay_policy: dhcp-k8s-bm-pod-2
 # svi end
 
 # Application Profiles
@@ -852,7 +838,8 @@ apic:
                   endpoint_group: '10.237.101.96_28'
               contracts:
                 consumers:
-                  - permit-to-ingress-subnet
+                  - permit-to-ingress-subnet-cluster-1
+                  - permit-to-ingress-subnet-cluster-2
                   - permit-to-ilb-vip-subnet
                 providers:
                   - permit-to-nginx-subnet-10.237.101.96_28

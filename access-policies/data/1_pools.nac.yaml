@@ -326,12 +326,10 @@ apic:
       - name: isovalent-nodes
         allocation: static
         ranges:
-          - from: 15
-            description: bare metal nodes
-          - from: 16
-            description: L3out to isovalent.vrf-01
-          - from: 17
-            description: L3out to isovalent.vrf-01
+          - from: 50
+            description: L3out to isovalent.vrf-01 VM nodes
+          - from: 51
+            description: L3out to isovalent.vrf-01 bare metal nodes
 
       - name: mgmt_inb
         allocation: static

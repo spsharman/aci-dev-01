@@ -123,88 +123,72 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-1G-isovalent-node-01
+      - name: vpc_to_c220m5-WZP220811XJ
         type: vpc
+        description: isovalent-node-01
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-1G-isovalent-node-02
+      - name: vpc_to_c220m5-WZP220811XT
         type: vpc
+        description: isovalent-node-02
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-1G-isovalent-node-03
+      - name: vpc_to_c220m5-WZP220811YV
         type: vpc
+        description: isovalent-node-03
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-1G-isovalent-node-04
+      - name: vpc_to_c220m5-WZP220811X8
         type: vpc
+        description: isovalent-node-04
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-1G-isovalent-node-05
+      - name: vpc_to_c220m5-WZP220811YQ
         type: vpc
+        description: isovalent-node-05
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-1G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      # - name: vpc_to_c220m3-1G-isovalent-node-06
-      #   type: vpc
-      #   aaep: vlans-allowed-to-isovalent-nodes
-      #   link_level_policy: speed-1G
-      #   lldp_policy: lldp-enabled
-      #   l2_policy: port-local-vlans
-      #   port_channel_policy: lacp-active
-
-      - name: vpc_to_c220m3-1G-isovalent-node-07
+      - name: vpc_to_c220m5-WZP22031ETX
         type: vpc
-        aaep: vlans-allowed-to-isovalent-nodes
-        link_level_policy: speed-1G
-        lldp_policy: lldp-enabled
-        l2_policy: port-local-vlans
-        port_channel_policy: lacp-active
-
-      - name: vpc_to_c220m3-1G-isovalent-node-08
-        type: vpc
-        aaep: vlans-allowed-to-isovalent-nodes
-        link_level_policy: speed-1G
-        lldp_policy: lldp-enabled
-        l2_policy: port-local-vlans
-        port_channel_policy: lacp-active
-
-      - name: vpc_to_c220m5-10G-isovalent-node-09
-        type: vpc
+        description: isovalent-node-06
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-10G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-10G-isovalent-node-10
+      - name: vpc_to_c220m5-WZP22031ETL
         type: vpc
+        description: isovalent-node-07
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-10G
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_c220m5-10G-isovalent-node-11
+      - name: vpc_to_c220m5-WZP22031EUJ
         type: vpc
+        description: isovalent-node-08
         aaep: vlans-allowed-to-isovalent-nodes
         link_level_policy: speed-10G
         lldp_policy: lldp-enabled

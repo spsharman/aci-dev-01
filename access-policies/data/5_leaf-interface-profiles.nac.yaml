@@ -92,40 +92,40 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_c220m5-1G-isovalent-node-01
-            policy_group: vpc_to_c220m5-1G-isovalent-node-01
+          - name: vpc_to_c220m5-WZP220811XJ
+            policy_group: vpc_to_c220m5-WZP220811XJ
             port_blocks:
               - name: block-1
                 description: isovalent-node-01
                 from_port: 21
                 to_port: 21
 
-          - name: vpc_to_c220m5-1G-isovalent-node-02
-            policy_group: vpc_to_c220m5-1G-isovalent-node-02
+          - name: vpc_to_c220m5-WZP220811XT
+            policy_group: vpc_to_c220m5-WZP220811XT
             port_blocks:
               - name: block-1
                 description: isovalent-node-02
                 from_port: 22
                 to_port: 22              
 
-          - name: vpc_to_c220m5-1G-isovalent-node-03
-            policy_group: vpc_to_c220m5-1G-isovalent-node-03
+          - name: vpc_to_c220m5-WZP220811YV
+            policy_group: vpc_to_c220m5-WZP220811YV
             port_blocks:
               - name: block-1
                 description: isovalent-node-03
                 from_port: 23
                 to_port: 23
 
-          - name: vpc_to_c220m5-1G-isovalent-node-04
-            policy_group: vpc_to_c220m5-1G-isovalent-node-04
+          - name: vpc_to_c220m5-WZP220811X8
+            policy_group: vpc_to_c220m5-WZP220811X8
             port_blocks:
               - name: block-1
                 description: isovalent-node-04
                 from_port: 24
                 to_port: 24
 
-          - name: vpc_to_c220m5-1G-isovalent-node-05
-            policy_group: vpc_to_c220m5-1G-isovalent-node-05
+          - name: vpc_to_c220m5-WZP220811YQ
+            policy_group: vpc_to_c220m5-WZP220811YQ
             port_blocks:
               - name: block-1
                 description: isovalent-node-05
@@ -228,40 +228,40 @@ apic:
                 from_port: 32
                 to_port: 32
 
-          - name: vpc_to_c220m5-1G-isovalent-node-01
-            policy_group: vpc_to_c220m5-1G-isovalent-node-01
+          - name: vpc_to_c220m5-WZP220811XJ
+            policy_group: vpc_to_c220m5-WZP220811XJ
             port_blocks:
               - name: block-1
                 description: isovalent-node-01
                 from_port: 21
                 to_port: 21
 
-          - name: vpc_to_c220m5-1G-isovalent-node-02
-            policy_group: vpc_to_c220m5-1G-isovalent-node-02
+          - name: vpc_to_c220m5-WZP220811XT
+            policy_group: vpc_to_c220m5-WZP220811XT
             port_blocks:
               - name: block-1
                 description: isovalent-node-02
                 from_port: 22
                 to_port: 22              
 
-          - name: vpc_to_c220m5-1G-isovalent-node-03
-            policy_group: vpc_to_c220m5-1G-isovalent-node-03
+          - name: vpc_to_c220m5-WZP220811YV
+            policy_group: vpc_to_c220m5-WZP220811YV
             port_blocks:
               - name: block-1
                 description: isovalent-node-03
                 from_port: 23
                 to_port: 23
 
-          - name: vpc_to_c220m5-1G-isovalent-node-04
-            policy_group: vpc_to_c220m5-1G-isovalent-node-04
+          - name: vpc_to_c220m5-WZP220811X8
+            policy_group: vpc_to_c220m5-WZP220811X8
             port_blocks:
               - name: block-1
                 description: isovalent-node-04
                 from_port: 24
                 to_port: 24
 
-          - name: vpc_to_c220m5-1G-isovalent-node-05
-            policy_group: vpc_to_c220m5-1G-isovalent-node-05
+          - name: vpc_to_c220m5-WZP220811YQ
+            policy_group: vpc_to_c220m5-WZP220811YQ
             port_blocks:
               - name: block-1
                 description: isovalent-node-05
@@ -409,53 +409,53 @@ apic:
 # aci-dev-01-pod-02-leaf-2103
       - name: aci-dev-01-pod-02-leaf-2103
         selectors:
-          - name: vpc_to_c220m5-10G-isovalent-node-09
-            policy_group: vpc_to_c220m5-10G-isovalent-node-09
+          - name: vpc_to_c220m5-WZP22031ETX
+            policy_group: vpc_to_c220m5-WZP22031ETL
             port_blocks:
               - name: block-1
-                description: isovalent-node-09
+                description: isovalent-node-06
                 from_port: 1
                 to_port: 1
 
-          - name: vpc_to_c220m5-10G-isovalent-node-10
-            policy_group: vpc_to_c220m5-10G-isovalent-node-10
+          - name: vpc_to_c220m5-WZP22031ETL
+            policy_group: vpc_to_c220m5-WZP22031ETX
             port_blocks:
-              - name: block-1
-                description: isovalent-node-10
+              - name: block-2
+                description: isovalent-node-07
                 from_port: 2
                 to_port: 2
 
-          - name: vpc_to_c220m5-10G-isovalent-node-11
-            policy_group: vpc_to_c220m5-10G-isovalent-node-11
+          - name: vpc_to_c220m5-WZP22031EUJ
+            policy_group: vpc_to_c220m5-WZP22031EUJ
             port_blocks:
-              - name: block-1
-                description: isovalent-node-11
+              - name: block-3
+                description: isovalent-node-08
                 from_port: 3
                 to_port: 3
 
 # aci-dev-01-pod-02-leaf-2104
       - name: aci-dev-01-pod-02-leaf-2104
         selectors:
-          - name: vpc_to_c220m5-10G-isovalent-node-09
-            policy_group: vpc_to_c220m5-10G-isovalent-node-09
+          - name: vpc_to_c220m5-WZP22031ETX
+            policy_group: vpc_to_c220m5-WZP22031ETL
             port_blocks:
               - name: block-1
-                description: isovalent-node-09
+                description: isovalent-node-06
                 from_port: 1
                 to_port: 1
 
-          - name: vpc_to_c220m5-10G-isovalent-node-10
-            policy_group: vpc_to_c220m5-10G-isovalent-node-10
+          - name: vpc_to_c220m5-WZP22031ETL
+            policy_group: vpc_to_c220m5-WZP22031ETX
             port_blocks:
-              - name: block-1
-                description: isovalent-node-10
+              - name: block-2
+                description: isovalent-node-07
                 from_port: 2
                 to_port: 2
 
-          - name: vpc_to_c220m5-10G-isovalent-node-11
-            policy_group: vpc_to_c220m5-10G-isovalent-node-11
+          - name: vpc_to_c220m5-WZP22031EUJ
+            policy_group: vpc_to_c220m5-WZP22031EUJ
             port_blocks:
-              - name: block-1
-                description: isovalent-node-11
+              - name: block-3
+                description: isovalent-node-08
                 from_port: 3
                 to_port: 3

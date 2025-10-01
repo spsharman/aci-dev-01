@@ -20,7 +20,7 @@ module "aci" {
   # yaml_directories = ["svi"]
   # yaml_directories = ["floating-svi"]
   # yaml_files = ["svi/configuration.nac.yaml"]
-  yaml_files = ["floating-svi/configuration.nac.yaml"]
+  yaml_files = ["floating-svi/configuration-v3.nac.yaml"]
 
 
   manage_access_policies    = false
