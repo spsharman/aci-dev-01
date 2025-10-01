@@ -688,6 +688,9 @@ apic:
                 - tenant: jorgquin
                   vrf: vrf-01
                   description: Leaked to tn-jorgquin:vrf-01
+                - tenant: maxalvar
+                  vrf: vrf-01
+                  description: Leaked to tn-maxalvar:vrf-01
 
 # L3out
       l3outs:
@@ -1105,7 +1108,8 @@ apic:
                 imported_consumers:
                   - permit-to-tn-mgmt-inb-mgmt
                   - permit-to-tn-isovalent-egress-subnet
-                  - permit-to-tn-isovalent-ingress-subnet
+                  - permit-to-tn-isovalent-ingress-subnet-cluster-1
+                  - permit-to-tn-isovalent-ingress-subnet-cluster-2
                   - permit-to-tn-isovalent-node-subnet
                   # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
 
