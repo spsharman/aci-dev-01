@@ -1,0 +1,820 @@
+# Notes:
+#
+#
+---
+apic:
+# Tenant
+  tenants:
+    - name: BRKDCN-2959
+      description: NAT testing
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-mpod-cluster
+                interfaces:
+                  - name: ftd-4112-01-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
+                    pod_id: 2
+                    node_id: 2101
+                    node2_id: 2102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 14
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+        redirect_policies:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
+            # ip_sla_policy: icmp-aggressive-timers
+            pod_aware: false
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:00:00:00:00:14
+                # redirect_health_group: ftd-4112-one-arm-L3-mpod-cluster
+
+        redirect_health_groups:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+
+        service_graph_templates:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: BRKDCN-2959
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'ipv4-src-any-dst-any'
+          entries:
+            - name: 'ipv4-src-any-dst-any'
+              ethertype: ipv4
+              protocol: unspecified
+
+        - name: 'src-any-dst-22'
+          entries:
+            - name: 'src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-01-all-services
+          description: EPG is contract provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-02-all-services
+          description: EPG is contract provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-to-application-03-all-services
+          description: EPG is contract provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: permit-from-lab-desktops-extEPG-to-application-01-all-services
+          description: lab-desktops extEPG (C) application-01 (P) 
+          scope: tenant
+          subjects:
+            - name: tcp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-22'
+            - name: icmp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
+
+        - name: permit-from-lab-desktops-extEPG-to-nat-subnet-extEPG
+          description: lab desktops extEPG (C) nat subnets (P)
+          scope: tenant
+          subjects:
+            - name: tcp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-22'
+            - name: icmp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: production-outside
+          leaked_external_prefixes:
+            - prefix: 0.0.0.0/0
+              destinations:
+                - tenant: BRKDCN-2959
+                  vrf: vrf-02
+
+        - name: vrf-02
+          description: configured with NAC
+          alias: production-inside
+          # leaked_internal_prefixes:
+          #   - prefix: 192.168.10.0/24
+          #     public: false
+          #     destinations:
+          #       - tenant: BRKDCN-2959
+          #         vrf: vrf-01
+
+# L3out BGP
+      l3outs:
+        - name: vrf-01-bgp-to-core
+          description: configured with NAC
+          vrf: vrf-01
+          domain: BRKDCN-2959.vrf-01
+
+# Nodes
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 101.1.0.6
+                  router_id_as_loopback: true
+
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 102.1.0.6
+                  router_id_as_loopback: true
+
+# Interfaces
+              interface_profiles:
+                - name: leaf-1101-eth7.12
+                  description: core-01 eth1/7.12
+                  interfaces:
+                    - node_id: 1101
+                      port: 7
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.40/31
+                      mac: "00:11:01:07:12:FF"
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.41/32
+                          description: core-01 eth1/7.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+
+                - name: leaf-1101-eth8.12
+                  description: core-02 eth1/8.12
+                  interfaces:
+                    - node_id: 1101
+                      port: 8
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.42/31
+                      mac: "00:11:01:08:12:FF"
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.43/32
+                          description: core-02 eth1/8.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+
+                - name: leaf-1102-eth7.12
+                  description: core-02 eth1/7.12
+                  interfaces:
+                    - node_id: 1102
+                      port: 7
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.44/31
+                      mac: "00:11:02:07:12:FF"
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.45/32
+                          description: core-02 eth1/7.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+
+                - name: leaf-1102-eth8.12
+                  description: core-01 eth1/8.12
+                  interfaces:
+                    - node_id: 1102
+                      port: 8
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.46/31
+                      mac: "00:11:01:08:12:FF"
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.47/32
+                          description: core-01 eth1/8.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 101.2.0.6
+                  router_id_as_loopback: true
+
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 102.2.0.6
+                  router_id_as_loopback: true
+
+              interface_profiles:
+                - name: leaf-2101-eth7.12
+                  description: core-03 eth1/7.12
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 7
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.48/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.49/32
+                          description: core-03 eth1/7.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2101-eth8.12
+                  description: core-04 eth1/8.12
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 8
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.50/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.51/32
+                          description: core-04 eth1/8.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2102-eth7.12
+                  description: core-04 eth1/7.12
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 7
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.52/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.53/32
+                          description: core-04 eth1/7.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          # peer_prefix_policy: cilium-cni
+
+                - name: leaf-2102-eth8.12
+                  description: core-02 eth1/8.12
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 8
+                      vlan: 12
+                      svi: false
+                      ip: 10.237.97.54/31
+                      mtu: inherit
+                      bgp_peers:
+                        - ip: 10.237.97.55/32
+                          description: core-03 eth1/8.12
+                          remote_as: 64800  
+                          local_as: 64803
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 2
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+
+# extEPGs
+          external_endpoint_groups:
+            # - name: all-ext-subnets
+            #   subnets:
+            #     - prefix: 0.0.0.0/0
+            #       shared_route_control: true
+            #       export_route_control: true
+            #       aggregate_export_route_control: true
+            #       import_security: false
+
+            #     - prefix: 0.0.0.0/1
+            #       import_security: true
+            #       shared_security: true
+
+            #     - prefix: 128.0.0.0/1
+            #       import_security: true
+            #       shared_security: true
+
+            #   contracts:
+            #     consumers:
+            #       - permit-to-application-01-all-services
+            #       - permit-to-application-02-all-services
+            #       - permit-to-application-03-all-services
+
+            - name: lab-desktops-subnets
+              subnets:
+                - prefix: 10.237.97.160/28
+                  name: lab-desktops
+                  shared_route_control: true
+                  shared_security: true
+                  import_security: true
+              contracts:
+                consumers:
+                  - permit-from-lab-desktops-extEPG-to-nat-subnet-extEPG
+                  - permit-from-lab-desktops-extEPG-to-application-01-all-services
+
+# L3out NAT
+        - name: vrf-02-nat-subnets
+          description: configured with NAC
+          vrf: vrf-02
+          domain: BRKDCN-2959.vrf-02
+
+# Pod 1 Nodes - static routes must be configured via the UI
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 101.1.0.6
+                  router_id_as_loopback: false
+
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 102.1.0.6
+                  router_id_as_loopback: false
+
+# Pod 1 Interfaces
+              interface_profiles:
+                - name: leaf-1101-eth7.13
+                  description: core-01 eth1/7.13
+                  interfaces:
+                    - node_id: 1101
+                      port: 7
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.1/31
+                      mac: "00:11:01:07:12:FF"
+                      mtu: inherit
+
+                - name: leaf-1101-eth8.13
+                  description: core-02 eth1/8.13
+                  interfaces:
+                    - node_id: 1101
+                      port: 8
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.3/31
+                      mac: "00:11:01:08:12:FF"
+                      mtu: inherit
+
+                - name: leaf-1102-eth7.13
+                  description: core-02 eth1/7.13
+                  interfaces:
+                    - node_id: 1102
+                      port: 7
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.5/31
+                      mac: "00:11:02:07:12:FF"
+                      mtu: inherit
+
+                - name: leaf-1102-eth8.13
+                  description: core-01 eth1/8.13
+                  interfaces:
+                    - node_id: 1102
+                      port: 8
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.7/31
+                      mac: "00:11:01:08:12:FF"
+                      mtu: inherit
+
+# Pod 2 Nodes - static routes must be configured via the UI
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 101.2.0.6
+                  router_id_as_loopback: false
+
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 102.2.0.6
+                  router_id_as_loopback: false
+
+# Interfaces
+              interface_profiles:
+                - name: leaf-2101-eth7.13
+                  description: core-03 eth1/7.13
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 7
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.9/31
+                      mtu: inherit
+
+                - name: leaf-2101-eth8.13
+                  description: core-04 eth1/8.13
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 8
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.11/31
+                      mtu: inherit
+
+                - name: leaf-2102-eth7.13
+                  description: core-04 eth1/7.13
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 7
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.13/31
+                      mtu: inherit
+
+                - name: leaf-2102-eth8.13
+                  description: core-02 eth1/8.13
+                  interfaces:
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 8
+                      vlan: 13
+                      svi: false
+                      ip: 172.16.13.15/31
+                      mtu: inherit
+
+# # extEPGs
+          external_endpoint_groups:
+            - name: nat-subnets
+              subnets:
+                - prefix: 172.16.1.0/24
+                  shared_route_control: true
+                  shared_security: true
+                  import_security: true
+              contracts:
+                providers:
+                  - permit-from-lab-desktops-extEPG-to-nat-subnet-extEPG
+
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          alias: pbr-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 192.168.10.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.10.1/24
+              public: false # not required when using ESG route leaking under the VRF
+              shared: false # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.11.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.11.1/24
+              public: false # not required when using ESG route leaking under the VRF
+              shared: false # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 192.168.12.0_24
+          alias: production-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.12.1/24
+              public: false # not required when using ESG route leaking under the VRF
+              shared: false # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.10.0_24'
+              # alias:
+              bridge_domain: '192.168.10.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1239
+                  secondary_vlan: 1240  
+                  u_segmentation: true  
+
+            - name: '192.168.11.0_24'
+              # alias:
+              bridge_domain: '192.168.11.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1241
+                  secondary_vlan: 1242  
+                  u_segmentation: true
+
+            - name: '192.168.12.0_24'
+              # alias:
+              bridge_domain: '192.168.12.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1243
+                  secondary_vlan: 1244  
+                  u_segmentation: true
+
+        - name: 'application-01'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-from-lab-desktops-extEPG-to-application-01-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.10/32
+                - value: 192.168.11.10/32
+                - value: 192.168.12.10/32
+                - value: 192.168.12.11/32
+
+        - name: 'application-02'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-02-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.20/32
+                - value: 192.168.11.20/32
+                - value: 192.168.11.21/32
+                - value: 192.168.12.20/32
+
+        - name: 'application-03'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: all-services
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                providers:
+                  - permit-to-application-03-all-services
+              ip_subnet_selectors:
+                - value: 192.168.10.30/32
+                - value: 192.168.11.30/32
+                - value: 192.168.12.30/32
+                - value: 192.168.12.31/32

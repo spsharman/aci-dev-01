@@ -46,6 +46,8 @@ apic:
 
       - name: BRKDCN-2959.vrf-01
 
+      - name: BRKDCN-2959.vrf-02
+
       - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         vlan_pool: BRKDCN-2959-DMZ.vrf-01-ospf-peering
 

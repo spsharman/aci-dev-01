@@ -105,6 +105,7 @@ apic:
         routed_domains:
           - shared-services.vrf-01-bgp-core
           - BRKDCN-2959.vrf-01
+          - BRKDCN-2959.vrf-02
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
