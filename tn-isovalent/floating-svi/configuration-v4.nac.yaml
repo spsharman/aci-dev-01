@@ -547,6 +547,17 @@ apic:
                   aggregate_shared_route_control: false
                   bgp_route_summarization: false
                   ospf_route_summarization: false
+                - prefix: 10.100.16.0/20
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: false
+                  import_security: true
+                  shared_security: false
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
               contracts:
                 providers:
                   - permit-to-pod-subnet-cluster-1
@@ -558,6 +569,17 @@ apic:
               description: pod subnet
               subnets:
                 - prefix: 10.2.0.0/16
+                  import_route_control: false
+                  export_route_control: false
+                  shared_route_control: false
+                  import_security: true
+                  shared_security: false
+                  aggregate_import_route_control: false
+                  aggregate_export_route_control: false
+                  aggregate_shared_route_control: false
+                  bgp_route_summarization: false
+                  ospf_route_summarization: false
+                - prefix: 10.100.32.0/19
                   import_route_control: false
                   export_route_control: false
                   shared_route_control: false
