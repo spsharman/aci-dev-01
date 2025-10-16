@@ -4,6 +4,8 @@
 #
 # Need to manually add a static route to the NAT subnet so that APIC creates a Null0 interface
 #
+# Need to manually add service graphs to the contracts as they're not push with NAC
+#
 ---
 apic:
 # Tenant
@@ -176,14 +178,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters: 
                   - filter: src-any-dst-22
             - name: icmp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters:
                   - filter: 'icmp'
 
@@ -193,14 +195,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters: 
                   - filter: src-any-dst-22
             - name: icmp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters:
                   - filter: 'icmp'
 
@@ -210,14 +212,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters: 
                   - filter: src-22-dst-any
             - name: icmp
               reverse_filter_ports: false
-              service_graph: ftd-4112-one-arm-L3-mpod-cluster
               consumer_to_provider:
+                service_graph: ftd-4112-one-arm-L3-mpod-cluster
                 filters:
                   - filter: 'icmp'
 

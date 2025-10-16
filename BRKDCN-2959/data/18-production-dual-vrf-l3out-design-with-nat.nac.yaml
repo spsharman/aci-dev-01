@@ -6,7 +6,7 @@ apic:
 # Tenant
   tenants:
     - name: BRKDCN-2959
-      description: NAT testing
+      description: Firewall cluster with NAT
 
 # Policies
       policies:
@@ -126,6 +126,27 @@ apic:
               protocol: tcp
               destination_from_port: 22
 
+        - name: 'src-any-dst-80'
+          entries:
+            - name: 'src-any-dst-80'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 80
+
+        - name: 'src-any-dst-443'
+          entries:
+            - name: 'src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+
+        - name: 'src-any-dst-53'
+          entries:
+            - name: 'src-any-dst-53'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 53
+
 # Contracts
       contracts:
         - name: intra-vrf
@@ -186,6 +207,44 @@ apic:
               filters:
                 - filter: 'icmp'
 
+        - name: permit-from-application-01-all-services-to-all-ext-subnets
+          description: application-01-all-services (C) all-ext-subnets (P)
+          scope: tenant
+          subjects:
+            - name: tcp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-22'
+                - filter: 'src-any-dst-80'
+                - filter: 'src-any-dst-443'
+            - name: udp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-53'          
+            - name: icmp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
+
+        - name: permit-from-nat-subnets-to-all-ext-subnets
+          description: nat-subnets (C) all-ext-subnets (P)
+          scope: tenant
+          subjects:
+            - name: tcp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-22'
+                - filter: 'src-any-dst-80'
+                - filter: 'src-any-dst-443'
+            - name: udp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'src-any-dst-53'          
+            - name: icmp
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
+
 # VRFs
       vrfs:
         - name: vrf-01
@@ -200,12 +259,6 @@ apic:
         - name: vrf-02
           description: configured with NAC
           alias: production-inside
-          # leaked_internal_prefixes:
-          #   - prefix: 192.168.10.0/24
-          #     public: false
-          #     destinations:
-          #       - tenant: BRKDCN-2959
-          #         vrf: vrf-01
 
 # L3out BGP
       l3outs:
@@ -512,27 +565,38 @@ apic:
 
 # extEPGs
           external_endpoint_groups:
-            # - name: all-ext-subnets
-            #   subnets:
-            #     - prefix: 0.0.0.0/0
-            #       shared_route_control: true
-            #       export_route_control: true
-            #       aggregate_export_route_control: true
-            #       import_security: false
+            - name: route-control-only
+              subnets:
+                - prefix: 0.0.0.0/0
+                  shared_route_control: true
+                  export_route_control: true
+                  aggregate_export_route_control: true
+                  import_security: false
 
-            #     - prefix: 0.0.0.0/1
-            #       import_security: true
-            #       shared_security: true
+            - name: all-ext-subnets
+              subnets:
+                # - prefix: 0.0.0.0/0
+                #   shared_route_control: true
+                #   export_route_control: true
+                #   aggregate_export_route_control: true
+                #   import_security: false
 
-            #     - prefix: 128.0.0.0/1
-            #       import_security: true
-            #       shared_security: true
+                - prefix: 0.0.0.0/1
+                  import_security: true
+                  shared_security: true
 
-            #   contracts:
+                - prefix: 128.0.0.0/1
+                  import_security: true
+                  shared_security: true
+
+              contracts:
             #     consumers:
             #       - permit-to-application-01-all-services
             #       - permit-to-application-02-all-services
             #       - permit-to-application-03-all-services
+                providers:
+                  - permit-from-application-01-all-services-to-all-ext-subnets
+                  - permit-from-nat-subnets-to-all-ext-subnets
 
             - name: lab-desktops-subnets
               subnets:
@@ -541,6 +605,10 @@ apic:
                   shared_route_control: true
                   shared_security: true
                   import_security: true
+
+                # - prefix: 172.16.1.0/24
+                #   export_route_control: true
+
               contracts:
                 consumers:
                   - permit-from-lab-desktops-extEPG-to-nat-subnet-extEPG
@@ -682,6 +750,8 @@ apic:
               contracts:
                 providers:
                   - permit-from-lab-desktops-extEPG-to-nat-subnet-extEPG
+                consumers:
+                  - permit-from-nat-subnets-to-all-ext-subnets
 
 
 # Bridge Domains
@@ -779,6 +849,8 @@ apic:
               contracts:
                 providers:
                   - permit-from-lab-desktops-extEPG-to-application-01-all-services
+                consumers:
+                  - permit-from-application-01-all-services-to-all-ext-subnets
               ip_subnet_selectors:
                 - value: 192.168.10.10/32
                 - value: 192.168.11.10/32
