@@ -1,0 +1,66 @@
+! core-02
+
+interface Ethernet1/7.13
+  description aci-dev-01 1102/1/7.13 BRKDCN-2984
+  mtu 9000
+  encapsulation dot1q 13
+  vrf member core
+  ip address 10.237.97.61/31
+  no shutdown
+
+interface Ethernet1/8.13
+  description aci-dev-01 1101/1/8.13 BRKDCN-2984
+  mtu 9000
+  encapsulation dot1q 13
+  vrf member core
+  ip address 10.237.97.59/31
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.60
+      remote-as 64804
+      description aci-dev-01-pod-01-leaf-1102 BRKDCN-2984
+      update-source Ethernet1/7.13
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.58
+      remote-as 64804
+      description aci-dev-01-pod-01-leaf-1101 BRKDCN-2984
+      update-source Ethernet1/8.13
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+
+core-02# show bgp vrf core ipv4 unicast summary
+BGP summary information for VRF core, address family IPv4 Unicast
+BGP router identifier 10.237.96.17, local AS number 64800
+BGP table version is 6084, IPv4 Unicast config peers 17, capable peers 13
+142 network entries and 486 paths using 74488 bytes of memory
+BGP attribute entries [105/37800], BGP AS path entries [16/200]
+BGP community entries [0/0], BGP clusterlist entries [0/0]
+451 received paths for inbound soft reconfiguration
+0 identical, 451 modified, 0 filtered received paths using 7216 bytes
+
+Neighbor        V    AS    MsgRcvd    MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.237.96.1     4 64800     170303     170857     6084    0    0    16w6d 30
+10.237.96.3     4 64800     170302     170857     6084    0    0    16w6d 30
+10.237.96.16    4 64800     170556     170857     6084    0    0    16w6d 51
+10.237.96.18    4 64800     170560     170857     6084    0    0    16w6d 49
+10.237.96.19    4 64800     172057     170853     6084    0    0    16w6d 93
+10.237.96.114   4 65101     170325     170819     6084    0    0    16w6d 1
+10.237.96.118   4 65101          0          0        0    0    0    16w6d Idle
+10.237.96.130   4 65101     170325     170819     6084    0    0    16w6d 1
+10.237.96.134   4 65101          0          0        0    0    0    16w6d Idle
+10.237.96.253   4 64801     173478     170339     6084    0    0     7w1d 71
+10.237.96.255   4 64801     173525     170340     6084    0    0     7w1d 71
+10.237.97.6     4 65090     170334     170808     6084    0    0     5w2d 4
+10.237.97.14    4 65090     170337     170809     6084    0    0     5w2d 4
+10.237.97.42    4 64803     170867     170795     6084    0    0     1w3d 13
+10.237.97.44    4 64803     170611     170787     6084    0    0     1w3d 33
+10.237.97.58    4 64804          0          0        0    0    0 00:10:36 Idle
+10.237.97.60    4 64804          0          0        0    0    0 00:10:36 Idle
+core-02#

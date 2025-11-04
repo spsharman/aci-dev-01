@@ -15,7 +15,10 @@ provider "aci" {
 module "aci" {
   source  = "netascode/nac-aci/aci"
 
-  yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
+  # yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
+
+  yaml_files = ["data/01-production-current-design-vzAny-allows-open-communication.nac.yaml"]
+
 
   # yaml_files = ["data/blueprints/blueprint-1.nac.yaml"]
   # yaml_files = ["data/blueprints/blueprint-2.nac.yaml"]

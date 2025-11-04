@@ -104,6 +104,7 @@ apic:
       - name: routed-interfaces-to-core
         routed_domains:
           - shared-services.vrf-01-bgp-core
+          - BRKDCN-2984.vrf-01
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
 
@@ -116,8 +117,10 @@ apic:
       - name: vlans-allowed-to-firewalls
         physical_domains:
           - firewalls
+          - BRKDCN-2959.vrf-02
         routed_domains:
           - shared-services.vrf-01-static-ftd-4112
+          - BRKDCN-2959.vrf-02
 
       - name: vlans-allowed-to-hyperflex
         infra_vlan: false

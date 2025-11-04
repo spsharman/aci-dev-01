@@ -37,6 +37,7 @@ module "aci" {
   # yaml_files = ["data/17-production-single-vrf-dual-l3out-design-with-nat.nac.yaml"]
   yaml_files = ["data/18-production-dual-vrf-l3out-design-with-nat.nac.yaml"]
   # yaml_files = ["data/19-production-dual-vrf-l3out-design-with-nat-uni-directional-contracts.nac.yaml"]
+  # yaml_files = ["data/20-production-dual-vrf-l3out-design-with-nat-fw-redirect-l3out.nac.yaml"]
 
 
   manage_access_policies    = false

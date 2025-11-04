@@ -4,6 +4,13 @@ apic:
 
 # VLAN pools  
     vlan_pools:
+      - name: BRKDCN-2959.vrf-02
+        allocation: static
+        ranges:
+          - from: 14
+            allocation: static
+            description: tn-BRKDCN-2959 L3out to FTD mPod cluster
+
       - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         allocation: static
         ranges:

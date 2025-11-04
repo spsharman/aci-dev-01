@@ -4,6 +4,9 @@ apic:
 
 # Physical Domains
     physical_domains:
+      - name: BRKDCN-2959.vrf-02
+        vlan_pool: BRKDCN-2959.vrf-02
+
       - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         vlan_pool: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         
@@ -44,9 +47,12 @@ apic:
         security_domains:
           - ajshahid.vrf-01
 
+      - name: BRKDCN-2984.vrf-01
+
       - name: BRKDCN-2959.vrf-01
 
       - name: BRKDCN-2959.vrf-02
+        vlan_pool: BRKDCN-2959.vrf-02
 
       - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering
         vlan_pool: BRKDCN-2959-DMZ.vrf-01-ospf-peering
