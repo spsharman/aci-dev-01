@@ -31,6 +31,9 @@ apic:
       - name: mgmt_inb
         vlan_pool: mgmt_inb
 
+      - name: robvand.vrf-01
+        vlan_pool: robvand-k8s-nodes
+
       - name: ssharman-ubuntu-nodes
         vlan_pool: ssharman-ubuntu-nodes
 
@@ -102,6 +105,9 @@ apic:
 
       - name: multisite
         vlan_pool: hx-dev-01-vds-02
+
+      - name: robvand.vrf-01
+        vlan_pool: robvand-k8s-nodes
 
       - name: shared-services.vrf-01-bgp-core
         vlan_pool: hx-dev-01-vds-02

@@ -1,0 +1,25 @@
+# Notes
+
+- Add new VLAN to UCS
+- Add port group to vds-01 for L3out peering - VLAN 51
+- New AS number - 65153 / 65254
+- Create L3out
+- vCenter user **DONE**
+- vCenter folder **DONE**
+- APIC user robvand **DONE**
+- APIC user api_robvand **DONE**
+- Access policies
+  - AAEP: vlans-allowed-to-hyperflex > add robvand.vrf-01 **DONE**
+  - L3 Domain: add robvand-k8s-nodes.vrf-01 **DONE**
+  - Physical Domain: robvand.vrf-01 **DONE**
+  - VLAN pool: add robvand-k8s-nodes > add vlan 51 **DONE**
+  - VLAN pool: isovalent-nodes > delete vlan 51 **DONE**
+- Update FTD adapter 8, gig 0/5
+- pod range is 10.101.4.0/22
+  - pod 1 range is 10.101.4.0/23
+  - pod 2 range is 10.101.5.0/23
+- pod 1 ingress range is 10.101.0.32/28
+- pod 2 ingress range is 10.101.0.48/28
+- pod 1 egress range is 10.101.0.64/28
+- pod 2 egress range is 10.101.0.80/28
+- fix imported contracts from shared-services

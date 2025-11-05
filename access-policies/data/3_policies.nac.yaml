@@ -128,6 +128,7 @@ apic:
           - hx-dev-01-vds-02
           - hyperflex
           - isovalent-nodes
+          - robvand.vrf-01
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
         routed_domains:
           - ajshahid.vrf-01
@@ -142,6 +143,7 @@ apic:
           - demo-05.vrf-01
           - demo-06.vrf-01
           - isovalent.vrf-01
+          - robvand.vrf-01
           - shared-services.vrf-01-bgp-core
           - shared-services.vrf-01-ospf-peering
 

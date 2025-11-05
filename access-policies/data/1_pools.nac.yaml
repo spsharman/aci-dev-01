@@ -335,8 +335,6 @@ apic:
         ranges:
           - from: 50
             description: L3out to isovalent.vrf-01 VM nodes
-          - from: 51
-            description: L3out to isovalent.vrf-01 bare metal nodes
           - from: 52
             description: L3out to isovalent.vrf-01 subnet 10.100.0.0/23
 
@@ -345,6 +343,12 @@ apic:
         ranges:
           - from: 3966
             description: fabric inband management
+
+      - name: robvand-k8s-nodes
+        allocation: static
+        ranges:
+          - from: 51
+            description: L3out to robvand.vrf-01
 
       - name: shared-services.vrf-01-ospf-peering
         allocation: static
