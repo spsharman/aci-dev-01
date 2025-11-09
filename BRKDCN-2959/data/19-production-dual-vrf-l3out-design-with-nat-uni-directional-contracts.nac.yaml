@@ -4,8 +4,6 @@
 #
 # Need to manually add a static route to the NAT subnet so that APIC creates a Null0 interface
 #
-# Need to manually add service graphs to the contracts as they're not push with NAC
-#
 ---
 apic:
 # Tenant
