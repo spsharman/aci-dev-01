@@ -1513,43 +1513,43 @@ apic:
                   resolution_immediacy: immediate
               physical_domains:
                 - ucsc-c220m3-vds-01
-              static_ports:
-                - node_id: 2101
-                  pod_id: 2
-                  port: 1
-                  vlan: 1073
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                - node_id: 2102
-                  pod_id: 2
-                  port: 1
-                  vlan: 1073
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 2
-                  vlan: 1073
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                - node_id: 2102
-                  pod_id: 2
-                  port: 2
-                  vlan: 1073
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 3
-                  vlan: 1073
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
-                - node_id: 2102
-                  pod_id: 2
-                  port: 3
-                  vlan: 1073
-                  description: UCSC-C220-M3 - FCH1910V17S
-                  deployment_immediacy: immediate
+              # static_ports:
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 1
+              #     vlan: 1073
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1735V1RG
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 1
+              #     vlan: 1073
+              #     description: UCSC-C220-M3 - FCH1735V1RG
+              #     deployment_immediacy: immediate
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 2
+              #     vlan: 1073
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1743V0Y4
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 2
+              #     vlan: 1073
+              #     description: UCSC-C220-M3 - FCH1743V0Y4
+              #     deployment_immediacy: immediate
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 3
+              #     vlan: 1073
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1910V17S
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 3
+              #     vlan: 1073
+              #     description: UCSC-C220-M3 - FCH1910V17S
+              #     deployment_immediacy: immediate
               contracts:
                 providers:
                   - permit-to-csr-management-csr-mgmt
@@ -1654,42 +1654,42 @@ apic:
                   mode: untagged
                   vlan: 10
                   deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 1
-                  vlan: 10
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                - node_id: 2102
-                  pod_id: 2
-                  port: 1
-                  vlan: 10
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 2
-                  vlan: 10
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                - node_id: 2102
-                  pod_id: 2
-                  port: 2
-                  vlan: 10
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 3
-                  vlan: 10
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
-                - node_id: 2102
-                  pod_id: 2
-                  port: 3
-                  vlan: 10
-                  description: UCSC-C220-M3 - FCH1910V17S
-                  deployment_immediacy: immediate
+                # - node_id: 2101
+                #   pod_id: 2
+                #   port: 1
+                #   vlan: 10
+                #   deployment_immediacy: immediate
+                #   description: UCSC-C220-M3 - FCH1735V1RG
+                # - node_id: 2102
+                #   pod_id: 2
+                #   port: 1
+                #   vlan: 10
+                #   description: UCSC-C220-M3 - FCH1735V1RG
+                #   deployment_immediacy: immediate
+                # - node_id: 2101
+                #   pod_id: 2
+                #   port: 2
+                #   vlan: 10
+                #   deployment_immediacy: immediate
+                #   description: UCSC-C220-M3 - FCH1743V0Y4
+                # - node_id: 2102
+                #   pod_id: 2
+                #   port: 2
+                #   vlan: 10
+                #   description: UCSC-C220-M3 - FCH1743V0Y4
+                #   deployment_immediacy: immediate
+                # - node_id: 2101
+                #   pod_id: 2
+                #   port: 3
+                #   vlan: 10
+                #   deployment_immediacy: immediate
+                #   description: UCSC-C220-M3 - FCH1910V17S
+                # - node_id: 2102
+                #   pod_id: 2
+                #   port: 3
+                #   vlan: 10
+                #   description: UCSC-C220-M3 - FCH1910V17S
+                #   deployment_immediacy: immediate
               contracts:
                 providers:
                   - permit-to-ftd-management-ftd-mgmt
@@ -1729,40 +1729,41 @@ apic:
                   mac_changes: reject
               physical_domains:
                 - ucsc-c220m3-vds-01
-              static_ports:
-                - node_id: 2101
-                  pod_id: 2
-                  port: 1
-                  vlan: 1013
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                - node_id: 2102
-                  pod_id: 2
-                  port: 1
-                  vlan: 1013
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 2
-                  vlan: 1013
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                - node_id: 2102
-                  pod_id: 2
-                  port: 2
-                  vlan: 1013
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 3
-                  vlan: 1013
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
-                - node_id: 2102
-                  pod_id: 2
-                  port: 3
-                  vlan: 1013
-                  description: UCSC-C220-M3 - FCH1910V17S
-                  deployment_immediacy: immediate
+              # static_ports:
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 1
+              #     vlan: 1013
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1735V1RG
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 1
+              #     vlan: 1013
+              #     description: UCSC-C220-M3 - FCH1735V1RG
+              #     deployment_immediacy: immediate
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 2
+              #     vlan: 1013
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1743V0Y4
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 2
+              #     vlan: 1013
+              #     description: UCSC-C220-M3 - FCH1743V0Y4
+              #     deployment_immediacy: immediate
+              #   - node_id: 2101
+              #     pod_id: 2
+              #     port: 3
+              #     vlan: 1013
+              #     deployment_immediacy: immediate
+              #     description: UCSC-C220-M3 - FCH1910V17S
+              #   - node_id: 2102
+              #     pod_id: 2
+              #     port: 3
+              #     vlan: 1013
+              #     description: UCSC-C220-M3 - FCH1910V17S
+              #     deployment_immediacy: immediate
+#

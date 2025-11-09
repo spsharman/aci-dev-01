@@ -396,53 +396,6 @@ apic:
                   secondary_vlan: 1272
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              # physical_domains:
-              #   - ucsc-c220m3-vds-01
-              # intra_epg_isolation: true
-              # proxy_arp: true
-              # static_ports:
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 1
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1735V1RG
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 1
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     description: UCSC-C220-M3 - FCH1735V1RG
-              #     deployment_immediacy: immediate
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 2
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1743V0Y4
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 2
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     description: UCSC-C220-M3 - FCH1743V0Y4
-              #     deployment_immediacy: immediate
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 3
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1910V17S
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 3
-              #     vlan: 1272
-              #     primary_vlan: 1271
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.32_27'
               description: no contracts on this EPG, use ESGs for contracts
@@ -455,171 +408,24 @@ apic:
                   secondary_vlan: 1274 
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
-              # physical_domains:
-              #   - ucsc-c220m3-vds-01
-              # intra_epg_isolation: true
-              # proxy_arp: true
-              # static_ports:
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 1
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1735V1RG
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 1
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     description: UCSC-C220-M3 - FCH1735V1RG
-              #     deployment_immediacy: immediate
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 2
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1743V0Y4
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 2
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     description: UCSC-C220-M3 - FCH1743V0Y4
-              #     deployment_immediacy: immediate
-              #   - node_id: 2101
-              #     pod_id: 2
-              #     port: 3
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1910V17S
-              #   - node_id: 2102
-              #     pod_id: 2
-              #     port: 3
-              #     vlan: 1274
-              #     primary_vlan: 1273
-              #     deployment_immediacy: immediate
-              #     description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.64_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
               bridge_domain: '10.1.15.64_27'
-              # vmware_vmm_domains:
-              #   - name: 'hx-dev-01-vds-01'
-              #     u_segmentation: true
-              #     primary_vlan: 1275
-              #     secondary_vlan: 1276
-              #     deployment_immediacy: immediate
-              #     resolution_immediacy: immediate
               physical_domains:
                 - ucsc-c220m3-vds-01
               intra_epg_isolation: true
               proxy_arp: true
-              static_ports:
-                - node_id: 2101
-                  pod_id: 2
-                  port: 1
-                  vlan: 1276
-                  primary_vlan: 1275
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                - node_id: 2102
-                  pod_id: 2
-                  port: 1
-                  vlan: 1276
-                  primary_vlan: 1275
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 2
-                  vlan: 1276
-                  primary_vlan: 1275
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                - node_id: 2102
-                  pod_id: 2
-                  port: 2
-                  vlan: 1276
-                  primary_vlan: 1275
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 3
-                  vlan: 1276
-                  primary_vlan: 1275
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
-                - node_id: 2102
-                  pod_id: 2
-                  port: 3
-                  vlan: 1276
-                  primary_vlan: 1275
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
 
             - name: '10.1.15.96_27'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
               bridge_domain: '10.1.15.96_27'
-              # vmware_vmm_domains:
-              #   - name: 'hx-dev-01-vds-01'
-              #     u_segmentation: true
-              #     primary_vlan: 1277
-              #     secondary_vlan: 1278
-              #     deployment_immediacy: immediate
-              #     resolution_immediacy: immediate
               physical_domains:
                 - ucsc-c220m3-vds-01
               intra_epg_isolation: true
               proxy_arp: true
-              static_ports:
-                - node_id: 2101
-                  pod_id: 2
-                  port: 1
-                  vlan: 1278
-                  primary_vlan: 1277
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                - node_id: 2102
-                  pod_id: 2
-                  port: 1
-                  vlan: 1278
-                  primary_vlan: 1277
-                  description: UCSC-C220-M3 - FCH1735V1RG
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 2
-                  vlan: 1278
-                  primary_vlan: 1277
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                - node_id: 2102
-                  pod_id: 2
-                  port: 2
-                  vlan: 1278
-                  primary_vlan: 1277
-                  description: UCSC-C220-M3 - FCH1743V0Y4
-                  deployment_immediacy: immediate
-                - node_id: 2101
-                  pod_id: 2
-                  port: 3
-                  vlan: 1278
-                  primary_vlan: 1277
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
-                - node_id: 2102
-                  pod_id: 2
-                  port: 3
-                  vlan: 1278
-                  primary_vlan: 1277
-                  deployment_immediacy: immediate
-                  description: UCSC-C220-M3 - FCH1910V17S
 
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 

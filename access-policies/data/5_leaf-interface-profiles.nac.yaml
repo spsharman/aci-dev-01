@@ -433,6 +433,22 @@ apic:
                 from_port: 3
                 to_port: 3
 
+          - name: ucs-c220m3-vds-01
+            policy_group: ucs-c220m3-vds-01
+            port_blocks:
+              - name: block-1
+                description: UCSC-C220-M3 - FCH1735V1RG
+                from_port: 5
+                to_port: 5
+              - name: block-2
+                description: UCSC-C220-M3 - FCH1743V0Y4
+                from_port: 6
+                to_port: 6
+              - name: block-3
+                description: UCSC-C220-M3 - FCH1910V17S
+                from_port: 7
+                to_port: 7
+
 # aci-dev-01-pod-02-leaf-2104
       - name: aci-dev-01-pod-02-leaf-2104
         selectors:
@@ -459,3 +475,19 @@ apic:
                 description: isovalent-node-08
                 from_port: 3
                 to_port: 3
+
+          - name: ucs-c220m3-vds-01
+            policy_group: ucs-c220m3-vds-01
+            port_blocks:
+              - name: block-1
+                description: UCSC-C220-M3 - FCH1735V1RG
+                from_port: 5
+                to_port: 5
+              - name: block-2
+                description: UCSC-C220-M3 - FCH1743V0Y4
+                from_port: 6
+                to_port: 6
+              - name: block-3
+                description: UCSC-C220-M3 - FCH1910V17S
+                from_port: 7
+                to_port: 7

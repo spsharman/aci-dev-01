@@ -146,7 +146,6 @@ apic:
           - robvand.vrf-01
           - shared-services.vrf-01-bgp-core
           - shared-services.vrf-01-ospf-peering
-
         vmware_vmm_domains:
           - hx-dev-01-vds-01
 
@@ -154,10 +153,78 @@ apic:
         physical_domains:
           - ucsc-c220m3-vds-01
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
+          - robvand.vrf-01
         routed_domains:
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
           - shared-services.vrf-01-ospf-peering
-
+          - robvand.vrf-01
+        endpoint_groups:
+          - tenant: BRKDCN-2959-DMZ
+            application_profile: 'network-segments'
+            endpoint_group: 172.16.10.0_24
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 110
+          - tenant: BRKDCN-2959-DMZ
+            application_profile: 'network-segments'
+            endpoint_group: 172.16.11.0_24
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 111
+          - tenant: BRKDCN-2959-DMZ
+            application_profile: 'network-segments'
+            endpoint_group: 172.16.12.0_24
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 112
+#
+          - tenant: esx-infrastructure
+            application_profile: 'host-connectivity'
+            endpoint_group: "host-mgmt"
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 992
+          - tenant: esx-infrastructure
+            application_profile: 'host-connectivity'
+            endpoint_group: "vmotion"
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 986
+#
+          - tenant: jorgquin
+            application_profile: 'network-segments'
+            endpoint_group: 10.1.15.64_27
+            mode: regular
+            deployment_immediacy: immediate
+            secondary_vlan: 1276
+            primary_vlan: 1275
+          - tenant: jorgquin
+            application_profile: 'network-segments'
+            endpoint_group: 10.1.15.96_27
+            mode: regular
+            deployment_immediacy: immediate
+            secondary_vlan: 1278
+            primary_vlan: 1277
+#
+          - tenant: shared-services
+            application_profile: 'csr-management'
+            endpoint_group: "csr-mgmt"
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 1073
+          - tenant: shared-services
+            application_profile: 'ftd-management'
+            endpoint_group: "ftd-mgmt"
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 10
+          - tenant: shared-services
+            application_profile: 'ftd-management'
+            endpoint_group: "ftd-ha"
+            mode: regular
+            deployment_immediacy: immediate
+            vlan: 1013
+#
       - name: vlans-allowed-to-ucs-c220m5-vds-01
         physical_domains:
           - ucsc-c220m5-vds-01

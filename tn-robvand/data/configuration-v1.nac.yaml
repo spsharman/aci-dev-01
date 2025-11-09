@@ -327,7 +327,13 @@ apic:
       vrfs:
         - name: vrf-01
           description: configured with NAC
-          alias: external-vrf
+          alias: internal-vrf
+          leaked_internal_prefixes:
+            - prefix: 10.237.101.160/28
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
           bgp:
             timer_policy: cilium-cni
             ipv4_address_family_context_policy: cilium-cni
@@ -359,7 +365,7 @@ apic:
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.101.0.161/28
+            - ip: 10.237.101.161/28
               public: true
               shared: true
               nd_ra_prefix: false
@@ -371,7 +377,7 @@ apic:
       l3outs:
         - name: robvand.vrf-01-bgp-AS-65151
           description: L3out SVI to robvand K8s environment
-          alias: external-vrf
+          alias: internal-vrf
           vrf: vrf-01
           domain: robvand.vrf-01
           import_route_control_enforcement: true
