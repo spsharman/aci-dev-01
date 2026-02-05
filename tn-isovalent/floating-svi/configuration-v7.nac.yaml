@@ -3,8 +3,9 @@
 # - Updated local max ECMP to 4
 # - Added match rule "pod-subnets" to match all pod subnets (0.0.0.0/0 le 32)
 # - Added set rule "floating-L3out-optimizations" to enable next hop propagation and multipath
-# - 
+# - Removed floating SVI from leaf 2103 and 2104
 #
+# - To fix - security domain for shared-services
 #
 ---
 apic:
@@ -823,7 +824,7 @@ apic:
                         - floating_ip: 10.100.0.9/23
                           physical_domain: isovalent-nodes
                       ip: 10.100.0.5/23
-                      ip_shared: 110.100.0.10/23
+                      ip_shared: 10.100.0.10/23
                       bgp_peers:
                         - ip: 10.100.0.0/23
                           description: k8s bare metal nodes on leaf 2103
@@ -883,73 +884,73 @@ apic:
                           peer_prefix_policy: cilium-cni
                           import_route_control: floating-L3out-optimizations
 
-                    - node_id: 2103                                           
-                      floating_svi: true
-                      pod_id: 2
-                      vlan: 52
-                      paths:
-                        - floating_ip: 10.100.0.9/23
-                          physical_domain: isovalent-nodes
-                      ip: 10.100.0.7/23
-                      ip_shared: 10.100.0.10/23
-                      bgp_peers:
-                        - ip: 10.100.0.0/23
-                          description: k8s bare metal nodes on leaf 2103
-                          remote_as: 65252
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                          import_route_control: floating-L3out-optimizations
+                    # - node_id: 2103                                           
+                    #   floating_svi: true
+                    #   pod_id: 2
+                    #   vlan: 52
+                    #   paths:
+                    #     - floating_ip: 10.100.0.9/23
+                    #       physical_domain: isovalent-nodes
+                    #   ip: 10.100.0.7/23
+                    #   ip_shared: 10.100.0.10/23
+                    #   bgp_peers:
+                    #     - ip: 10.100.0.0/23
+                    #       description: k8s bare metal nodes on leaf 2103
+                    #       remote_as: 65252
+                    #       local_as: 65151
+                    #       allow_self_as: false
+                    #       as_override: true
+                    #       disable_peer_as_check: true
+                    #       next_hop_self: false
+                    #       send_community: false
+                    #       send_ext_community: false
+                    #       allowed_self_as_count: 3
+                    #       bfd: false
+                    #       disable_connected_check: false
+                    #       ttl: 1
+                    #       remove_all_private_as: false
+                    #       remove_private_as: false
+                    #       replace_private_as_with_local_as: false
+                    #       unicast_address_family: true
+                    #       multicast_address_family: false
+                    #       admin_state: true
+                    #       as_propagate: no-prepend
+                    #       peer_prefix_policy: cilium-cni
+                    #       import_route_control: floating-L3out-optimizations
 
-                    - node_id: 2104                                           
-                      floating_svi: true
-                      pod_id: 2
-                      vlan: 52
-                      paths:
-                        - floating_ip: 10.100.0.9/23
-                          physical_domain: isovalent-nodes
-                      ip: 10.100.0.8/23
-                      ip_shared: 10.100.0.10/23
-                      bgp_peers:
-                        - ip: 10.100.0.0/23
-                          description: k8s bare metal nodes on leaf 2104
-                          remote_as: 65252
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: cilium-cni
-                          import_route_control: floating-L3out-optimizations
+                    # - node_id: 2104                                           
+                    #   floating_svi: true
+                    #   pod_id: 2
+                    #   vlan: 52
+                    #   paths:
+                    #     - floating_ip: 10.100.0.9/23
+                    #       physical_domain: isovalent-nodes
+                    #   ip: 10.100.0.8/23
+                    #   ip_shared: 10.100.0.10/23
+                    #   bgp_peers:
+                    #     - ip: 10.100.0.0/23
+                    #       description: k8s bare metal nodes on leaf 2104
+                    #       remote_as: 65252
+                    #       local_as: 65151
+                    #       allow_self_as: false
+                    #       as_override: true
+                    #       disable_peer_as_check: true
+                    #       next_hop_self: false
+                    #       send_community: false
+                    #       send_ext_community: false
+                    #       allowed_self_as_count: 3
+                    #       bfd: false
+                    #       disable_connected_check: false
+                    #       ttl: 1
+                    #       remove_all_private_as: false
+                    #       remove_private_as: false
+                    #       replace_private_as_with_local_as: false
+                    #       unicast_address_family: true
+                    #       multicast_address_family: false
+                    #       admin_state: true
+                    #       as_propagate: no-prepend
+                    #       peer_prefix_policy: cilium-cni
+                    #       import_route_control: floating-L3out-optimizations
 
                   dhcp_labels:
                     - dhcp_relay_policy: dhcp.uktme.cisco.com

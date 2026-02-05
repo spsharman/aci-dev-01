@@ -1,0 +1,37 @@
+# Notes:
+#
+#
+---
+apic:
+  tenants:
+    - name: BRKDCN-2959-DMZ-test
+      description: test tenant for automation
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: outside-vrf-to-ftd
+
+# Bridge Domains
+      bridge_domains:
+        - name: 192.168.10.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+        - name: 192.168.11.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+        - name: 192.168.12.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.10.0_24'
+              # alias:
+              bridge_domain: '192.168.10.0_24'

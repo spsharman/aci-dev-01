@@ -1,0 +1,25 @@
+apic:
+  new_interface_configuration: false
+  access_policies:  
+
+# Leaf switch profiles
+    leaf_switch_profiles:
+      - name: leaf1
+        selectors:
+          - name: leaf1
+            node_blocks:
+              - name: leaf1
+                from: 101
+                to: 101
+        interface_profiles:
+          - leaf1
+
+      - name: leaf2
+        selectors:
+          - name: leaf2
+            node_blocks:
+              - name: leaf2
+                from: 102
+                to: 102
+        interface_profiles:
+          - leaf2

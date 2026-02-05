@@ -1,0 +1,33 @@
+apic:
+  new_interface_configuration: false
+  access_policies:  
+    leaf_interface_profiles:
+# leaf1
+      - name: leaf1
+        selectors:
+          - name: esx-hosts-vSwitch0
+            policy_group: esx-hosts-vSwitch0
+            port_blocks:
+              - name: block-1
+                description: host-1
+                from_port: 1
+                to_port: 1
+              - name: block-2
+                description: host-2
+                from_port: 2
+                to_port: 2
+
+# leaf2
+      - name: leaf2
+        selectors:
+          - name: esx-hosts-vSwitch0
+            policy_group: esx-hosts-vSwitch0
+            port_blocks:
+              - name: block-1
+                description: host-1
+                from_port: 1
+                to_port: 1
+              - name: block-2
+                description: host-2
+                from_port: 2
+                to_port: 2

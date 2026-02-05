@@ -1,0 +1,43 @@
+---
+apic:
+  new_interface_configuration: false
+  access_policies:
+
+# Global policies
+    mcp:
+      action: true
+      admin_state: true
+      frequency_sec: 2
+      initial_delay: 180
+      loop_detection: 3
+      per_vlan: true
+      key: cisco
+
+# Interface policies
+    interface_policies:
+      cdp_policies:
+        - name: cdp-enabled
+          admin_state: true
+
+        - name: cdp-disabled
+          admin_state: false
+
+      l2_policies:
+        - name: port-local-vlans
+          vlan_scope: portlocal
+
+      link_level_policies:
+        - name: speed-10G
+          speed: "10G"
+          auto: true
+          fec_mode: inherit
+
+      mcp_policies:
+        - name: mcp-enabled
+          admin_state: true
+
+# AAEP
+    aaeps:
+      - name: vlans-allowed-to-esx-hosts-vSwitch0
+        physical_domains:
+          - esx-hosts-vSwitch0

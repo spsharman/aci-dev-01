@@ -1,0 +1,15 @@
+apic:
+  new_interface_configuration: false
+  access_policies:
+
+# VLAN pools  
+    vlan_pools:
+      - name: esx-hosts-vSwitch0
+        allocation: static
+        ranges:
+          - from: 986
+            description: hx-dev-01 - vmotion
+          - from: 987
+            description: hx-dev-01 - storage
+          - from: 992
+            description: hx-dev-01 - esx-mgmt

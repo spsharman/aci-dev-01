@@ -1,0 +1,15 @@
+apic:
+  new_interface_configuration: false
+  access_policies:  
+
+# Leaf interface policy groups
+    leaf_interface_policy_groups:
+
+# Access port
+      - name: esx-hosts-vSwitch0
+        type: access
+        aaep: vlans-allowed-to-esx-hosts-vSwitch0
+        cdp_policy: cdp-enabled
+        l2_policy: port-local-vlans
+        mcp_policy: mcp-enabled
+        link_level_policy: speed-10G

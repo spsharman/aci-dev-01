@@ -1,0 +1,46 @@
+apic:
+  new_interface_configuration: true
+  auto_generate_switch_pod_profiles: true
+  auto_generate_access_leaf_switch_interface_profiles: true
+
+  access_policies:
+    leaf_switch_profile_name: "leaf-\\g<id>"
+    leaf_interface_profile_name: "leaf-\\g<id>"
+    leaf_switch_selector_name: "leaf-\\g<id>"
+    leaf_interface_selector_name: "eth-\\g<mod>-\\g<port>"
+
+# Nodes
+  node_policies:
+    nodes:
+      - id: 101
+        role: leaf
+      - id: 102
+        role: leaf
+
+# Interfaces
+  interface_policies:
+    nodes:
+      - id: 101
+        interfaces:
+          - port: 1
+            description: host-1
+            policy_group: esx-hosts-vSwitch0
+          - port: 2
+            description: host-2
+            policy_group: esx-hosts-vSwitch0
+          - port: 3
+            description: host-3
+            policy_group: esx-hosts-vSwitch0
+
+
+      - id: 102
+        interfaces:
+          - port: 1
+            description: host-1
+            policy_group: esx-hosts-vSwitch0
+          - port: 2
+            description: host-2
+            policy_group: esx-hosts-vSwitch0
+          - port: 3
+            description: host-3
+            policy_group: esx-hosts-vSwitch0

@@ -326,21 +326,21 @@ apic:
                 from_port: 14
                 to_port: 14
 
-          - name: ucs-c220m3-vds-01
-            policy_group: ucs-c220m3-vds-01
-            port_blocks:
-              - name: block-1
-                description: UCSC-C220-M3 - FCH1735V1RG
-                from_port: 1
-                to_port: 1
-              - name: block-2
-                description: UCSC-C220-M3 - FCH1743V0Y4
-                from_port: 2
-                to_port: 2
-              - name: block-3
-                description: UCSC-C220-M3 - FCH1910V17S
-                from_port: 3
-                to_port: 3
+          # - name: ucs-c220m3-vds-01
+          #   policy_group: ucs-c220m3-vds-01
+          #   port_blocks:
+          #     - name: block-1
+          #       description: UCSC-C220-M3 - FCH1735V1RG
+          #       from_port: 1
+          #       to_port: 1
+          #     - name: block-2
+          #       description: UCSC-C220-M3 - FCH1743V0Y4
+          #       from_port: 2
+          #       to_port: 2
+          #     - name: block-3
+          #       description: UCSC-C220-M3 - FCH1910V17S
+          #       from_port: 3
+          #       to_port: 3
 
 # aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2102
@@ -390,21 +390,21 @@ apic:
                 from_port: 14
                 to_port: 14
 
-          - name: ucs-c220m3-vds-01
-            policy_group: ucs-c220m3-vds-01
-            port_blocks:
-              - name: block-1
-                description: UCSC-C220-M3 - FCH1735V1RG
-                from_port: 1
-                to_port: 1
-              - name: block-2
-                description: UCSC-C220-M3 - FCH1743V0Y4
-                from_port: 2
-                to_port: 2
-              - name: block-3
-                description: UCSC-C220-M3 - FCH1910V17S
-                from_port: 3
-                to_port: 3
+          # - name: ucs-c220m3-vds-01
+          #   policy_group: ucs-c220m3-vds-01
+          #   port_blocks:
+          #     - name: block-1
+          #       description: UCSC-C220-M3 - FCH1735V1RG
+          #       from_port: 1
+          #       to_port: 1
+          #     - name: block-2
+          #       description: UCSC-C220-M3 - FCH1743V0Y4
+          #       from_port: 2
+          #       to_port: 2
+          #     - name: block-3
+          #       description: UCSC-C220-M3 - FCH1910V17S
+          #       from_port: 3
+          #       to_port: 3
 
 # aci-dev-01-pod-02-leaf-2103
       - name: aci-dev-01-pod-02-leaf-2103

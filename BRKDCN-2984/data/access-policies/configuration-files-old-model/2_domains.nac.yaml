@@ -1,0 +1,8 @@
+apic:
+  new_interface_configuration: false
+  access_policies:
+
+# Physical Domains
+    physical_domains:
+      - name: esx-hosts-vSwitch0
+        vlan_pool: esx-hosts-vSwitch0
