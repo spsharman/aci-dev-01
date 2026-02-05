@@ -1,0 +1,161 @@
+# Notes:
+#
+#
+#
+---
+apic:
+  tenants:
+    - name: BRKDCN-2984
+      description: 192.168.10.0-192.168.12.0
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'ipv4-src-any-dst-any'
+          entries:
+            - name: 'ipv4-src-any-dst-any'
+              ethertype: ipv4
+              protocol: unspecified
+
+# Contracts
+      contracts:
+        - name: permit-to-core-services
+          # description:
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: 'ipv4-src-any-dst-any'
+
+        - name: permit-to-application-staging
+          # description: 
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: 'ipv4-src-any-dst-any'
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: external-vrf
+          leaked_external_prefixes:
+            - prefix: 0.0.0.0/0
+              destinations:
+                - tenant: BRKDCN-2984
+                  vrf: vrf-02
+
+        - name: vrf-02
+          description: configured with NAC
+          alias: internal-vrf
+          leaked_internal_prefixes:
+            - prefix: 192.168.10.0/24
+              public: true
+              destinations:
+                - tenant: BRKDCN-2984
+                  vrf: vrf-01
+
+            - prefix: 192.168.11.0/24
+              public: true
+              destinations:
+                - tenant: BRKDCN-2984
+                  vrf: vrf-01
+
+            - prefix: 192.168.12.0/24
+              public: true
+              destinations:
+                - tenant: BRKDCN-2984
+                  vrf: vrf-01
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
+        - name: 192.168.10.0_24
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.10.1/24
+
+        - name: 192.168.11.0_24
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.11.1/24
+
+        - name: 192.168.12.0_24
+          alias: internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 192.168.12.1/24
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '192.168.10.0_24'
+              # alias:
+              bridge_domain: '192.168.10.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.11.0_24'
+              # alias:
+              bridge_domain: '192.168.11.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '192.168.12.0_24'
+              # alias:
+              bridge_domain: '192.168.12.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+        - name: 'application-staging'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: staging-security-group
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              contracts:
+                consumers:
+                  - permit-to-core-services
+                providers:
+                  - permit-to-application-staging
+              ip_subnet_selectors:
+                - value: 192.168.10.10
+                - value: 192.168.10.11
+                - value: 192.168.10.12
+                - value: 192.168.10.13
+                - value: 192.168.11.10
+                - value: 192.168.11.11
+                - value: 192.168.11.12
+                - value: 192.168.11.13
+                - value: 192.168.12.10
+                - value: 192.168.12.11
+                - value: 192.168.12.12
+                - value: 192.168.12.13
