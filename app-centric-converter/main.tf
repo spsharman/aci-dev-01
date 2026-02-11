@@ -242,7 +242,6 @@ resource "aci_endpoint_security_group_tag_selector" "esg_tag" {
   match_value = each.key          # application_name from CSV
 }
 
-
 #############################################
 # Outputs
 #############################################
