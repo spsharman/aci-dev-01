@@ -16,7 +16,10 @@ apic:
                 description: host-2
                 from_port: 2
                 to_port: 2
-
+              - name: block-3
+                description: host-3
+                from_port: 3
+                to_port: 3
 # leaf2
       - name: leaf2
         selectors:
@@ -31,3 +34,7 @@ apic:
                 description: host-2
                 from_port: 2
                 to_port: 2
+              - name: block-3
+                description: host-3
+                from_port: 3
+                to_port: 3

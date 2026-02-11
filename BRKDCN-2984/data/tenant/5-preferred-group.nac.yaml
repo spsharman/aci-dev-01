@@ -204,7 +204,10 @@ apic:
                   - permit-to-application-staging
                   - deny-to-application-staging
 
-            - name: application-01
+        - name: 'application-01'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: application-01-all-endpoints
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
@@ -218,7 +221,10 @@ apic:
                 - value: 192.168.12.10
                 - value: 192.168.12.11
 
-            - name: application-02
+        - name: 'application-02'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: application-02-all-endpoints
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
@@ -232,7 +238,10 @@ apic:
                 - value: 192.168.11.11
                 - value: 192.168.12.12
 
-            - name: application-03
+        - name: 'application-03'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: application-03-all-endpoints
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false

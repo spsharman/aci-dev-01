@@ -27,6 +27,10 @@ apic:
           alias: dmz-subnet
           vrf: vrf-01
 
+        - name: 192.168.15.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
 # Application profiles
       application_profiles:
         - name: 'network-segments'

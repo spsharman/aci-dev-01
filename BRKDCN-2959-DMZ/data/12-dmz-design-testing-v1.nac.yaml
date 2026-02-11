@@ -22,8 +22,12 @@ apic:
         - name: 192.168.11.0_24
           alias: dmz-subnet
           vrf: vrf-01
-
+          
         - name: 192.168.12.0_24
+          alias: dmz-subnet
+          vrf: vrf-01
+
+        - name: 192.168.13.0_24
           alias: dmz-subnet
           vrf: vrf-01
 

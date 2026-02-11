@@ -19,9 +19,9 @@ module "aci" {
 
   # yaml_files = ["1-base-build.nac.yaml"]
   # yaml_files = ["2-secure-application-staging.nac.yaml"]
-  # yaml_files = ["3-application-esgs.nac.yaml"]
+  yaml_files = ["3-application-esgs.nac.yaml"]
   # yaml_files = ["4-vzany-for-intra-vrf.nac.yaml"]
-  yaml_files = ["5-preferred-group.nac.yaml"]
+  # yaml_files = ["5-preferred-group.nac.yaml"]
 
 
   # yaml_files = ["data/blueprints/blueprint-1.nac.yaml"]
