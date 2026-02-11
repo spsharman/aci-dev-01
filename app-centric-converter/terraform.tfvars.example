@@ -1,0 +1,4 @@
+# APIC authentication
+apic_username = "your-username"
+apic_password = "your-password"
+apic_url      = "https://your-apic-url"

@@ -1,6 +1,224 @@
-/.DS_Store
-/.terraform*
-/.terraform.lock.hcl
-/plan.out
-/terraform.tfstate*
-/terraform.tfvars
+# ============================================================================
+# Terraform .gitignore
+# ============================================================================
+
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform lockfile (comment out if you want to commit it for consistency)
+.terraform.lock.hcl
+
+# Terraform state files - NEVER commit these (contain sensitive data)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform.tfstate.lock.info
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files, which are likely to contain sensitive data
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore plan output files
+*.tfplan
+*tfplan*
+plan.out
+plan.json
+
+# ============================================================================
+# Sensitive Data Files
+# ============================================================================
+
+# CSV files that may contain production IP addresses or sensitive data
+# Uncomment the next line if your CSV contains sensitive information
+# *.csv
+# application-details.csv
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# SSH keys
+*.pem
+*.key
+id_rsa*
+*.ppk
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Credentials and secrets
+credentials.json
+secrets.json
+secrets.yaml
+secrets.yml
+*.credentials
+
+# ============================================================================
+# IDE and Editor Files
+# ============================================================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (IntelliJ, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Emacs
+\#*\#
+.\#*
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ============================================================================
+# Development and Testing
+# ============================================================================
+
+# Test files
+test/
+tests/
+*.test
+*_test.go
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Log files
+*.log
+logs/
+
+# Python (if using Python for testing/automation)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Node.js (if using for testing/automation)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================================================
+# Documentation Build Artifacts
+# ============================================================================
+
+# Generated documentation
+docs/_build/
+site/
+.terraform-docs/
+
+# ============================================================================
+# OS-Specific Files
+# ============================================================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ============================================================================
+# Project-Specific Excludes
+# ============================================================================
+
+# Keep example files but ignore actual configuration
+!terraform.tfvars.example
+!*.example
+!*-sample.csv
+
+# Ignore generated output directories
+outputs/
+output/
+
+# Ignore any local testing or sandbox directories
+sandbox/
+local/
+scratch/
+
+# ============================================================================
+# Security Scanning and Compliance
+# ============================================================================
+
+# Trivy/Checkov/tfsec output
+trivy-*.json
+checkov-*.json
+tfsec-*.json
+*.sarif
+
+# ============================================================================
+# Comments and Guidance
+# ============================================================================
+
+# IMPORTANT SECURITY NOTES:
+# 
+# 1. NEVER commit *.tfstate files - they contain sensitive data including:
+#    - Resource IDs
+#    - IP addresses
+#    - Potentially secrets and passwords
+#
+# 2. NEVER commit *.tfvars files - they often contain:
+#    - Credentials
+#    - API keys
+#    - Passwords
+#    - Private network information
+#
+# 3. Use terraform.tfvars.example as a template
+#    - Keep it updated with required variables
+#    - Document what values are needed
+#    - Never include actual credentials
+#
+# 4. For team collaboration:
+#    - Use remote state (Terraform Cloud, S3 with encryption)
+#    - Use a secrets manager (Vault, AWS Secrets Manager, etc.)
+#    - Never share credentials through version control
+#
+# 5. CSV files consideration:
+#    - If your application-details.csv contains production IPs, consider excluding it
+#    - Keep a sanitized sample file (application-details-sample.csv) for reference
+#    - Document required CSV format in README
+
