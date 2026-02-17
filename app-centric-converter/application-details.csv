@@ -1,5 +1,4 @@
 tenant,application_name,ip_address,isolated,preferred-group
-
 BRKDCN-2959-DMZ,application-02,172.16.11.20,unenforced,exclude
 BRKDCN-2959-DMZ,application-01,172.16.11.51,unenforced,exclude
 BRKDCN-2959-DMZ,application-01,172.16.12.51,unenforced,exclude
