@@ -175,6 +175,27 @@ apic:
                   - permit-to-192.168.10.0_24
                   - permit-to-192.168.11.0_24
 
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: 192.168.10.0_24
+              vrf: vrf-02
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 192.168.10.0_24
+
+            - name: 192.168.11.0_24
+              vrf: vrf-02
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 192.168.11.0_24
+                  
+            - name: 192.168.12.0_24
+              vrf: vrf-02
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 192.168.12.0_24
+
         - name: 'application-staging'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
