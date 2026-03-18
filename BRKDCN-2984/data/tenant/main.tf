@@ -22,8 +22,8 @@ module "aci" {
   # yaml_files = ["3-application-esgs.nac.yaml"]
   # yaml_files = ["4-vzany-for-intra-vrf.nac.yaml"]
   # yaml_files = ["5-preferred-group.nac.yaml"]
-  yaml_files = ["10-base-build-plus-esg-mapped-epgs.nac.yaml"]
-
+  # yaml_files = ["10-base-build-plus-esg-mapped-epgs.nac.yaml"]
+  yaml_files = ["11-base-build-plus-esg-mapped-epgs-new.nac.yaml"]
 
   # yaml_files = ["data/blueprints/blueprint-1.nac.yaml"]
   # yaml_files = ["data/blueprints/blueprint-2.nac.yaml"]
