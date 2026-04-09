@@ -1,0 +1,305 @@
+# Notes:
+#
+# Private VLAN pairs (../access-policies/data/1_pools.nac.yaml)
+#
+# - from: 1247
+#   to: 1248
+#   allocation: static
+#   description: tn-stturnbu PVLANs
+# - from: 1249
+#   to: 1250
+#   allocation: static
+#   description: tn-stturnbu PVLANs
+# - from: 1251
+#   to: 1252
+#   allocation: static
+#   description: tn-stturnbu PVLANs
+# - from: 1253
+#   to: 1254
+#   allocation: static
+#   description: tn-stturnbu PVLANs
+---
+apic:
+  tenants:
+    - name: stturnbu
+      description: Routable IP range 10.6.0.0/21
+      security_domains:
+        - stturnbu
+
+#Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: stturnbu
+                l3out: stturnbu.vrf-01-bgp-AS-65151
+                external_endpoint_group: all-external-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'permit-src-any-dst-any'
+          entries:
+            - name: 'permit-src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      imported_contracts:
+        - name: permit-from-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+        - name: 'permit-from-core-services'
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: 'permit-to-core-services'
+          tenant: shared-services
+          contract: permit-to-core-services
+          
+      contracts:
+        - name: intra-tenant
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-esg-10.6.0.0_24
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-csr-1kv-01-pod-1
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+        - name: permit-to-ubuntu-02-10.6.0.26
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: permit-src-any-dst-any
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC - external vrf for tn-stturnbu
+          alias: external-vrf
+
+        - name: vrf-02
+          description: configured with NAC - internal vrf for tn-stturnbu
+          alias: internal-vrf
+
+# L3outs
+      # l3outs:
+      #   - name: stturnbu.vrf-01-bgp-AS-65151
+      #     description: configured with NAC
+      #     alias: external-vrf
+      #     vrf: vrf-01
+      #     domain: stturnbu.vrf-01
+
+      #     node_profiles:
+      #       - name: border-leafs
+      #         nodes:
+      #           - node_id: 101
+      #             router_id: 101.2.15.1
+      #           - node_id: 102
+      #             router_id: 102.2.15.1
+
+      #         interface_profiles:
+      #           - name: hx-dev-01-fi-a-vlan-11
+      #             interfaces:
+      #               - node_id: 101
+      #                 channel: hx-dev-01-fi-a
+      #                 vlan: 11
+      #                 svi: true
+      #                 ip: 10.237.99.57/29
+      #                 mtu: 1500
+      #                 bgp_peers:
+      #                   - ip: 10.237.99.60/29
+      #                     remote_as: 65051
+      #                     local_as: 65151
+      #                     allow_self_as: false
+      #                     as_override: false
+      #                     disable_peer_as_check: false
+      #                     next_hop_self: false
+      #                     send_community: false
+      #                     send_ext_community: false
+      #                     allowed_self_as_count: 3
+      #                     bfd: false
+      #                     disable_connected_check: false
+      #                     ttl: 1
+      #                     remove_all_private_as: false
+      #                     remove_private_as: false
+      #                     replace_private_as_with_local_as: false
+      #                     unicast_address_family: true
+      #                     multicast_address_family: true
+      #                     admin_state: true
+      #                     as_propagate: none
+
+      #           - name: hx-dev-01-fi-b-vlan-11
+      #             interfaces:
+      #               - node_id: 102
+      #                 channel: hx-dev-01-fi-b
+      #                 vlan: 11
+      #                 svi: true
+      #                 ip: 10.237.99.58/29
+      #                 mtu: 1500
+      #                 bgp_peers:
+      #                   - ip: 10.237.99.60/29
+      #                     remote_as: 65051
+      #                     local_as: 65151
+      #                     allow_self_as: false
+      #                     as_override: false
+      #                     disable_peer_as_check: false
+      #                     next_hop_self: false
+      #                     send_community: false
+      #                     send_ext_community: false
+      #                     allowed_self_as_count: 3
+      #                     bfd: false
+      #                     disable_connected_check: false
+      #                     ttl: 1
+      #                     remove_all_private_as: false
+      #                     remove_private_as: false
+      #                     replace_private_as_with_local_as: false
+      #                     unicast_address_family: true
+      #                     multicast_address_family: true
+      #                     admin_state: true
+      #                     as_propagate: none
+
+      #     external_endpoint_groups:
+      #       - name: all-external-subnets
+      #         subnets:
+      #           - prefix: 0.0.0.0/0
+      #             shared_route_control: true
+      #             import_security: false
+
+      #           - prefix: 0.0.0.0/1
+      #             shared_security: true
+
+      #           - prefix: 128.0.0.0/1
+      #             shared_security: true
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet
+          alias: internal-vrf
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 10.6.0.0_24
+          alias: internal-vrf-02
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 10.6.0.1/24
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+        - name: 10.6.1.0_24
+          alias: internal-vrf-02
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 10.6.1.1/24
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+
+# Application Profiles
+      application_profiles:
+        - name: 'network-segments'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: 10.6.0.0_24
+              alias: internal-vrf-02
+              bridge_domain: 10.6.0.0_24
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1247
+                  secondary_vlan: 1248
+
+            - name: 10.6.1.0_24
+              alias: internal-vrf-02
+              bridge_domain: 10.6.1.0_24
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1249
+                  secondary_vlan: 1250
+
+        - name: network-security-groups
+          endpoint_security_groups:
+            - name: 10.6.0.0_24
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              epg_selectors:              
+                - application_profile: network-segments
+                  endpoint_group: 10.6.0.0_24
+
+            - name: 10.6.1.0_24
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              epg_selectors:
+                - application_profile: network-segments
+                  endpoint_group: 10.6.1.0_24
+
+        - name: endpoint-security-groups
+          endpoint_security_groups:
+            - name: csr-1kv-01-pod-1-10.6.0.254
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              ip_subnet_selectors:
+                - value: 10.6.0.254/32
+              contracts:
+                providers:
+                  - permit-to-csr-1kv-01-pod-1
+
+            - name: ubuntu-01-10.6.0.25
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              ip_subnet_selectors:
+                - value: 10.6.0.25/32
+              contracts:
+                consumers:
+                  - permit-to-csr-1kv-01-pod-1
+                  - permit-to-ubuntu-02-10.6.0.26
+
+            - name: ubuntu-02-10.6.0.26
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              ip_subnet_selectors:
+                - value: 10.6.0.26/32
+              contracts:
+                consumers:
+                  - permit-to-csr-1kv-01-pod-1
+                providers:
+                  - permit-to-ubuntu-02-10.6.0.26
