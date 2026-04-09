@@ -184,19 +184,19 @@ apic:
           - from: 1247
             to: 1248
             allocation: static
-            description: tn-demo-05 PVLANs
+            description: tn-stturnbu PVLANs
           - from: 1249
             to: 1250
             allocation: static
-            description: tn-demo-05 PVLANs
+            description: tn-stturnbu PVLANs
           - from: 1251
             to: 1252
             allocation: static
-            description: tn-demo-05 PVLANs
+            description: tn-stturnbu PVLANs
           - from: 1253
             to: 1254
             allocation: static
-            description: tn-demo-05 PVLANs
+            description: tn-stturnbu PVLANs
           - from: 1255
             to: 1256
             allocation: static
