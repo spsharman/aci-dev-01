@@ -1,0 +1,190 @@
+# Notes:
+#
+#
+---
+apic:
+  tenants:
+    - name: {tenant-name}
+      description: Something sensible
+
+# Policies
+      policies:
+        ospf_interface_policies:
+          - name: broadcast
+            cost: unspecified
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: false
+            bfd: false
+            hello_interval: 1
+            dead_interval: 4
+            network_type: bcast
+            priority: 1
+            lsa_retransmit_interval: 3
+            lsa_transmit_delay: 1
+
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services
+      services:
+        l4l7_devices:
+          - name: {smart-switch-name}
+            physical_domain: {tenant-name}.vrf-01-ospf-peering
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: {smart-switch-name}
+                interfaces:
+                  - name: {smart-switch-name}-{vpc-to-smart-switch}
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: {vpc-to-smart-switch}
+                    vlan: 3000
+
+            logical_interfaces:
+              - name: {smart-switch-name}-{peering-interface-name}
+                vlan: 3000
+                concrete_interfaces:
+                  - device: {smart-switch-name}
+                    interface_name: {smart-switch-name}-{vpc-to-smart-switch}
+
+        redirect_health_groups:
+          - name: {smart-switch-name}-{peering-interface-name}
+
+        redirect_policies:
+          - name: {smart-switch-name}-{peering-interface-name}
+            ip_sla_policy: icmp-aggressive-timers
+            anycast: false
+            pod_aware: false
+            l3_destinations:
+              - ip: 10.237.99.87
+                mac: de:ad:be:ef:00:21
+                redirect_health_group: {smart-switch-name}-{peering-interface-name}
+
+        service_graph_templates:
+          - name: {smart-switch-name}
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: {tenant-name}
+              name: {smart-switch-name}
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: {smart-switch-name}
+            consumer:
+              redirect_policy:
+                name: {smart-switch-name}-{peering-interface-name}
+              logical_interface: FTDv-inside
+              l3_destination: true
+              external_endpoint_group:
+                l3out: {tenant-name}.vrf-01-ospf-peering
+                name: all-dmz-subnets
+
+            provider:
+              redirect_policy:
+                name: {smart-switch-name}-{peering-interface-name}
+              logical_interface: FTDv-inside
+              l3_destination: true
+              external_endpoint_group:
+                l3out: {tenant-name}.vrf-01-ospf-peering
+                name: all-dmz-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+# Contracts
+      contracts:
+        - name: intra-vrf
+          description: allows traffic to all dmz subnets
+          scope: context
+          subjects:
+            - name: redirect
+              service_graph: {smart-switch-name}
+              filters: 
+                - filter: src-any-dst-any
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: dmz-vrf
+          contracts:
+            providers:
+              - intra-vrf
+            consumers:
+              - intra-vrf
+
+#L3out
+      l3outs:
+        - name: {tenant-name}.vrf-01-ospf-peering
+          description: configured with NAC
+          alias: dmz-vrf
+          vrf: vrf-01
+          domain: {tenant-name}.vrf-01-ospf-peering
+          ospf:
+            area: 0.0.0.0
+            area_type: regular
+
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  router_id: 101.1.0.7
+                  pod_id: 1
+
+                - node_id: 1102
+                  router_id: 102.1.0.7
+                  pod_id: 1
+
+              interface_profiles:
+                - name: {tenant-name}.vrf-01-ospf-peering
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      pod_id: 1
+                      mode: regular                       
+                      svi: true
+                      vlan: 3000
+                      mtu: 1500
+                      channel: {vpc-to-smart-switch}
+                      ip: 10.237.99.81/28
+                      ip_shared: 10.237.99.86/28
+
+                  ospf:
+                    policy: broadcast
+
+          external_endpoint_groups:
+            - name: all-dmz-subnets
+              subnets:
+                - prefix: 0.0.0.0/1
+
+                - prefix: 128.0.0.0/1
+
+              contracts:
+                providers:
+                  - permit-to-all-dmz-subnets
+
