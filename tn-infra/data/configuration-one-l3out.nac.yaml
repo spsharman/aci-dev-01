@@ -187,6 +187,7 @@ apic:
                   router_id: 10.0.0.22
                   router_id_as_loopback: false
                   loopback: 10.0.0.24
+
               interface_profiles:
                 - name: aci-dev-01-pod-01-spine-1201-eth49
                   description: to core-01 eth1/49
@@ -223,6 +224,7 @@ apic:
                   router_id: 10.0.0.23
                   router_id_as_loopback: false
                   loopback: 10.0.0.25
+
               interface_profiles:
                 - name: aci-dev-01-pod-01-spine-1202-eth49
                   description: to core-01 eth1/50
@@ -259,6 +261,7 @@ apic:
                   router_id: 10.0.0.34
                   router_id_as_loopback: false
                   loopback: 10.0.0.36
+
               interface_profiles:
                 - name: aci-dev-01-pod-02-spine-2201-eth49
                   description: to core-03 eth1/49
@@ -295,6 +298,7 @@ apic:
                   router_id: 10.0.0.35
                   router_id_as_loopback: false
                   loopback: 10.0.0.37
+
               interface_profiles:
                 - name: aci-dev-01-pod-02-spine-2202-eth49
                   description: to core-03 eth1/50

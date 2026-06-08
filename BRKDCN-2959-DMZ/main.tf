@@ -19,7 +19,7 @@ module "aci" {
   # yaml_directories = ["data"] # to exclude a set of configuration move the .nac.yaml file to the /data/excluded directory
 
   # yaml_files = ["data/01-dmz-design-firewalls-outside-one-ha-pair.nac.yaml"]
-  # yaml_files = ["data/02-dmz-design-firewalls-outside-two-ha-pairs.nac.yaml"]
+  yaml_files = ["data/02-dmz-design-firewalls-outside-two-ha-pairs.nac.yaml"]
   # yaml_files = ["data/03-dmz-design-firewalls-outside-dual-clusters-independent-mode.nac.yaml"]
   # yaml_files = ["data/04-dmz-design-firewalls-outside-single-cluster-independent-mode.nac.yaml"]
   # yaml_files = ["data/05-dmz-design-firewalls-inside-single-cluster.nac.yaml"]
@@ -31,7 +31,7 @@ module "aci" {
   # yaml_files = ["data/10-dmz-design-dual-bd-peering-to-fabric-vrf.nac.yaml"]
   # yaml_files = ["data/11-dmz-design-firewall-clusters-outside-and-inside.nac.yaml"]
   # yaml_files = ["data/12-dmz-design-testing-v1.nac.yaml"]
-  yaml_files = ["data/12-dmz-design-testing-v2.nac.yaml"]
+  # yaml_files = ["data/12-dmz-design-testing-v2.nac.yaml"]
 
 
   manage_access_policies    = false

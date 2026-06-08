@@ -1,0 +1,35 @@
+---
+apic:
+  fabric_policies:
+
+# System » System Settings » System Alias and Banners
+    banners:
+      apic_gui_alias: aci-dev-01
+      apic_cli_banner: aci-dev-01
+      switch_cli_banner: aci-dev-01
+
+# System » System Settings » Global AES Passphrase Encryption Settings
+    config_passphrase: C!5co123$%C!5co123$%
+
+# System » System Settings » Fabric-Wide Settings
+    global_settings:
+      domain_validation: true
+      enforce_subnet_check: true
+      opflex_authentication: true
+      disable_remote_endpoint_learn: true
+      overlapping_vlan_validation: true
+      remote_leaf_direct: false
+      reallocate_gipo: true
+
+# System » System Settings » Date and Time
+    date_time_format:
+      display_format: local
+      show_offset: true
+
+# System » System Settings » BGP Route Reflector
+    fabric_bgp_as: 65051
+    fabric_bgp_rr:
+      - 1201
+      - 1202
+      - 2201
+      - 2202

@@ -590,21 +590,6 @@ apic:
                   log: false
                   no_stats: false
 
-        - name: permit-to-n9000v-management-n9000v-mgmt
-          scope: context
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
-
-            - name: icmp
-              filters:
-                - filter: icmp
-                  action: permit
-                  priority: default
-                  log: false
-                  no_stats: false
-
         - name: permit-to-ftd-management-ftd-mgmt
           scope: context
           subjects:
@@ -1098,7 +1083,6 @@ apic:
                   - permit-to-ftd-management-ftd-mgmt
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
-                  - permit-to-n9000v-management-n9000v-mgmt
                   - permit-to-all-BRKDCN-2959-DMZ-subnets
 
                 providers:
@@ -1155,7 +1139,6 @@ apic:
                   - permit-to-ftd-management-ftd-mgmt
                   - permit-to-csr-management-csr-mgmt
                   - permit-to-csw-management-data-collector
-                  - permit-to-n9000v-management-n9000v-mgmt
                   - permit-to-all-BRKDCN-2959-DMZ-subnets
                 imported_consumers:
                   # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
@@ -1574,23 +1557,8 @@ apic:
                   - permit-from-core-services
                   - permit-to-core-services
                   - permit-from-lab-desktops
-
-        - name: n9000v-management
-          managed: true
-          endpoint_groups:
-            - name: n9000v-mgmt
-              bridge_domain: 10.237.100.56_29
-              vmware_vmm_domains:
-                - name: hx-dev-01-vds-01
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-              contracts:
-                providers:
-                  - permit-to-n9000v-management-n9000v-mgmt
-                consumers:
-                  - permit-from-core-services
-                  - permit-to-core-services
-                  - permit-from-lab-desktops
+                imported_consumers:
+                  - permit-to-inb-mgmt
 
         - name: ftd-management
           managed: true

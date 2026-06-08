@@ -25,8 +25,8 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v4.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v5.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v6.nac.yaml"]
-  yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
-
+  # yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
+  yaml_files = ["floating-svi/configuration-v8.nac.yaml"]
 
 # SVI configuration
 

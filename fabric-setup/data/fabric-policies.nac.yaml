@@ -1,0 +1,51 @@
+---
+apic:
+  fabric_policies:
+
+# Fabric » Fabric Policies » Fabric Policies » Policies » Pod » Date and Time
+    pod_policies:
+      date_time_policies:
+        - name: cisco-ntp-servers
+          ntp_servers:
+            - hostname_ip: 10.81.254.202
+              preferred: false
+              mgmt_epg: oob
+            - hostname_ip: 72.163.32.44
+              preferred: false
+              mgmt_epg: oob
+            - hostname_ip: 173.38.201.67
+              preferred: false
+              mgmt_epg: oob
+            - hostname_ip: 173.38.201.115
+              preferred: false
+              mgmt_epg: oob
+
+# Fabric » Fabric Policies » Policies » Global » DNS Profiles
+    dns_policies:
+      - name: ns1.uktme.cisco.com
+        mgmt_epg: oob
+        providers:
+          - ip: 10.237.97.134
+        domains:
+          - name: uktme.cisco.com
+            default: true
+      - name: ns2.uktme.cisco.com
+        mgmt_epg: oob
+        providers:
+          - ip: 10.237.97.135
+        domains:
+          - name: uktme.cisco.com
+            default: true
+
+# Fabric » Fabric Policies » Pods » Policy Groups
+    pod_policy_groups:
+      - name: pod-0
+        description: vAPIC pod
+        date_time_policy: cisco-ntp-servers
+      - name: pod-1
+        description: pod-1
+        date_time_policy: cisco-ntp-servers
+      - name: pod-2
+        description: pod-2
+        date_time_policy: cisco-ntp-servers
+

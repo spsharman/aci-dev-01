@@ -34,9 +34,9 @@ apic:
             providers:
               - ip: 10.237.97.133
                 type: external_epg
-                tenant: stturnbu
-                l3out: stturnbu.vrf-01-bgp-AS-65151
-                external_endpoint_group: all-external-subnets
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
 
 # Filters
       filters:
