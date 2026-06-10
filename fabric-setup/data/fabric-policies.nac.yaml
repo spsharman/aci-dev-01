@@ -16,9 +16,9 @@ apic:
             - hostname_ip: 173.38.201.67
               preferred: false
               mgmt_epg: oob
-            - hostname_ip: 173.38.201.115
-              preferred: false
-              mgmt_epg: oob
+            # - hostname_ip: 173.38.201.115
+            #   preferred: false
+            #   mgmt_epg: oob
 
 # Fabric » Fabric Policies » Policies » Global » DNS Profiles
     dns_policies:

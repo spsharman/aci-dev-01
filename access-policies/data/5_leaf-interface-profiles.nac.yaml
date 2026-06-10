@@ -326,6 +326,18 @@ apic:
                 from_port: 14
                 to_port: 14
 
+          - name: hx-dev-02-fi-a
+            policy_group: hx-dev-02-fi-a
+            port_blocks:
+              - name: block-1
+                description: hx-dev-02-fi-a e1/31
+                from_port: 9
+                to_port: 9
+              - name: block-2
+                description: hx-dev-02-fi-a e1/32
+                from_port: 10
+                to_port: 10
+
           # - name: ucs-c220m3-vds-01
           #   policy_group: ucs-c220m3-vds-01
           #   port_blocks:
@@ -389,6 +401,18 @@ apic:
                 description: ftd-4112-01 e1/8
                 from_port: 14
                 to_port: 14
+
+          - name: hx-dev-02-fi-b
+            policy_group: hx-dev-02-fi-b
+            port_blocks:
+              - name: block-1
+                description: hx-dev-02-fi-b e1/31
+                from_port: 9
+                to_port: 9
+              - name: block-2
+                description: hx-dev-02-fi-b e1/32
+                from_port: 10
+                to_port: 10
 
           # - name: ucs-c220m3-vds-01
           #   policy_group: ucs-c220m3-vds-01

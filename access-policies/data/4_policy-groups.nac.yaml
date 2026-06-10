@@ -58,6 +58,20 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
+      - name: hx-dev-02-fi-a
+        type: pc
+        aaep: vlans-allowed-to-hyperflex
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: hx-dev-02-fi-b
+        type: pc
+        aaep: vlans-allowed-to-hyperflex
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
 # Virtual port channel
       - name: vpc_to_ftd-4112-01-ccl
         type: vpc
