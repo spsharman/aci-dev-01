@@ -15,6 +15,14 @@ apic:
                 from_port: 48
                 to_port: 48
 
+          - name: smart-switch
+            policy_group: vpc_to_smart-switch
+            port_blocks:
+              - name: block-1
+                description: smart-switch e1/1
+                from_port: 10
+                to_port: 10
+
           - name: ftd-4112-01-mgmt
             policy_group: vpc_to_ftd-4112-01-mgmt
             port_blocks:
@@ -63,12 +71,12 @@ apic:
             policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
-                description: core-01 e1/7
+                description: L12-C93180YC-FX-01 e1/7
                 from_port: 7
                 to_port: 7
 
               - name: block-2
-                description: core-02 e1/8
+                description: L12-C93180YC-EX-02 e1/8
                 from_port: 8
                 to_port: 8
 
@@ -151,6 +159,14 @@ apic:
                 from_port: 48
                 to_port: 48
 
+          - name: smart-switch
+            policy_group: vpc_to_smart-switch
+            port_blocks:
+              - name: block-1
+                description: smart-switch e1/2
+                from_port: 10
+                to_port: 10
+
           - name: ftd-4112-01-mgmt
             policy_group: vpc_to_ftd-4112-01-mgmt
             port_blocks:
@@ -199,12 +215,12 @@ apic:
             policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
-                description: core-02 eth1/7
+                description: L12-C93180YC-EX-02 eth1/7
                 from_port: 7
                 to_port: 7
 
               - name: block-2
-                description: core-01 e1/8
+                description: L12-C93180YC-FX-01 e1/8
                 from_port: 8
                 to_port: 8
 
@@ -285,12 +301,12 @@ apic:
             policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
-                description: core-03 e1/7
+                description: L13-C93180YC-FX-01 e1/7
                 from_port: 7
                 to_port: 7
 
               - name: block-2
-                description: core-04 e1/8
+                description: L13-C93180YC-FX-02 e1/8
                 from_port: 8
                 to_port: 8
 
@@ -354,6 +370,7 @@ apic:
           #       from_port: 3
           #       to_port: 3
 
+
 # aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2102
         selectors:
@@ -361,12 +378,12 @@ apic:
             policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
-                description: core-04 eth1/7
+                description: L13-C93180YC-FX-02 eth1/7
                 from_port: 7
                 to_port: 7
 
               - name: block-2
-                description: core-03 e1/8
+                description: L13-C93180YC-FX-01 e1/8
                 from_port: 8
                 to_port: 8
 

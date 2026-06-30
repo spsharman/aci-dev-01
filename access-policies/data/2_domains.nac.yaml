@@ -34,6 +34,9 @@ apic:
       - name: robvand.vrf-01
         vlan_pool: robvand-k8s-nodes
 
+      - name: smart-switches
+        vlan_pool: smart-switches
+
       - name: ssharman-ubuntu-nodes
         vlan_pool: ssharman-ubuntu-nodes
 
@@ -117,3 +120,10 @@ apic:
 
       - name: shared-services.vrf-01-static-ftd-4112
         vlan_pool: firewalls
+
+      - name: shared-services.vrf-01
+        vlan_pool: smart-switches
+
+      - name: tech-elevate.vrf-01
+        security_domains:
+          - tech-elevate.vrf-01

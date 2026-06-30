@@ -13,8 +13,10 @@ provider "aci" {
 }
 module "aci" {
   source  = "netascode/nac-aci/aci"
+  version = "1.2.0"
 
-  yaml_files = ["data/configuration.nac.yaml"]
+  # yaml_files = ["data/configuration.nac.yaml"]
+  yaml_files = ["data/configuration-bgp-applied-to-node.nac.yaml"]
   # yaml_directories = ["data"]
 
   manage_access_policies    = false

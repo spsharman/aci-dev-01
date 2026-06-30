@@ -107,6 +107,7 @@ apic:
           - BRKDCN-2984.vrf-01
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
+          - tech-elevate.vrf-01
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
@@ -207,12 +208,6 @@ apic:
             primary_vlan: 1277
 #
           - tenant: shared-services
-            application_profile: 'csr-management'
-            endpoint_group: "csr-mgmt"
-            mode: regular
-            deployment_immediacy: immediate
-            vlan: 1073
-          - tenant: shared-services
             application_profile: 'ftd-management'
             endpoint_group: "ftd-mgmt"
             mode: regular
@@ -236,6 +231,12 @@ apic:
           - dmz
           - external-switches
           - hyperflex
+
+      - name: vlans-allowed-to-smart-switches
+        physical_domains:
+          - smart-switches
+        routed_domains:
+          - shared-services.vrf-01
 
       - name: vlans-allowed-to-ssharman-ubuntu-nodes
         physical_domains:

@@ -137,6 +137,14 @@ apic:
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
+      - name: vpc_to_smart-switch
+        type: vpc
+        aaep: vlans-allowed-to-smart-switches
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
       - name: vpc_to_c220m5-WZP220811XJ
         type: vpc
         description: isovalent-node-01

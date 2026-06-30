@@ -152,19 +152,19 @@ apic:
           - from: 1231
             to: 1232
             allocation: static
-            description: tn-demo-03 PVLANs
+            description: unused
           - from: 1233
             to: 1234
             allocation: static
-            description: tn-demo-03 PVLANs
+            description: tn-tech-elevate PVLANs
           - from: 1235
             to: 1236
             allocation: static
-            description: tn-demo-03 PVLANs
+            description: tn-tech-elevate PVLANs
           - from: 1237
             to: 1238
             allocation: static
-            description: tn-demo-03 PVLANs
+            description: tn-tech-elevate PVLANs
           - from: 1239
             to: 1240
             allocation: static
@@ -357,6 +357,30 @@ apic:
         ranges:
           - from: 8
             description: shared-services.vrf-01-ospf-peering
+
+      - name: smart-switches
+        allocation: static
+        ranges:
+          - from: 30
+            to: 30
+            description: pbr - tn-tech-elevate
+            allocation: inherit
+            role: external
+          - from: 31
+            to: 31
+            description: pbr - tn-shared-services
+            allocation: inherit
+            role: external
+          - from: 32
+            to: 32
+            description: pbr - tn-BRKDCN-2984
+            allocation: inherit
+            role: external
+          - from: 40
+            to: 40
+            description: smart switch L3out peering
+            allocation: inherit
+            role: external
 
       - name: ssharman-ubuntu-nodes
         allocation: static

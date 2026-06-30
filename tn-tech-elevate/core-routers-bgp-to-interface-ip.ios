@@ -1,0 +1,160 @@
+! L12-C93180YC-FX-01
+interface Ethernet1/7.14
+  description aci-dev-01 1101/1/7.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.97/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+  interface Ethernet1/8.14
+  description aci-dev-01 1102/1/8.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.103/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.96
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.102
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+! L12-C93180YC-EX-02
+interface Ethernet1/7.14
+  description aci-dev-01 1102/1/7.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.101/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+  interface Ethernet1/8.14
+  description aci-dev-01 1101/1/8.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.99/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.100
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.98
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+
+! L13-C93180YC-FX-01
+L13-C93180YC-FX-01
+interface Ethernet1/7.14
+  description aci-dev-01 2101/1/7.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.105/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+  interface Ethernet1/8.14
+  description aci-dev-01 2102/1/8.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.111/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  ip policy route-map redirect-to-nat-gateway
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.104
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/7.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.110
+      remote-as 64805
+      description aci-dev-01-pod-01-leaf-1101
+      update-source Ethernet1/8.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+
+
+! L13-C93180YC-FX-02
+interface Ethernet1/7.14
+  description aci-dev-01 2102/1/7.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.109/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+  interface Ethernet1/8.14
+  description aci-dev-01 2101/1/8.14
+  mtu 9000
+  encapsulation dot1q 14
+  vrf member core
+  ip address 10.237.97.107/31
+  ip ospf network point-to-point
+  ip router ospf core area 0.0.0.0
+  no shutdown
+
+router bgp 64800
+  vrf core
+    neighbor 10.237.97.106
+      remote-as 64805
+      description aci-dev-01-pod-02-leaf-2101
+      update-source Ethernet1/8.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
+    neighbor 10.237.97.108
+      remote-as 64805
+      description aci-dev-01-pod-02-leaf-2102
+      update-source Ethernet1/7.14
+      address-family ipv4 unicast
+        next-hop-self
+        soft-reconfiguration inbound always
