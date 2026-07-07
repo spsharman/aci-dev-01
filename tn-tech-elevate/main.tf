@@ -18,19 +18,18 @@ module "aci" {
   
   # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
 
-  # yaml_files = ["data/01-production-current-design-vzAny-allows-open-communication.nac.yaml"]
-  # yaml_files = ["data/02-production-dual-vrf-design-l3out-consumer.nac.yaml"]  
-
-
   # yaml_files = ["bgp-applied-to-node/00-base-network.nac.yaml"]
-  # yaml_files = ["bgp-applied-to-node/01-split-vrf.nac.yaml"]
-  # yaml_files = ["bgp-applied-to-node/02-route-leaking.nac.yaml"]    
+  # yaml_files = ["bgp-applied-to-node/01-add-split-vrf.nac.yaml"]
+  # yaml_files = ["bgp-applied-to-node/02-add-route-leaking.nac.yaml"]    
   # yaml_files = ["bgp-applied-to-node/03-epg-to-esg-mapping.nac.yaml"]   
   # yaml_files = ["bgp-applied-to-node/04-add-ftdv-north-south-flows.nac.yaml"]   
-  yaml_files = ["bgp-applied-to-node/05-add-ss-east-west-flows.nac.yaml"]   
-
-
-
+  # yaml_files = ["bgp-applied-to-node/05-add-ss-east-west-flows.nac.yaml"]   
+  # yaml_files = ["bgp-applied-to-node/06-add-ftdv-east-west-flows.nac.yaml"]   
+  # yaml_files = ["bgp-applied-to-node/07-add-contract-to-each-esg.nac.yaml"]
+  # yaml_files = ["bgp-applied-to-node/08-add-application-esgs-and-contracts.nac.yaml"]
+  yaml_files = ["bgp-applied-to-node/09-add-intra-application-contracts.nac.yaml"]
+  
+  
   manage_access_policies    = false
   manage_fabric_policies    = false
   manage_pod_policies       = false

@@ -1,13 +1,13 @@
 # Notes:
 #
-# Description: This is the current production network design for Tech-Elevate. It is configured to allow open communication between all EPGs and external subnets. The design includes a single VRF, multiple bridge domains, and a BGP L3Out to the core network. The design also includes filters and contracts to allow ICMP traffic and any-to-any communication between EPGs.
+# Description: Build v00 baseline. Single VRF (vrf-01) with bridge domains and BGP L3Out, plus broad any-to-any and ICMP contract policy before VRF split, route leaking, ESG mapping, and service insertion changes introduced in later builds.
 
 # subnet 10.5.0.0/21
 ---
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v01
+      description: blueprint - v00
       managed: true
       security_domains:
         - tech-elevate

@@ -1,6 +1,6 @@
 # Notes:
 #
-# Description: Build v05 delta from v04. Keeps north-south FTDv policy and adds smart-switch east-west service insertion using a physical L4-L7 device with matching redirect policy, health group, service graph template, and device-selection policy.
+# Description: Build v06 delta from v05. Adds a second east-west inspection path with virtual firewall ftdv-02-east-west, including its L4-L7 device object, redirect policy destination, health group, service graph template, and device-selection policy.
 
 # subnet 10.5.0.0/21
 # ftdv-01-eth2-gig-0-0
@@ -8,7 +8,7 @@
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v05
+      description: blueprint - v06
       managed: true
       security_domains:
         - tech-elevate
@@ -35,6 +35,27 @@ apic:
               - name: data
                 concrete_interfaces:
                   - device: ftdv-01-adapter-6-gig-0-3
+                    interface_name: data
+
+          - name: ftdv-02-east-west 
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-02-adapter-5-gig-0-2
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-02.uktme.cisco.com
+                interfaces:
+                  - name: data
+                    vnic_name: Network adapter 5
+
+            logical_interfaces:
+              - name: data
+                concrete_interfaces:
+                  - device: ftdv-02-adapter-5-gig-0-2
                     interface_name: data
 
           - name: smart-switch-east-west
@@ -71,6 +92,17 @@ apic:
                 mac: 00:50:56:A1:CF:6C
                 redirect_health_group: ftdv-01-north-south
 
+          - name: ftdv-02-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                name: ftdv-02-east-west
+                mac: 00:50:56:A1:FE:A1
+                redirect_health_group: ftdv-02-east-west
+
           - name: smart-switch-east-west
             anycast: false
             pod_aware: true
@@ -84,7 +116,7 @@ apic:
 
         redirect_health_groups:
           - name: ftdv-01-north-south
-
+          - name: ftdv-02-east-west
           - name: smart-switch-east-west
 
         service_graph_templates:
@@ -95,6 +127,18 @@ apic:
             device:
               tenant: tech-elevate
               name: ftdv-01-north-south
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: ftdv-02-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-02-east-west
             consumer:
               direct_connect: false
             provider:
@@ -124,6 +168,21 @@ apic:
             provider:
               redirect_policy:
                 name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-02-east-west
+            consumer:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-02-east-west
               logical_interface: data
               bridge_domain:
                 name: 6.6.6.0_24

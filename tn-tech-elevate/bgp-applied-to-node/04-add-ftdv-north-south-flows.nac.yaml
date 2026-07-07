@@ -1,6 +1,6 @@
 # Notes:
 #
-# Description: This is the current production network design for Tech-Elevate. It is configured to allow open communication between all EPGs and external subnets. The design includes a single VRF, multiple bridge domains, and a BGP L3Out to the core network. The design also includes filters and contracts to allow ICMP traffic and any-to-any communication between EPGs.
+# Description: Build v04 delta from v03. Adds north-south FTDv service insertion (device, redirect policy, service graph template, and health tracking via IP SLA) and introduces the 6.6.6.0/24 transit bridge domain for redirected traffic.
 
 # subnet 10.5.0.0/21
 # ftdv-01-eth2-gig-0-0
@@ -8,7 +8,7 @@
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v05
+      description: blueprint - v04
       managed: true
       security_domains:
         - tech-elevate
@@ -150,7 +150,7 @@ apic:
           description: configured with NAC
           alias: outside-vrf
           leaked_external_prefixes:
-            - prefix: 0.0.0.0
+            - prefix: 0.0.0.0/0
               destinations:
                 - tenant: tech-elevate
                   vrf: vrf-02

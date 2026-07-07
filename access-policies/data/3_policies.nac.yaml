@@ -192,21 +192,6 @@ apic:
             deployment_immediacy: immediate
             vlan: 986
 #
-          - tenant: jorgquin
-            application_profile: 'network-segments'
-            endpoint_group: 10.1.15.64_27
-            mode: regular
-            deployment_immediacy: immediate
-            secondary_vlan: 1276
-            primary_vlan: 1275
-          - tenant: jorgquin
-            application_profile: 'network-segments'
-            endpoint_group: 10.1.15.96_27
-            mode: regular
-            deployment_immediacy: immediate
-            secondary_vlan: 1278
-            primary_vlan: 1277
-#
           - tenant: shared-services
             application_profile: 'ftd-management'
             endpoint_group: "ftd-mgmt"

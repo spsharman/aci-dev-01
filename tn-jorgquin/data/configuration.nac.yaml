@@ -17,7 +17,7 @@ apic:
   tenants:
     - name: jorgquin
       managed: true
-      description: 10.1.15.0/24
+      description: 10.5.8.0/21
       security_domains:
         - jorgquin
 
@@ -155,7 +155,7 @@ apic:
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-to-epg-10.1.15.0_27
+          - name: permit-to-epg-10.5.8.0_24
             scope: context
             subjects:
               - name: redirect
@@ -163,7 +163,7 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-10.1.15.0_27
+          - name: permit-to-esg-10.5.8.0_24
             scope: context
             subjects:
               - name: redirect
@@ -171,14 +171,14 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-intra-esg-10.1.15.0_27
+          - name: permit-intra-esg-10.5.8.0_24
             scope: context
             subjects:
               - name: src-any-dst-any
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-to-epg-10.1.15.32_27
+          - name: permit-to-epg-10.5.9.0_24
             scope: context
             subjects:
               - name: redirect
@@ -186,7 +186,7 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-10.1.15.32_27
+          - name: permit-to-esg-10.5.9.0_24
             scope: context
             subjects:
               - name: redirect
@@ -194,36 +194,14 @@ apic:
                   - filter: 'tcp-src-any-dst-152'
                     action: permit
 
-          - name: permit-intra-esg-10.1.15.32_27
+          - name: permit-intra-esg-10.5.9.0_24
             scope: context
             subjects:
               - name: src-any-dst-any
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-to-epg-10.1.15.64_27
-            scope: context
-            subjects:
-              - name: redirect
-                filters:
-                  - filter: 'tcp-src-any-dst-151'
-                    action: permit
-
-          - name: permit-to-esg-10.1.15.64_27
-            scope: tenant
-            subjects:
-              - name: src-any-dst-any
-                filters:
-                  - filter: src-any-dst-any
-
-          - name: permit-intra-esg-10.1.15.64_27
-            scope: context
-            subjects:
-              - name: src-any-dst-any
-                filters:
-                  - filter: src-any-dst-any
-
-          - name: permit-to-epg-10.1.15.96_27
+          - name: permit-to-epg-10.5.10.0_24
             scope: context
             subjects:
               - name: redirect
@@ -231,14 +209,36 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-10.1.15.96_27
+          - name: permit-to-esg-10.5.10.0_24
             scope: tenant
             subjects:
               - name: src-any-dst-any
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-intra-esg-10.1.15.96_27
+          - name: permit-intra-esg-10.5.10.0_24
+            scope: context
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-to-epg-10.5.11.0_24
+            scope: context
+            subjects:
+              - name: redirect
+                filters:
+                  - filter: 'tcp-src-any-dst-151'
+                    action: permit
+
+          - name: permit-to-esg-10.5.11.0_24
+            scope: tenant
+            subjects:
+              - name: src-any-dst-any
+                filters:
+                  - filter: src-any-dst-any
+
+          - name: permit-intra-esg-10.5.11.0_24
             scope: context
             subjects:
               - name: src-any-dst-any
@@ -284,22 +284,22 @@ apic:
             providers:
               - intra-vrf
           leaked_internal_prefixes:
-            - prefix: 10.1.15.0/27
+            - prefix: 10.5.8.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.15.32/27
+            - prefix: 10.5.9.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.15.64/27
+            - prefix: 10.5.10.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.15.96/27
+            - prefix: 10.5.11.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -314,39 +314,39 @@ apic:
           subnets:
             - ip: 6.6.6.1/24
 
-        - name: 10.1.15.0_27
+        - name: 10.5.8.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.15.1/27
+            - ip: 10.5.8.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.15.32_27
+        - name: 10.5.9.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.15.33/27
+            - ip: 10.5.9.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.15.64_27
+        - name: 10.5.10.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.15.65/27
+            - ip: 10.5.10.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.15.96_27
+        - name: 10.5.11.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.15.97/27
+            - ip: 10.5.11.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -385,10 +385,10 @@ apic:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads - no contracts on EPGs
           endpoint_groups:      
-            - name: '10.1.15.0_27'
+            - name: '10.5.8.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.15.0_27'
+              bridge_domain: '10.5.8.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -397,10 +397,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.1.15.32_27'
+            - name: '10.5.9.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.15.32_27'
+              bridge_domain: '10.5.9.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -409,23 +409,85 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.1.15.64_27'
+            - name: '10.5.10.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.15.64_27'
+              bridge_domain: '10.5.10.0_24'
               physical_domains:
                 - ucsc-c220m3-vds-01
               intra_epg_isolation: true
               proxy_arp: true
+              static_ports:
+                - node_id: 2103
+                  pod_id: 2
+                  port: 5
+                  vlan: 1275
+                  primary_vlan: 1276
+                - node_id: 2104
+                  pod_id: 2
+                  port: 5
+                  vlan: 1275
+                  primary_vlan: 1276
+                - node_id: 2103
+                  pod_id: 2
+                  port: 6
+                  vlan: 1275
+                  primary_vlan: 1276
+                - node_id: 2104
+                  pod_id: 2
+                  port: 6
+                  vlan: 1275
+                  primary_vlan: 1276
+                - node_id: 2103
+                  pod_id: 2
+                  port: 7
+                  vlan: 1275
+                  primary_vlan: 1276
+                - node_id: 2104
+                  pod_id: 2
+                  port: 7
+                  vlan: 1275
+                  primary_vlan: 1276
 
-            - name: '10.1.15.96_27'
+            - name: '10.5.11.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.15.96_27'
+              bridge_domain: '10.5.11.0_24'
               physical_domains:
                 - ucsc-c220m3-vds-01
               intra_epg_isolation: true
               proxy_arp: true
+              static_ports:
+                - node_id: 2103
+                  pod_id: 2
+                  port: 5
+                  vlan: 1277
+                  primary_vlan: 1278
+                - node_id: 2104
+                  pod_id: 2
+                  port: 5
+                  vlan: 1277
+                  primary_vlan: 1278
+                - node_id: 2103
+                  pod_id: 2
+                  port: 6
+                  vlan: 1277
+                  primary_vlan: 1278
+                - node_id: 2104
+                  pod_id: 2
+                  port: 6
+                  vlan: 1277
+                  primary_vlan: 1278
+                - node_id: 2103
+                  pod_id: 2
+                  port: 7
+                  vlan: 1277
+                  primary_vlan: 1278
+                - node_id: 2104
+                  pod_id: 2
+                  port: 7
+                  vlan: 1277
+                  primary_vlan: 1278
 
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
@@ -437,61 +499,61 @@ apic:
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.15.0_27'
+                  endpoint_group: '10.5.8.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.15.32_27'
+                  endpoint_group: '10.5.9.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.15.64_27'
+                  endpoint_group: '10.5.10.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.15.96_27'
+                  endpoint_group: '10.5.11.0_24'
               contracts:
                 intra_esgs:
                   - intra-esg
 
-            # - name: epg-10.1.15.0_27
+            # - name: epg-10.5.8.0_24
             #   vrf: vrf-01
             #   shutdown: false
             #   intra_esg_isolation: true
             #   preferred_group: false
             #   epg_selectors:
             #     - application_profile: 'network-segments'
-            #       endpoint_group: '10.1.15.0_27'
+            #       endpoint_group: '10.5.8.0_24'
             #   contracts:
             #     intra_esgs:
-            #       - permit-intra-esg-10.1.15.0_27
+            #       - permit-intra-esg-10.5.8.0_24
 
-            # - name: epg-10.1.15.32_27
+            # - name: epg-10.5.9.0_24
             #   vrf: vrf-01
             #   shutdown: false
             #   intra_esg_isolation: true
             #   preferred_group: false
             #   epg_selectors:
             #     - application_profile: 'network-segments'
-            #       endpoint_group: '10.1.15.32_27'
+            #       endpoint_group: '10.5.9.0_24'
             #   contracts:
             #     intra_esgs:
-            #       - permit-intra-esg-10.1.15.32_27
+            #       - permit-intra-esg-10.5.9.0_24
 
-            # - name: epg-10.1.15.64_27
+            # - name: epg-10.5.10.0_24
             #   vrf: vrf-01
             #   shutdown: false
             #   intra_esg_isolation: true
             #   preferred_group: false
             #   epg_selectors:
             #     - application_profile: 'network-segments'
-            #       endpoint_group: '10.1.15.64_27'
+            #       endpoint_group: '10.5.10.0_24'
             #   contracts:
             #     intra_esgs:
-            #       - permit-intra-esg-10.1.15.64_27
+            #       - permit-intra-esg-10.5.10.0_24
 
-            # - name: epg-10.1.15.96_27
+            # - name: epg-10.5.11.0_24
             #   vrf: vrf-01
             #   shutdown: false
             #   intra_esg_isolation: true
             #   preferred_group: false
             #   epg_selectors:
             #     - application_profile: 'network-segments'
-            #       endpoint_group: '10.1.15.96_27'
+            #       endpoint_group: '10.5.11.0_24'
             #   contracts:
             #     intra_esgs:
-            #       - permit-intra-esg-10.1.15.96_27
+            #       - permit-intra-esg-10.5.11.0_24

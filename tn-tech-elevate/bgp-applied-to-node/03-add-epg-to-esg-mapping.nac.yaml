@@ -1,6 +1,6 @@
 # Notes:
 #
-# Description: This is the current production network design for Tech-Elevate. It is configured to allow open communication between all EPGs and external subnets. The design includes a single VRF, multiple bridge domains, and a BGP L3Out to the core network. The design also includes filters and contracts to allow ICMP traffic and any-to-any communication between EPGs.
+# Description: Build v03 delta from v02. Introduces the network-security-groups application profile and maps each workload EPG (10.5.0.0/24, 10.5.1.0/24, 10.5.2.0/24) to a matching ESG in vrf-02.
 
 # subnet 10.5.0.0/21
 ---
@@ -74,7 +74,7 @@ apic:
           description: configured with NAC
           alias: outside-vrf
           leaked_external_prefixes:
-            - prefix: 0.0.0.0
+            - prefix: 0.0.0.0/0
               destinations:
                 - tenant: tech-elevate
                   vrf: vrf-02
@@ -432,3 +432,26 @@ apic:
                 - name: hx-dev-01-vds-01
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+
+        - name: 'network-security-groups'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: 10.5.0.0_24
+              vrf: vrf-02
+              epg_selectors:
+                - application_profile: 'network-segments'
+                  endpoint_group: 10.5.0.0_24
+
+            - name: 10.5.1.0_24
+              vrf: vrf-02
+              shutdown: false
+              epg_selectors:
+                - application_profile: network-segments
+                  endpoint_group: 10.5.1.0_24
+
+            - name: 10.5.2.0_24
+              vrf: vrf-02
+              shutdown: false
+              epg_selectors:
+                - application_profile: network-segments
+                  endpoint_group: 10.5.2.0_24
