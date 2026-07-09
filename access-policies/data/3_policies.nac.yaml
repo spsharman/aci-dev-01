@@ -130,6 +130,7 @@ apic:
           - hyperflex
           - isovalent-nodes
           - robvand.vrf-01
+          - tech-elevate.vrf-01
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
         routed_domains:
           - ajshahid.vrf-01

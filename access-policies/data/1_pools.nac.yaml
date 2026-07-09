@@ -493,3 +493,9 @@ apic:
             description: primary/secondary PVLANs
             allocation: static
 
+      - name: tech-elevate.vrf-01
+        allocation: static
+        ranges:
+          - from: 54
+            allocation: static
+            description: tn-tech-elevate L3out to K8s
