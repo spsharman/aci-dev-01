@@ -63,14 +63,14 @@ apic:
             prefixes:
               - ip: 0.0.0.0/0
                 aggregate: true
-                to_length: 0
+                to_length: 32
 
           - name: pod-subnets-redistribution
             description: match all pod subnets
             prefixes:
               - ip: 0.0.0.0/0
                 aggregate: true
-                to_length: 0
+                to_length: 32
 
         ospf_interface_policies:
           - name: OSPF_p2p
@@ -113,8 +113,8 @@ apic:
 
           - name: floating-L3out-bgp-redistribution-optimization
             community_mode: append
-            multipath: true
-            next_hop_propagation: true
+            multipath: false
+            next_hop_propagation: false
 
 # Filters
       filters:
