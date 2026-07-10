@@ -493,7 +493,7 @@ apic:
             description: primary/secondary PVLANs
             allocation: static
 
-      - name: tech-elevate.vrf-01
+      - name: tech-elevate
         allocation: static
         ranges:
           - from: 54

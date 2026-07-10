@@ -108,6 +108,7 @@ apic:
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
           - tech-elevate.vrf-01
+          - tech-elevate.vrf-02
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
@@ -131,6 +132,7 @@ apic:
           - isovalent-nodes
           - robvand.vrf-01
           - tech-elevate.vrf-01
+          - tech-elevate.vrf-02
           - BRKDCN-2959-DMZ.vrf-01-ospf-peering
         routed_domains:
           - ajshahid.vrf-01
@@ -146,6 +148,8 @@ apic:
           - demo-06.vrf-01
           - isovalent.vrf-01
           - robvand.vrf-01
+          - tech-elevate.vrf-01
+          - tech-elevate.vrf-02
           - shared-services.vrf-01-bgp-core
           - shared-services.vrf-01-ospf-peering
         vmware_vmm_domains:

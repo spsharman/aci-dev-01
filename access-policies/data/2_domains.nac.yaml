@@ -41,9 +41,14 @@ apic:
         vlan_pool: ssharman-ubuntu-nodes
 
       - name: tech-elevate.vrf-01
-        vlan_pool: tech-elevate.vrf-01
+        vlan_pool: tech-elevate
         security_domains:
-          - tech-elevate.vrf-01
+          - tech-elevate
+
+      - name: tech-elevate.vrf-02
+        vlan_pool: tech-elevate
+        security_domains:
+          - tech-elevate
 
       - name: ucsc-c220m3-vds-01
         vlan_pool: ucsc-c220m3-vds-01
@@ -130,6 +135,11 @@ apic:
         vlan_pool: smart-switches
 
       - name: tech-elevate.vrf-01
-        vlan_pool: tech-elevate.vrf-01
+        vlan_pool: tech-elevate
         security_domains:
           - tech-elevate.vrf-01
+
+      - name: tech-elevate.vrf-02
+        vlan_pool: tech-elevate
+        security_domains:
+          - tech-elevate

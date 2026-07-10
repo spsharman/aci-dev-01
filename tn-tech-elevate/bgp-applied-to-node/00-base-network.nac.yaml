@@ -14,15 +14,6 @@ apic:
 
 # Policies
       policies:
-        bgp_timer_policies:
-          - name: cilium-cni-bgp-timers
-            description: BGP timer policies for cilium cni
-            keepalive_interval: 1
-            hold_interval: 3
-            stale_interval: 6
-            graceful_restart_helper: true
-            maximum_as_limit: 1
-
         bgp_address_family_context_policies:
           - name: cilium-cni-bgp-af-context
             description: BGP weights and paths policies for cilium cni
@@ -34,6 +25,12 @@ apic:
             local_max_ecmp: 4
             enable_host_route_leak: false
 
+        bgp_best_path_policies:
+          - name: cilium-cni-bgp-as-path
+            description: BGP best path policy for cilium cni
+            as_path_multipath_relax: true
+            ignore_igp_metric: false
+
         bgp_peer_prefix_policies:
           - name: cilium-cni-bgp-prefix-policy
             description: BGP prefix policies for cilium cni
@@ -41,11 +38,14 @@ apic:
             threshold: 75
             max_prefixes: 500
 
-        bgp_best_path_policies:
-          - name: cilium-cni-bgp-as-path
-            description: BGP best path policy for cilium cni
-            as_path_multipath_relax: true
-            ignore_igp_metric: true
+        bgp_timer_policies:
+          - name: cilium-cni-bgp-timers
+            description: BGP timer policies for cilium cni
+            keepalive_interval: 1
+            hold_interval: 3
+            stale_interval: 6
+            graceful_restart_helper: true
+            maximum_as_limit: 1
 
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
@@ -58,13 +58,6 @@ apic:
                 external_endpoint_group: core-services-subnets
 
         match_rules:
-          - name: pod-subnets-interleak
-            description: match all pod subnets
-            prefixes:
-              - ip: 0.0.0.0/0
-                aggregate: true
-                to_length: 32
-
           - name: pod-subnets-redistribution
             description: match all pod subnets
             prefixes:
@@ -87,15 +80,6 @@ apic:
             lsa_transmit_delay: 1
 
         route_control_route_maps:
-          - name: floating-L3out-interleak-optimization
-            type: global
-            contexts:
-              - name: pods-subnets
-                action: permit
-                match_rules:
-                  - pod-subnets-interleak
-                set_rule: floating-L3out-bgp-interleak-optimization
-
           - name: floating-L3out-redistribution-optimization
             type: global
             contexts:
@@ -106,11 +90,6 @@ apic:
                 set_rule: floating-L3out-bgp-redistribution-optimization
 
         set_rules:
-          - name: floating-L3out-bgp-interleak-optimization
-            community_mode: append
-            multipath: true
-            next_hop_propagation: true
-
           - name: floating-L3out-bgp-redistribution-optimization
             community_mode: append
             multipath: false
@@ -142,6 +121,7 @@ apic:
       vrfs:
         - name: vrf-01
           description: configured with NAC
+          alias: inside-vrf
           bgp:
             timer_policy: cilium-cni-bgp-timers
             ipv4_address_family_context_policy: cilium-cni-bgp-af-context
@@ -154,7 +134,8 @@ apic:
 # L3out
       l3outs:
         - name: vrf-01-bgp-as-64805
-          description: configured with NAC
+          alias: inside-vrf-to-core
+          description: L3out peering to core
           vrf: vrf-01
           domain: tech-elevate.vrf-01
           ospf:
@@ -232,6 +213,7 @@ apic:
                     - node_id: 1101
                       pod_id: 1
                       port: 7
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.96/31
@@ -246,6 +228,7 @@ apic:
                     - node_id: 1101
                       pod_id: 1
                       port: 8
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.98/31
@@ -260,6 +243,7 @@ apic:
                     - node_id: 1102
                       pod_id: 1
                       port: 7
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.100/31
@@ -274,6 +258,7 @@ apic:
                     - node_id: 1102
                       pod_id: 1
                       port: 8
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.102/31
@@ -352,6 +337,7 @@ apic:
                     - node_id: 2101
                       pod_id: 2
                       port: 7
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.104/31
@@ -366,6 +352,7 @@ apic:
                     - node_id: 2101
                       pod_id: 2
                       port: 8
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.106/31
@@ -380,6 +367,7 @@ apic:
                     - node_id: 2102
                       pod_id: 2
                       port: 7
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.108/31
@@ -394,6 +382,7 @@ apic:
                     - node_id: 2102
                       pod_id: 2
                       port: 8
+                      scope: vrf
                       vlan: 14
                       svi: false
                       ip: 10.237.97.110/31
@@ -406,6 +395,13 @@ apic:
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
+                - prefix: 0.0.0.0/0
+                  name: route-control-only
+                  export_route_control: true
+                  aggregate_export_route_control: true
+                  shared_route_control: true
+                  import_security: false
+
                 - prefix: 0.0.0.0/1
                   shared_security: true
                   import_security: true
@@ -414,20 +410,13 @@ apic:
                   shared_security: true
                   import_security: true
 
-            - name: k8s-nodes
-              subnets:
-                - prefix: 10.237.97.224/28
-                  shared_security: false
-                  import_security: false
-                  export_route_control: true
-
 # L3out
         - name: vrf-01-bgp-AS-64808
+          alias: inside-vrf-to-k8s-nodes
           description: L3out SVI to K8s environment
           vrf: vrf-01
           domain: tech-elevate.vrf-01
-          import_route_control_enforcement: true
-          interleak_route_map: floating-L3out-interleak-optimization
+          import_route_control_enforcement: false
           redistribution_route_maps:
             - source: attached-host
               route_map: floating-L3out-redistribution-optimization
@@ -453,30 +442,30 @@ apic:
                 timer_policy: cilium-cni-bgp-timers
                 as_path_policy: cilium-cni-bgp-as-path
 
-              bgp_peers:
-                - ip: 10.237.97.224/28
-                  description: k8s virtual machine nodes via FI
-                  remote_as: 64808
-                  local_as: 64805
-                  allow_self_as: false
-                  as_override: true
-                  disable_peer_as_check: true
-                  next_hop_self: false
-                  send_community: false
-                  send_ext_community: false
-                  allowed_self_as_count: 3
-                  bfd: false
-                  disable_connected_check: false
-                  ttl: 1
-                  remove_all_private_as: false
-                  remove_private_as: false
-                  replace_private_as_with_local_as: false
-                  unicast_address_family: true
-                  multicast_address_family: false
-                  admin_state: true
-                  as_propagate: no-prepend
-                  peer_prefix_policy: cilium-cni-bgp-prefix-policy
-                  # import_route_control: floating-L3out-optimizations
+              # bgp_peers:
+              #   - ip: 10.237.97.224/28
+              #     description: k8s virtual machine nodes via FI
+              #     remote_as: 64808
+              #     local_as: 64805
+              #     allow_self_as: false
+              #     as_override: true
+              #     disable_peer_as_check: true
+              #     next_hop_self: false
+              #     send_community: false
+              #     send_ext_community: false
+              #     allowed_self_as_count: 3
+              #     bfd: false
+              #     disable_connected_check: false
+              #     ttl: 1
+              #     remove_all_private_as: false
+              #     remove_private_as: false
+              #     replace_private_as_with_local_as: false
+              #     unicast_address_family: true
+              #     multicast_address_family: false
+              #     admin_state: true
+              #     as_propagate: no-prepend
+              #     peer_prefix_policy: cilium-cni-bgp-prefix-policy
+              #     # import_route_control: floating-L3out-optimizations
 
               interface_profiles:
                 - name: k8s-nodes     
@@ -484,6 +473,7 @@ apic:
                     - node_id: 1101                       
                       mode: regular                       
                       floating_svi: true
+                      scope: vrf
                       vlan: 54
                       paths:
                         - floating_ip: 10.237.97.227/28
@@ -491,15 +481,66 @@ apic:
                       ip: 10.237.97.225/28
                       ip_shared: 10.237.97.228/28
 
-                    - node_id: 1102                       
+                      bgp_peers:
+                        - ip: 10.237.97.224/28
+                          description: k8s virtual machine nodes via FI
+                          remote_as: 64808
+                          local_as: 64805
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                          # import_route_control: imported-routes
+
+                    - node_id: 1102
                       mode: regular                       
                       floating_svi: true
+                      scope: vrf                      
                       vlan: 54
                       paths:
                         - floating_ip: 10.237.97.227/28
                           physical_domain: tech-elevate.vrf-01
                       ip: 10.237.97.226/28
                       ip_shared: 10.237.97.228/28      
+
+                      bgp_peers:
+                        - ip: 10.237.97.224/28
+                          description: k8s virtual machine nodes via FI
+                          remote_as: 64808
+                          local_as: 64805
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                          # import_route_control: floating-L3out-optimizations
 
                   dhcp_labels:
                     - dhcp_relay_policy: dhcp.uktme.cisco.com
