@@ -7,7 +7,7 @@
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v02
+      description: blueprint - v04
       managed: true
       security_domains:
         - tech-elevate
@@ -56,6 +56,13 @@ apic:
                 tenant: shared-services
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
+
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
 
         match_rules:
           - name: pod-subnets-redistribution
@@ -106,6 +113,242 @@ apic:
             community_mode: append
             multipath: false
             next_hop_propagation: false
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftdv-01-north-south
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-6-gig-0-3
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: ftdv-01-gig-0-3
+                    vnic_name: Network adapter 6
+
+            logical_interfaces:
+              - name: data
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-6-gig-0-3
+                    interface_name: ftdv-01-gig-0-3
+
+          - name: ftdv-02-east-west 
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-02-adapter-5-gig-0-2
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-02.uktme.cisco.com
+                interfaces:
+                  - name: data
+                    vnic_name: Network adapter 5
+
+            logical_interfaces:
+              - name: data
+                concrete_interfaces:
+                  - device: ftdv-02-adapter-5-gig-0-2
+                    interface_name: data
+
+          - name: smart-switch-east-west
+            physical_domain: smart-switches
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: smart-switch-east-west
+                interfaces:
+                  - name: data
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_smart-switch
+            logical_interfaces:
+              - name: data
+                vlan: 30
+                concrete_interfaces:
+                  - device: smart-switch-east-west
+                    interface_name: data
+
+        redirect_policies:
+          - name: ftdv-01-north-south
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                name: ftdv-01
+                redirect_health_group: ftdv-01-north-south
+
+          - name: ftdv-02-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.12
+                name: ftdv-02-east-west
+                redirect_health_group: ftdv-02-east-west
+
+          - name: smart-switch-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.11
+                name: smart-switch-east-west
+                redirect_health_group: smart-switch-east-west
+
+        service_graph_templates:
+          - name: ftdv-01-north-south
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-01-north-south
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: ftdv-02-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-02-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: smart-switch-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-ftdv-02-east-west
+            redirect: true
+            template_type: FW_ROUTED
+            devices:
+              - name: smart-switch-east-west
+                node_name: N1
+              - name: ftdv-02-east-west
+                node_name: N2
+            connections:
+              - consumer_node: EPG-Consumer
+                provider_node: N1
+
+              - consumer_node: N1
+                provider_node: N2
+
+              - consumer_node: N2
+                provider_node: EPG-Provider
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftdv-01-north-south
+            consumer:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-02-east-west
+            consumer:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-ftdv-02-east-west
+            devices:
+              - name: smart-switch-east-west
+                node_name: N1
+                consumer:
+                  redirect_policy:
+                    name: smart-switch-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+                provider:
+                  redirect_policy:
+                    name: smart-switch-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+              - name: ftdv-02-east-west
+                node_name: N2
+                consumer:
+                  redirect_policy:
+                    name: ftdv-02-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+                provider:
+                  redirect_policy:
+                    name: ftdv-02-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+
+        redirect_health_groups:
+          - name: ftdv-01-north-south
+          - name: ftdv-02-east-west
+          - name: smart-switch-east-west
 
 # Filters
       filters:
@@ -204,7 +447,7 @@ apic:
           vrf: vrf-02
           domain: tech-elevate.vrf-02
           ospf:
-            area: 0.0.0.0
+            area: backbone
             area_type: regular
           export_route_map:
             type: global
@@ -610,6 +853,12 @@ apic:
 
 # Bridge Domains
       bridge_domains:
+        - name: 6.6.6.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+
         - name: 10.5.0.0_24
           unknown_unicast: proxy
           vrf: vrf-01

@@ -139,7 +139,7 @@ apic:
           vrf: vrf-01
           domain: tech-elevate.vrf-01
           ospf:
-            area: 0.0.0.0
+            area: backbone
             area_type: regular
           
 # Nodes
