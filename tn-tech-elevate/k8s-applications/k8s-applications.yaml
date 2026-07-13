@@ -1,0 +1,74 @@
+k8s_applications:
+  payments-api:
+    namespace: payments
+    application_name: api
+    enable_intra_esg_contract: true
+    provided_contract_scope: context
+    consumed_contract_scope: tenant
+    external_subnets:
+      - 10.20.10.11/32
+      - 10.20.10.12/32
+    contract_rules_in:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "443"
+        stateful: true
+    contract_rules_out:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "8443"
+        stateful: true
+
+  payments-worker:
+    namespace: payments
+    application_name: worker
+    external_subnets:
+      - 10.20.10.21/32
+    contract_rules_in:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "443"
+        stateful: true
+    contract_rules_out:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "8443"
+        stateful: true
+
+  orders-api:
+    namespace: orders
+    application_name: api
+    external_subnets:
+      - 10.20.20.11/32
+    contract_rules_in:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "443"
+        stateful: true
+    contract_rules_out:
+      - subject: TCP
+        source_port: "any"
+        destination_port: "8443"
+        stateful: true
+
+  dns-cache:
+    namespace: shared-services
+    application_name: dns
+    provided_contract_scope: tenant
+    consumed_contract_scope: tenant
+    external_subnets:
+      - 10.30.40.10/32
+    contract_rules_in:
+      - subject: UDP
+        source_port: "any"
+        destination_port: "53"
+        stateful: true
+        # Optional; graph resource is created by another plan:
+        service_graph: "uni/tn-tech-elevate/AbsGraph-ftdv-01-north-south"
+    contract_rules_out:
+      - subject: UDP
+        source_port: "any"
+        destination_port: "53"
+        stateful: true
+        # Optional; graph resource is created by another plan:
+        # service_graph: "uni/tn-tech-elevate/AbsGraph-ftdv-01-north-south"

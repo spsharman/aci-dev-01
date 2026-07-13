@@ -1,0 +1,53 @@
+tenant_name      = "tn-tech-elevate"
+vrf_name         = "vrf-01"
+contract_prefix  = "permit-to"
+consumed_contract_prefix = "permit-from"
+intra_contract_prefix = "permit-intra"
+contract_scope = "context" # default fallback; valid: context, tenant, global
+k8s_applications_yaml_file = "k8s-applications.yaml"
+
+# Keep empty when using YAML file input.
+k8s_applications = {}
+
+# Example k8s-applications.yaml (YAML-first, easier to read at scale):
+#
+# k8s_applications:
+#   payments-api:
+#     namespace: payments
+#     application_name: api
+#     enable_intra_esg_contract: true
+#     provided_contract_scope: context
+#     consumed_contract_scope: tenant
+#     external_subnets:
+#       - 10.20.10.11/32
+#       - 10.20.10.12/32
+#     contract_rules_in:
+#       - subject: TCP
+#         source_port: "any"
+#         destination_port: "443"
+#         stateful: true
+#         # Optional; created by a separate plan:
+#         # service_graph: "uni/tn-tech-elevate/AbsGraph-your-graph"
+#     contract_rules_out:
+#       - subject: TCP
+#         source_port: "any"
+#         destination_port: "8443"
+#         stateful: true
+#
+#   dns-cache:
+#     namespace: shared-services
+#     application_name: dns
+#     external_subnets:
+#       - 10.30.40.10/32
+#     contract_rules_in:
+#       - subject: UDP
+#         source_port: "any"
+#         destination_port: "53"
+#         stateful: true
+#         # service_graph: "uni/tn-tech-elevate/AbsGraph-dns-service-graph"
+#     contract_rules_out:
+#       - subject: UDP
+#         source_port: "any"
+#         destination_port: "53"
+#         stateful: true
+#         # service_graph: "uni/tn-tech-elevate/AbsGraph-dns-service-graph"

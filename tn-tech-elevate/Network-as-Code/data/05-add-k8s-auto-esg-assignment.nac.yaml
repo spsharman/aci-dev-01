@@ -84,22 +84,6 @@ apic:
               - ip: 10.237.99.72/27
                 aggregate: true
 
-          - name: k8s-application-1
-            description: matches k8s application 1
-            community_terms:
-              - name: k8s-application-1
-                factors:
-                  - community: regular:as2-nn2:64808:1
-                    scope: transitive
-
-          - name: k8s-application-2
-            description: matches k8s application 2
-            community_terms:
-              - name: k8s-application-2
-                factors:
-                  - community: regular:as2-nn2:64808:2
-                    scope: transitive
-
         ospf_interface_policies:
           - name: OSPF_p2p
             cost: unspecified
@@ -1001,8 +985,14 @@ apic:
                 providers:
                   - permit-to-k8s-applications
 
-            - name: k8s-application-quarantine
+            - name: k8s-application-4
               vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.75
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-k8s-applications
 
         - name: 'k8s-nodes'
           description: 'ESGs are used to define security groups' 

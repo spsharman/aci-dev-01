@@ -24,8 +24,8 @@ module "aci" {
   # yaml_files = ["data/02-migrate-to-esgs.nac.yaml"]
   # yaml_files = ["data/03-add-ftdv-for-north-south-flows.nac.yaml"]
   # yaml_files = ["data/04-add-ss-and-ftdv-for-east-west-flows.nac.yaml"]
-  # yaml_files = ["data/05-add-k8s-auto-esg-assignment.nac.yaml"]
-  yaml_files = ["data/66-test-dual-vrf.nac.yaml"]
+  yaml_files = ["data/05-add-k8s-auto-esg-assignment.nac.yaml"]
+  # yaml_files = ["data/66-test-dual-vrf.nac.yaml"]
   # yaml_files = ["data/67-test-single-vrf.nac.yaml"]
 
   # yaml_files = ["data/08-add-application-esgs-and-contracts.nac.yaml"]
