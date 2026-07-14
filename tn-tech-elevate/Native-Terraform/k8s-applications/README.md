@@ -58,7 +58,7 @@ Optional:
 - `consumed_contract_prefix` (default: `permit-from`)
 - `intra_contract_prefix` (default: `permit-intra`)
 - `contract_scope` (default fallback for provided/consumed: `context`, valid: `context`, `tenant`, `global`)
-- `default_provided_contract_consumer_esg_dns` (default: `["uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets"]`)
+- `default_provided_contract_consumer_dns` (default: `["uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets"]`)
 - `default_consumed_contract_provider_dns` (default: `["uni/tn-tech-elevate/brc-permit-to-all-external-subnets"]`)
 - `k8s_applications_yaml_file` (default: `k8s-applications.yaml`)
 
@@ -83,9 +83,9 @@ k8s_applications:
     enable_intra_esg_contract: true
     provided_contract_scope: context # optional override
     consumed_contract_scope: tenant  # optional override
-    provided_contract_consumer_esg_dns: # optional override
+    additional_provided_contract_consumer_dns: # optional additions to defaults
       - uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets
-    consumed_contract_provider_dns: # optional override
+    additional_consumed_contract_provider_dns: # optional additions to defaults
       - uni/tn-tech-elevate/brc-permit-to-all-external-subnets
     external_subnets:
       - 10.10.10.10/32

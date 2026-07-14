@@ -35,14 +35,20 @@ locals {
   applications = {
     for app_key, application in local.raw_applications :
     app_key => {
-      namespace                          = tostring(application.namespace)
-      application_name                   = tostring(application.application_name)
-      enable_intra_esg_contract          = try(tobool(application.enable_intra_esg_contract), false)
-      provided_contract_scope            = try(tostring(application.provided_contract_scope), "")
-      consumed_contract_scope            = try(tostring(application.consumed_contract_scope), "")
-      provided_contract_consumer_esg_dns = toset([for dn in try(application.provided_contract_consumer_esg_dns, []) : tostring(dn)])
-      consumed_contract_provider_dns     = toset([for dn in try(application.consumed_contract_provider_dns, []) : tostring(dn)])
-      external_subnets                   = toset([for subnet in try(application.external_subnets, []) : tostring(subnet)])
+      namespace                 = tostring(application.namespace)
+      application_name          = tostring(application.application_name)
+      enable_intra_esg_contract = try(tobool(application.enable_intra_esg_contract), false)
+      provided_contract_scope   = try(tostring(application.provided_contract_scope), "")
+      consumed_contract_scope   = try(tostring(application.consumed_contract_scope), "")
+      additional_provided_contract_consumer_dns = toset([for dn in concat(
+        try(application.additional_provided_contract_consumer_dns, []),
+        try(application.provided_contract_consumer_esg_dns, [])
+      ) : tostring(dn)])
+      additional_consumed_contract_provider_dns = toset([for dn in concat(
+        try(application.additional_consumed_contract_provider_dns, []),
+        try(application.consumed_contract_provider_dns, [])
+      ) : tostring(dn)])
+      external_subnets = toset([for subnet in try(application.external_subnets, []) : tostring(subnet)])
       contract_rules_in = [
         for rule in try(application.contract_rules_in, []) : {
           subject          = tostring(rule.subject)
@@ -281,26 +287,24 @@ locals {
     )
   }
 
-  application_provided_contract_consumer_esg_dns = {
+  application_provided_contract_consumer_dns = {
     for app_key, application in local.applications :
-    app_key => (
-      length(try(application.provided_contract_consumer_esg_dns, [])) > 0
-      ? toset(application.provided_contract_consumer_esg_dns)
-      : var.default_provided_contract_consumer_esg_dns
+    app_key => setunion(
+      var.default_provided_contract_consumer_dns,
+      try(application.additional_provided_contract_consumer_dns, toset([]))
     )
   }
 
   application_consumed_contract_provider_dns = {
     for app_key, application in local.applications :
-    app_key => (
-      length(try(application.consumed_contract_provider_dns, [])) > 0
-      ? toset(application.consumed_contract_provider_dns)
-      : var.default_consumed_contract_provider_dns
+    app_key => setunion(
+      var.default_consumed_contract_provider_dns,
+      try(application.additional_consumed_contract_provider_dns, toset([]))
     )
   }
 
   app_provided_contract_consumers = merge([
-    for app_key, consumer_dns in local.application_provided_contract_consumer_esg_dns : {
+    for app_key, consumer_dns in local.application_provided_contract_consumer_dns : {
       for consumer_dn in consumer_dns :
       "${app_key}::${consumer_dn}" => {
         app_key     = app_key

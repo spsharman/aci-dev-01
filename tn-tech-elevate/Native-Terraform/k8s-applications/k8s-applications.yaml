@@ -5,9 +5,9 @@ k8s_applications:
     enable_intra_esg_contract: true
     provided_contract_scope: context
     consumed_contract_scope: tenant
-    provided_contract_consumer_esg_dns:
+    additional_provided_contract_consumer_dns:
       - uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets
-    consumed_contract_provider_dns:
+    additional_consumed_contract_provider_dns:
       - uni/tn-tech-elevate/brc-permit-to-all-external-subnets
     external_subnets:
       - 10.20.10.11/32
