@@ -27,15 +27,22 @@ locals {
     : {}
   )
 
-  yaml_applications = {
-    for app_key, application in try(local.yaml_configuration.k8s_applications, {}) :
+  raw_applications = merge(
+    try(local.yaml_configuration.k8s_applications, {}),
+    yamldecode(jsonencode(var.k8s_applications))
+  )
+
+  applications = {
+    for app_key, application in local.raw_applications :
     app_key => {
-      namespace                 = tostring(application.namespace)
-      application_name          = tostring(application.application_name)
-      enable_intra_esg_contract = try(tobool(application.enable_intra_esg_contract), false)
-      provided_contract_scope   = try(tostring(application.provided_contract_scope), "")
-      consumed_contract_scope   = try(tostring(application.consumed_contract_scope), "")
-      external_subnets          = toset(try(application.external_subnets, []))
+      namespace                          = tostring(application.namespace)
+      application_name                   = tostring(application.application_name)
+      enable_intra_esg_contract          = try(tobool(application.enable_intra_esg_contract), false)
+      provided_contract_scope            = try(tostring(application.provided_contract_scope), "")
+      consumed_contract_scope            = try(tostring(application.consumed_contract_scope), "")
+      provided_contract_consumer_esg_dns = toset([for dn in try(application.provided_contract_consumer_esg_dns, []) : tostring(dn)])
+      consumed_contract_provider_dns     = toset([for dn in try(application.consumed_contract_provider_dns, []) : tostring(dn)])
+      external_subnets                   = toset([for subnet in try(application.external_subnets, []) : tostring(subnet)])
       contract_rules_in = [
         for rule in try(application.contract_rules_in, []) : {
           subject          = tostring(rule.subject)
@@ -56,7 +63,6 @@ locals {
       ]
     }
   }
-  applications = length(var.k8s_applications) > 0 ? var.k8s_applications : local.yaml_applications
 
   application_identifiers = {
     for app_key, application in local.applications :
@@ -275,6 +281,49 @@ locals {
     )
   }
 
+  application_provided_contract_consumer_esg_dns = {
+    for app_key, application in local.applications :
+    app_key => (
+      length(try(application.provided_contract_consumer_esg_dns, [])) > 0
+      ? toset(application.provided_contract_consumer_esg_dns)
+      : var.default_provided_contract_consumer_esg_dns
+    )
+  }
+
+  application_consumed_contract_provider_dns = {
+    for app_key, application in local.applications :
+    app_key => (
+      length(try(application.consumed_contract_provider_dns, [])) > 0
+      ? toset(application.consumed_contract_provider_dns)
+      : var.default_consumed_contract_provider_dns
+    )
+  }
+
+  app_provided_contract_consumers = merge([
+    for app_key, consumer_dns in local.application_provided_contract_consumer_esg_dns : {
+      for consumer_dn in consumer_dns :
+      "${app_key}::${consumer_dn}" => {
+        app_key     = app_key
+        consumer_dn = consumer_dn
+      }
+    }
+  ]...)
+
+  app_external_consumed_contracts = merge([
+    for app_key, contract_dns in local.application_consumed_contract_provider_dns : {
+      for contract_dn in contract_dns :
+      "${app_key}::${contract_dn}" => {
+        app_key     = app_key
+        contract_dn = contract_dn
+        contract_name = (
+          startswith(element(reverse(split("/", contract_dn)), 0), "brc-")
+          ? substr(element(reverse(split("/", contract_dn)), 0), 4, length(element(reverse(split("/", contract_dn)), 0)) - 4)
+          : element(reverse(split("/", contract_dn)), 0)
+        )
+      }
+    }
+  ]...)
+
 }
 
 resource "aci_application_profile" "namespace" {
@@ -332,23 +381,32 @@ resource "aci_endpoint_security_group" "application" {
     vrf_name = var.vrf_name
   }
 
-  relation_to_provided_contracts = [
-    {
-      contract_name = aci_contract.application[each.key].name
-    }
-  ]
-
-  relation_to_consumed_contracts = [
-    {
-      contract_name = aci_contract.application_consumed[each.key].name
-    }
-  ]
-
   relation_to_intra_epg_contracts = try(each.value.enable_intra_esg_contract, false) ? [
     {
       contract_name = aci_contract.application_intra[each.key].name
     }
   ] : []
+}
+
+resource "aci_relation_to_provided_contract" "app_esg_provided" {
+  for_each = local.applications
+
+  parent_dn     = aci_endpoint_security_group.application[each.key].id
+  contract_name = aci_contract.application[each.key].name
+}
+
+resource "aci_relation_to_consumed_contract" "app_esg_consumed_external" {
+  for_each = local.app_external_consumed_contracts
+
+  parent_dn     = aci_endpoint_security_group.application[each.value.app_key].id
+  contract_name = each.value.contract_name
+}
+
+resource "aci_relation_to_consumed_contract" "external_esg_consumes_app_provided" {
+  for_each = local.app_provided_contract_consumers
+
+  parent_dn     = each.value.consumer_dn
+  contract_name = aci_contract.application[each.value.app_key].name
 }
 
 resource "aci_endpoint_security_group_selector" "application_external_subnet" {

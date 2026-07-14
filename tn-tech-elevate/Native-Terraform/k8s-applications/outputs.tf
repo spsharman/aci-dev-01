@@ -11,11 +11,13 @@ output "endpoint_security_groups" {
   value = {
     for app_key, esg in aci_endpoint_security_group.application :
     app_key => {
-      esg_name               = esg.name
-      provided_contract_name = local.application_contract_names[app_key]
-      consumed_contract_name = local.application_consumed_contract_names[app_key]
-      intra_contract_name    = try(aci_contract.application_intra[app_key].name, null)
-      external_subnets       = local.applications[app_key].external_subnets
+      esg_name                           = esg.name
+      provided_contract_name             = local.application_contract_names[app_key]
+      consumed_contract_name             = local.application_consumed_contract_names[app_key]
+      intra_contract_name                = try(aci_contract.application_intra[app_key].name, null)
+      provided_contract_consumer_esg_dns = local.application_provided_contract_consumer_esg_dns[app_key]
+      consumed_contract_provider_dns     = local.application_consumed_contract_provider_dns[app_key]
+      external_subnets                   = local.applications[app_key].external_subnets
     }
   }
 }

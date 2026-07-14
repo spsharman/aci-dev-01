@@ -4,6 +4,8 @@ contract_prefix  = "permit-to"
 consumed_contract_prefix = "permit-from"
 intra_contract_prefix = "permit-intra"
 contract_scope = "context" # default fallback; valid: context, tenant, global
+default_provided_contract_consumer_esg_dns = ["uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets"]
+default_consumed_contract_provider_dns     = ["uni/tn-tech-elevate/brc-permit-to-all-external-subnets"]
 k8s_applications_yaml_file = "k8s-applications.yaml"
 
 # Keep empty when using YAML file input.
@@ -18,6 +20,10 @@ k8s_applications = {}
 #     enable_intra_esg_contract: true
 #     provided_contract_scope: context
 #     consumed_contract_scope: tenant
+#     provided_contract_consumer_esg_dns:
+#       - uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets
+#     consumed_contract_provider_dns:
+#       - uni/tn-tech-elevate/brc-permit-to-all-external-subnets
 #     external_subnets:
 #       - 10.20.10.11/32
 #       - 10.20.10.12/32

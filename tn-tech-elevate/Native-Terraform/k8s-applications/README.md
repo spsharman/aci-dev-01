@@ -8,8 +8,9 @@ For each entry in `k8s_applications`:
 
 - Application Profile: `k8s.ns.<namespace>.<application_name>`
 - ESG: `<application_name>`
-- ESG provided contract reference: `permit-to-k8s.ns.<namespace>.<application_name>`
-- ESG consumed contract reference: `permit-from-k8s.ns.<namespace>.<application_name>`
+- App ESG provides contract: `permit-to-k8s.ns.<namespace>.<application_name>`
+- App ESG consumes external provided contracts (default: `uni/tn-tech-elevate/brc-permit-to-all-external-subnets`)
+- External ESGs consume app provided contract (default consumer ESG: `uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets`)
 - ESG optional intra contract reference: `permit-intra-k8s.ns.<namespace>.<application_name>` (when enabled per app)
 - ESG external subnet selectors: `ip=='<cidr>'` for each CIDR in `external_subnets`
 
@@ -57,6 +58,8 @@ Optional:
 - `consumed_contract_prefix` (default: `permit-from`)
 - `intra_contract_prefix` (default: `permit-intra`)
 - `contract_scope` (default fallback for provided/consumed: `context`, valid: `context`, `tenant`, `global`)
+- `default_provided_contract_consumer_esg_dns` (default: `["uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets"]`)
+- `default_consumed_contract_provider_dns` (default: `["uni/tn-tech-elevate/brc-permit-to-all-external-subnets"]`)
 - `k8s_applications_yaml_file` (default: `k8s-applications.yaml`)
 
 `k8s_applications` can be supplied directly in tfvars, or loaded from YAML via `k8s_applications_yaml_file`.
@@ -80,6 +83,10 @@ k8s_applications:
     enable_intra_esg_contract: true
     provided_contract_scope: context # optional override
     consumed_contract_scope: tenant  # optional override
+    provided_contract_consumer_esg_dns: # optional override
+      - uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets
+    consumed_contract_provider_dns: # optional override
+      - uni/tn-tech-elevate/brc-permit-to-all-external-subnets
     external_subnets:
       - 10.10.10.10/32
     contract_rules_in:

@@ -372,7 +372,7 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-all-external-subnets-from-esg-all-epgs
+        - name: permit-to-all-external-subnets
           description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
@@ -935,7 +935,7 @@ apic:
                   endpoint_group: 10.5.2.0_24
               contracts:
                 consumers:
-                  - permit-to-all-external-subnets-from-esg-all-epgs
+                  - permit-to-all-external-subnets
                   - permit-to-k8s-applications
 
         - name: 'external-subnets'
@@ -953,7 +953,7 @@ apic:
                   - permit-to-k8s-nodes
                   - permit-to-k8s-applications
                 providers:
-                  - permit-to-all-external-subnets-from-esg-all-epgs
+                  - permit-to-all-external-subnets
 
         - name: 'k8s-applications'
           description: 'ESGs are used to define security groups' 

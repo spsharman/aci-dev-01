@@ -54,6 +54,18 @@ variable "contract_scope" {
   }
 }
 
+variable "default_provided_contract_consumer_esg_dns" {
+  description = "Default ESG DN list that should consume each app provided contract."
+  type        = set(string)
+  default     = ["uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets"]
+}
+
+variable "default_consumed_contract_provider_dns" {
+  description = "Default provided contract DN list that each app ESG should consume."
+  type        = set(string)
+  default     = ["uni/tn-tech-elevate/brc-permit-to-all-external-subnets"]
+}
+
 variable "k8s_applications_yaml_file" {
   description = "Optional YAML file path. When present, k8s_applications are loaded from this file."
   type        = string
@@ -74,17 +86,21 @@ variable "k8s_applications" {
     Each application defines direction-specific rules:
       - contract_rules_in  -> provided contract filters (<proto>-in-...)
       - contract_rules_out -> consumed contract filters (<proto>-out-...)
+      - provided_contract_consumer_esg_dns -> external ESG DNs that consume this app provided contract
+      - consumed_contract_provider_dns -> provided contract DNs this app ESG consumes
 
     Allowed subject values: TCP, UDP, ICMP, Redirect.
   EOT
 
   type = map(object({
-    namespace                 = string
-    application_name          = string
-    enable_intra_esg_contract = optional(bool, false)
-    provided_contract_scope   = optional(string)
-    consumed_contract_scope   = optional(string)
-    external_subnets          = set(string)
+    namespace                          = string
+    application_name                   = string
+    enable_intra_esg_contract          = optional(bool, false)
+    provided_contract_scope            = optional(string)
+    consumed_contract_scope            = optional(string)
+    provided_contract_consumer_esg_dns = optional(set(string), [])
+    consumed_contract_provider_dns     = optional(set(string), [])
+    external_subnets                   = set(string)
     contract_rules_in = list(object({
       subject          = string
       source_port      = string
@@ -108,6 +124,28 @@ variable "k8s_applications" {
       app.provided_contract_scope == null || contains(["context", "tenant", "global"], lower(app.provided_contract_scope))
     ])
     error_message = "provided_contract_scope must be one of: context, tenant, global."
+  }
+
+  validation {
+    condition = alltrue([
+      for app in values(var.k8s_applications) :
+      alltrue([
+        for dn in app.provided_contract_consumer_esg_dns :
+        can(regex("^uni/tn-[^/]+/ap-[^/]+/esg-[^/]+$", dn))
+      ])
+    ])
+    error_message = "Each provided_contract_consumer_esg_dns entry must be an ESG DN (for example: uni/tn-tech-elevate/ap-external-subnets/esg-all-external-subnets)."
+  }
+
+  validation {
+    condition = alltrue([
+      for app in values(var.k8s_applications) :
+      alltrue([
+        for dn in app.consumed_contract_provider_dns :
+        can(regex("^uni/tn-[^/]+/brc-[^/]+$", dn))
+      ])
+    ])
+    error_message = "Each consumed_contract_provider_dns entry must be a contract DN (for example: uni/tn-tech-elevate/brc-permit-to-all-external-subnets)."
   }
 
   validation {
