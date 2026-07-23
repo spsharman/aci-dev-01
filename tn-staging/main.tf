@@ -2,7 +2,6 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      version = ">=2.13.2"
     }
   }
 }
@@ -14,10 +13,13 @@ provider "aci" {
 }
 
 module "aci" {
-  source  = "netascode/nac-aci/aci"
-  version = ">=0.8.1"
+  source = "netascode/nac-aci/aci"
+  # version = "1.2.0"
+  version = ">=2.0.0"
 
-  yaml_directories = ["data"]
+  # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
+
+  yaml_files = ["data/csr-l3out.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false

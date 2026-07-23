@@ -1,13 +1,28 @@
 # Notes:
-#
-# Description: Build v01 delta from v00. Splits the tenant into outside and inside VRFs (vrf-01 and vrf-02), moves internal bridge domains to vrf-02, adds leaked_external_prefixes default-route intent, and adds the external-subnet contract for inside-to-outside access.
 
-# subnet 10.5.0.0/21
+# Subnet 10.5.0.0/21
+
+# ESG/Contract relationships:
+
+# An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied. 
+
+# - If an ESG is the provider of a contract the contract name is `permit to-<application-profile-name.ESG-name>`
+# - If an ESG is the consumer of a contract the contract name is `permit from-<application-profile-name.ESG-name>`
+# - If an ESG has an intra ESG contract applied, the contract name is `permit-intra-<application-profile-name.ESG-name>`
+
+# Description: Build v04 delta from v02. 
+
+# Adds the following service nodes to the v02 design:
+
+# - ftdv-01-north-south
+# - ftdv-02-east-west
+# - smart-switch-east-west
+# - applies service graph to intra-vrf contract to redirect traffic to the service nodes
 ---
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v05
+      description: blueprint - v04
       managed: true
       security_domains:
         - tech-elevate
@@ -368,11 +383,20 @@ apic:
           description: vzAny is contract Consumer and Provider
           scope: context
           subjects:
+            - name: redirect
+              service_graph: smart-switch-east-west
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-inbound-to-epg-mapped-security-groups.all-epgs
+          description: esg-all-epgs is the contract Provider
+          scope: tenant
+          subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-all-external-subnets
+        - name: permit-outbound-from-epg-mapped-security-groups.all-epgs
           description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
@@ -380,16 +404,32 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-k8s-nodes
-          description: permit to k8s nodes
+        - name: permit-inbound-to-k8s-nodes.all-k8s-nodes
+          description: k8s nodes is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-k8s-applications
-          description: permit to k8s applications
+        - name: permit-outbound-from-k8s-nodes.all-k8s-nodes
+          description: k8s nodes is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-inbound-to-k8s-applications.all-k8s-applications
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-outbound-from-k8s-applications.all-k8s-applications
+          description: k8s applications is the contract Consumer
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -935,8 +975,7 @@ apic:
                   endpoint_group: 10.5.2.0_24
               contracts:
                 consumers:
-                  - permit-to-all-external-subnets
-                  - permit-to-k8s-applications
+                  - k8s-applications-permit-to-all-k8s-applications
 
         - name: 'external-subnets'
           description: 'ESGs are used to define security groups' 
@@ -950,49 +989,25 @@ apic:
                   shared: true
               contracts:
                 consumers:
-                  - permit-to-k8s-nodes
-                  - permit-to-k8s-applications
+                  - permit-to-k8s-nodes.all-k8s-nodes
+                  - permit-to-k8s-applications.all-k8s-applications
+                  - permit-to-epg-mapped-security-groups.all-epgs
                 providers:
-                  - permit-to-all-external-subnets
+                  - permit-from-all-k8s-nodes.all-k8s-nodes
+                  - permit-from-all-k8s-applications.all-k8s-applications
+                  - permit-from-epg-mapped-security-groups.all-epgs
 
         - name: 'k8s-applications'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
-            - name: k8s-application-1
+            - name: all-k8s-applications
               vrf: vrf-01
               ip_external_subnet_selectors:
-                - ip: 10.237.99.72
+                - ip: 10.237.99.72/29
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-applications
-
-            - name: k8s-application-2
-              vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.73
-                  shared: true
-              contracts:
-                providers:
-                  - permit-to-k8s-applications
-
-            - name: k8s-application-3
-              vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.74
-                  shared: true
-              contracts:
-                providers:
-                  - permit-to-k8s-applications
-
-            - name: k8s-application-4
-              vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.75
-                  shared: true
-              contracts:
-                providers:
-                  - permit-to-k8s-applications
+                  - permit-to-k8s-applications.all-k8s-applications
 
         - name: 'k8s-nodes'
           description: 'ESGs are used to define security groups' 
@@ -1004,4 +1019,4 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-nodes
+                  - permit-to-k8s-nodes.all-k8s-nodes

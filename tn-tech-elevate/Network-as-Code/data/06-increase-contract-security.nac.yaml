@@ -1,13 +1,55 @@
 # Notes:
-#
-# Description: Build v01 delta from v00. Splits the tenant into outside and inside VRFs (vrf-01 and vrf-02), moves internal bridge domains to vrf-02, adds leaked_external_prefixes default-route intent, and adds the external-subnet contract for inside-to-outside access.
 
-# subnet 10.5.0.0/21
+# Subnet 10.5.0.0/21
+
+# ESG/Contract relationships:
+
+# An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied. 
+
+# - If an ESG is the provider of a contract the contract name is `permit to-<application-profile-name.ESG-name>`
+# - If an ESG is the consumer of a contract the contract name is `permit from-<application-profile-name.ESG-name>`
+# - If an ESG has an intra ESG contract applied, the contract name is `permit-intra-<application-profile-name.ESG-name>`
+
+
+# Contract Priorities - https://www.cisco.com/c/en/us/products/collateral/networking/cloud-networking/application-centric-infrastructure/contract-guide.html#Contractpriorities
+
+# The lower the number of the priority, the higher the priority; therefore, rules with a lower value (that is, a higher priority) win over rules with a higher value (that is, a lower priority).
+
+# The following list provides a summary of the high-level rules of priority used when filtering traffic:
+
+# More-specific EPGs win over vzAny and preferred groups.
+# - EPG-to-EPG (priority 7 or 9) wins over EPG-to-vzAny (priority 13 or 15) and vzAny-to-EPG (priority 14 or 16), which wins over vzAny-to-vzAny (priority 17 or 21)
+# - Specific source wins over specific destination (for example, EPG-to-vzAny wins over vzAny-to-EPG).
+
+# More-specific L4 rules win.
+# - Specific filters win over the “any” filter (for example, an EPG-to-EPG contract with a specific filter wins over one with a default filter).
+# - Specific destination wins over specific source (for example, sport-any-to-dport-80 wins over sport-80-to-dport-any).
+
+# Deny actions win. Specific protocol wins.
+# - Within the same zoning-rule priority, deny wins over redirect or permit action.
+# - Between redirect and permit actions, a more specific protocol and a specific L4 port wins.
+# - Between redirect and permit, and deny + log and deny, if the filters are the same, redirect wins over permit and deny + log wins over deny. If the filter rules have overlapping ports and have the same priority, the priority is not deterministic. The contract-rule configuration should not have conflicting rules of this type if you want the action to be deterministic.
+
+
+# Description: Build v06 delta from v04. 
+
+# Adds more specific filters
+
+# - tcp-src-any-dst-any-stateful
+# - tcp-src-any-dst-22-stateful
+# - tcp-src-any-dst-80-stateful
+# - tcp-src-any-dst-443-stateful
+# - udp-src-any-dst-any
+
+# Adds per application ESGs for both VMs and K8s with tightened contract security.
+
+# Adds specific contract subjects with specific filters to increase security of contracts.
+
 ---
 apic:
   tenants:
     - name: tech-elevate
-      description: blueprint - v04
+      description: blueprint - v06
       managed: true
       security_domains:
         - tech-elevate
@@ -362,17 +404,63 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
+        - name: 'tcp-src-any-dst-any-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-any-stateful'
+              ethertype: ip
+              protocol: tcp
+              stateful: true
+
+        - name: 'tcp-src-any-dst-22-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+
+        - name: 'tcp-src-any-dst-80-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+
+        - name: 'tcp-src-any-dst-443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-443-stateful'
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+
+        - name: 'udp-src-any-dst-any'
+          entries:
+            - name: 'udp-src-any-dst-any'
+              ethertype: ip
+              protocol: udp
+
 # Contracts
       contracts:
         - name: intra-vrf
           description: vzAny is contract Consumer and Provider
           scope: context
           subjects:
+            - name: redirect
+              service_graph: smart-switch-east-west
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-in-to-epg-mapped-security-groups.all-epgs
+          description: esg-all-epgs is the contract Provider
+          scope: tenant
+          subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-all-external-subnets-from-esg-all-epgs
+        - name: permit-out-from-epg-mapped-security-groups.all-epgs
           description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
@@ -380,16 +468,162 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-k8s-nodes
-          description: permit to k8s nodes
+        - name: permit-in-to-k8s-nodes.all-k8s-nodes
+          description: k8s nodes is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-to-k8s-applications
-          description: permit to k8s applications
+        - name: permit-out-from-k8s-nodes.all-k8s-nodes
+          description: k8s nodes is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-in-to-k8s-applications.all-k8s-applications
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-out-from-k8s-applications.all-k8s-applications
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-in-to-k8s-juice-shop.lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-k8s-juice-shop.egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-in-to-k8s-pacman.lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-k8s-pacman.egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-in-to-k8s-timescape-ui.lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-k8s-timescape-ui.egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-in-to-k8s-tomcat.lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-k8s-tomcat.egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-in-to-siwapp.all-siwapp-endpoints
+          description: siwapp application is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-siwapp.all-siwapp-endpoints
+          description: siwapp application is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-intra-siwapp.all-siwapp-endpoints
+          description: intra siwapp application
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: permit-in-to-online-boutique.all-online-boutique-endpoints
+          description: online-boutique application is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-443-stateful
+              filters: 
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: permit-out-from-online-boutique.all-online-boutique-endpoints
+          description: online-boutique application is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters: 
+                - filter: src-any-dst-any-stateful
+            - name: udp
+              filters: 
+                - filter: udp-src-any-dst-any
+
+        - name: permit-intra-online-boutique.all-online-boutique-endpoints
+          description: intra online-boutique application
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -935,8 +1169,9 @@ apic:
                   endpoint_group: 10.5.2.0_24
               contracts:
                 consumers:
-                  - permit-to-all-external-subnets-from-esg-all-epgs
-                  - permit-to-k8s-applications
+                  - permit-to-k8s-applications.all-k8s-applications
+                providers:
+                  - permit-epg-mapped-security-groups.all-epgs
 
         - name: 'external-subnets'
           description: 'ESGs are used to define security groups' 
@@ -950,10 +1185,28 @@ apic:
                   shared: true
               contracts:
                 consumers:
-                  - permit-to-k8s-nodes
-                  - permit-to-k8s-applications
+                  - permit-in-to-k8s-nodes.all-k8s-nodes
+                  - permit-in-to-k8s-applications.all-k8s-applications
+                  - permit-in-to-epg-mapped-security-groups.all-epgs
+                  - permit-in-to-siwapp.all-siwapp-endpoints
+                  - permit-in-to-k8s-juice-shop.lb-vip
+                  - permit-in-to-k8s-pacman.lb-vip
+                  - permit-in-to-k8s-tomcat.lb-vip
+                  - permit-in-to-k8s-timescape-ui.lb-vip
+                  - permit-in-to-online-boutique.all-online-boutique-endpoints
+                  - permit-in-to-siwapp.all-siwapp-endpoints
+
                 providers:
-                  - permit-to-all-external-subnets-from-esg-all-epgs
+                  - permit-out-from-all-k8s-nodes.all-k8s-nodes
+                  - permit-out-from-all-k8s-applications.all-k8s-applications
+                  - permit-out-from-epg-mapped-security-groups.all-epgs
+                  - permit-out-from-siwapp.all-siwapp-endpoints
+                  - permit-out-from-k8s-juice-shop.egress-gw
+                  - permit-out-from-k8s-pacman.egress-gw
+                  - permit-out-from-k8s-tomcat.egress-gw
+                  - permit-out-from-k8s-timescape-ui.egress-gw
+                  - permit-out-from-online-boutique.all-online-boutique-endpoints
+                  - permit-out-from-siwapp.all-siwapp-endpoints
 
         - name: 'k8s-applications'
           description: 'ESGs are used to define security groups' 
@@ -965,7 +1218,55 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-applications
+                  - permit-to-k8s-applications.all-k8s-applications
+
+        - name: 'k8s-juice-shop'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: lb-vip
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.73/32
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-k8s-juice-shop.lb-vip
+
+        - name: 'k8s-pacman'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: lb-vip
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.75/32
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-k8s-pacman.lb-vip
+
+        - name: 'k8s-tomcat'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: lb-vip
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.74/32
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-k8s-tomcat.lb-vip
+
+        - name: 'k8s-timescape-ui'
+          description: 'ESGs are used to define security groups' 
+          endpoint_security_groups:
+            - name: lb-vip
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.72/32
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-k8s-timescape-ui.lb-vip
 
         - name: 'k8s-nodes'
           description: 'ESGs are used to define security groups' 
@@ -977,4 +1278,58 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-nodes
+                  - permit-to-k8s-nodes.all-k8s-nodes
+
+        - name: 'siwapp'
+          description: 'ESGs are used to define security groups' 
+          # alias: use-case-3
+          endpoint_security_groups:
+            - name: all-siwapp-endpoints
+              vrf: vrf-01
+              ip_subnet_selectors:
+                - value: 10.5.0.49
+                - value: 10.5.0.50
+                - value: 10.5.0.51
+                - value: 10.5.0.52
+                - value: 10.5.0.166
+                - value: 10.5.1.49
+                - value: 10.5.1.50
+                - value: 10.5.1.51
+                - value: 10.5.1.52
+                - value: 10.5.1.166
+                - value: 10.5.2.50
+                - value: 10.5.2.51
+                - value: 10.5.2.52
+              contracts:
+                providers:
+                  - permit-in-to-siwapp.all-siwapp-endpoints
+                consumers:
+                  - permit-out-from-siwapp.all-siwapp-endpoints
+                intra_esgs:
+                  - intra-siwapp.all-siwapp-endpoints
+
+        - name: 'online-boutique'
+          description: 'ESGs are used to define security groups' 
+          # alias: use-case-3
+          endpoint_security_groups:
+            - name: all-online-boutique-endpoints
+              vrf: vrf-01
+              ip_subnet_selectors:
+                - value: 10.5.0.100
+                - value: 10.5.0.101
+                - value: 10.5.0.102
+                - value: 10.5.0.103
+                - value: 10.5.1.100
+                - value: 10.5.1.101
+                - value: 10.5.1.102
+                - value: 10.5.1.103
+                - value: 10.5.2.100
+                - value: 10.5.2.101
+                - value: 10.5.2.102
+              contracts:
+                providers:
+                  - permit-in-to-online-boutique.all-online-boutique-endpoints
+                consumers:
+                  - permit-out-from-online-boutique.all-online-boutique-endpoints
+                intra_esgs:
+                  - intra-online-boutique.all-online-boutique-endpoints

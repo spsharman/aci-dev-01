@@ -1243,12 +1243,7 @@ apic:
                   router_id: 110.1.0.1
                   router_id_as_loopback: false
                   static_routes:
-                    - prefix: 6.6.6.32/32
-                      next_hops:
-                        - ip: 6.6.6.30
-                          preference: 1
-                          type: prefix
-                    - prefix: 6.6.6.33/32
+                    - prefix: 10.237.96.1/32
                       next_hops:
                         - ip: 6.6.6.30
                           preference: 1
@@ -1259,12 +1254,7 @@ apic:
                   router_id: 110.2.0.1
                   router_id_as_loopback: false
                   static_routes:
-                    - prefix: 6.6.6.32/32
-                      next_hops:
-                        - ip: 6.6.6.30
-                          preference: 1
-                          type: prefix
-                    - prefix: 6.6.6.33/32
+                    - prefix: 10.237.96.1/32
                       next_hops:
                         - ip: 6.6.6.30
                           preference: 1
@@ -1289,12 +1279,9 @@ apic:
           external_endpoint_groups:
             - name: smart-switch-mgmt-agent
               subnets:
-                - prefix: 6.6.6.32/32
+                - prefix: 10.237.96.1/32
                   import_security: true
                   description: smart switch management agent
-                - prefix: 6.6.6.33/32
-                  import_security: true
-                  description: test loopback
               contracts:
                 providers:
                   - permit-to-smart-switch-management-agent
@@ -1504,6 +1491,9 @@ apic:
                   - permit-from-core-services
                   - permit-to-core-services
                   - permit-from-lab-desktops
+                  - permit-to-csw-management-data-collector
+                imported_consumers:
+                  - permit-to-inb-mgmt
 
             - name: ftd-ccl
               bridge_domain: 1.1.0.0_16
