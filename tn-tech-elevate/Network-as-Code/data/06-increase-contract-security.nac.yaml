@@ -6,9 +6,9 @@
 
 # An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied. 
 
-# - If an ESG is the provider of a contract the contract name is `permit to-<application-profile-name.ESG-name>`
-# - If an ESG is the consumer of a contract the contract name is `permit from-<application-profile-name.ESG-name>`
-# - If an ESG has an intra ESG contract applied, the contract name is `permit-intra-<application-profile-name.ESG-name>`
+# - If an ESG is the provider of a contract the contract name is `<application-profile-name>-permit-to-<ESG-name>`
+# - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
+# - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
 
 # Contract Priorities - https://www.cisco.com/c/en/us/products/collateral/networking/cloud-networking/application-centric-infrastructure/contract-guide.html#Contractpriorities
@@ -107,6 +107,12 @@ apic:
             sla_type: icmp
 
         match_rules:
+          - name: match-bridge-domain-subnets
+            description: match all bridge domain subnets
+            prefixes:
+              - ip: 10.5.0.0/21
+                aggregate: true
+
           - name: pod-subnets-redistribution
             description: match all pod subnets
             prefixes:
@@ -128,7 +134,6 @@ apic:
 
         ospf_interface_policies:
           - name: OSPF_p2p
-            cost: unspecified
             passive_interface: false
             mtu_ignore: false
             advertise_subnet: true
@@ -179,6 +184,27 @@ apic:
                 concrete_interfaces:
                   - device: ftdv-01-adapter-6-gig-0-3
                     interface_name: ftdv-01-gig-0-3
+
+          - name: ftdv-01-east-west
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-01-adapter-8-gig-0-5
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-01.uktme.cisco.com
+                interfaces:
+                  - name: ftdv-01-gig-0-5
+                    vnic_name: Network adapter 8
+
+            logical_interfaces:
+              - name: data
+                concrete_interfaces:
+                  - device: ftdv-01-adapter-8-gig-0-5
+                    interface_name: ftdv-01-gig-0-5
 
           - name: ftdv-02-east-west 
             vmware_vmm_domain: hx-dev-01-vds-01
@@ -234,6 +260,16 @@ apic:
                 name: ftdv-01
                 redirect_health_group: ftdv-01-north-south
 
+          - name: ftdv-01-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.13
+                name: ftdv-01
+                redirect_health_group: ftdv-01-east-west
+
           - name: ftdv-02-east-west
             anycast: false
             pod_aware: true
@@ -267,6 +303,18 @@ apic:
             provider:
               direct_connect: true
 
+          - name: ftdv-01-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-01-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
           - name: ftdv-02-east-west
             template_type: FW_ROUTED
             redirect: true
@@ -291,13 +339,13 @@ apic:
             provider:
               direct_connect: true
 
-          - name: smart-switch-ftdv-02-east-west
+          - name: smart-switch-ftdv-01-east-west
             redirect: true
             template_type: FW_ROUTED
             devices:
               - name: smart-switch-east-west
                 node_name: N1
-              - name: ftdv-02-east-west
+              - name: ftdv-01-east-west
                 node_name: N2
             connections:
               - consumer_node: EPG-Consumer
@@ -321,6 +369,21 @@ apic:
             provider:
               redirect_policy:
                 name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-01-east-west
+            consumer:
+              redirect_policy:
+                name: ftdv-01-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-01-east-west
               logical_interface: data
               bridge_domain:
                 name: 6.6.6.0_24
@@ -356,7 +419,7 @@ apic:
                 name: 6.6.6.0_24
 
           - contract: any
-            service_graph_template: smart-switch-ftdv-02-east-west
+            service_graph_template: smart-switch-ftdv-01-east-west
             devices:
               - name: smart-switch-east-west
                 node_name: N1
@@ -372,23 +435,24 @@ apic:
                   logical_interface: data
                   bridge_domain:
                     name: 6.6.6.0_24
-              - name: ftdv-02-east-west
+              - name: ftdv-01-east-west
                 node_name: N2
                 consumer:
                   redirect_policy:
-                    name: ftdv-02-east-west
+                    name: ftdv-01-east-west
                   logical_interface: data
                   bridge_domain:
                     name: 6.6.6.0_24
                 provider:
                   redirect_policy:
-                    name: ftdv-02-east-west
+                    name: ftdv-01-east-west
                   logical_interface: data
                   bridge_domain:
                     name: 6.6.6.0_24
 
         redirect_health_groups:
           - name: ftdv-01-north-south
+          - name: ftdv-01-east-west
           - name: ftdv-02-east-west
           - name: smart-switch-east-west
 
@@ -413,7 +477,7 @@ apic:
 
         - name: 'tcp-src-any-dst-22-stateful'
           entries:
-            - name: 'tcp-src-any-dst-22'
+            - name: 'tcp-src-any-dst-22-stateful'
               protocol: tcp
               destination_from_port: 22
               destination_to_port: 22
@@ -421,7 +485,7 @@ apic:
 
         - name: 'tcp-src-any-dst-80-stateful'
           entries:
-            - name: 'tcp-src-any-dst-80'
+            - name: 'tcp-src-any-dst-80-stateful'
               protocol: tcp
               destination_from_port: 80
               destination_to_port: 80
@@ -435,6 +499,22 @@ apic:
               destination_to_port: 443
               stateful: true
 
+        - name: 'tcp-src-any-dst-6443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-6443-stateful'
+              protocol: tcp
+              destination_from_port: 6443
+              destination_to_port: 6443
+              stateful: true
+
+        # - name: 'tcp-src-any-dst-8443-stateful'
+        #   entries:
+        #     - name: 'tcp-src-any-dst-8443-stateful'
+        #       protocol: tcp
+        #       destination_from_port: 8443
+        #       destination_to_port: 8443
+        #       stateful: true
+
         - name: 'udp-src-any-dst-any'
           entries:
             - name: 'udp-src-any-dst-any'
@@ -443,6 +523,54 @@ apic:
 
 # Contracts
       contracts:
+        - name: epg-security-groups-permit-from-all-epgs
+          description: esg-all-epgs is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: epg-security-groups-permit-intra-all-epgs
+          description: intra epg-security-groups
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: epg-security-groups-permit-to-all-epgs
+          description: esg-all-epgs is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
         - name: intra-vrf
           description: vzAny is contract Consumer and Provider
           scope: context
@@ -452,150 +580,275 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-in-to-epg-mapped-security-groups.all-epgs
-          description: esg-all-epgs is the contract Provider
+        - name: k8s-applications-permit-from-all-k8s-applications
+          description: k8s applications is the contract Consumer
           scope: tenant
           subjects:
-            - name: permit-src-any-dst-any
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
-        - name: permit-out-from-epg-mapped-security-groups.all-epgs
-          description: esg-all-epgs is the contract Consumer
+        - name: k8s-applications-permit-to-all-k8s-applications
+          description: k8s applications is the contract Provider
           scope: tenant
           subjects:
-            - name: permit-src-any-dst-any
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
-        - name: permit-in-to-k8s-nodes.all-k8s-nodes
-          description: k8s nodes is the contract Provider
+        - name: k8s-juice-shop-permit-from-egress-gw
+          description: k8s applications is the contract Consumer
           scope: tenant
           subjects:
-            - name: permit-src-any-dst-any
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
-        - name: permit-out-from-k8s-nodes.all-k8s-nodes
+        - name: k8s-juice-shop-permit-to-lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: k8s-nodes-permit-from-all-k8s-nodes
           description: k8s nodes is the contract Consumer
           scope: tenant
           subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: k8s-nodes-permit-to-all-k8s-nodes
+          description: k8s nodes is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+                - filter: tcp-src-any-dst-6443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: k8s-pacman-permit-from-egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: k8s-pacman-permit-to-lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: k8s-timescape-ui-permit-from-egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: k8s-timescape-ui-permit-to-lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: k8s-tomcat-permit-from-egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: k8s-tomcat-permit-to-lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+
+        - name: online-boutique-permit-from-all-online-boutique-endpoints
+          description: online-boutique application is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: online-boutique-permit-intra-all-online-boutique-endpoints
+          description: intra online-boutique application
+          scope: tenant
+          subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-in-to-k8s-applications.all-k8s-applications
-          description: k8s applications is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
-
-        - name: permit-out-from-k8s-applications.all-k8s-applications
-          description: k8s applications is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
-
-        - name: permit-in-to-k8s-juice-shop.lb-vip
-          description: k8s applications is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
-                - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-k8s-juice-shop.egress-gw
-          description: k8s applications is the contract Consumer
+        - name: online-boutique-permit-to-all-online-boutique-endpoints
+          description: online-boutique application is the contract Provider
           scope: tenant
           subjects:
             - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any-stateful
-            - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
-
-        - name: permit-in-to-k8s-pacman.lb-vip
-          description: k8s applications is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-k8s-pacman.egress-gw
-          description: k8s applications is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              filters: 
-                - filter: src-any-dst-any-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
             - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
+              description: allows inbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
-        - name: permit-in-to-k8s-timescape-ui.lb-vip
-          description: k8s applications is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
-                - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-k8s-timescape-ui.egress-gw
-          description: k8s applications is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              filters: 
-                - filter: src-any-dst-any-stateful
-            - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
-
-        - name: permit-in-to-k8s-tomcat.lb-vip
-          description: k8s applications is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
-                - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-k8s-tomcat.egress-gw
-          description: k8s applications is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              filters: 
-                - filter: src-any-dst-any-stateful
-            - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
-
-        - name: permit-in-to-siwapp.all-siwapp-endpoints
-          description: siwapp application is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
-                - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-siwapp.all-siwapp-endpoints
+        - name: siwapp-permit-from-all-siwapp-endpoints
           description: siwapp application is the contract Consumer
           scope: tenant
           subjects:
             - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any-stateful
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
             - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
+              description: allows outbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
-        - name: permit-intra-siwapp.all-siwapp-endpoints
+        - name: siwapp-permit-intra-all-siwapp-endpoints
           description: intra siwapp application
           scope: tenant
           subjects:
@@ -603,32 +856,26 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-in-to-online-boutique.all-online-boutique-endpoints
-          description: online-boutique application is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-443-stateful
-              filters: 
-                - filter: tcp-src-any-dst-443-stateful
-
-        - name: permit-out-from-online-boutique.all-online-boutique-endpoints
-          description: online-boutique application is the contract Consumer
+        - name: siwapp-permit-to-all-siwapp-endpoints
+          description: siwapp application is the contract Provider
           scope: tenant
           subjects:
             - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
               filters: 
-                - filter: src-any-dst-any-stateful
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: icmp
             - name: udp
-              filters: 
-                - filter: udp-src-any-dst-any
-
-        - name: permit-intra-online-boutique.all-online-boutique-endpoints
-          description: intra online-boutique application
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
+              description: allows inbound udp from consumer to provider
+              consumer_to_provider:
+                filters:
+                  - filter: udp-src-any-dst-any
 
 # VRFs
       vrfs:
@@ -644,7 +891,7 @@ apic:
         - name: vrf-01
           description: configured with NAC
           alias: inside-vrf
-          leaked_internal_prefixes:
+          leaked_internal_subnets:
             - prefix: 10.5.0.0/24
               public: true
               destinations:
@@ -673,6 +920,11 @@ apic:
                 - tenant: tech-elevate
                   vrf: vrf-02
 
+          contracts:
+              consumers:
+                - intra-vrf
+              providers:
+                - intra-vrf
 # L3out
       l3outs:
         - name: vrf-02-bgp-as-64805
@@ -685,17 +937,15 @@ apic:
             area_type: regular
           export_route_map:
             type: global
+
             contexts:
-              - name: permit-k8s-node-subnet
+              - name: export-internal-vrf-subnets
                 order: 0
                 action: permit
                 match_rules:
                   - match-k8s-node-subnet
-              - name: permit-k8s-applications
-                order: 1
-                action: permit
-                match_rules:
                   - match-k8s-applications
+                  - match-bridge-domain-subnets
 
 # Nodes
           node_profiles:
@@ -703,17 +953,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.5
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.5
+                    - 110.2.6.11
 
               bgp_peers:
                 - ip: 12.0.0.3
@@ -823,17 +1073,17 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.0
+                  router_id: 210.1.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.1.0.5
+                    - 210.1.6.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.0
+                  router_id: 210.2.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.2.0.5
+                    - 210.2.6.11
 
               bgp_peers:
                 - ip: 13.0.0.3
@@ -960,46 +1210,21 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.6
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.6
+                    - 110.2.6.11
 
               bgp:
                 timer_policy: cilium-cni-bgp-timers
                 as_path_policy: cilium-cni-bgp-as-path
-
-              # bgp_peers:
-              #   - ip: 10.237.97.224/28
-              #     description: k8s virtual machine nodes via FI
-              #     remote_as: 64808
-              #     local_as: 64805
-              #     allow_self_as: false
-              #     as_override: true
-              #     disable_peer_as_check: true
-              #     next_hop_self: false
-              #     send_community: false
-              #     send_ext_community: false
-              #     allowed_self_as_count: 3
-              #     bfd: false
-              #     disable_connected_check: false
-              #     ttl: 1
-              #     remove_all_private_as: false
-              #     remove_private_as: false
-              #     replace_private_as_with_local_as: false
-              #     unicast_address_family: true
-              #     multicast_address_family: false
-              #     admin_state: true
-              #     as_propagate: no-prepend
-              #     peer_prefix_policy: cilium-cni-bgp-prefix-policy
-              #     # import_route_control: floating-L3out-optimizations
 
               interface_profiles:
                 - name: k8s-nodes     
@@ -1155,7 +1380,7 @@ apic:
                   primary_vlan: 1237
                   secondary_vlan: 1238
 
-        - name: 'epg-mapped-security-groups'
+        - name: 'epg-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: all-epgs
@@ -1169,9 +1394,10 @@ apic:
                   endpoint_group: 10.5.2.0_24
               contracts:
                 consumers:
-                  - permit-to-k8s-applications.all-k8s-applications
+                  - k8s-applications-permit-to-all-k8s-applications
+                  - epg-security-groups-permit-from-all-epgs
                 providers:
-                  - permit-epg-mapped-security-groups.all-epgs
+                  - epg-security-groups-permit-to-all-epgs
 
         - name: 'external-subnets'
           description: 'ESGs are used to define security groups' 
@@ -1185,28 +1411,22 @@ apic:
                   shared: true
               contracts:
                 consumers:
-                  - permit-in-to-k8s-nodes.all-k8s-nodes
-                  - permit-in-to-k8s-applications.all-k8s-applications
-                  - permit-in-to-epg-mapped-security-groups.all-epgs
-                  - permit-in-to-siwapp.all-siwapp-endpoints
-                  - permit-in-to-k8s-juice-shop.lb-vip
-                  - permit-in-to-k8s-pacman.lb-vip
-                  - permit-in-to-k8s-tomcat.lb-vip
-                  - permit-in-to-k8s-timescape-ui.lb-vip
-                  - permit-in-to-online-boutique.all-online-boutique-endpoints
-                  - permit-in-to-siwapp.all-siwapp-endpoints
+                  - epg-security-groups-permit-to-all-epgs
+                  - k8s-applications-permit-to-all-k8s-applications
+                  - k8s-juice-shop-permit-to-lb-vip
+                  - k8s-nodes-permit-to-all-k8s-nodes
+                  - k8s-pacman-permit-to-lb-vip
+                  - k8s-timescape-ui-permit-to-lb-vip
+                  - k8s-tomcat-permit-to-lb-vip
+                  - online-boutique-permit-to-all-online-boutique-endpoints
+                  - siwapp-permit-to-all-siwapp-endpoints
 
                 providers:
-                  - permit-out-from-all-k8s-nodes.all-k8s-nodes
-                  - permit-out-from-all-k8s-applications.all-k8s-applications
-                  - permit-out-from-epg-mapped-security-groups.all-epgs
-                  - permit-out-from-siwapp.all-siwapp-endpoints
-                  - permit-out-from-k8s-juice-shop.egress-gw
-                  - permit-out-from-k8s-pacman.egress-gw
-                  - permit-out-from-k8s-tomcat.egress-gw
-                  - permit-out-from-k8s-timescape-ui.egress-gw
-                  - permit-out-from-online-boutique.all-online-boutique-endpoints
-                  - permit-out-from-siwapp.all-siwapp-endpoints
+                  - epg-security-groups-permit-from-all-epgs
+                  - k8s-applications-permit-from-all-k8s-applications
+                  - k8s-nodes-permit-from-all-k8s-nodes
+                  - online-boutique-permit-from-all-online-boutique-endpoints
+                  - siwapp-permit-from-all-siwapp-endpoints
 
         - name: 'k8s-applications'
           description: 'ESGs are used to define security groups' 
@@ -1218,55 +1438,53 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-applications.all-k8s-applications
+                  - k8s-applications-permit-to-all-k8s-applications
+                consumers:
+                  - k8s-applications-permit-from-all-k8s-applications
 
         - name: 'k8s-juice-shop'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.73/32
-                  shared: true
+              ip_subnet_selectors:
+                - value: 10.237.99.73
               contracts:
                 providers:
-                  - permit-to-k8s-juice-shop.lb-vip
+                  - k8s-juice-shop-permit-to-lb-vip
 
         - name: 'k8s-pacman'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.75/32
-                  shared: true
+              ip_subnet_selectors:
+                - value: 10.237.99.75
               contracts:
                 providers:
-                  - permit-to-k8s-pacman.lb-vip
+                  - k8s-pacman-permit-to-lb-vip
 
         - name: 'k8s-tomcat'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.74/32
-                  shared: true
+              ip_subnet_selectors:
+                - value: 10.237.99.74
               contracts:
                 providers:
-                  - permit-to-k8s-tomcat.lb-vip
+                  - k8s-tomcat-permit-to-lb-vip
 
         - name: 'k8s-timescape-ui'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_external_subnet_selectors:
-                - ip: 10.237.99.72/32
-                  shared: true
+              ip_subnet_selectors:
+                - value: 10.237.99.72
               contracts:
                 providers:
-                  - permit-to-k8s-timescape-ui.lb-vip
+                  - k8s-timescape-ui-permit-to-lb-vip
 
         - name: 'k8s-nodes'
           description: 'ESGs are used to define security groups' 
@@ -1278,7 +1496,9 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-nodes.all-k8s-nodes
+                  - k8s-nodes-permit-to-all-k8s-nodes
+                consumers:
+                  - k8s-nodes-permit-from-all-k8s-nodes
 
         - name: 'siwapp'
           description: 'ESGs are used to define security groups' 
@@ -1302,11 +1522,11 @@ apic:
                 - value: 10.5.2.52
               contracts:
                 providers:
-                  - permit-in-to-siwapp.all-siwapp-endpoints
+                  - siwapp-permit-to-all-siwapp-endpoints
                 consumers:
-                  - permit-out-from-siwapp.all-siwapp-endpoints
+                  - siwapp-permit-from-all-siwapp-endpoints
                 intra_esgs:
-                  - intra-siwapp.all-siwapp-endpoints
+                  - siwapp-permit-intra-all-siwapp-endpoints
 
         - name: 'online-boutique'
           description: 'ESGs are used to define security groups' 
@@ -1328,8 +1548,8 @@ apic:
                 - value: 10.5.2.102
               contracts:
                 providers:
-                  - permit-in-to-online-boutique.all-online-boutique-endpoints
+                  - online-boutique-permit-to-all-online-boutique-endpoints
                 consumers:
-                  - permit-out-from-online-boutique.all-online-boutique-endpoints
+                  - online-boutique-permit-from-all-online-boutique-endpoints
                 intra_esgs:
-                  - intra-online-boutique.all-online-boutique-endpoints
+                  - online-boutique-permit-intra-all-online-boutique-endpoints

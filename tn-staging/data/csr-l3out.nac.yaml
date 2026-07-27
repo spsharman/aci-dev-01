@@ -97,3 +97,67 @@ apic:
                 - prefix: 128.0.0.0/1
                   shared_security: true
                   import_security: true
+
+# Bridge Domains
+      bridge_domains:
+        - name: 10.5.0.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-as-64805
+          subnets:
+            - ip: 10.5.0.1/24
+              public: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.1.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-as-64805
+          subnets:
+            - ip: 10.5.1.1/24
+              public: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.2.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          l3outs:
+            - vrf-01-bgp-as-64805
+          subnets:
+            - ip: 10.5.2.1/24
+              public: true # not required when using ESG route leaking under the VRF
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+# Application profiles
+      application_profiles:
+        - name: 'workload-connectivity'
+          description: EPGs provide the VLAN backing for application workloads
+          endpoint_groups:      
+            - name: '10.5.0.0_24'
+              bridge_domain: '10.5.0.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.5.1.0_24'
+              bridge_domain: '10.5.1.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.5.2.0_24'
+              bridge_domain: '10.5.2.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate

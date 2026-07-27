@@ -20,7 +20,14 @@ apic:
 
       - name: routed-interfaces-to-core
         type: access
-        aaep: routed-interfaces-to-core
+        aaep: vlans-allowed-to-routed-interfaces-to-core
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-disabled
+        l2_policy: port-local-vlans
+
+      - name: routed-interfaces-to-C93108TC-FX3P
+        type: access
+        aaep: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
         cdp_policy: cdp-enabled
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans

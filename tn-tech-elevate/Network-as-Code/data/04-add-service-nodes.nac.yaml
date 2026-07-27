@@ -6,9 +6,9 @@
 
 # An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied. 
 
-# - If an ESG is the provider of a contract the contract name is `permit to-<application-profile-name.ESG-name>`
-# - If an ESG is the consumer of a contract the contract name is `permit from-<application-profile-name.ESG-name>`
-# - If an ESG has an intra ESG contract applied, the contract name is `permit-intra-<application-profile-name.ESG-name>`
+# - If an ESG is the provider of a contract the contract name is `<application-profile-name>-permit-to-<ESG-name>`
+# - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
+# - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
 # Description: Build v04 delta from v02. 
 
@@ -388,15 +388,7 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-inbound-to-epg-mapped-security-groups.all-epgs
-          description: esg-all-epgs is the contract Provider
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
-
-        - name: permit-outbound-from-epg-mapped-security-groups.all-epgs
+        - name: epg-security-groups-permit-from-all-epgs
           description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
@@ -404,7 +396,15 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-inbound-to-k8s-nodes.all-k8s-nodes
+        - name: epg-security-groups-permit-to-all-epgs
+          description: esg-all-epgs is the contract Provider
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+
+        - name: k8s-nodes-permit-to-all-k8s-nodes
           description: k8s nodes is the contract Provider
           scope: tenant
           subjects:
@@ -412,7 +412,7 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-outbound-from-k8s-nodes.all-k8s-nodes
+        - name: k8s-nodes-permit-from-all-k8s-nodes
           description: k8s nodes is the contract Consumer
           scope: tenant
           subjects:
@@ -420,16 +420,16 @@ apic:
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-inbound-to-k8s-applications.all-k8s-applications
-          description: k8s applications is the contract Provider
+        - name: k8s-applications-permit-from-all-k8s-applications
+          description: k8s applications is the contract Consumer
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters: 
                 - filter: src-any-dst-any
 
-        - name: permit-outbound-from-k8s-applications.all-k8s-applications
-          description: k8s applications is the contract Consumer
+        - name: k8s-applications-permit-to-all-k8s-applications
+          description: k8s applications is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
@@ -509,17 +509,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.5
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.5
+                    - 110.2.6.11
 
               bgp_peers:
                 - ip: 12.0.0.3
@@ -629,17 +629,17 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.0
+                  router_id: 210.1.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.1.0.5
+                    - 210.1.6.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.0
+                  router_id: 210.2.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.2.0.5
+                    - 210.2.6.11
 
               bgp_peers:
                 - ip: 13.0.0.3
@@ -766,17 +766,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.6
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.6
+                    - 110.2.6.11
 
               bgp:
                 timer_policy: cilium-cni-bgp-timers
@@ -961,7 +961,7 @@ apic:
                   primary_vlan: 1237
                   secondary_vlan: 1238
 
-        - name: 'epg-mapped-security-groups'
+        - name: 'epg-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: all-epgs
@@ -976,6 +976,7 @@ apic:
               contracts:
                 consumers:
                   - k8s-applications-permit-to-all-k8s-applications
+                  - epg-security-groups-permit-from-all-epgs
 
         - name: 'external-subnets'
           description: 'ESGs are used to define security groups' 
@@ -989,13 +990,14 @@ apic:
                   shared: true
               contracts:
                 consumers:
-                  - permit-to-k8s-nodes.all-k8s-nodes
-                  - permit-to-k8s-applications.all-k8s-applications
-                  - permit-to-epg-mapped-security-groups.all-epgs
+                  - epg-security-groups-permit-to-all-epgs
+                  - k8s-applications-permit-to-all-k8s-applications
+                  - k8s-nodes-permit-to-all-k8s-nodes
+
                 providers:
-                  - permit-from-all-k8s-nodes.all-k8s-nodes
-                  - permit-from-all-k8s-applications.all-k8s-applications
-                  - permit-from-epg-mapped-security-groups.all-epgs
+                  - epg-security-groups-permit-from-all-epgs
+                  - k8s-applications-permit-from-all-k8s-applications
+                  - k8s-nodes-permit-from-all-k8s-nodes
 
         - name: 'k8s-applications'
           description: 'ESGs are used to define security groups' 
@@ -1007,7 +1009,7 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-applications.all-k8s-applications
+                  - k8s-applications-permit-to-all-k8s-applications
 
         - name: 'k8s-nodes'
           description: 'ESGs are used to define security groups' 
@@ -1019,4 +1021,6 @@ apic:
                   shared: true
               contracts:
                 providers:
-                  - permit-to-k8s-nodes.all-k8s-nodes
+                  - k8s-nodes-permit-to-all-k8s-nodes
+                consumers:
+                  - k8s-nodes-permit-from-all-k8s-nodes

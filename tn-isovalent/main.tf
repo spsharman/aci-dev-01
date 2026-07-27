@@ -2,7 +2,6 @@ terraform {
   required_providers {
     aci = {
       source = "CiscoDevNet/aci"
-      # version = ">=2.13.2"
     }
   }
 }
@@ -14,8 +13,9 @@ provider "aci" {
 }
 
 module "aci" {
-  source  = "netascode/nac-aci/aci"
-  # version = ">=0.8.1"
+  source = "netascode/nac-aci/aci"
+  # version = "1.2.0"
+  version = ">=2.0.0"
 
 # Floating SVI configuration
 
@@ -26,7 +26,9 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v5.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v6.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
-  yaml_files = ["floating-svi/configuration-v8.nac.yaml"]
+  # yaml_files = ["floating-svi/configuration-v8.nac.yaml"] << working configuration
+  yaml_files = ["floating-svi/configuration-v9.nac.yaml"] # << testing
+
 
 # SVI configuration
 

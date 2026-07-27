@@ -22,7 +22,7 @@ module "aci" {
   # yaml_files = ["data/00-base-network.nac.yaml"]
   # yaml_files = ["data/02-migrate-to-esgs.nac.yaml"]
   # yaml_files = ["data/04-add-service-nodes.nac.yaml"]
-  # yaml_files = ["data/06-increase-contract-security.nac.yaml"]
+  yaml_files = ["data/06-increase-contract-security.nac.yaml"]
   # yaml_files = ["data/07-increase-contract-security.nac.yaml"]
   # yaml_files = ["data/08-add-application-esgs-and-contracts.nac.yaml"]
   # yaml_files = ["data/09-add-intra-application-contracts.nac.yaml"]
@@ -34,7 +34,7 @@ module "aci" {
   # yaml_files = ["data/98-add-ss-east-west-flows.nac.yaml"]
   # yaml_files = ["data/99-add-route-leaking.nac.yaml"]
 
-  yaml_files = ["data/csr-l3out.nac.yaml"]
+  # yaml_files = ["data/csr-l3out.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false

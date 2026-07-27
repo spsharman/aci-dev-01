@@ -101,14 +101,20 @@ apic:
         routed_domains:
           - multisite
 
-      - name: routed-interfaces-to-core
+      - name: vlans-allowed-to-routed-interfaces-to-core
         routed_domains:
           - shared-services.vrf-01-bgp-core
           - BRKDCN-2984.vrf-01
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
+          - isovalent.vrf-01
+          - isovalent.vrf-02
           - tech-elevate.vrf-01
           - tech-elevate.vrf-02
+
+      - name: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
+        routed_domains:
+          - isovalent.vrf-02
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:

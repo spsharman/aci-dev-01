@@ -202,15 +202,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 101.1.0.6
-                  router_id_as_loopback: true
-                  # loopback: 10.237.96.22/32
+                  router_id: 110.1.2.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.1.2.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 102.1.0.6
-                  router_id_as_loopback: true
-                  # loopback: 10.237.96.23/32
+                  router_id: 110.2.2.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.2.2.11
 
 # Interfaces
               interface_profiles:
@@ -350,15 +352,17 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 101.2.0.6
-                  router_id_as_loopback: true
-                  # loopback: 10.237.96.28/32
+                  router_id: 210.1.2.1
+                  router_id_as_loopback: false
+                  loopbacks: 
+                    - 210.1.2.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 102.2.0.6
-                  router_id_as_loopback: true
-                  # loopback: 10.237.96.29/32
+                  router_id: 210.2.2.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 210.2.2.11
 
               interface_profiles:
                 - name: leaf-2101-eth7.12

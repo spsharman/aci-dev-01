@@ -80,6 +80,14 @@ apic:
                 from_port: 8
                 to_port: 8
 
+          - name: routed-interfaces-to-L11-C93108TC-FX3P
+            policy_group: routed-interfaces-to-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: L11-C93108TC-FX3P e1/53
+                from_port: 33
+                to_port: 33
+
           - name: ucs-c220m5-vds-01
             policy_group: ucs-c220m5-vds-01
             port_blocks:
@@ -224,6 +232,14 @@ apic:
                 from_port: 8
                 to_port: 8
 
+          - name: routed-interfaces-to-L11-C93108TC-FX3P
+            policy_group: routed-interfaces-to-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: L11-C93108TC-FX3P e1/54
+                from_port: 33
+                to_port: 33
+
           - name: ucs-c220m5-vds-01
             policy_group: ucs-c220m5-vds-01
             port_blocks:
@@ -297,19 +313,6 @@ apic:
 # aci-dev-01-pod-02-leaf-2101
       - name: aci-dev-01-pod-02-leaf-2101
         selectors:
-          - name: routed-interfaces-to-core
-            policy_group: routed-interfaces-to-core
-            port_blocks:
-              - name: block-1
-                description: L13-C93180YC-FX-01 e1/7
-                from_port: 7
-                to_port: 7
-
-              - name: block-2
-                description: L13-C93180YC-FX-02 e1/8
-                from_port: 8
-                to_port: 8
-
           - name: ftd-4112-02-mgmt
             policy_group: vpc_to_ftd-4112-02-mgmt
             port_blocks:
@@ -370,23 +373,30 @@ apic:
           #       from_port: 3
           #       to_port: 3
 
-
-# aci-dev-01-pod-02-leaf-2102
-      - name: aci-dev-01-pod-02-leaf-2102
-        selectors:
           - name: routed-interfaces-to-core
             policy_group: routed-interfaces-to-core
             port_blocks:
               - name: block-1
-                description: L13-C93180YC-FX-02 eth1/7
+                description: L13-C93180YC-FX-01 e1/7
                 from_port: 7
                 to_port: 7
 
               - name: block-2
-                description: L13-C93180YC-FX-01 e1/8
+                description: L13-C93180YC-FX-02 e1/8
                 from_port: 8
                 to_port: 8
 
+          - name: routed-interfaces-to-L14-C93108TC-FX3P
+            policy_group: routed-interfaces-to-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: L14-C93108TC-FX3P e1/53
+                from_port: 33
+                to_port: 33
+
+# aci-dev-01-pod-02-leaf-2102
+      - name: aci-dev-01-pod-02-leaf-2102
+        selectors:
           - name: ftd-4112-02-mgmt
             policy_group: vpc_to_ftd-4112-02-mgmt
             port_blocks:
@@ -446,6 +456,27 @@ apic:
           #       description: UCSC-C220-M3 - FCH1910V17S
           #       from_port: 3
           #       to_port: 3
+
+          - name: routed-interfaces-to-core
+            policy_group: routed-interfaces-to-core
+            port_blocks:
+              - name: block-1
+                description: L13-C93180YC-FX-02 eth1/7
+                from_port: 7
+                to_port: 7
+
+              - name: block-2
+                description: L13-C93180YC-FX-01 e1/8
+                from_port: 8
+                to_port: 8
+
+          - name: routed-interfaces-to-L14-C93108TC-FX3P
+            policy_group: routed-interfaces-to-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: L14-C93108TC-FX3P e1/54
+                from_port: 33
+                to_port: 33
 
 # aci-dev-01-pod-02-leaf-2103
       - name: aci-dev-01-pod-02-leaf-2103

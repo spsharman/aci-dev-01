@@ -148,17 +148,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.5
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.5
+                    - 110.2.6.11
 
               bgp_peers:
                 - ip: 12.0.0.3
@@ -272,17 +272,17 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.0
+                  router_id: 210.1.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.1.0.5
+                    - 210.1.6.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.0
+                  router_id: 210.2.6.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.2.0.5
+                    - 210.2.6.11
 
               bgp_peers:
                 - ip: 13.0.0.3
@@ -426,17 +426,17 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.0
+                  router_id: 110.1.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.6
+                    - 110.1.6.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.0
+                  router_id: 110.2.6.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.6
+                    - 110.2.6.11
 
               bgp:
                 timer_policy: cilium-cni-bgp-timers

@@ -71,12 +71,16 @@ apic:
             - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
-                  router_id: 101.1.0.7
                   pod_id: 1
+                  router_id: 110.1.3.1
+                  loopbacks:
+                    - 110.1.3.11
 
                 - node_id: 1102
-                  router_id: 102.1.0.7
+                  router_id: 110.2.3.1
                   pod_id: 1
+                  loopbacks:
+                    - 110.2.3.11
 
               interface_profiles:
                 - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering         
@@ -116,12 +120,16 @@ apic:
             - name: border-leafs-pod-2
               nodes:
                 - node_id: 2101
-                  router_id: 101.2.0.7
                   pod_id: 2
+                  router_id: 210.1.3.1
+                  loopbacks:
+                    - 210.1.3.11
 
                 - node_id: 2102
-                  router_id: 102.2.0.7
                   pod_id: 2
+                  router_id: 210.2.3.1
+                  loopbacks:
+                    - 210.2.3.11
 
               interface_profiles:
                 - name: BRKDCN-2959-DMZ.vrf-01-ospf-peering       
