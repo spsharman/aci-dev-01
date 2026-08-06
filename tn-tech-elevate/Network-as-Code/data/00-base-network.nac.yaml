@@ -1,8 +1,16 @@
 # Notes:
+# Subnet 10.5.0.0/21
 #
-
-# Description: Build v00 baseline. Single VRF (vrf-01) with bridge domains and BGP L3Out, plus broad any-to-any and ICMP contract policy before VRF split, route leaking, ESG mapping, and service insertion changes introduced in later builds.
-# subnet 10.5.0.0/21
+# Description: Build v00 baseline.
+# Single VRF (vrf-01) with bridge domains and two BGP L3Outs:
+#   - vrf-01-bgp-AS-64805: external connectivity
+#   - vrf-01-bgp-AS-64808: K8s node peering
+# Broad any-to-any (permit-src-any-dst-any) and ICMP policy via the intra-vrf contract.
+# BGP policies for Cilium CNI (address family context, best path, peer prefix, timers).
+# DHCP relay and floating L3out BGP redistribution optimisation route map.
+# No ESGs — workloads are modelled as plain EPGs in the network-segments application profile.
+# This is the legacy baseline before VRF split, route leaking, ESG migration, and service
+# insertion changes that are introduced in later builds.
 ---
 apic:
 

@@ -6,8 +6,17 @@
 # - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
 # - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
-# Description: Build v02 delta from v00.
-# Add an external VRF (vrf-02) and moves the external connectivity from vrf-01 to vrf-02. Adds route leaking between VRFs and an external route-map to advertise subnets directly attached to vrf-01, or learned by vrf-01 (from k8s) to the outside.
+# Description: Build v01 delta from v00.
+# Adds a second VRF (vrf-02) for external connectivity, moving the external BGP L3Out from
+# vrf-01 to vrf-02 (vrf-02-bgp-AS-64805). Route leaking is configured between VRFs with
+# new match rules (match-bridge-domain-subnets, match-k8s-node-subnet, match-k8s-applications)
+# and route maps to advertise vrf-01 subnets and K8s pod routes to the outside.
+# Migrates workloads from EPGs to ESGs across four new application profiles:
+#   - epg-security-groups: general VM workload ESGs
+#   - external-subnets: external EPG ESGs
+#   - k8s-applications: K8s application VIP ESGs
+#   - k8s-nodes: K8s node ESGs
+# Adds broad permit contracts (permit-src-any-dst-any) for each ESG group.
 ---
 apic:
 

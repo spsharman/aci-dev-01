@@ -22,18 +22,12 @@
 # - Between redirect and permit actions, a more specific protocol and a specific L4 port wins.
 # - Between redirect and permit, and deny + log and deny, if the filters are the same, redirect wins over permit and deny + log wins over deny. If the filter rules have overlapping ports and have the same priority, the priority is not deterministic. The contract-rule configuration should not have conflicting rules of this type if you want the action to be deterministic.
 
-# Description: Build v06 delta from v04.
-# Adds more specific filters
-# - tcp-src-any-dst-any-stateful
-# - tcp-src-any-dst-22-stateful
-# - tcp-src-any-dst-80-stateful
-# - tcp-src-any-dst-443-stateful
-# - tcp-src-any-dst-6443-stateful
-# - tcp-src-any-dst-8443-stateful
-# - udp-src-any-dst-any
-
-# Adds per application ESGs for both VMs and K8s with tightened contract security.
-# Adds specific contract subjects with specific filters to increase security of contracts.
+# Description: Build v06 delta from v05.
+# Adds the k8s-pacman application profile with a lb-vip ESG (external IP 10.237.99.75/32).
+# Adds contracts: k8s-pacman-permit-from-egress-gw and k8s-pacman-permit-to-lb-vip.
+# Adds k8s-pacman as a consumer to the lb-vip contracts across other k8s application profiles.
+# Enables the ftdv-01-east-west-L7 service graph on the east-west intra-vrf contract.
+# Removes ftdv-01-north-south service graph assignments from inbound north-south contracts.
 ---
 apic:
 

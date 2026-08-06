@@ -22,18 +22,12 @@
 # - Between redirect and permit actions, a more specific protocol and a specific L4 port wins.
 # - Between redirect and permit, and deny + log and deny, if the filters are the same, redirect wins over permit and deny + log wins over deny. If the filter rules have overlapping ports and have the same priority, the priority is not deterministic. The contract-rule configuration should not have conflicting rules of this type if you want the action to be deterministic.
 
-# Description: Build v06 delta from v04.
-# Adds more specific filters
-# - tcp-src-any-dst-any-stateful
-# - tcp-src-any-dst-22-stateful
-# - tcp-src-any-dst-80-stateful
-# - tcp-src-any-dst-443-stateful
-# - tcp-src-any-dst-6443-stateful
-# - tcp-src-any-dst-8443-stateful
-# - udp-src-any-dst-any
-
-# Adds per application ESGs for both VMs and K8s with tightened contract security.
-# Adds specific contract subjects with specific filters to increase security of contracts.
+# Description: Build v05 delta from v04.
+# Enables Agentless Application Dependency Mapping (ADM) by activating ip_subnet_selectors
+# on the siwapp and online-boutique ESGs with their known endpoint IP addresses.
+# Sets deployment_immediacy: immediate on these ESGs to trigger ADM discovery.
+# Switches the east-west intra-vrf service graph option from smart-switch-east-west to
+# ftdv-01-east-west-L7 (commented — available to enable in a subsequent build).
 ---
 apic:
 

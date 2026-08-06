@@ -6,12 +6,13 @@
 # - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
 # - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
-# Description: Build v04 delta from v02.
-# Adds the following service nodes to the v02 design:
-# - ftdv-01-north-south
-# - ftdv-02-east-west
-# - smart-switch-east-west
-# - applies service graph to intra-vrf contract to redirect traffic to the service nodes
+# Description: Build v03 delta from v02.
+# Adds intra-ESG contract (epg-security-groups-permit-intra-all-epgs) for the all-epgs ESG.
+# Updates the vzAny intra-vrf contract from permit-src-any-dst-any to a redirect contract,
+# with an optional service graph (smart-switch-east-west) ready to apply to redirect all
+# east-west intra-VRF traffic through the smart switch.
+# Adds epg-security-groups-permit-from-all-epgs as a consumer contract to the
+# epg-security-groups and k8s-nodes ESGs.
 ---
 apic:
 
