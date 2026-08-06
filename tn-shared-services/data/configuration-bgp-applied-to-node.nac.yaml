@@ -2,12 +2,16 @@
 
 ---
 apic:
+
+# Tenants: Location in GUI: `Tenants`
   tenants:
     - name: shared-services
       managed: true
 
-# Policies
+# Policies: Location in GUI: `Tenants` » `XXX` » `Policies`
       policies:
+
+# DHCP Relay Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `DHCP Relay`
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
             description: "dhcp.uktme.cisco.com"
@@ -19,6 +23,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: all-external-subnets
 
+# IP SLA Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `IP SLA`
         ip_sla_policies:
           - name: icmp-aggressive-timers
             description: This policy sends a icmp ping every 1 second
@@ -26,6 +31,7 @@ apic:
             multiplier: 3
             sla_type: icmp
 
+# Match Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Match Rules`
         match_rules:
           - name: match-10.237.101.0_27
             description: matches Isovalent node subnets
@@ -55,7 +61,7 @@ apic:
                 aggregate: true
                 from_length: 32
                 to_length: 32
-                
+
           - name: match-172.16.12.0_24
             description: matches BRKDCN-2959-DMZ subnets
             prefixes:
@@ -63,6 +69,7 @@ apic:
                 aggregate: true
                 to_length: 32
 
+# OSPF Interface Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `OSPF Interface`
         ospf_interface_policies:
           - name: ospf_p2p
             cost: unspecified
@@ -90,12 +97,15 @@ apic:
             lsa_retransmit_interval: 3
             lsa_transmit_delay: 1
 
+# Route Tag Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Route Tag Policies`
         route_tag_policies:
           - name: shared-services.vrf-01
             tag: 4290166600
 
-# Services
+# Services: Location in GUI: `Tenants` » `XXX` » `Services`
       services:
+
+# L4L7 Devices: Location in GUI: `Tenants` » `XXX` » `Services` » `L4L7 Devices`
         l4l7_devices:
           - name: ftd-4112-one-arm-L3
             physical_domain: firewalls
@@ -209,6 +219,7 @@ apic:
                   - device: ftd-4112-cluster
                     interface_name: data-02-vlan-13
 
+# Redirect Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Redirect Policies`
         redirect_policies:
           - name: ftd-4112-one-arm-L3-mpod-cluster
             anycast: true
@@ -217,6 +228,7 @@ apic:
               - ip: 6.6.6.242
                 mac: 00:00:00:00:00:12
 
+# Service Graph Templates: Location in GUI: `Tenants` » `XXX` » `Services` » `Service Graph Templates`
         service_graph_templates:
           - name: ftd-4112-one-arm-L3-mpod-cluster
             template_type: FW_ROUTED
@@ -230,6 +242,7 @@ apic:
             provider:
               direct_connect: true
 
+# Device Selection Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Device Selection Policies`
         device_selection_policies:
           - contract: any
             service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
@@ -246,7 +259,7 @@ apic:
               bridge_domain:
                 name: 6.6.6.240_28
 
-# Filters
+# Filters: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
       filters:
         - name: 'icmp'
           entries:
@@ -266,6 +279,21 @@ apic:
               protocol: tcp
               source_from_port: 22
               source_to_port: 22
+
+        - name: 'tcp-src-any-dst-any-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-any-stateful'
+              ethertype: ip
+              protocol: tcp
+              stateful: true
+
+        - name: 'tcp-src-any-dst-22-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-22-stateful'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
 
         - name: 'tcp-src-80-dst-any'
           entries:
@@ -364,7 +392,7 @@ apic:
               destination_from_port: 5140
               destination_to_port: 5140
 
-# Contracts
+# Contracts: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Standard`
       contracts:
         - name: deny-to-all-external-subnets
           scope: global
@@ -654,13 +682,35 @@ apic:
                   log: false
                   no_stats: false
 
-# Imported contracts
-      imported_contracts:
-        - name: permit-to-tn-mgmt-inb-mgmt
-          tenant: mgmt
-          contract: permit-to-inb-mgmt
+        - name: stateful-testing-permit-from-test-esg
+          scope: context
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-53
+                  - filter: udp-src-any-dst-123
 
-# VRFs
+        - name: stateful-testing-permit-to-test-esg
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters: 
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                - filter: icmp
+
+# VRFs: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
         - name: vrf-01
           description: external connectivity
@@ -688,7 +738,7 @@ apic:
                   vrf: vrf-01
                   description: Leaked to tn-maxalvar:vrf-01
 
-# L3out
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
       l3outs:
 
 # L3out BGP to core
@@ -967,7 +1017,7 @@ apic:
                   ospf:
                     policy: ospf_p2p
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
             - name: all-external-subnets
               subnets:
@@ -1033,13 +1083,14 @@ apic:
                   - permit-to-csw-management-data-collector
                   - permit-to-all-BRKDCN-2959-DMZ-subnets
                   - permit-to-smart-switch-management-agent
+                  - stateful-testing-permit-to-test-esg
 
                 providers:
                   - deny-to-all-external-subnets
                   - permit-to-all-external-subnets
+                  - stateful-testing-permit-from-test-esg
 
                 imported_consumers:
-                  - permit-to-tn-mgmt-inb-mgmt
                   - permit-to-tn-isovalent-egress-subnet
                   - permit-to-tn-isovalent-ingress-subnet-cluster-1
                   - permit-to-tn-isovalent-ingress-subnet-cluster-2
@@ -1063,13 +1114,13 @@ apic:
                 consumers:
                   - permit-to-all-BRKDCN-2959-DMZ-subnets
                   - permit-to-smart-switch-management-agent
+                  - stateful-testing-permit-to-test-esg
+
                 providers:
                   - deny-to-core-services
                   - permit-from-core-services
                   - permit-to-core-services
-                imported_consumers:
-                  - permit-to-tn-mgmt-inb-mgmt
-                  # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
+                  - stateful-testing-permit-from-test-esg
 
             - name: lab-desktops-subnets
               subnets:
@@ -1091,141 +1142,251 @@ apic:
                   - permit-to-csw-management-data-collector
                   - permit-to-all-BRKDCN-2959-DMZ-subnets
                   - permit-to-smart-switch-management-agent
+                  - stateful-testing-permit-to-test-esg
+
                 # imported_consumers:
                   # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
                 providers:
                   - deny-to-lab-desktops
                   - permit-from-lab-desktops
+                  - stateful-testing-permit-from-test-esg
 
 # L3out OSPF
+
 #         - name: shared-services.vrf-01-ospf-peering
+
 #           description: configured with NAC
+
 #           vrf: vrf-01
+
 #           domain: shared-services.vrf-01-ospf-peering
+
 #           ospf:
+
 #             area: 0.0.0.0
+
 #             area_type: regular
 
 # # Nodes
+
 #           node_profiles:
+
 #             - name: border-leafs-pod-1
+
 #               nodes:
+
 #                 - node_id: 1101
+
 #                   pod_id: 1
+
 #                   router_id: 110.1.0.0
 
 #                 - node_id: 1102
+
 #                   pod_id: 1
+
 #                   router_id: 110.1.0.0
 
 # # Interfaces
+
 #               interface_profiles:
+
 #                 - name: shared-services.vrf-01-ospf-peering
+
 #                   interfaces:
+
 #                     - node_id: 1101
+
 #                       pod_id: 1
+
 #                       floating_svi: true
+
 #                       vlan: 8
+
 #                       mtu: 1500
+
 #                       paths:
+
 #                         - floating_ip: 10.237.99.53/28
+
 #                           physical_domain: hx-dev-01-vds-02
+
 #                       ip: 10.237.99.49/28
+
 #                       ip_shared: 10.237.99.54/28
 
 #                     - node_id: 1102
+
 #                       pod_id: 1
+
 #                       floating_svi: true
+
 #                       vlan: 8
+
 #                       mtu: 1500
+
 #                       paths:
+
 #                         - floating_ip: 10.237.99.53/28
+
 #                           physical_domain: hx-dev-01-vds-02
+
 #                       ip: 10.237.99.50/28
+
 #                       ip_shared: 10.237.99.54/28
 
 #                   ospf:
+
 #                     policy: broadcast
 
 # # Nodes
+
 #             - name: border-leafs-pod-2
+
 #               nodes:
+
 #                 - node_id: 2101
+
 #                   pod_id: 2
+
 #                   router_id: 210.1.0.0
 
 #                 - node_id: 2102
+
 #                   pod_id: 2
+
 #                   router_id: 210.2.0.0
 
 # # Interfaces
+
 #               interface_profiles:
+
 #                 - name: shared-services.vrf-01-ospf-peering      
+
 #                   interfaces:
+
 #                     - node_id: 2101
+
 #                       pod_id: 2
+
 #                       mode: regular                       
+
 #                       floating_svi: true
+
 #                       vlan: 8
+
 #                       mtu: 1500
+
 #                       paths:
+
 #                         - floating_ip: 10.237.99.53/28
+
 #                           physical_domain: ucsc-c220m3-vds-01
+
 #                       ip: 10.237.99.51/28
+
 #                       ip_shared: 10.237.99.54/28
 
 #                     - node_id: 2102
+
 #                       pod_id: 2
+
 #                       mode: regular                       
+
 #                       floating_svi: true
+
 #                       vlan: 8
+
 #                       mtu: 1500
+
 #                       paths:
+
 #                         - floating_ip: 10.237.99.53/28
+
 #                           physical_domain: ucsc-c220m3-vds-01
+
 #                       ip: 10.237.99.52/28
+
 #                       ip_shared: 10.237.99.54/28
+
 #                   ospf:
+
 #                     policy: broadcast
 
 # # extEPGs
+
 #           external_endpoint_groups:
+
 #             - name: BRKDCN-2959-subnets
+
 #               subnets:
+
 #                 - prefix: 0.0.0.0/0
+
 #                   name: Advertise-to-BRKDCN-2959
+
 #                   import_security: false
+
 #                   export_route_control: true
+
 #                 - prefix: 192.168.10.0/24
+
 #                   name: BRKDCN-2959
+
 #                   import_security: true
+
 #                 - prefix: 192.168.11.0/24
+
 #                   name: BRKDCN-2959
+
 #                   import_security: true
+
 #                 - prefix: 192.168.12.0/24
+
 #                   name: BRKDCN-2959
+
 #                   import_security: true
+
 #               contracts:
+
 #                 providers:
+
 #                   - permit-to-all-BRKDCN-2959-subnets
 
 #             - name: BRKDCN-2959-DMZ-subnets
+
 #               subnets:
+
 #                 - prefix: 0.0.0.0/0
+
 #                   name: Advertise-to-BRKDCN-2959-DMZ
+
 #                   import_security: false
+
 #                   export_route_control: true
+
 #                 - prefix: 172.16.10.0/24
+
 #                   name: BRKDCN-2959-DMZ
+
 #                   import_security: true
+
 #                 - prefix: 172.16.11.0/24
+
 #                   name: BRKDCN-2959-DMZ
+
 #                   import_security: true
+
 #                 - prefix: 172.16.12.0/24
+
 #                   name: BRKDCN-2959-DMZ
+
 #                   import_security: true
+
 #               contracts:
+
 #                 providers:
+
 #                   - permit-to-all-BRKDCN-2959-DMZ-subnets
 
 # L3out static to smart switch
@@ -1275,7 +1436,7 @@ apic:
                       ip_shared: 6.6.6.27/29
                       mtu: 1500
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
             - name: smart-switch-mgmt-agent
               subnets:
@@ -1286,7 +1447,7 @@ apic:
                 providers:
                   - permit-to-smart-switch-management-agent
 
-# Bridge domains
+# Bridge Domains: Location in GUI: `Tenants` » `XXX` » `Networking` » `Bridge Domains`
       bridge_domains:
         - name: 1.1.0.0_16
           description: ftd cluster subnet
@@ -1378,10 +1539,14 @@ apic:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant
 
-# Application Profiles
+# Application profiles: Location in GUI: `Tenants` » `XXX` » `Application Profiles`
       application_profiles:
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: apic-simulators
           managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
           endpoint_groups:
             - name: apic-mgmt
               bridge_domain: 10.237.100.32_28
@@ -1397,8 +1562,11 @@ apic:
                   - permit-to-core-services
                   - permit-from-lab-desktops
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: csr-management
           managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
           endpoint_groups:
             - name: csr-mgmt
               bridge_domain: 10.237.100.32_28
@@ -1414,8 +1582,11 @@ apic:
                   - permit-to-core-services
                   - permit-from-lab-desktops
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: csw-management
           managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
           endpoint_groups:
             - name: data-collector
               bridge_domain: 10.237.100.48_29
@@ -1430,11 +1601,12 @@ apic:
                   - permit-from-core-services
                   - permit-to-core-services
                   - permit-from-lab-desktops
-                imported_consumers:
-                  - permit-to-inb-mgmt
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: ftd-management
           managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
           endpoint_groups:
             - name: ftd-diagnostic
               bridge_domain: 10.237.100.0_27
@@ -1492,8 +1664,6 @@ apic:
                   - permit-to-core-services
                   - permit-from-lab-desktops
                   - permit-to-csw-management-data-collector
-                imported_consumers:
-                  - permit-to-inb-mgmt
 
             - name: ftd-ccl
               bridge_domain: 1.1.0.0_16
@@ -1527,8 +1697,11 @@ apic:
               physical_domains:
                 - ucsc-c220m3-vds-01
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: smart-switch-management
           managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
           endpoint_groups:
             - name: smart-switch-mgmt
               bridge_domain: 10.237.100.32_28
@@ -1543,3 +1716,32 @@ apic:
                   - permit-from-lab-desktops
                   - permit-to-all-external-subnets
                   - permit-to-smart-switch-management-agent
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: stateful-testing
+          managed: true
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
+          endpoint_groups:
+            - name: interfaces-and-vlans
+              bridge_domain: 10.237.100.0_27
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
+          endpoint_security_groups:
+            - name: test-esg
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: stateful-testing
+                  endpoint_group: interfaces-and-vlans
+              contracts:
+                consumers:
+                  - stateful-testing-permit-from-test-esg
+                providers:
+                  - stateful-testing-permit-to-test-esg

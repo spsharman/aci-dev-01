@@ -1,22 +1,14 @@
 # Notes:
-
 # Subnet 10.5.0.0/21
-
 # ESG/Contract relationships:
-
-# An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied. 
-
+# An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied.
 # - If an ESG is the provider of a contract the contract name is `<application-profile-name>-permit-to-<ESG-name>`
 # - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
 # - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
-
 # Contract Priorities - https://www.cisco.com/c/en/us/products/collateral/networking/cloud-networking/application-centric-infrastructure/contract-guide.html#Contractpriorities
-
 # The lower the number of the priority, the higher the priority; therefore, rules with a lower value (that is, a higher priority) win over rules with a higher value (that is, a lower priority).
-
 # The following list provides a summary of the high-level rules of priority used when filtering traffic:
-
 # More-specific EPGs win over vzAny and preferred groups.
 # - EPG-to-EPG (priority 7 or 9) wins over EPG-to-vzAny (priority 13 or 15) and vzAny-to-EPG (priority 14 or 16), which wins over vzAny-to-vzAny (priority 17 or 21)
 # - Specific source wins over specific destination (for example, EPG-to-vzAny wins over vzAny-to-EPG).
@@ -30,23 +22,22 @@
 # - Between redirect and permit actions, a more specific protocol and a specific L4 port wins.
 # - Between redirect and permit, and deny + log and deny, if the filters are the same, redirect wins over permit and deny + log wins over deny. If the filter rules have overlapping ports and have the same priority, the priority is not deterministic. The contract-rule configuration should not have conflicting rules of this type if you want the action to be deterministic.
 
-
-# Description: Build v06 delta from v04. 
-
+# Description: Build v06 delta from v04.
 # Adds more specific filters
-
 # - tcp-src-any-dst-any-stateful
 # - tcp-src-any-dst-22-stateful
 # - tcp-src-any-dst-80-stateful
 # - tcp-src-any-dst-443-stateful
+# - tcp-src-any-dst-6443-stateful
+# - tcp-src-any-dst-8443-stateful
 # - udp-src-any-dst-any
 
 # Adds per application ESGs for both VMs and K8s with tightened contract security.
-
 # Adds specific contract subjects with specific filters to increase security of contracts.
-
 ---
 apic:
+
+# Tenants: Location in GUI: `Tenants`
   tenants:
     - name: tech-elevate
       description: blueprint - v06
@@ -54,8 +45,10 @@ apic:
       security_domains:
         - tech-elevate
 
-# Policies
+# Policies: Location in GUI: `Tenants` » `XXX` » `Policies`
       policies:
+
+# BGP Address Family Context Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Address Family Context`
         bgp_address_family_context_policies:
           - name: cilium-cni-bgp-af-context
             description: BGP weights and paths policies for cilium cni
@@ -67,12 +60,14 @@ apic:
             local_max_ecmp: 4
             enable_host_route_leak: false
 
+# BGP Best Path Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Best Path`
         bgp_best_path_policies:
           - name: cilium-cni-bgp-as-path
             description: BGP best path policy for cilium cni
             as_path_multipath_relax: true
             ignore_igp_metric: false
 
+# BGP Peer Prefix Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Peer Prefix`
         bgp_peer_prefix_policies:
           - name: cilium-cni-bgp-prefix-policy
             description: BGP prefix policies for cilium cni
@@ -80,6 +75,7 @@ apic:
             threshold: 75
             max_prefixes: 500
 
+# BGP Timer Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Timers`
         bgp_timer_policies:
           - name: cilium-cni-bgp-timers
             description: BGP timer policies for cilium cni
@@ -89,6 +85,7 @@ apic:
             graceful_restart_helper: true
             maximum_as_limit: 1
 
+# DHCP Relay Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `DHCP Relay`
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
             description: "dhcp.uktme.cisco.com"
@@ -99,6 +96,7 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
+# IP SLA Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `IP SLA`
         ip_sla_policies:
           - name: icmp-aggressive-timers
             description: This policy sends a icmp ping every 1 second
@@ -106,6 +104,7 @@ apic:
             multiplier: 3
             sla_type: icmp
 
+# Match Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Match Rules`
         match_rules:
           - name: match-bridge-domain-subnets
             description: match all bridge domain subnets
@@ -132,6 +131,7 @@ apic:
               - ip: 10.237.99.72/27
                 aggregate: true
 
+# OSPF Interface Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `OSPF Interface`
         ospf_interface_policies:
           - name: OSPF_p2p
             passive_interface: false
@@ -145,6 +145,7 @@ apic:
             lsa_retransmit_interval: 5
             lsa_transmit_delay: 1
 
+# Route Control Route Maps: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Route Maps`
         route_control_route_maps:
           - name: floating-L3out-redistribution-optimization
             type: global
@@ -155,14 +156,17 @@ apic:
                   - pod-subnets-redistribution
                 set_rule: floating-L3out-bgp-redistribution-optimization
 
+# Set Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Set Rules`
         set_rules:
           - name: floating-L3out-bgp-redistribution-optimization
             community_mode: append
             multipath: false
             next_hop_propagation: false
 
-# Services
+# Services: Location in GUI: `Tenants` » `XXX` » `Services`
       services:
+
+# L4L7 Devices: Location in GUI: `Tenants` » `XXX` » `Services` » `L4L7 Devices`
         l4l7_devices:
           - name: ftdv-01-north-south
             vmware_vmm_domain: hx-dev-01-vds-01
@@ -206,7 +210,7 @@ apic:
                   - device: ftdv-01-adapter-8-gig-0-5
                     interface_name: ftdv-01-gig-0-5
 
-          - name: ftdv-02-east-west 
+          - name: ftdv-02-east-west
             vmware_vmm_domain: hx-dev-01-vds-01
             context_aware: single-Context
             type: VIRTUAL
@@ -249,6 +253,7 @@ apic:
                   - device: smart-switch-east-west
                     interface_name: data
 
+# Redirect Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Redirect Policies`
         redirect_policies:
           - name: ftdv-01-north-south
             anycast: false
@@ -290,6 +295,7 @@ apic:
                 name: smart-switch-east-west
                 redirect_health_group: smart-switch-east-west
 
+# Service Graph Templates: Location in GUI: `Tenants` » `XXX` » `Services` » `Service Graph Templates`
         service_graph_templates:
           - name: ftdv-01-north-south
             template_type: FW_ROUTED
@@ -357,6 +363,7 @@ apic:
               - consumer_node: N2
                 provider_node: EPG-Provider
 
+# Device Selection Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Device Selection Policies`
         device_selection_policies:
           - contract: any
             service_graph_template: ftdv-01-north-south
@@ -450,13 +457,14 @@ apic:
                   bridge_domain:
                     name: 6.6.6.0_24
 
+# Redirect Health Groups: Location in GUI: `Tenants` » `XXX` » `Services` » `Redirect Health Groups`
         redirect_health_groups:
           - name: ftdv-01-north-south
           - name: ftdv-01-east-west
           - name: ftdv-02-east-west
           - name: smart-switch-east-west
 
-# Filters
+# Filters: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
       filters:
         - name: 'icmp'
           entries:
@@ -507,13 +515,13 @@ apic:
               destination_to_port: 6443
               stateful: true
 
-        # - name: 'tcp-src-any-dst-8443-stateful'
-        #   entries:
-        #     - name: 'tcp-src-any-dst-8443-stateful'
-        #       protocol: tcp
-        #       destination_from_port: 8443
-        #       destination_to_port: 8443
-        #       stateful: true
+        - name: 'tcp-src-any-dst-8443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-8443-stateful'
+              protocol: tcp
+              destination_from_port: 8443
+              destination_to_port: 8443
+              stateful: true
 
         - name: 'udp-src-any-dst-any'
           entries:
@@ -521,7 +529,23 @@ apic:
               ethertype: ip
               protocol: udp
 
-# Contracts
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'udp-src-any-dst-123'
+          entries:
+            - name: 'udp-src-any-dst-123'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 123
+              destination_to_port: 123
+
+# Contracts: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Standard`
       contracts:
         - name: epg-security-groups-permit-from-all-epgs
           description: esg-all-epgs is the contract Consumer
@@ -529,25 +553,24 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                  - filter: udp-src-any-dst-53
+                  - filter: udp-src-any-dst-123
 
         - name: epg-security-groups-permit-intra-all-epgs
           description: intra epg-security-groups
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
         - name: epg-security-groups-permit-to-all-epgs
@@ -556,19 +579,17 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows inbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: udp-src-any-dst-any
 
         - name: intra-vrf
@@ -577,7 +598,7 @@ apic:
           subjects:
             - name: redirect
               service_graph: smart-switch-east-west
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
         - name: k8s-applications-permit-from-all-k8s-applications
@@ -586,18 +607,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-applications-permit-to-all-k8s-applications
           description: k8s applications is the contract Provider
@@ -605,19 +625,17 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows inbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: udp-src-any-dst-any
 
         - name: k8s-juice-shop-permit-from-egress-gw
@@ -626,18 +644,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-juice-shop-permit-to-lb-vip
           description: k8s applications is the contract Provider
@@ -645,7 +662,7 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
@@ -656,18 +673,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-nodes-permit-to-all-k8s-nodes
           description: k8s nodes is the contract Provider
@@ -675,20 +691,18 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
                 - filter: tcp-src-any-dst-6443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows inbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: udp-src-any-dst-any
 
         - name: k8s-pacman-permit-from-egress-gw
@@ -697,18 +711,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-pacman-permit-to-lb-vip
           description: k8s applications is the contract Provider
@@ -716,7 +729,7 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
@@ -727,18 +740,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-timescape-ui-permit-to-lb-vip
           description: k8s applications is the contract Provider
@@ -746,7 +758,7 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
@@ -757,18 +769,17 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: k8s-tomcat-permit-to-lb-vip
           description: k8s applications is the contract Provider
@@ -776,7 +787,7 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
@@ -787,25 +798,25 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: online-boutique-permit-intra-all-online-boutique-endpoints
           description: intra online-boutique application
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              # service_graph: ftdv-01-east-west # uncomment this line to redirect intra online-boutique traffic through ftdv-01-east-west
+              filters:
                 - filter: src-any-dst-any
 
         - name: online-boutique-permit-to-all-online-boutique-endpoints
@@ -814,20 +825,14 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
-            - name: udp
-              description: allows inbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
 
         - name: siwapp-permit-from-all-siwapp-endpoints
           description: siwapp application is the contract Consumer
@@ -835,25 +840,24 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-any-stateful
             - name: icmp
               description: allows outbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows outbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
-                  - filter: udp-src-any-dst-any
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
 
         - name: siwapp-permit-intra-all-siwapp-endpoints
           description: intra siwapp application
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
         - name: siwapp-permit-to-all-siwapp-endpoints
@@ -862,22 +866,20 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              filters: 
+              filters:
                 - filter: tcp-src-any-dst-22-stateful
                 - filter: tcp-src-any-dst-80-stateful
                 - filter: tcp-src-any-dst-443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: icmp
             - name: udp
               description: allows inbound udp from consumer to provider
-              consumer_to_provider:
-                filters:
+              filters:
                   - filter: udp-src-any-dst-any
 
-# VRFs
+# VRFs: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
         - name: vrf-02
           description: configured with NAC
@@ -925,7 +927,8 @@ apic:
                 - intra-vrf
               providers:
                 - intra-vrf
-# L3out
+
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
       l3outs:
         - name: vrf-02-bgp-as-64805
           alias: outside-vrf-to-core
@@ -953,22 +956,22 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.6.1
+                  router_id: 110.1.8.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.6.11
+                    - 110.1.8.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.6.1
+                  router_id: 110.2.8.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.6.11
+                    - 110.2.8.11
 
               bgp_peers:
                 - ip: 12.0.0.3
                   description: L12-C93180YC-FX-01
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -990,7 +993,7 @@ apic:
 
                 - ip: 12.0.0.4
                   description: L12-C93180YC-EX-02
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -1073,22 +1076,22 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.6.1
+                  router_id: 210.1.8.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.1.6.11
+                    - 210.1.8.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.6.1
+                  router_id: 210.2.8.1
                   router_id_as_loopback: true
                   loopbacks:
-                    - 210.2.6.11
+                    - 210.2.8.11
 
               bgp_peers:
                 - ip: 13.0.0.3
                   description: L13-C93180YC-FX-01
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -1110,7 +1113,7 @@ apic:
 
                 - ip: 13.0.0.4
                   description: L13-C93180YC-FX-02
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -1188,12 +1191,12 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-AS-64805
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-64805
 
-# L3out
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
         - name: vrf-01-bgp-AS-64808
           alias: inside-vrf-to-k8s-nodes
           description: L3out SVI to K8s environment
@@ -1227,10 +1230,10 @@ apic:
                 as_path_policy: cilium-cni-bgp-as-path
 
               interface_profiles:
-                - name: k8s-nodes     
+                - name: k8s-nodes
                   interfaces:
-                    - node_id: 1101                       
-                      mode: regular                       
+                    - node_id: 1101
+                      mode: regular
                       floating_svi: true
                       scope: vrf
                       vlan: 54
@@ -1266,15 +1269,15 @@ apic:
                           # import_route_control: imported-routes
 
                     - node_id: 1102
-                      mode: regular                       
+                      mode: regular
                       floating_svi: true
-                      scope: vrf                      
+                      scope: vrf
                       vlan: 54
                       paths:
                         - floating_ip: 10.237.97.227/28
                           physical_domain: tech-elevate.vrf-01
                       ip: 10.237.97.226/28
-                      ip_shared: 10.237.97.228/28      
+                      ip_shared: 10.237.97.228/28
 
                       bgp_peers:
                         - ip: 10.237.97.224/28
@@ -1305,12 +1308,12 @@ apic:
                     - dhcp_relay_policy: dhcp.uktme.cisco.com
                       scope: tenant
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-AS-64808
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-64808
 
-# Bridge Domains
+# Bridge Domains: Location in GUI: `Tenants` » `XXX` » `Networking` » `Bridge Domains`
       bridge_domains:
         - name: 6.6.6.0_24
           unknown_unicast: proxy
@@ -1345,11 +1348,15 @@ apic:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant
 
-# Application profiles
+# Application profiles: Location in GUI: `Tenants` » `XXX` » `Application Profiles`
       application_profiles:
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'network-segments-epgs-and-vlans'
           description: EPGs provide the VLAN backing for application workloads - no contracts are applied to these EPGs
-          endpoint_groups:      
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
+          endpoint_groups:
             - name: '10.5.0.0_24'
               bridge_domain: '10.5.0.0_24'
               vmware_vmm_domains:
@@ -1380,11 +1387,15 @@ apic:
                   primary_vlan: 1237
                   secondary_vlan: 1238
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'epg-security-groups'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-epgs
               vrf: vrf-01
+              deployment_immediacy: immediate
               epg_selectors:
                 - application_profile: 'network-segments-epgs-and-vlans'
                   endpoint_group: 10.5.0.0_24
@@ -1399,11 +1410,15 @@ apic:
                 providers:
                   - epg-security-groups-permit-to-all-epgs
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'external-subnets'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-external-subnets
               vrf: vrf-02
+              deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 0.0.0.0/1
                   shared: true
@@ -1428,11 +1443,15 @@ apic:
                   - online-boutique-permit-from-all-online-boutique-endpoints
                   - siwapp-permit-from-all-siwapp-endpoints
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-applications'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-k8s-applications
               vrf: vrf-01
+              deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.99.72/29
                   shared: true
@@ -1442,57 +1461,81 @@ apic:
                 consumers:
                   - k8s-applications-permit-from-all-k8s-applications
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-juice-shop'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_subnet_selectors:
-                - value: 10.237.99.73
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.73/32
+                  shared: true
               contracts:
                 providers:
                   - k8s-juice-shop-permit-to-lb-vip
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-pacman'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_subnet_selectors:
-                - value: 10.237.99.75
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.75/32
+                  shared: true
               contracts:
                 providers:
                   - k8s-pacman-permit-to-lb-vip
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-tomcat'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_subnet_selectors:
-                - value: 10.237.99.74
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.74/32
+                  shared: true
               contracts:
                 providers:
                   - k8s-tomcat-permit-to-lb-vip
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-timescape-ui'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: lb-vip
               vrf: vrf-01
-              ip_subnet_selectors:
-                - value: 10.237.99.72
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.72/32
+                  shared: true
               contracts:
                 providers:
                   - k8s-timescape-ui-permit-to-lb-vip
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-nodes'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-k8s-nodes
               vrf: vrf-01
+              deployment_immediacy: immediate
               ip_external_subnet_selectors:
-                - ip: 10.237.97.224/28
+                - ip: 10.237.99.76/32
                   shared: true
               contracts:
                 providers:
@@ -1500,12 +1543,16 @@ apic:
                 consumers:
                   - k8s-nodes-permit-from-all-k8s-nodes
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'siwapp'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
           # alias: use-case-3
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-siwapp-endpoints
               vrf: vrf-01
+              deployment_immediacy: immediate
               ip_subnet_selectors:
                 - value: 10.5.0.49
                 - value: 10.5.0.50
@@ -1528,12 +1575,16 @@ apic:
                 intra_esgs:
                   - siwapp-permit-intra-all-siwapp-endpoints
 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'online-boutique'
-          description: 'ESGs are used to define security groups' 
+          description: 'ESGs are used to define security groups'
           # alias: use-case-3
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: all-online-boutique-endpoints
               vrf: vrf-01
+              deployment_immediacy: immediate
               ip_subnet_selectors:
                 - value: 10.5.0.100
                 - value: 10.5.0.101

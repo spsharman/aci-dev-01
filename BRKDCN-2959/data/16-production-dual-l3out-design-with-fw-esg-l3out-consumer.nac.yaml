@@ -27,6 +27,19 @@ apic:
             multiplier: 3
             sla_type: icmp
 
+        ospf_interface_policies:
+          - name: OSPF_p2p
+            passive_interface: false
+            mtu_ignore: false
+            advertise_subnet: true
+            bfd: false
+            hello_interval: 10
+            dead_interval: 40
+            network_type: p2p
+            priority: 1
+            lsa_retransmit_interval: 5
+            lsa_transmit_delay: 1
+
 # Services
       services:
         l4l7_devices:
@@ -195,6 +208,9 @@ apic:
           description: configured with NAC
           vrf: vrf-01
           domain: BRKDCN-2959.vrf-01
+          ospf:
+            area: backbone
+            area_type: regular
 
 # Nodes
           node_profiles:
@@ -214,6 +230,51 @@ apic:
                   loopbacks:
                     - 110.2.2.11
 
+              bgp_peers:
+                - ip: 12.0.0.3
+                  description: L12-C93180YC-FX-01
+                  remote_as: 64800  
+                  local_as: 64803
+                  allow_self_as: false
+                  as_override: true
+                  disable_peer_as_check: true
+                  next_hop_self: false
+                  send_community: false
+                  send_ext_community: false
+                  allowed_self_as_count: 3
+                  bfd: false
+                  disable_connected_check: false
+                  ttl: 2
+                  remove_all_private_as: false
+                  remove_private_as: false
+                  replace_private_as_with_local_as: false
+                  unicast_address_family: true
+                  multicast_address_family: false
+                  admin_state: true
+                  as_propagate: no-prepend
+
+                - ip: 12.0.0.4
+                  description: L12-C93180YC-EX-02
+                  remote_as: 64800  
+                  local_as: 64803
+                  allow_self_as: false
+                  as_override: true
+                  disable_peer_as_check: true
+                  next_hop_self: false
+                  send_community: false
+                  send_ext_community: false
+                  allowed_self_as_count: 3
+                  bfd: false
+                  disable_connected_check: false
+                  ttl: 2
+                  remove_all_private_as: false
+                  remove_private_as: false
+                  replace_private_as_with_local_as: false
+                  unicast_address_family: true
+                  multicast_address_family: false
+                  admin_state: true
+                  as_propagate: no-prepend
+
 # Interfaces
               interface_profiles:
                 - name: leaf-1101-eth7.12
@@ -226,28 +287,8 @@ apic:
                       ip: 10.237.97.40/31
                       mac: "00:11:01:07:12:FF"
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.41/32
-                          description: core-01 eth1/7.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-1101-eth8.12
                   description: core-02 eth1/8.12
@@ -259,28 +300,8 @@ apic:
                       ip: 10.237.97.42/31
                       mac: "00:11:01:08:12:FF"
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.43/32
-                          description: core-02 eth1/8.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-1102-eth7.12
                   description: core-02 eth1/7.12
@@ -292,28 +313,8 @@ apic:
                       ip: 10.237.97.44/31
                       mac: "00:11:02:07:12:FF"
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.45/32
-                          description: core-02 eth1/7.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-1102-eth8.12
                   description: core-01 eth1/8.12
@@ -325,28 +326,8 @@ apic:
                       ip: 10.237.97.46/31
                       mac: "00:11:01:08:12:FF"
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.47/32
-                          description: core-01 eth1/8.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
+                  ospf:
+                    policy: OSPF_p2p
 
             - name: border-leafs-pod-2
               nodes:
@@ -364,6 +345,51 @@ apic:
                   loopbacks:
                     - 210.2.2.11
 
+              bgp_peers:
+                - ip: 13.0.0.3
+                  description: L13-C93180YC-FX-01
+                  remote_as: 64800  
+                  local_as: 64803
+                  allow_self_as: false
+                  as_override: true
+                  disable_peer_as_check: true
+                  next_hop_self: false
+                  send_community: false
+                  send_ext_community: false
+                  allowed_self_as_count: 3
+                  bfd: false
+                  disable_connected_check: false
+                  ttl: 2
+                  remove_all_private_as: false
+                  remove_private_as: false
+                  replace_private_as_with_local_as: false
+                  unicast_address_family: true
+                  multicast_address_family: false
+                  admin_state: true
+                  as_propagate: no-prepend
+
+                - ip: 13.0.0.4
+                  description: L13-C93180YC-FX-02
+                  remote_as: 64800  
+                  local_as: 64803
+                  allow_self_as: false
+                  as_override: true
+                  disable_peer_as_check: true
+                  next_hop_self: false
+                  send_community: false
+                  send_ext_community: false
+                  allowed_self_as_count: 3
+                  bfd: false
+                  disable_connected_check: false
+                  ttl: 2
+                  remove_all_private_as: false
+                  remove_private_as: false
+                  replace_private_as_with_local_as: false
+                  unicast_address_family: true
+                  multicast_address_family: false
+                  admin_state: true
+                  as_propagate: no-prepend
+
               interface_profiles:
                 - name: leaf-2101-eth7.12
                   description: core-03 eth1/7.12
@@ -375,29 +401,8 @@ apic:
                       svi: false
                       ip: 10.237.97.48/31
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.49/32
-                          description: core-03 eth1/7.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          # peer_prefix_policy: cilium-cni
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-2101-eth8.12
                   description: core-04 eth1/8.12
@@ -409,29 +414,8 @@ apic:
                       svi: false
                       ip: 10.237.97.50/31
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.51/32
-                          description: core-04 eth1/8.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          # peer_prefix_policy: cilium-cni
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-2102-eth7.12
                   description: core-04 eth1/7.12
@@ -443,29 +427,8 @@ apic:
                       svi: false
                       ip: 10.237.97.52/31
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.53/32
-                          description: core-04 eth1/7.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          # peer_prefix_policy: cilium-cni
+                  ospf:
+                    policy: OSPF_p2p
 
                 - name: leaf-2102-eth8.12
                   description: core-02 eth1/8.12
@@ -477,29 +440,8 @@ apic:
                       svi: false
                       ip: 10.237.97.54/31
                       mtu: inherit
-                      bgp_peers:
-                        - ip: 10.237.97.55/32
-                          description: core-03 eth1/8.12
-                          remote_as: 64800  
-                          local_as: 64803
-                          allow_self_as: false
-                          as_override: true
-                          disable_peer_as_check: true
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 2
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-
+                  ospf:
+                    policy: OSPF_p2p
 # extEPGs
           external_endpoint_groups:
             - name: all-ext-subnets

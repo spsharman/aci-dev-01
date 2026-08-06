@@ -126,7 +126,6 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
-
         ip_sla_policies:
           - name: icmp-aggressive-timers
             description: This policy sends a icmp ping every 1 second
@@ -434,31 +433,31 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.3
+                  router_id: 110.1.5.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.4
+                    - 110.1.5.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.3
+                  router_id: 110.2.5.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.4
+                    - 110.2.5.11
 
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.3
+                  router_id: 210.1.5.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.1.0.4
+                    - 210.1.5.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.3
+                  router_id: 210.2.5.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.2.0.4
+                    - 210.2.5.11
 
               bgp:
                 timer_policy: cilium-cni-bgp-timers
@@ -991,23 +990,23 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.3
+                  router_id: 110.1.7.2
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.3
+                    - 110.1.7.21
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.3
+                  router_id: 110.2.7.2
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.3
+                    - 110.2.7.21
 
               bgp_peers:
                 - ip: 12.0.0.3
                   description: L12-C93180YC-FX-01
                   remote_as: 64800  
-                  local_as: 65151
+                  local_as: 64809
                   allow_self_as: false
                   as_override: true
                   disable_peer_as_check: true
@@ -1029,7 +1028,7 @@ apic:
                 - ip: 12.0.0.4
                   description: L12-C93180YC-EX-02
                   remote_as: 64800  
-                  local_as: 65151
+                  local_as: 64809
                   allow_self_as: false
                   as_override: true
                   disable_peer_as_check: true
@@ -1139,23 +1138,23 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.3
+                  router_id: 210.1.7.2
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.1.0.3
+                    - 210.1.7.21
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.3
+                  router_id: 210.2.7.2
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.2.0.3
+                    - 210.2.7.21
 
               bgp_peers:
                 - ip: 13.0.0.3
                   description: L13-C93180YC-FX-01
                   remote_as: 64800  
-                  local_as: 65151
+                  local_as: 64809
                   allow_self_as: false
                   as_override: true
                   disable_peer_as_check: true
@@ -1177,7 +1176,7 @@ apic:
                 - ip: 13.0.0.4
                   description: L13-C93180YC-FX-02
                   remote_as: 64800  
-                  local_as: 65151
+                  local_as: 64809
                   allow_self_as: false
                   as_override: true
                   disable_peer_as_check: true

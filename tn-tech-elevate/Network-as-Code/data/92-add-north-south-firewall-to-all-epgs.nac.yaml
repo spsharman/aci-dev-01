@@ -1,29 +1,31 @@
 # Notes:
-#
-# Description: Build v08 delta from v07. Adds three application-specific ESG groups (application-01/02/03) with IP subnet selectors and introduces permit-to-application-* contracts that are consumed externally and provided by each application ESG.
+# Subnet 10.5.0.0/21
+# ESG/Contract relationships:
+# An ESG can be a provider or consumer of a contract. Additionally the ESG can have an intra ESG contract applied.
+# - If an ESG is the provider of a contract the contract name is `<application-profile-name>-permit-to-<ESG-name>`
+# - If an ESG is the consumer of a contract the contract name is `<application-profile-name>-permit-from-<ESG-name>`
+# - If an ESG has an intra ESG contract applied, the contract name is `<application-profile-name>-permit-intra-<ESG-name>`
 
-# subnet 10.5.0.0/21
-# ftdv-01-eth2-gig-0-0
+# Description: Build v04 delta from v02.
+# Adds the following service nodes to the v02 design:
+# - ftdv-01-north-south
+# - ftdv-02-east-west
+# - smart-switch-east-west
+# - applies service graph to intra-vrf contract to redirect traffic to the service nodes
 ---
 apic:
+
+# Tenants: Location in GUI: `Tenants`
   tenants:
     - name: tech-elevate
-      description: blueprint - v08
+      description: blueprint - v03 add north/south firewall
       managed: true
       security_domains:
         - tech-elevate
 
-# Policies
       policies:
-        bgp_timer_policies:
-          - name: cilium-cni-bgp-timers
-            description: BGP timer policies for cilium cni
-            keepalive_interval: 1
-            hold_interval: 3
-            stale_interval: 6
-            graceful_restart_helper: true
-            maximum_as_limit: 1
 
+# BGP Address Family Context Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Address Family Context`
         bgp_address_family_context_policies:
           - name: cilium-cni-bgp-af-context
             description: BGP weights and paths policies for cilium cni
@@ -35,6 +37,14 @@ apic:
             local_max_ecmp: 4
             enable_host_route_leak: false
 
+# BGP Best Path Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Best Path`
+        bgp_best_path_policies:
+          - name: cilium-cni-bgp-as-path
+            description: BGP best path policy for cilium cni
+            as_path_multipath_relax: true
+            ignore_igp_metric: false
+
+# BGP Peer Prefix Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Peer Prefix`
         bgp_peer_prefix_policies:
           - name: cilium-cni-bgp-prefix-policy
             description: BGP prefix policies for cilium cni
@@ -42,20 +52,37 @@ apic:
             threshold: 75
             max_prefixes: 500
 
-        bgp_best_path_policies:
-          - name: cilium-cni-bgp-as-path
-            description: BGP best path policy for cilium cni
-            as_path_multipath_relax: true
-            ignore_igp_metric: true
+# BGP Timer Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `BGP` » `Timers`
+        bgp_timer_policies:
+          - name: cilium-cni-bgp-timers
+            description: BGP timer policies for cilium cni
+            keepalive_interval: 1
+            hold_interval: 3
+            stale_interval: 6
+            graceful_restart_helper: true
+            maximum_as_limit: 1
 
+# DHCP Relay Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `DHCP Relay`
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# IP SLA Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `IP SLA`
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Match Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Match Rules`
         match_rules:
-          - name: pod-subnets-interleak
-            description: match all pod subnets
-            prefixes:
-              - ip: 0.0.0.0/0
-                aggregate: true
-                to_length: 32
-
           - name: pod-subnets-redistribution
             description: match all pod subnets
             prefixes:
@@ -63,39 +90,21 @@ apic:
                 aggregate: true
                 to_length: 32
 
-        route_control_route_maps:
-          - name: floating-L3out-interleak-optimization
-            type: global
-            contexts:
-              - name: pods-subnets
-                action: permit
-                match_rules:
-                  - pod-subnets-interleak
-                set_rule: floating-L3out-bgp-interleak-optimization
+          - name: match-k8s-node-subnet
+            description: matches K8s node subnets
+            prefixes:
+              - ip: 10.237.97.224/28
+                aggregate: false
 
-          - name: floating-L3out-redistribution-optimization
-            type: global
-            contexts:
-              - name: pods-subnets
-                action: permit
-                match_rules:
-                  - pod-subnets-redistribution
-                set_rule: floating-L3out-bgp-redistribution-optimization
+          - name: match-k8s-applications
+            description: matches K8s applications VIP
+            prefixes:
+              - ip: 10.237.99.72/27
+                aggregate: true
 
-        set_rules:
-          - name: floating-L3out-bgp-interleak-optimization
-            community_mode: append
-            next_hop_propagation: true
-            multipath: true
-
-          - name: floating-L3out-bgp-redistribution-optimization
-            community_mode: append
-            multipath: false
-            next_hop_propagation: false
-
+# OSPF Interface Policies: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocols` » `OSPF Interface`
         ospf_interface_policies:
           - name: OSPF_p2p
-            cost: unspecified
             passive_interface: false
             mtu_ignore: false
             advertise_subnet: true
@@ -107,18 +116,28 @@ apic:
             lsa_retransmit_interval: 5
             lsa_transmit_delay: 1
 
-        dhcp_relay_policies:
-          - name: dhcp.uktme.cisco.com
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
+# Route Control Route Maps: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Route Maps`
+        route_control_route_maps:
+          - name: floating-L3out-redistribution-optimization
+            type: global
+            contexts:
+              - name: pods-subnets
+                action: permit
+                match_rules:
+                  - pod-subnets-redistribution
+                set_rule: floating-L3out-bgp-redistribution-optimization
 
-# Services
+# Set Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Routing` » `Set Rules`
+        set_rules:
+          - name: floating-L3out-bgp-redistribution-optimization
+            community_mode: append
+            multipath: false
+            next_hop_propagation: false
+
+# Services: Location in GUI: `Tenants` » `XXX` » `Services`
       services:
+
+# L4L7 Devices: Location in GUI: `Tenants` » `XXX` » `Services` » `L4L7 Devices`
         l4l7_devices:
           - name: ftdv-01-north-south
             vmware_vmm_domain: hx-dev-01-vds-01
@@ -132,16 +151,16 @@ apic:
                 vcenter_name: hx-dev-01-vc01.uktme.cisco.com
                 vm_name: ftdv72_82-01.uktme.cisco.com
                 interfaces:
-                  - name: data
+                  - name: ftdv-01-gig-0-3
                     vnic_name: Network adapter 6
 
             logical_interfaces:
               - name: data
                 concrete_interfaces:
                   - device: ftdv-01-adapter-6-gig-0-3
-                    interface_name: data
+                    interface_name: ftdv-01-gig-0-3
 
-          - name: ftdv-02-east-west 
+          - name: ftdv-02-east-west
             vmware_vmm_domain: hx-dev-01-vds-01
             context_aware: single-Context
             type: VIRTUAL
@@ -184,6 +203,7 @@ apic:
                   - device: smart-switch-east-west
                     interface_name: data
 
+# Redirect Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Redirect Policies`
         redirect_policies:
           - name: ftdv-01-north-south
             anycast: false
@@ -192,8 +212,7 @@ apic:
             ip_sla_policy: icmp-aggressive-timers
             l3_destinations:
               - ip: 6.6.6.10
-                name: ftdv-01-north-south
-                mac: 00:50:56:A1:CF:6C
+                name: ftdv-01
                 redirect_health_group: ftdv-01-north-south
 
           - name: ftdv-02-east-west
@@ -202,9 +221,8 @@ apic:
             resilient_hashing: false
             ip_sla_policy: icmp-aggressive-timers
             l3_destinations:
-              - ip: 6.6.6.10
+              - ip: 6.6.6.12
                 name: ftdv-02-east-west
-                mac: 00:50:56:A1:FE:A1
                 redirect_health_group: ftdv-02-east-west
 
           - name: smart-switch-east-west
@@ -213,16 +231,11 @@ apic:
             resilient_hashing: false
             ip_sla_policy: icmp-aggressive-timers
             l3_destinations:
-              - ip: 6.6.6.10
+              - ip: 6.6.6.11
                 name: smart-switch-east-west
-                mac: 08:f4:f0:68:73:77
                 redirect_health_group: smart-switch-east-west
 
-        redirect_health_groups:
-          - name: ftdv-01-north-south
-          - name: ftdv-02-east-west
-          - name: smart-switch-east-west
-
+# Service Graph Templates: Location in GUI: `Tenants` » `XXX` » `Services` » `Service Graph Templates`
         service_graph_templates:
           - name: ftdv-01-north-south
             template_type: FW_ROUTED
@@ -260,6 +273,25 @@ apic:
             provider:
               direct_connect: true
 
+          - name: smart-switch-ftdv-02-east-west
+            redirect: true
+            template_type: FW_ROUTED
+            devices:
+              - name: smart-switch-east-west
+                node_name: N1
+              - name: ftdv-02-east-west
+                node_name: N2
+            connections:
+              - consumer_node: EPG-Consumer
+                provider_node: N1
+
+              - consumer_node: N1
+                provider_node: N2
+
+              - consumer_node: N2
+                provider_node: EPG-Provider
+
+# Device Selection Policies: Location in GUI: `Tenants` » `XXX` » `Services` » `Device Selection Policies`
         device_selection_policies:
           - contract: any
             service_graph_template: ftdv-01-north-south
@@ -306,40 +338,45 @@ apic:
               bridge_domain:
                 name: 6.6.6.0_24
 
-# Policies
-      policies:
-        ospf_interface_policies:
-          - name: OSPF_p2p
-            cost: unspecified
-            passive_interface: false
-            mtu_ignore: false
-            advertise_subnet: true
-            bfd: false
-            hello_interval: 10
-            dead_interval: 40
-            network_type: p2p
-            priority: 1
-            lsa_retransmit_interval: 5
-            lsa_transmit_delay: 1
+          - contract: any
+            service_graph_template: smart-switch-ftdv-02-east-west
+            devices:
+              - name: smart-switch-east-west
+                node_name: N1
+                consumer:
+                  redirect_policy:
+                    name: smart-switch-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+                provider:
+                  redirect_policy:
+                    name: smart-switch-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+              - name: ftdv-02-east-west
+                node_name: N2
+                consumer:
+                  redirect_policy:
+                    name: ftdv-02-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
+                provider:
+                  redirect_policy:
+                    name: ftdv-02-east-west
+                  logical_interface: data
+                  bridge_domain:
+                    name: 6.6.6.0_24
 
-        dhcp_relay_policies:
-          - name: dhcp.uktme.cisco.com
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
+# Redirect Health Groups: Location in GUI: `Tenants` » `XXX` » `Services` » `Redirect Health Groups`
+        redirect_health_groups:
+          - name: ftdv-01-north-south
+          - name: ftdv-02-east-west
+          - name: smart-switch-east-west
 
-        ip_sla_policies:
-          - name: icmp-aggressive-timers
-            description: This policy sends a icmp ping every 1 second
-            frequency: 1
-            multiplier: 3
-            sla_type: icmp
-
-# Filters
+# Filters: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
       filters:
         - name: 'icmp'
           entries:
@@ -351,142 +388,157 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
-# Contracts
+# Contracts: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Standard`
       contracts:
         - name: intra-vrf
           description: vzAny is contract Consumer and Provider
           scope: context
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-all-external-subnets-from-vzAny-vrf-02
-          description: vzAny in vrf-02 is the contract Consumer
+        - name: epg-security-groups-permit-from-all-epgs
+          description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              # service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-esg-10.5.0.0_24
-          description: permit traffic to the ESG
+        - name: epg-security-groups-permit-to-all-epgs
+          description: esg-all-epgs is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              # service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-esg-10.5.1.0_24
-          description: permit traffic to the ESG
+        - name: k8s-nodes-permit-to-all-k8s-nodes
+          description: k8s nodes is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-esg-10.5.2.0_24
-          description: permit traffic to the ESG
+        - name: k8s-nodes-permit-from-all-k8s-nodes
+          description: k8s nodes is the contract Consumer
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-application-01
-          description: permit traffic to the ESG
+        - name: k8s-applications-permit-from-all-k8s-applications
+          description: k8s applications is the contract Consumer
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-application-02
-          description: permit traffic to the ESG
+        - name: k8s-applications-permit-to-all-k8s-applications
+          description: k8s applications is the contract Provider
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              filters: 
+              filters:
                 - filter: src-any-dst-any
 
-        - name: permit-to-application-03
-          description: permit traffic to the ESG
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: src-any-dst-any
-
-# VRFs
+# VRFs: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
-        - name: vrf-01
+        - name: vrf-02
           description: configured with NAC
           alias: outside-vrf
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
                 - tenant: tech-elevate
-                  vrf: vrf-02
+                  vrf: vrf-01
 
-        - name: vrf-02
+        - name: vrf-01
           description: configured with NAC
           alias: inside-vrf
-          
           contracts:
-            providers: 
+            providers:
               - intra-vrf
-            consumers: 
+            consumers:
               - intra-vrf
-
-          leaked_internal_prefixes:
+          leaked_internal_subnets:
             - prefix: 10.5.0.0/24
               public: true
               destinations:
                 - tenant: tech-elevate
-                  vrf: vrf-01
+                  vrf: vrf-02
             - prefix: 10.5.1.0/24
               public: true
               destinations:
                 - tenant: tech-elevate
-                  vrf: vrf-01
+                  vrf: vrf-02
             - prefix: 10.5.2.0/24
               public: true
               destinations:
                 - tenant: tech-elevate
-                  vrf: vrf-01
+                  vrf: vrf-02
 
-# L3out
+          leaked_external_prefixes:
+            - prefix: 10.237.97.224/28
+              destinations:
+                - tenant: tech-elevate
+                  vrf: vrf-02
+            - prefix: 10.237.99.72/29
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: tech-elevate
+                  vrf: vrf-02
+
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
       l3outs:
-        - name: vrf-01-bgp-as-64805
-          description: configured with NAC
-          vrf: vrf-01
-          domain: tech-elevate.vrf-01
+        - name: vrf-02-bgp-AS-64805
+          alias: outside-vrf-to-core
+          description: L3out peering to core
+          vrf: vrf-02
+          domain: tech-elevate.vrf-02
           ospf:
-            area: 0.0.0.0
+            area: backbone
             area_type: regular
-          
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-internal-vrf-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-k8s-node-subnet
+                  - match-k8s-applications
+                  - match-bridge-domain-subnets
+
 # Nodes
           node_profiles:
             - name: border-leafs-pod-1
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.0.5
+                  router_id: 110.1.8.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.0.5
+                    - 110.1.8.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.0.5
+                  router_id: 110.2.8.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.0.5
+                    - 110.2.8.11
 
               bgp_peers:
                 - ip: 12.0.0.3
                   description: L12-C93180YC-FX-01
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -508,7 +560,7 @@ apic:
 
                 - ip: 12.0.0.4
                   description: L12-C93180YC-EX-02
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -591,22 +643,22 @@ apic:
               nodes:
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.0.5
-                  router_id_as_loopback: false
+                  router_id: 210.1.8.1
+                  router_id_as_loopback: true
                   loopbacks:
-                    - 210.1.0.5
+                    - 210.1.8.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.0.5
-                  router_id_as_loopback: false
+                  router_id: 210.2.8.1
+                  router_id_as_loopback: true
                   loopbacks:
-                    - 210.2.0.5
+                    - 210.2.8.11
 
               bgp_peers:
                 - ip: 13.0.0.3
                   description: L13-C93180YC-FX-01
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -628,7 +680,7 @@ apic:
 
                 - ip: 13.0.0.4
                   description: L13-C93180YC-FX-02
-                  remote_as: 64800  
+                  remote_as: 64800
                   local_as: 64805
                   allow_self_as: false
                   as_override: true
@@ -706,156 +758,140 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
-            - name: all-external-subnets
-              subnets:
-                - prefix: 0.0.0.0/0
-                  shared_route_control: true
-                  import_security: false
+            - name: dummy-extEPG-for-vrf-01-bgp-AS-64805
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-64805
 
-                - prefix: 0.0.0.0/1
-                  shared_security: true
-                  import_security: true
-
-                - prefix: 128.0.0.0/1
-                  shared_security: true
-                  import_security: true
-
-              contracts:
-                consumers:
-                  - permit-to-esg-10.5.0.0_24
-                  - permit-to-esg-10.5.1.0_24
-                  - permit-to-esg-10.5.2.0_24
-                  - permit-to-application-01
-                  - permit-to-application-02
-                  - permit-to-application-03
-
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
         - name: vrf-01-bgp-AS-64808
+          alias: inside-vrf-to-k8s-nodes
           description: L3out SVI to K8s environment
           vrf: vrf-01
           domain: tech-elevate.vrf-01
           import_route_control_enforcement: false
-          interleak_route_map: floating-L3out-interleak-optimization
           redistribution_route_maps:
             - source: attached-host
               route_map: floating-L3out-redistribution-optimization
+
 # Nodes
           node_profiles:
             - name: border-leafs
               nodes:
-               - node_id: 1101
-                 pod_id: 1
-                 router_id: 110.1.0.0
-                 router_id_as_loopback: false
-                 loopbacks:
-                   - 110.1.0.6
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 110.1.8.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.1.8.12
 
-               - node_id: 1102
-                 pod_id: 1
-                 router_id: 110.2.0.0
-                 router_id_as_loopback: false
-                 loopbacks:
-                   - 110.2.0.6
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 110.2.8.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.2.8.12
 
               bgp:
-               timer_policy: cilium-cni-bgp-timers
-               as_path_policy: cilium-cni-bgp-as-path
+                timer_policy: cilium-cni-bgp-timers
+                as_path_policy: cilium-cni-bgp-as-path
 
+# Interfaces
               interface_profiles:
-               - name: k8s-nodes     
-                 interfaces:
-                   - node_id: 1101                       
-                     mode: regular                       
-                     floating_svi: true
-                     vlan: 54
-                     paths:
-                       - floating_ip: 10.237.97.227/28
-                         physical_domain: tech-elevate.vrf-01
-                     ip: 10.237.97.225/28
-                     ip_shared: 10.237.97.228/28
+                - name: k8s-nodes
+                  interfaces:
+                    - node_id: 1101
+                      mode: regular
+                      floating_svi: true
+                      scope: vrf
+                      vlan: 54
+                      paths:
+                        - floating_ip: 10.237.97.227/28
+                          physical_domain: tech-elevate.vrf-01
+                      ip: 10.237.97.225/28
+                      ip_shared: 10.237.97.228/28
 
-                     bgp_peers:
-                       - ip: 10.237.97.224/28
-                         description: k8s virtual machine nodes via FI
-                         remote_as: 64808
-                         local_as: 64805
-                         allow_self_as: false
-                         as_override: true
-                         disable_peer_as_check: true
-                         next_hop_self: false
-                         send_community: false
-                         send_ext_community: false
-                         allowed_self_as_count: 3
-                         bfd: false
-                         disable_connected_check: false
-                         ttl: 1
-                         remove_all_private_as: false
-                         remove_private_as: false
-                         replace_private_as_with_local_as: false
-                         unicast_address_family: true
-                         multicast_address_family: false
-                         admin_state: true
-                         as_propagate: no-prepend
-                         peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                      bgp_peers:
+                        - ip: 10.237.97.224/28
+                          description: k8s virtual machine nodes via FI
+                          remote_as: 64808
+                          local_as: 64805
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                          # import_route_control: imported-routes
 
-                   - node_id: 1102                       
-                     mode: regular                       
-                     floating_svi: true
-                     vlan: 54
-                     paths:
-                       - floating_ip: 10.237.97.227/28
-                         physical_domain: tech-elevate.vrf-01
-                     ip: 10.237.97.226/28
-                     ip_shared: 10.237.97.228/28      
+                    - node_id: 1102
+                      mode: regular
+                      floating_svi: true
+                      scope: vrf
+                      vlan: 54
+                      paths:
+                        - floating_ip: 10.237.97.227/28
+                          physical_domain: tech-elevate.vrf-01
+                      ip: 10.237.97.226/28
+                      ip_shared: 10.237.97.228/28
 
-                     bgp_peers:
-                       - ip: 10.237.97.224/28
-                         description: k8s virtual machine nodes via FI
-                         remote_as: 64808
-                         local_as: 64805
-                         allow_self_as: false
-                         as_override: true
-                         disable_peer_as_check: true
-                         next_hop_self: false
-                         send_community: false
-                         send_ext_community: false
-                         allowed_self_as_count: 3
-                         bfd: false
-                         disable_connected_check: false
-                         ttl: 1
-                         remove_all_private_as: false
-                         remove_private_as: false
-                         replace_private_as_with_local_as: false
-                         unicast_address_family: true
-                         multicast_address_family: false
-                         admin_state: true
-                         as_propagate: no-prepend
-                         peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                      bgp_peers:
+                        - ip: 10.237.97.224/28
+                          description: k8s virtual machine nodes via FI
+                          remote_as: 64808
+                          local_as: 64805
+                          allow_self_as: false
+                          as_override: true
+                          disable_peer_as_check: true
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: cilium-cni-bgp-prefix-policy
+                          # import_route_control: floating-L3out-optimizations
 
-                 dhcp_labels:
-                   - dhcp_relay_policy: dhcp.uktme.cisco.com
-                     scope: tenant
+                  dhcp_labels:
+                    - dhcp_relay_policy: dhcp.uktme.cisco.com
+                      scope: tenant
 
-# extEPGs
+# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
-            - name: all-k8s-nodes
-              subnets:
-               - prefix: 10.237.97.224/28
-                 shared_security: true
-                 import_security: true
+            - name: dummy-extEPG-for-vrf-01-bgp-AS-64808
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-64808
 
-# Bridge Domains
+# Bridge Domains: Location in GUI: `Tenants` » `XXX` » `Networking` » `Bridge Domains`
       bridge_domains:
         - name: 6.6.6.0_24
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
           subnets:
             - ip: 6.6.6.1/24
 
         - name: 10.5.0.0_24
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
           subnets:
             - ip: 10.5.0.1/24
           dhcp_labels:
@@ -864,7 +900,7 @@ apic:
 
         - name: 10.5.1.0_24
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
           subnets:
             - ip: 10.5.1.1/24
           dhcp_labels:
@@ -873,100 +909,124 @@ apic:
 
         - name: 10.5.2.0_24
           unknown_unicast: proxy
-          vrf: vrf-02
+          vrf: vrf-01
           subnets:
             - ip: 10.5.2.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant
 
-# Application profiles
+# Application profiles: Location in GUI: `Tenants` » `XXX` » `Application Profiles`
       application_profiles:
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'network-segments'
-          description: EPGs provide the VLAN backing for application workloads
-          endpoint_groups:      
+          description: EPGs provide the VLAN backing for application workloads - no contracts are applied to these EPGs
+
+# Application EPGs: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
+          endpoint_groups:
             - name: '10.5.0.0_24'
               bridge_domain: '10.5.0.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1233
+                  secondary_vlan: 1234
 
             - name: '10.5.1.0_24'
               bridge_domain: '10.5.1.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1235
+                  secondary_vlan: 1236
 
             - name: '10.5.2.0_24'
               bridge_domain: '10.5.2.0_24'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
+                  u_segmentation: true
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
+                  primary_vlan: 1237
+                  secondary_vlan: 1238
 
-        - name: 'network-security-groups'
-          description: 'ESGs are used to define security groups' 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: 'epg-security-groups'
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
-            - name: 10.5.0.0_24
-              vrf: vrf-02
+            - name: all-epgs
+              vrf: vrf-01
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: 10.5.0.0_24
-              contracts:
-                providers:
-                  - permit-to-esg-10.5.0.0_24
-
-            - name: 10.5.1.0_24
-              vrf: vrf-02
-              shutdown: false
-              epg_selectors:
-                - application_profile: network-segments
+                - application_profile: 'network-segments'
                   endpoint_group: 10.5.1.0_24
-              contracts:
-                providers:
-                  - permit-to-esg-10.5.1.0_24
-
-            - name: 10.5.2.0_24
-              vrf: vrf-02
-              shutdown: false
-              epg_selectors:
-                - application_profile: network-segments
+                - application_profile: 'network-segments'
                   endpoint_group: 10.5.2.0_24
               contracts:
-                providers:
-                  - permit-to-esg-10.5.2.0_24
+                consumers:
+                  - k8s-applications-permit-to-all-k8s-applications
+                  - epg-security-groups-permit-from-all-epgs
 
-        - name: 'application-01'
-          description: 'ESGs are used to define security groups' 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: 'external-subnets'
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
-            - name: all-application-endpoints
+            - name: all-external-subnets
               vrf: vrf-02
-              ip_subnet_selectors:
-                - value: 10.5.0.10
+              ip_external_subnet_selectors:
+                - ip: 0.0.0.0/1
+                  shared: true
+                - ip: 128.0.0.0/1
+                  shared: true
+              contracts:
+                consumers:
+                  - epg-security-groups-permit-to-all-epgs
+                  - k8s-applications-permit-to-all-k8s-applications
+                  - k8s-nodes-permit-to-all-k8s-nodes
+
+                providers:
+                  - epg-security-groups-permit-from-all-epgs
+                  - k8s-applications-permit-from-all-k8s-applications
+                  - k8s-nodes-permit-from-all-k8s-nodes
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: 'k8s-applications'
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
+          endpoint_security_groups:
+            - name: all-k8s-applications
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.72/29
+                  shared: true
               contracts:
                 providers:
-                  - permit-to-application-01
+                  - k8s-applications-permit-to-all-k8s-applications
 
-        - name: 'application-02'
-          description: 'ESGs are used to define security groups' 
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: 'k8s-nodes'
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
-            - name: all-application-endpoints
-              vrf: vrf-02
-              ip_subnet_selectors:
-                - value: 10.5.1.10
+            - name: all-k8s-nodes
+              vrf: vrf-01
+              ip_external_subnet_selectors:
+                - ip: 10.237.97.224/28
+                  shared: true
               contracts:
                 providers:
-                  - permit-to-application-02
-
-        - name: 'application-03'
-          description: 'ESGs are used to define security groups' 
-          endpoint_security_groups:
-            - name: all-application-endpoints
-              vrf: vrf-02
-              ip_subnet_selectors:
-                - value: 10.5.2.10
-              contracts:
-                providers:
-                  - permit-to-application-03
+                  - k8s-nodes-permit-to-all-k8s-nodes
+                consumers:
+                  - k8s-nodes-permit-from-all-k8s-nodes

@@ -1,11 +1,14 @@
 #
-# This tenant is used for testing different EPG route leaking scenarios. 
+# Tenant ssharman - 10.5.32.0/21 subnets
+# Modelled after tn-tech-elevate/06-increase-contract-security.nac.yaml
+# Uses shared L3out from shared-services (no local L3out)
 #
 ---
 apic:
   tenants:
     - name: ssharman
-      description: 10.237.99.160/28, 10.237.99.176/28
+      description: 10.5.32.0/21
+      managed: true
 
 # Policies
       policies:
@@ -16,7 +19,419 @@ apic:
               - ip: 10.237.97.133
                 type: external_epg
                 tenant: shared-services
-                # l3out: shared-services.vrf-01-ospf-area-0.0.0.1
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-any-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-any-stateful'
+              ethertype: ip
+              protocol: tcp
+              stateful: true
+
+        - name: 'tcp-src-any-dst-22-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-22-stateful'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+
+        - name: 'tcp-src-any-dst-80-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-80-stateful'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+
+        - name: 'tcp-src-any-dst-443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-443-stateful'
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+
+        - name: 'tcp-src-any-dst-6443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-6443-stateful'
+              protocol: tcp
+              destination_from_port: 6443
+              destination_to_port: 6443
+              stateful: true
+
+        - name: 'tcp-src-any-dst-8443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-8443-stateful'
+              protocol: tcp
+              destination_from_port: 8443
+              destination_to_port: 8443
+              stateful: true
+
+        - name: 'udp-src-any-dst-any'
+          entries:
+            - name: 'udp-src-any-dst-any'
+              ethertype: ip
+              protocol: udp
+
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'udp-src-any-dst-123'
+          entries:
+            - name: 'udp-src-any-dst-123'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 123
+              destination_to_port: 123
+
+# Contracts
+      contracts:
+        - name: epg-security-groups-permit-from-all-epgs
+          description: esg-all-epgs is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-53
+                  - filter: udp-src-any-dst-123
+
+        - name: epg-security-groups-permit-intra-all-epgs
+          description: intra epg-security-groups
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: epg-security-groups-permit-to-all-epgs
+          description: esg-all-epgs is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: online-boutique-permit-from-all-online-boutique-endpoints
+          description: online-boutique application is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
+
+        - name: online-boutique-permit-intra-all-online-boutique-endpoints
+          description: intra online-boutique application
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: online-boutique-permit-to-all-online-boutique-endpoints
+          description: online-boutique application is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+
+        - name: siwapp-permit-from-all-siwapp-endpoints
+          description: siwapp application is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                - filter: udp-src-any-dst-53
+                - filter: udp-src-any-dst-123
+
+        - name: siwapp-permit-intra-all-siwapp-endpoints
+          description: intra siwapp application
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+        - name: siwapp-permit-to-all-siwapp-endpoints
+          description: siwapp application is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-80-stateful
+                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+# Imported contracts
+      imported_contracts:
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-from-shared-services-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-from-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf
+          leaked_internal_subnets:
+            - prefix: 10.5.32.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.5.33.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.5.34.0/24
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+          contracts:
+            imported_consumers:
+              - permit-from-shared-services-core-services
+              - permit-to-shared-services-core-services
+              - permit-from-shared-services-lab-desktops
+
+# Bridge Domains
+      bridge_domains:
+        - name: 10.5.32.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.32.1/24
+              public: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.33.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.33.1/24
+              public: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.34.0_24
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.34.1/24
+              public: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+# Application profiles
+      application_profiles:
+        - name: 'network-segments-epgs-and-vlans'
+          description: EPGs provide the VLAN backing for application workloads - no contracts are applied to these EPGs
+          endpoint_groups:
+            - name: '10.5.32.0_24'
+              bridge_domain: '10.5.32.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1239
+                  secondary_vlan: 1240
+
+            - name: '10.5.33.0_24'
+              bridge_domain: '10.5.33.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1241
+                  secondary_vlan: 1242
+
+            - name: '10.5.34.0_24'
+              bridge_domain: '10.5.34.0_24'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+                  u_segmentation: true
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+                  primary_vlan: 1243
+                  secondary_vlan: 1244
+
+        - name: 'epg-security-groups'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: all-epgs
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              epg_selectors:
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.32.0_24
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.33.0_24
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.34.0_24
+              contracts:
+                consumers:
+                  - epg-security-groups-permit-from-all-epgs
+                  - permit-to-shared-services-all-external-subnets
+                providers:
+                  - epg-security-groups-permit-to-all-epgs
+
+        - name: 'siwapp'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: all-siwapp-endpoints
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.49
+                - value: 10.5.32.50
+                - value: 10.5.32.51
+                - value: 10.5.32.52
+                - value: 10.5.32.166
+                - value: 10.5.33.49
+                - value: 10.5.33.50
+                - value: 10.5.33.51
+                - value: 10.5.33.52
+                - value: 10.5.33.166
+                - value: 10.5.34.50
+                - value: 10.5.34.51
+                - value: 10.5.34.52
+              contracts:
+                providers:
+                  - siwapp-permit-to-all-siwapp-endpoints
+                consumers:
+                  - siwapp-permit-from-all-siwapp-endpoints
+                intra_esgs:
+                  - siwapp-permit-intra-all-siwapp-endpoints
+
+        - name: 'online-boutique'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: all-online-boutique-endpoints
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.100
+                - value: 10.5.32.101
+                - value: 10.5.32.102
+                - value: 10.5.32.103
+                - value: 10.5.33.100
+                - value: 10.5.33.101
+                - value: 10.5.33.102
+                - value: 10.5.33.103
+                - value: 10.5.34.100
+                - value: 10.5.34.101
+                - value: 10.5.34.102
+              contracts:
+                providers:
+                  - online-boutique-permit-to-all-online-boutique-endpoints
+                consumers:
+                  - online-boutique-permit-from-all-online-boutique-endpoints
+                intra_esgs:
+                  - online-boutique-permit-intra-all-online-boutique-endpoints
+
+
+# Policies
+      policies:
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 

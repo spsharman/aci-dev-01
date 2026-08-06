@@ -176,16 +176,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters: 
-                  - filter: src-any-dst-22
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-22
             - name: icmp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters:
-                  - filter: 'icmp'
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
 
         - name: permit-from-lab-desktops-extEPG-to-application-01-all-services
           description: lab desktops extEPG (C) application-01-all-services (P)
@@ -193,16 +191,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters: 
-                  - filter: src-any-dst-22
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-any-dst-22
             - name: icmp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters:
-                  - filter: 'icmp'
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
 
         - name: permit-from-application-01-all-services-to-lab-desktops-extEPG
           description: application-01 (C) lab desktops extEPG (C)
@@ -210,16 +206,14 @@ apic:
           subjects:
             - name: tcp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters: 
-                  - filter: src-22-dst-any
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters: 
+                - filter: src-22-dst-any
             - name: icmp
               reverse_filter_ports: false
-              consumer_to_provider:
-                service_graph: ftd-4112-one-arm-L3-mpod-cluster
-                filters:
-                  - filter: 'icmp'
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: 'icmp'
 
 # VRFs
       vrfs:

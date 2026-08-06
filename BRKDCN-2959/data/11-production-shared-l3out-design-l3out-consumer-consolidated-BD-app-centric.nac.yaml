@@ -14,9 +14,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
         - name: permit-from-BRKDCN-2959-application-02-to-lab-desktops
           description: unidirectional contract
@@ -24,9 +23,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
         - name: permit-from-BRKDCN-2959-application-03-to-lab-desktops
           description: unidirectional contract
@@ -34,9 +32,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
       imported_contracts:
         - name: permit-to-BRKDCN-2959-application-01
@@ -95,9 +92,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
         - name: permit-from-shared-services-lab-desktops-to-application-02
           description: unidirectional contract
@@ -105,9 +101,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
         - name: permit-from-shared-services-lab-desktops-to-application-03
           description: unidirectional contract
@@ -115,9 +110,8 @@ apic:
           subjects:
           - name: permit-src-any-dst-any
             reverse_filter_ports: false
-            consumer_to_provider:
-              filters: 
-                - filter: src-any-dst-any
+            filters: 
+              - filter: src-any-dst-any
 
       imported_contracts:
         - name: deny-to-shared-services-all-external-subnets

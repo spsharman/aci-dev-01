@@ -119,6 +119,8 @@ apic:
       - name: isovalent.vrf-02
         vlan_pool: isovalent-nodes
 
+      - name: mgmt-inb.vrf-01
+
       - name: multisite
         vlan_pool: hx-dev-01-vds-02
 

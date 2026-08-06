@@ -1,7 +1,7 @@
 ---
 apic:
   node_policies:
-    inb_endpoint_group: inb
+    inb_endpoint_group: default
     nodes:
 # Pod 1
       - id: 1
@@ -10,9 +10,9 @@ apic:
         name: aci-dev-01-apic-01
         serial_number: FCH2214V0P6
         set_role: false
-        oob_address: 64.103.44.66/27
-        oob_gateway: 64.103.44.65
-        inb_address: 10.237.96.226/29
+        oob_address: 198.18.20.10/24
+        oob_gateway: 198.18.20.1
+        inb_address: 10.237.96.226/28
         inb_gateway: 10.237.96.225
 
       - id: 1201

@@ -109,6 +109,7 @@ apic:
           - BRKDCN-2959.vrf-02
           - isovalent.vrf-01
           - isovalent.vrf-02
+          - mgmt-inb.vrf-01
           - tech-elevate.vrf-01
           - tech-elevate.vrf-02
 
