@@ -34,7 +34,7 @@ apic:
 # Tenants: Location in GUI: `Tenants`
   tenants:
     - name: tech-elevate
-      description: blueprint - v05 enable agentless ADM
+      description: blueprint - v06 add pacman
       managed: true
       security_domains:
         - tech-elevate
