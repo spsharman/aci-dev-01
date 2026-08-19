@@ -22,21 +22,19 @@
 # - Between redirect and permit actions, a more specific protocol and a specific L4 port wins.
 # - Between redirect and permit, and deny + log and deny, if the filters are the same, redirect wins over permit and deny + log wins over deny. If the filter rules have overlapping ports and have the same priority, the priority is not deterministic. The contract-rule configuration should not have conflicting rules of this type if you want the action to be deterministic.
 
-# Description: Build v04 delta from v03.
-# Adds per-application ESGs with tightened contract security for K8s workloads and VM applications.
-# New application profiles and ESGs: k8s-juice-shop, k8s-tomcat, k8s-timescape-ui, siwapp, online-boutique.
-# New specific filters: tcp-src-any-dst-22-stateful, tcp-src-any-dst-80-stateful,
-# tcp-src-any-dst-443-stateful, tcp-src-any-dst-6443-stateful, tcp-src-any-dst-8443-stateful,
-# tcp-src-any-dst-any-stateful, udp-src-any-dst-53, udp-src-any-dst-any.
-# Adds per-application provider/consumer contracts with specific TCP/UDP/ICMP subjects and filters.
-# Optional service graph (smart-switch-east-west) is available on vzAny and intra-ESG contracts.
+# Description: Build v06 delta from v05.
+# Adds the k8s-pacman application profile with a lb-vip ESG (external IP 10.237.99.75/32).
+# Adds contracts: k8s-pacman-permit-from-egress-gw and k8s-pacman-permit-to-lb-vip.
+# Adds k8s-pacman as a consumer to the lb-vip contracts across other k8s application profiles.
+# Enables the ftdv-01-east-west-L7 service graph on the east-west intra-vrf contract.
+# Removes ftdv-01-north-south service graph assignments from inbound north-south contracts.
 ---
 apic:
 
 # Tenants: Location in GUI: `Tenants`
   tenants:
     - name: tech-elevate
-      description: blueprint - v05 add application security groups and contracts
+      description: blueprint - v06 add pacman
       managed: true
       security_domains:
         - tech-elevate
@@ -305,6 +303,30 @@ apic:
             provider:
               direct_connect: true
 
+          - name: ftdv-01-north-south-c2p
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-01-north-south
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: ftdv-01-north-south-p2c
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-01-north-south
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
           - name: ftdv-01-east-west-L7
             template_type: FW_ROUTED
             redirect: true
@@ -329,7 +351,55 @@ apic:
             provider:
               direct_connect: true
 
+          - name: ftdv-02-east-west-c2p
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-02-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: ftdv-02-east-west-p2c
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: ftdv-02-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
           - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: smart-switch-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-east-west-c2p
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: tech-elevate
+              name: smart-switch-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-east-west-p2c
             template_type: FW_ROUTED
             redirect: true
             share_encapsulation: false
@@ -345,6 +415,36 @@ apic:
         device_selection_policies:
           - contract: any
             service_graph_template: ftdv-01-north-south
+            consumer:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-01-north-south-c2p
+            consumer:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-01-north-south
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-01-north-south-p2c
             consumer:
               redirect_policy:
                 name: ftdv-01-north-south
@@ -389,7 +489,67 @@ apic:
                 name: 6.6.6.0_24
 
           - contract: any
+            service_graph_template: ftdv-02-east-west-c2p
+            consumer:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: ftdv-02-east-west-p2c
+            consumer:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-02-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
             service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-east-west-c2p
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-east-west-p2c
             consumer:
               redirect_policy:
                 name: smart-switch-east-west
@@ -422,6 +582,12 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
+        - name: 'tcp-c2p-src-any-dst-any'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-any'
+              ethertype: ip
+              protocol: tcp
+
         - name: 'tcp-c2p-src-any-dst-any-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-any-stateful'
@@ -429,34 +595,175 @@ apic:
               protocol: tcp
               stateful: true
 
+        - name: 'tcp-c2p-src-any-dst-any-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-any-flag-syn'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-any-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-any-flag-est'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-any-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-any-flag-fin'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
+        - name: 'tcp-p2c-src-any-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-any-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
+
+        - name: 'tcp-c2p-src-any-dst-22'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+
         - name: 'tcp-c2p-src-any-dst-22-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-22-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 22
               destination_to_port: 22
               stateful: true
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-syn'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-est'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-fin'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-syn-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-syn-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-est-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-est-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-22-flag-fin-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-22-flag-fin-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+              tcp_rules: fin
+
+        - name: 'tcp-p2c-src-22-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-22-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 22
+              source_to_port: 22
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
+
+        - name: 'tcp-c2p-src-any-dst-80'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 80
+              destination_to_port: 80
 
         - name: 'tcp-c2p-src-any-dst-80-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-80-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 80
               destination_to_port: 80
               stateful: true
-
-        - name: 'tcp-p2c-src-80-dst-any-flag-ack'
-          entries:
-            - name: 'tcp-p2c-src-80-dst-any-flag-ack'
-              protocol: tcp
-              source_from_port: 80
-              source_to_port: 80
-              tcp_rules: ack
 
         - name: 'tcp-c2p-src-any-dst-80-flag-syn'
           entries:
             - name: 'tcp-c2p-src-any-dst-80-flag-syn'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 80
               destination_to_port: 80
               tcp_rules: syn
@@ -465,6 +772,8 @@ apic:
           entries:
             - name: 'tcp-c2p-src-any-dst-80-flag-est'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 80
               destination_to_port: 80
               tcp_rules: est
@@ -473,49 +782,329 @@ apic:
           entries:
             - name: 'tcp-c2p-src-any-dst-80-flag-fin'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 80
               destination_to_port: 80
               tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-syn-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-syn-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-est-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-est-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-fin-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-fin-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+              tcp_rules: fin
+
+        - name: 'tcp-p2c-src-80-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-80-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 80
+              source_to_port: 80
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
 
         - name: 'tcp-c2p-src-any-dst-443-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-443-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 443
               destination_to_port: 443
               stateful: true
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-syn'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-est'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-fin'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-syn-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-syn-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-est-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-est-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-443-flag-fin-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-flag-fin-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+              tcp_rules: fin
+
+        - name: 'tcp-p2c-src-443-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-443-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 443
+              source_to_port: 443
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
 
         - name: 'tcp-c2p-src-any-dst-6443-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-6443-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 6443
               destination_to_port: 6443
               stateful: true
+
 
         - name: 'tcp-c2p-src-any-dst-8080-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-8080-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 8080
               destination_to_port: 8080
               stateful: true
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-syn'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-est'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-fin'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-syn-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-syn-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              stateful: true
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-est-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-est-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              stateful: true
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-8080-flag-fin-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8080-flag-fin-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8080
+              destination_to_port: 8080
+              stateful: true
+              tcp_rules: fin
+
+        - name: 'tcp-p2c-src-8080-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-8080-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 8080
+              source_to_port: 8080
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
 
         - name: 'tcp-c2p-src-any-dst-8099-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-8099-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 8099
               destination_to_port: 8099
               stateful: true
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-syn'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-est'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-fin'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-syn-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-syn-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              stateful: true
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-est-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-est-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              stateful: true
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-8099-flag-fin-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-8099-flag-fin-stateful'
+              protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
+              destination_from_port: 8099
+              destination_to_port: 8099
+              stateful: true
+              tcp_rules: fin
+
+        - name: 'tcp-p2c-src-8099-dst-any-flag-ack'
+          entries:
+            - name: 'tcp-p2c-src-8099-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 8099
+              source_to_port: 8099
+              destination_from_port: unspecified
+              destination_to_port: unspecified
+              tcp_rules: ack
+
 
         - name: 'tcp-c2p-src-any-dst-8443-stateful'
           entries:
             - name: 'tcp-c2p-src-any-dst-8443-stateful'
               protocol: tcp
+              source_from_port: unspecified
+              source_to_port: unspecified
               destination_from_port: 8443
               destination_to_port: 8443
               stateful: true
+
 
         - name: 'udp-src-any-dst-any'
           entries:
@@ -557,7 +1146,7 @@ apic:
               service_graph: smart-switch-east-west # uncomment this line to apply the service graph
               filters:
                 - filter: src-any-dst-any
-                
+
         - name: epg-security-groups-permit-from-all-epgs
           description: esg-all-epgs is the contract Consumer
           scope: tenant
@@ -590,6 +1179,7 @@ apic:
           scope: tenant
           subjects:
             - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
               filters:
                 - filter: tcp-c2p-src-any-dst-22-stateful
                 - filter: tcp-c2p-src-any-dst-80-stateful
@@ -602,8 +1192,9 @@ apic:
               filters:
                 - filter: udp-c2p-src-any-dst-10230
             - name: icmp
+              description: allows inbound icmp from consumer to Provider
               filters:
-                - filter: icmp
+                  - filter: icmp
 
         - name: k8s-nodes-permit-from-all-nodes
           description: k8s nodes is the contract Consumer
@@ -687,6 +1278,35 @@ apic:
                 - filter: tcp-c2p-src-any-dst-80-stateful
                 - filter: tcp-c2p-src-any-dst-443-stateful
 
+        - name: k8s-pacman-permit-from-egress-gw
+          description: k8s applications is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-c2p-src-any-dst-any-stateful
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                - filter: udp-c2p-src-any-dst-53
+                - filter: udp-c2p-src-any-dst-123
+
+        - name: k8s-pacman-permit-to-lb-vip
+          description: k8s applications is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-c2p-src-any-dst-22-stateful
+                - filter: tcp-c2p-src-any-dst-80-stateful
+                - filter: tcp-c2p-src-any-dst-443-stateful
+
         - name: k8s-timescape-ui-permit-from-egress-gw
           description: k8s applications is the contract Consumer
           scope: tenant
@@ -745,51 +1365,170 @@ apic:
                 - filter: tcp-c2p-src-any-dst-80-stateful
                 - filter: tcp-c2p-src-any-dst-443-stateful
 
-        - name: online-boutique-permit-from-all-endpoints
-          description: online-boutique application is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              description: allows outbound stateful tcp from consumer to provider
-              service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
-              filters:
-                - filter: tcp-c2p-src-any-dst-any-stateful
-            - name: icmp
-              description: allows outbound icmp from consumer to provider
-              filters:
-                  - filter: icmp
-            - name: udp
-              description: allows outbound udp from consumer to provider
-              filters:
-                - filter: udp-c2p-src-any-dst-53
-                - filter: udp-c2p-src-any-dst-123
-
         - name: online-boutique-permit-intra-all-endpoints
           description: intra online-boutique application
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
-              service_graph: smart-switch-east-west # uncomment this line to apply the service graph
+              service_graph: ftdv-01-east-west-L7 # uncomment this line to apply the service graph
               filters:
                 - filter: src-any-dst-any
 
-        - name: online-boutique-permit-to-all-endpoints
-          description: online-boutique application is the contract Provider
+# These rules create a contract/filter overlap condition resulting in traffic being erroneously redirected to a firewall when a service graph is applied to the FROM contract. 
+        - name: online-boutique-permit-from-all-endpoints-icmp-udp
+          description: online-boutique all-endpoints is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: icmp
+              description: allows icmp from/to all-endpoints
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows udp from/to all-endpoints
+              filters:
+                - filter: udp-c2p-src-any-dst-53
+                - filter: udp-c2p-src-any-dst-123
+##
+        - name: online-boutique-permit-to-all-endpoints-restricted-tcp-flags
+          description: online-boutique all-endpoints is the contract Provider
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
-              service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
-              filters:
-                - filter: tcp-c2p-src-any-dst-22-stateful
-                - filter: tcp-c2p-src-any-dst-80-stateful
-                - filter: tcp-c2p-src-any-dst-443-stateful
-                - filter: tcp-c2p-src-any-dst-8080-stateful
-                - filter: tcp-c2p-src-any-dst-8099-stateful
-            - name: icmp
-              description: allows inbound icmp from consumer to provider
-              filters:
-                  - filter: icmp
+              description: allows inbound to the ESG tracking tcp syn, est, fin flags, and outbound from the ESG tracking tcp ack flag
+              consumer_to_provider:
+                filters:
+                  # - filter: tcp-c2p-src-any-dst-22-flag-syn
+                  # - filter: tcp-c2p-src-any-dst-22-flag-est
+                  # - filter: tcp-c2p-src-any-dst-22-flag-fin
+                  - filter: tcp-c2p-src-any-dst-80-flag-syn
+                  - filter: tcp-c2p-src-any-dst-80-flag-est
+                  - filter: tcp-c2p-src-any-dst-80-flag-fin
+                  # - filter: tcp-c2p-src-any-dst-443-flag-syn
+                  # - filter: tcp-c2p-src-any-dst-443-flag-est
+                  # - filter: tcp-c2p-src-any-dst-443-flag-fin
+                  # - filter: tcp-c2p-src-any-dst-8080-flag-syn
+                  # - filter: tcp-c2p-src-any-dst-8080-flag-est
+                  # - filter: tcp-c2p-src-any-dst-8080-flag-fin
+                  # - filter: tcp-c2p-src-any-dst-8099-flag-syn
+                  # - filter: tcp-c2p-src-any-dst-8099-flag-est
+                  # - filter: tcp-c2p-src-any-dst-8099-flag-fin
+
+        - name: online-boutique-permit-from-all-endpoints-restricted-tcp-ack
+          description: online-boutique all-endpoints is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound to the ESG tracking tcp syn, est, fin flags, and outbound from the ESG tracking tcp ack flag
+              consumer_to_provider:
+                filters:
+                  # - filter: tcp-p2c-src-22-dst-any-flag-ack
+                  - filter: tcp-p2c-src-80-dst-any-flag-ack
+                  # - filter: tcp-p2c-src-443-dst-any-flag-ack
+                  # - filter: tcp-p2c-src-8080-dst-any-flag-ack
+                  # - filter: tcp-p2c-src-8099-dst-any-flag-ack
+
+        - name: online-boutique-permit-to-all-endpoints-unrestricted-tcp-ack
+          description: online-boutique all-endpoints is the contract Provider
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound to the ESG tracking tcp syn, est, fin flags, and outbound from the ESG tracking tcp ack flag
+              consumer_to_provider:
+                filters:
+                  - filter: tcp-c2p-src-any-dst-any-flag-ack
+
+        - name: online-boutique-permit-from-all-endpoints-unrestricted-tcp-flags
+          description: online-boutique all-endpoints is the contract Consumer
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound to the ESG tracking tcp syn, est, fin flags, and outbound from the ESG tracking tcp ack flag
+              consumer_to_provider:
+                filters:
+                  - filter: tcp-c2p-src-any-dst-any-flag-syn
+                  - filter: tcp-c2p-src-any-dst-any-flag-est
+                  - filter: tcp-c2p-src-any-dst-any-flag-fin
+##
+        # - name: online-boutique-permit-to-all-endpoints-tcp-flags
+        #   description: online-boutique all-endpoints is the contract Provider
+        #   scope: tenant
+        #   subjects:
+        #     - name: tcp
+        #       description: allows inbound to the ESG tracking tcp syn, est, fin flags, and outbound from the ESG tracking tcp ack flag
+        #       consumer_to_provider:
+        #         filters:
+        #           - filter: tcp-c2p-src-any-dst-22-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-22-flag-est
+        #           - filter: tcp-c2p-src-any-dst-22-flag-fin
+        #           - filter: tcp-c2p-src-any-dst-80-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-80-flag-est
+        #           - filter: tcp-c2p-src-any-dst-80-flag-fin
+        #           - filter: tcp-c2p-src-any-dst-443-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-443-flag-est
+        #           - filter: tcp-c2p-src-any-dst-443-flag-fin
+        #           - filter: tcp-c2p-src-any-dst-8080-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-8080-flag-est
+        #           - filter: tcp-c2p-src-any-dst-8080-flag-fin
+        #           - filter: tcp-c2p-src-any-dst-8099-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-8099-flag-est
+        #           - filter: tcp-c2p-src-any-dst-8099-flag-fin
+        #       provider_to_consumer:
+        #         filters:
+        #           - filter: tcp-p2c-src-22-dst-any-flag-ack
+        #           - filter: tcp-p2c-src-80-dst-any-flag-ack
+        #           - filter: tcp-p2c-src-443-dst-any-flag-ack
+        #           - filter: tcp-p2c-src-8080-dst-any-flag-ack
+        #           - filter: tcp-p2c-src-8099-dst-any-flag-ack
+
+
+        # - name: online-boutique-permit-from-all-endpoints-tcp-flags
+        #   description: online-boutique all-endpoints is the contract Consumer
+        #   scope: tenant
+        #   subjects:
+        #     - name: tcp
+        #       description: allows outbound from the ESG tracking tcp syn, est, fin flags, and inbound from the ESG tracking tcp ack flag
+        #       consumer_to_provider:
+        #         filters:
+        #           - filter: tcp-c2p-src-any-dst-any-flag-syn
+        #           - filter: tcp-c2p-src-any-dst-any-flag-est
+        #           - filter: tcp-c2p-src-any-dst-any-flag-fin
+        #       provider_to_consumer:
+        #         filters:
+        #           - filter: tcp-p2c-src-any-dst-any-flag-ack
+
+# requires service graph in both directions
+        # - name: online-boutique-permit-to-all-endpoints-tcp-flags
+        #   description: online-boutique all-endpoints is the contract Provider
+        #   scope: tenant
+        #   subjects:
+        #     - name: tcp
+        #       description: allows inbound to the ESG tracking tcp syn, est, fin flags, with stateful to track incoming ack
+        #       filters:
+        #         - filter: tcp-c2p-src-any-dst-22-flag-syn-stateful
+        #         - filter: tcp-c2p-src-any-dst-22-flag-est-stateful
+        #         - filter: tcp-c2p-src-any-dst-22-flag-fin-stateful
+        #         - filter: tcp-c2p-src-any-dst-80-flag-syn-stateful
+        #         - filter: tcp-c2p-src-any-dst-80-flag-est-stateful
+        #         - filter: tcp-c2p-src-any-dst-80-flag-fin-stateful
+        #         - filter: tcp-c2p-src-any-dst-443-flag-syn-stateful
+        #         - filter: tcp-c2p-src-any-dst-443-flag-est-stateful
+        #         - filter: tcp-c2p-src-any-dst-443-flag-fin-stateful
+        #         - filter: tcp-c2p-src-any-dst-8080-flag-syn-stateful
+        #         - filter: tcp-c2p-src-any-dst-8080-flag-est-stateful
+        #         - filter: tcp-c2p-src-any-dst-8080-flag-fin-stateful
+        #         - filter: tcp-c2p-src-any-dst-8099-flag-syn-stateful
+        #         - filter: tcp-c2p-src-any-dst-8099-flag-est-stateful
+        #         - filter: tcp-c2p-src-any-dst-8099-flag-fin-stateful
+
+        # - name: online-boutique-permit-from-all-endpoints-tcp-flags
+        #   description: online-boutique all-endpoints is the contract Consumer
+        #   scope: tenant
+        #   subjects:
+        #     - name: tcp
+        #       description: allows outbound from the ESG with stateful to track incoming ack
+        #       filters:
+        #         - filter: tcp-c2p-src-any-dst-any-stateful
+
 
         - name: siwapp-permit-from-all-endpoints
           description: siwapp application is the contract Consumer
@@ -797,7 +1536,6 @@ apic:
           subjects:
             - name: tcp
               description: allows outbound stateful tcp from consumer to provider
-              service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
               filters:
                 - filter: tcp-c2p-src-any-dst-any-stateful
             - name: icmp
@@ -825,7 +1563,6 @@ apic:
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
-              service_graph: ftdv-01-north-south # uncomment this line to apply the service graph
               filters:
                 - filter: tcp-c2p-src-any-dst-22-stateful
                 - filter: tcp-c2p-src-any-dst-80-stateful
@@ -838,6 +1575,9 @@ apic:
               description: allows inbound udp from consumer to provider
               filters:
                   - filter: udp-src-any-dst-any
+
+
+
 
 # VRFs: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
@@ -1354,6 +2094,7 @@ apic:
           endpoint_security_groups:
             - name: all-epgs
               vrf: vrf-01
+              deployment_immediacy: immediate
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: 10.5.0.0_24
@@ -1388,16 +2129,32 @@ apic:
                   - k8s-applications-permit-to-all-applications
                   - k8s-juice-shop-permit-to-lb-vip
                   - k8s-nodes-permit-to-all-nodes
+                  - k8s-pacman-permit-to-lb-vip
                   - k8s-timescape-ui-permit-to-lb-vip
                   - k8s-tomcat-permit-to-lb-vip
-                  - online-boutique-permit-to-all-endpoints
-                  - siwapp-permit-to-all-endpoints
+                  # - online-boutique-permit-to-all-endpoints-tcp-flags-syn-est-fin  # inbound to app - this is working
+                  # - online-boutique-permit-to-all-endpoints-tcp-flags-ack # inbound reflexive to app - this is working
+                  # - online-boutique-permit-to-all-endpoints-tcp-flags
 
+                  - online-boutique-permit-to-all-endpoints-restricted-tcp-flags # inbound to app on restricted ports
+
+                  - online-boutique-permit-to-all-endpoints-unrestricted-tcp-ack
+
+                  - siwapp-permit-to-all-endpoints
                 providers:
                   - epg-security-groups-permit-from-all-epgs
                   - k8s-applications-permit-from-all-applications
                   - k8s-nodes-permit-from-all-nodes
-                  - online-boutique-permit-from-all-endpoints
+                  - online-boutique-permit-from-all-endpoints-icmp-udp # outbound from app - this is working
+
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags  # outbound from app
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags-ack # outbound from app - this is working
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags-syn-est-fin  # outbound reflexive from app
+
+                  - online-boutique-permit-from-all-endpoints-restricted-tcp-ack # reflexive from app on restricted ports
+
+                  - online-boutique-permit-from-all-endpoints-unrestricted-tcp-flags # outbound from app on unrestricted ports
+
                   - siwapp-permit-from-all-endpoints
 
 # Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
@@ -1433,6 +2190,22 @@ apic:
               contracts:
                 providers:
                   - k8s-juice-shop-permit-to-lb-vip
+
+# Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
+        - name: 'k8s-pacman'
+          description: 'ESGs are used to define security groups'
+
+# Endpoint Security Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
+          endpoint_security_groups:
+            - name: lb-vip
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.99.75/32
+                  shared: true
+              contracts:
+                providers:
+                  - k8s-pacman-permit-to-lb-vip
 
 # Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-tomcat'
@@ -1494,20 +2267,20 @@ apic:
             - name: all-siwapp-endpoints
               vrf: vrf-01
               deployment_immediacy: immediate
-              # ip_subnet_selectors: # uncomment the following lines to use the IP addresses of the siwapp application endpoints
-              #   - value: 10.5.0.49
-              #   - value: 10.5.0.50
-              #   - value: 10.5.0.51
-              #   - value: 10.5.0.52
-              #   - value: 10.5.0.166
-              #   - value: 10.5.1.49
-              #   - value: 10.5.1.50
-              #   - value: 10.5.1.51
-              #   - value: 10.5.1.52
-              #   - value: 10.5.1.166
-              #   - value: 10.5.2.50
-              #   - value: 10.5.2.51
-              #   - value: 10.5.2.52
+              ip_subnet_selectors:
+                - value: 10.5.0.49
+                - value: 10.5.0.50
+                - value: 10.5.0.51
+                - value: 10.5.0.52
+                - value: 10.5.0.166
+                - value: 10.5.1.49
+                - value: 10.5.1.50
+                - value: 10.5.1.51
+                - value: 10.5.1.52
+                - value: 10.5.1.166
+                - value: 10.5.2.50
+                - value: 10.5.2.51
+                - value: 10.5.2.52
               contracts:
                 providers:
                   - siwapp-permit-to-all-endpoints
@@ -1526,23 +2299,43 @@ apic:
             - name: all-online-boutique-endpoints
               vrf: vrf-01
               deployment_immediacy: immediate
-              # ip_subnet_selectors: # uncomment the following lines to use the IP addresses of the online-boutique application endpoints
-              #   - value: 10.5.0.100
-              #   - value: 10.5.0.101
-              #   - value: 10.5.0.102
-              #   - value: 10.5.0.103
-              #   - value: 10.5.1.100
-              #   - value: 10.5.1.101
-              #   - value: 10.5.1.102
-              #   - value: 10.5.1.103
-              #   - value: 10.5.2.45
-              #   - value: 10.5.2.100
-              #   - value: 10.5.2.101
-              #   - value: 10.5.2.102
+              ip_subnet_selectors:
+                - value: 10.5.0.100
+                - value: 10.5.0.101
+                - value: 10.5.0.102
+                - value: 10.5.0.103
+                - value: 10.5.1.100
+                - value: 10.5.1.101
+                - value: 10.5.1.102
+                - value: 10.5.1.103
+                - value: 10.5.2.100
+                - value: 10.5.2.101
+                - value: 10.5.2.102
               contracts:
-                providers:
-                  - online-boutique-permit-to-all-endpoints
                 consumers:
-                  - online-boutique-permit-from-all-endpoints
+                  - online-boutique-permit-from-all-endpoints-icmp-udp # outbound from app
+
+                  - online-boutique-permit-from-all-endpoints-restricted-tcp-ack # reflexive from app on restricted ports
+
+                  - online-boutique-permit-from-all-endpoints-unrestricted-tcp-flags # outbound from app on unrestricted ports
+
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags-syn-est-fin  # outbound from app - this is working
+                  # - online-boutique-permit-from-all-endpoints-tcp-flags-ack # outbound reflexive from app - this is working
+                providers:
+                  - online-boutique-permit-to-all-endpoints-restricted-tcp-flags # inbound to app on restricted ports
+
+                  - online-boutique-permit-to-all-endpoints-unrestricted-tcp-ack # reflexive to app on unrestricted ports
+                  
+                  # - online-boutique-permit-to-all-endpoints-tcp-flags
+                  # - online-boutique-permit-to-all-endpoints-restricted-tcp-flags-syn-est-fin  # inbound to app - this is working
+                  # - online-boutique-permit-to-all-endpoints-tcp-flags-ack # inbound reflexive to app - this is working
                 intra_esgs:
                   - online-boutique-permit-intra-all-endpoints
+
+
+# - online-boutique-permit-from-all-endpoints-tcp-flags-syn-est-fin  # outbound from app
+# - online-boutique-permit-to-all-endpoints-tcp-flags-ack # inbound to app
+
+# - online-boutique-permit-to-all-endpoints-tcp-flags-syn-est-fin  # inbound to app
+# - online-boutique-permit-from-all-endpoints-tcp-flags-ack # outbound from app

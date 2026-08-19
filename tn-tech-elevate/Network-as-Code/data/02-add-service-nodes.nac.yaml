@@ -1102,6 +1102,7 @@ apic:
               contracts:
                 consumers:
                   - k8s-applications-permit-to-all-k8s-applications
+                  - epg-security-groups-permit-from-all-epgs
                 providers:
                   - epg-security-groups-permit-to-all-epgs
 
@@ -1127,6 +1128,7 @@ apic:
                 providers:
                   - k8s-applications-permit-from-all-k8s-applications
                   - k8s-nodes-permit-from-all-k8s-nodes
+                  - epg-security-groups-permit-from-all-epgs
 
 # Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-applications'

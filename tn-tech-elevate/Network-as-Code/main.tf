@@ -25,7 +25,15 @@ module "aci" {
   # yaml_files = ["data/03-add-east-west-smart-switch-to-vzAny-and-esg-all-epgs.nac.yaml"]
   # yaml_files = ["data/04-application-security-groups.nac.yaml"]
   # yaml_files = ["data/05-stateless-adm.nac.yaml"]
-  yaml_files = ["data/06-add-pacman.nac.yaml"]
+  # yaml_files = ["data/06-add-pacman.nac.yaml"]
+
+
+  # yaml_files = ["data-simplified-contract-names/02-add-service-nodes.nac.yaml"]
+  # yaml_files = ["data-simplified-contract-names/03-add-east-west-smart-switch-to-vzAny-and-esg-all-epgs.nac.yaml"]  
+  # yaml_files = ["data-simplified-contract-names/06-add-pacman.nac.yaml"]
+  yaml_files = ["data-simplified-contract-names/07-contract-testing.nac.yaml"]
+
+
   # yaml_files = ["data/07-add-eve.nac.yaml"]
   # yaml_files = ["data/08-add-application-esgs-and-contracts.nac.yaml"]
   # yaml_files = ["data/09-add-intra-application-contracts.nac.yaml"]

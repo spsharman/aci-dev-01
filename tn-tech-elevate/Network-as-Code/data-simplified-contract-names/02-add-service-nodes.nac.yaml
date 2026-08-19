@@ -407,64 +407,96 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
-        - name: 'tcp-src-any-dst-any-stateful'
+        - name: 'tcp-c2p-src-any-dst-any-stateful'
           entries:
-            - name: 'tcp-src-any-dst-any-stateful'
+            - name: 'tcp-c2p-src-any-dst-any-stateful'
               ethertype: ip
               protocol: tcp
               stateful: true
 
-        - name: 'tcp-src-any-dst-22-stateful'
+        - name: 'tcp-c2p-src-any-dst-22-stateful'
           entries:
-            - name: 'tcp-src-any-dst-22-stateful'
+            - name: 'tcp-c2p-src-any-dst-22-stateful'
               protocol: tcp
               destination_from_port: 22
               destination_to_port: 22
               stateful: true
 
-        - name: 'tcp-src-any-dst-80-stateful'
+        - name: 'tcp-c2p-src-any-dst-80-stateful'
           entries:
-            - name: 'tcp-src-any-dst-80-stateful'
+            - name: 'tcp-c2p-src-any-dst-80-stateful'
               protocol: tcp
               destination_from_port: 80
               destination_to_port: 80
               stateful: true
 
-        - name: 'tcp-src-any-dst-443-stateful'
+        - name: 'tcp-p2c-src-80-dst-any-flag-ack'
           entries:
-            - name: 'tcp-src-any-dst-443-stateful'
+            - name: 'tcp-p2c-src-80-dst-any-flag-ack'
+              protocol: tcp
+              source_from_port: 80
+              source_to_port: 80
+              tcp_rules: ack
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-syn'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-syn'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              tcp_rules: syn
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-est'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-est'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              tcp_rules: est
+
+        - name: 'tcp-c2p-src-any-dst-80-flag-fin'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-80-flag-fin'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              tcp_rules: fin
+
+        - name: 'tcp-c2p-src-any-dst-443-stateful'
+          entries:
+            - name: 'tcp-c2p-src-any-dst-443-stateful'
               protocol: tcp
               destination_from_port: 443
               destination_to_port: 443
               stateful: true
 
-        - name: 'tcp-src-any-dst-6443-stateful'
+        - name: 'tcp-c2p-src-any-dst-6443-stateful'
           entries:
-            - name: 'tcp-src-any-dst-6443-stateful'
+            - name: 'tcp-c2p-src-any-dst-6443-stateful'
               protocol: tcp
               destination_from_port: 6443
               destination_to_port: 6443
               stateful: true
 
-        - name: 'tcp-src-any-dst-8080-stateful'
+        - name: 'tcp-c2p-src-any-dst-8080-stateful'
           entries:
-            - name: 'tcp-src-any-dst-8080-stateful'
+            - name: 'tcp-c2p-src-any-dst-8080-stateful'
               protocol: tcp
               destination_from_port: 8080
               destination_to_port: 8080
               stateful: true
 
-        - name: 'tcp-src-any-dst-8099-stateful'
+        - name: 'tcp-c2p-src-any-dst-8099-stateful'
           entries:
-            - name: 'tcp-src-any-dst-8099-stateful'
+            - name: 'tcp-c2p-src-any-dst-8099-stateful'
               protocol: tcp
               destination_from_port: 8099
               destination_to_port: 8099
               stateful: true
 
-        - name: 'tcp-src-any-dst-8443-stateful'
+        - name: 'tcp-c2p-src-any-dst-8443-stateful'
           entries:
-            - name: 'tcp-src-any-dst-8443-stateful'
+            - name: 'tcp-c2p-src-any-dst-8443-stateful'
               protocol: tcp
               destination_from_port: 8443
               destination_to_port: 8443
@@ -476,25 +508,25 @@ apic:
               ethertype: ip
               protocol: udp
 
-        - name: 'udp-src-any-dst-53'
+        - name: 'udp-c2p-src-any-dst-53'
           entries:
-            - name: 'udp-src-any-dst-53'
+            - name: 'udp-c2p-src-any-dst-53'
               ethertype: ip
               protocol: udp
               destination_from_port: 53
               destination_to_port: 53
 
-        - name: 'udp-src-any-dst-123'
+        - name: 'udp-c2p-src-any-dst-123'
           entries:
-            - name: 'udp-src-any-dst-123'
+            - name: 'udp-c2p-src-any-dst-123'
               ethertype: ip
               protocol: udp
               destination_from_port: 123
               destination_to_port: 123
 
-        - name: 'udp-src-any-dst-10230'
+        - name: 'udp-c2p-src-any-dst-10230'
           entries:
-            - name: 'udp-src-any-dst-10230'
+            - name: 'udp-c2p-src-any-dst-10230'
               ethertype: ip
               protocol: udp
               destination_from_port: 10230
@@ -516,11 +548,11 @@ apic:
           subjects:
             - name: tcp
               filters:
-                - filter: tcp-src-any-dst-any-stateful
+                - filter: tcp-c2p-src-any-dst-any-stateful
             - name: udp
               filters:
-                - filter: udp-src-any-dst-53
-                - filter: udp-src-any-dst-123                
+                - filter: udp-c2p-src-any-dst-53
+                - filter: udp-c2p-src-any-dst-123                
             - name: icmp
               filters:
                 - filter: icmp
@@ -531,16 +563,16 @@ apic:
           subjects:
             - name: tcp
               filters:
-                - filter: tcp-src-any-dst-22-stateful
-                - filter: tcp-src-any-dst-80-stateful
-                - filter: tcp-src-any-dst-443-stateful
-                - filter: tcp-src-any-dst-6443-stateful
-                - filter: tcp-src-any-dst-8080-stateful
-                - filter: tcp-src-any-dst-8099-stateful
-                - filter: tcp-src-any-dst-8443-stateful
+                - filter: tcp-c2p-src-any-dst-22-stateful
+                - filter: tcp-c2p-src-any-dst-80-stateful
+                - filter: tcp-c2p-src-any-dst-443-stateful
+                - filter: tcp-c2p-src-any-dst-6443-stateful
+                - filter: tcp-c2p-src-any-dst-8080-stateful
+                - filter: tcp-c2p-src-any-dst-8099-stateful
+                - filter: tcp-c2p-src-any-dst-8443-stateful
             - name: udp
               filters:
-                - filter: udp-src-any-dst-10230
+                - filter: udp-c2p-src-any-dst-10230
             - name: icmp
               filters:
                 - filter: icmp
@@ -1102,6 +1134,7 @@ apic:
               contracts:
                 consumers:
                   - k8s-applications-permit-to-all-applications
+                  - epg-security-groups-permit-from-all-epgs
                 providers:
                   - epg-security-groups-permit-to-all-epgs
 
@@ -1127,6 +1160,7 @@ apic:
                 providers:
                   - k8s-applications-permit-from-all-applications
                   - k8s-nodes-permit-from-all-nodes
+                  - epg-security-groups-permit-from-all-epgs
 
 # Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'k8s-applications'
