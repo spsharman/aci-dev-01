@@ -754,16 +754,6 @@ apic:
             name: export-subnets
             type: combinable
             contexts:
-              - name: permit-10.237.101.0_27
-                order: 0
-                action: permit
-                match_rules:
-                  - match-10.237.101.0_27
-              - name: permit-10.237.101.32_27
-                order: 1
-                action: permit
-                match_rules:
-                  - match-10.237.101.32_27
               - name: permit-172.16.10.0_24
                 order: 2
                 action: permit
@@ -1090,11 +1080,11 @@ apic:
                   - permit-to-all-external-subnets
                   - stateful-testing-permit-from-test-esg
 
-                imported_consumers:
-                  - permit-to-tn-isovalent-egress-subnet
-                  - permit-to-tn-isovalent-ingress-subnet-cluster-1
-                  - permit-to-tn-isovalent-ingress-subnet-cluster-2
-                  - permit-to-tn-isovalent-node-subnet
+                # imported_consumers:
+                #   - permit-to-tn-isovalent-egress-subnet
+                #   - permit-to-tn-isovalent-ingress-subnet-cluster-1
+                #   - permit-to-tn-isovalent-ingress-subnet-cluster-2
+                #   - permit-to-tn-isovalent-node-subnet
                   # - permit-to-tn-BRKDCN-2959-DMZ-all-dmz-subnets
 
             - name: core-services-subnets

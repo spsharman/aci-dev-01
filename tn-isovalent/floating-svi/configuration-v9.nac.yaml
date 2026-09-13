@@ -141,6 +141,56 @@ apic:
                 aggregate: true
                 to_length: 0
 
+          - name: match-bridge-domain-subnets
+            description: match all bridge domain subnets
+            prefixes:
+              - ip: 10.237.101.96/28
+                aggregate: false
+              - ip: 10.237.101.144/28
+                aggregate: false
+
+          - name: match-isovalent-supernet
+            description: match isovalent address space
+            prefixes:
+              - ip: 10.100.0.0/23
+                aggregate: true
+
+          - name: match-k8s-node-subnet
+            description: match all k8s node subnet
+            prefixes:
+              - ip: 10.237.101.0/27
+                aggregate: false
+
+          - name: match-k8s-egress-subnet-cluster-1
+            description: match all k8s egress subnet cluster 1
+            prefixes:
+              - ip: 10.237.101.48/28
+                aggregate: true
+
+          - name: match-k8s-egress-subnet-cluster-2
+            description: match all k8s egress subnet cluster 2
+            prefixes:
+              - ip: 10.237.101.120/29
+                aggregate: true
+
+          - name: match-k8s-ingress-subnet-cluster-1
+            description: match all k8s ingress subnet cluster 1
+            prefixes:
+              - ip: 10.237.101.32/28
+                aggregate: true
+
+          - name: match-k8s-ingress-subnet-cluster-2
+            description: match all k8s ingress subnet cluster 2
+            prefixes:
+              - ip: 10.237.101.112/29
+                aggregate: true
+
+          - name: match-k8s-ilb-vip-subnet
+            description: match all k8s ilb vip subnet
+            prefixes:
+              - ip: 10.237.101.128/29
+                aggregate: true
+
         ospf_interface_policies:
           - name: OSPF_p2p
             passive_interface: false
@@ -240,6 +290,11 @@ apic:
             - name: 'icmp'
               protocol: icmp
 
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
         - name: 'ipv4-src-any-dst-any'
           entries:
             - name: 'ipv4-src-any-dst-any'
@@ -251,12 +306,77 @@ apic:
               protocol: tcp
               destination_to_port: unspecified
 
+# TCP
+        - name: 'tcp-src-22-dst-any'
+          entries:
+            - name: 'tcp-src-22-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 22
+              source_to_port: 22
+
+        - name: 'tcp-src-any-dst-any-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-any-stateful'
+              ethertype: ip
+              protocol: tcp
+              stateful: true
+
+        - name: 'tcp-src-any-dst-22-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-22-stateful'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+
+        - name: 'tcp-src-80-dst-any'
+          entries:
+            - name: 'tcp-src-80-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 80
+              source_to_port: 80
+
+        - name: 'tcp-src-443-dst-any'
+          entries:
+            - name: 'tcp-src-443-dst-any'
+              ethertype: ipv4
+              protocol: tcp
+              source_from_port: 443
+              source_to_port: 443
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-53'
+          entries:
+            - name: 'tcp-src-any-dst-53'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 53
+              destination_to_port: 53
+
         - name: 'tcp-src-any-dst-80'
           entries:
             - name: 'tcp-src-any-dst-80'
+              ethertype: ipv4
               protocol: tcp
               destination_from_port: 80
               destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
 
         - name: 'tcp-src-any-dst-4240'
           entries:
@@ -286,6 +406,55 @@ apic:
               destination_from_port: 19765
               destination_to_port: 19765
 
+# UDP
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'udp-src-any-dst-67'
+          entries:
+            - name: 'udp-src-any-dst-67'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 67
+              destination_to_port: 67
+
+        - name: udp-src-68-dst-any
+          entries:
+            - name: udp-src-68-dst-any
+              ethertype: ipv4
+              protocol: udp
+              source_from_port: 68
+              source_to_port: 68
+
+        - name: 'udp-src-any-dst-514'
+          entries:
+            - name: 'udp-src-any-dst-514'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 514
+              destination_to_port: 514
+
+        - name: 'udp-src-any-dst-123'
+          entries:
+            - name: 'udp-src-any-dst-123'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 123
+              destination_to_port: 123
+
+        - name: 'udp-src-any-dst-5140'
+          entries:
+            - name: 'udp-src-any-dst-5140'
+              ethertype: ipv4
+              protocol: udp
+              destination_from_port: 5140
+              destination_to_port: 5140
+
         - name: udp-src-any-dst-any
           entries:
             - name: udp-src-any-dst-any
@@ -301,36 +470,55 @@ apic:
               filters: 
                 - filter: ipv4-src-any-dst-any
 
+        - name: permit-to-all-external-subnets
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters: 
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
         - name: permit-to-egress-subnet
-          scope: global
+          scope: tenant
           subjects:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
 
         - name: permit-to-ingress-subnet-cluster-1
-          scope: global
+          scope: tenant
           subjects:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
 
         - name: permit-to-ingress-subnet-cluster-2
-          scope: global
+          scope: tenant
           subjects:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
 
         - name: permit-to-ilb-vip-subnet
-          scope: global
+          scope: tenant
           subjects:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
 
         - name: permit-to-node-subnet
-          scope: global
+          scope: tenant
           subjects:
             - name: permit-ipv4-src-any-dst-any
               filters: 
@@ -376,23 +564,118 @@ apic:
               filters:
                 - filter: icmp
 
-# Imported contracts
-      imported_contracts:
-        - name: permit-to-shared-services-all-external-subnets
-          tenant: shared-services
-          contract: permit-to-all-external-subnets
+        - name: permit-from-core-services
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-22-dst-any'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+                - filter: 'tcp-src-443-dst-any'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
 
-        - name: permit-from-shared-services-core-services
-          tenant: shared-services
-          contract: permit-from-core-services
+            - name: udp
+              filters:
+                - filter: 'udp-src-68-dst-any'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
 
-        - name: permit-to-shared-services-core-services
-          tenant: shared-services
-          contract: permit-to-core-services
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
 
-        - name: permit-from-shared-services-lab-desktops
-          tenant: shared-services
-          contract: permit-from-lab-desktops
+        - name: permit-to-core-services
+          scope: tenant
+          subjects:
+            - name: tcp
+              filters:
+                - filter: 'tcp-src-any-dst-22'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+                - filter: 'tcp-src-any-dst-80'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+                - filter: 'tcp-src-any-dst-443'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: udp
+              filters:
+                - filter: 'udp-src-any-dst-53'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+                - filter: 'udp-src-any-dst-67'
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+        - name: permit-from-lab-desktops
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+        - name: permit-to-lab-desktops
+          scope: tenant
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
+
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
+                  priority: default
+                  log: false
+                  no_stats: false
 
 # VRFs
       vrfs:
@@ -402,17 +685,76 @@ apic:
           contracts:
             # providers: 
             #   - intra-tenant
-            # consumers:
-            #   - intra-tenant
-            imported_consumers:
-              - permit-to-shared-services-all-external-subnets
-              - permit-from-shared-services-core-services
-              - permit-to-shared-services-core-services
-              - permit-from-shared-services-lab-desktops
-        
+            consumers:
+              # - intra-tenant
+              - permit-to-all-external-subnets
+              - permit-from-core-services
+              - permit-to-core-services
+              - permit-to-lab-desktops
+
+          leaked_internal_subnets:
+            - prefix: 10.237.101.96/28
+              public: true
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.144/28
+              public: true
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+          leaked_external_prefixes:
+            - prefix: 10.100.0.0/23
+              # from_prefix_length: 32
+              # to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.0/27
+              # from_prefix_length: 32
+              # to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.32/28
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.48/28
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.112/29
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.120/29
+              from_prefix_length: 32
+              to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+            - prefix: 10.237.101.128/29
+              # from_prefix_length: 32
+              # to_prefix_length: 32
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-02
+
         - name: vrf-02
           description: configured with NAC
           alias: external-vrf
+          leaked_external_prefixes:
+            - prefix: 0.0.0.0/0
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-01
 
 # L3Outs
       l3outs:
@@ -713,278 +1055,41 @@ apic:
                       ip: 10.100.4.6/23
                       ip_shared: 10.100.4.10/23
 
-                    # - node_id: 2103                                           
-                    #   floating_svi: true
-                    #   pod_id: 2
-                    #   vlan: 52
-                    #   paths:
-                    #     - floating_ip: 10.100.0.9/23
-                    #       physical_domain: isovalent-nodes
-                    #   ip: 10.100.0.7/23
-                    #   ip_shared: 10.100.0.10/23
-                    #   bgp_peers:
-                    #     - ip: 10.100.0.0/23
-                    #       description: k8s bare metal nodes on leaf 2103
-                    #       remote_as: 65252
-                    #       local_as: 65151
-                    #       allow_self_as: false
-                    #       as_override: true
-                    #       disable_peer_as_check: true
-                    #       next_hop_self: false
-                    #       send_community: false
-                    #       send_ext_community: false
-                    #       allowed_self_as_count: 3
-                    #       bfd: false
-                    #       disable_connected_check: false
-                    #       ttl: 1
-                    #       remove_all_private_as: false
-                    #       remove_private_as: false
-                    #       replace_private_as_with_local_as: false
-                    #       unicast_address_family: true
-                    #       multicast_address_family: false
-                    #       admin_state: true
-                    #       as_propagate: no-prepend
-                    #       peer_prefix_policy: cilium-cni
-                    #       import_route_control: floating-L3out-optimizations
-
-                    # - node_id: 2104                                           
-                    #   floating_svi: true
-                    #   pod_id: 2
-                    #   vlan: 52
-                    #   paths:
-                    #     - floating_ip: 10.100.0.9/23
-                    #       physical_domain: isovalent-nodes
-                    #   ip: 10.100.0.8/23
-                    #   ip_shared: 10.100.0.10/23
-                    #   bgp_peers:
-                    #     - ip: 10.100.0.0/23
-                    #       description: k8s bare metal nodes on leaf 2104
-                    #       remote_as: 65252
-                    #       local_as: 65151
-                    #       allow_self_as: false
-                    #       as_override: true
-                    #       disable_peer_as_check: true
-                    #       next_hop_self: false
-                    #       send_community: false
-                    #       send_ext_community: false
-                    #       allowed_self_as_count: 3
-                    #       bfd: false
-                    #       disable_connected_check: false
-                    #       ttl: 1
-                    #       remove_all_private_as: false
-                    #       remove_private_as: false
-                    #       replace_private_as_with_local_as: false
-                    #       unicast_address_family: true
-                    #       multicast_address_family: false
-                    #       admin_state: true
-                    #       as_propagate: no-prepend
-                    #       peer_prefix_policy: cilium-cni
-                    #       import_route_control: floating-L3out-optimizations
-
                   dhcp_labels:
                     - dhcp_relay_policy: dhcp.uktme.cisco.com
                       scope: tenant
 
 # External EPGs
           external_endpoint_groups:
-            - name: node-subnet
-              description: node subnet
-              subnets:
-                - prefix: 10.237.101.0/27
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-                - prefix: 10.100.0.0/23
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-node-subnet
-                consumers:
-                  - permit-to-pod-subnet-cluster-1
-                  - permit-to-pod-subnet-cluster-2
-                  - permit-to-ingress-subnet-cluster-1
-                  - permit-to-ingress-subnet-cluster-2
+            - name: dummy-extEPG-for-vrf-01-bgp-AS-65252
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65252
 
-            - name: ingress-subnet-cluster-1
-              description: ingress subnet cluster 1
-              subnets:
-                - prefix: 10.237.101.32/28
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: true
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-ingress-subnet-cluster-1
-
-            - name: ingress-subnet-cluster-2
-              description: ingress subnet cluster 2
-              subnets:
-                - prefix: 10.237.101.112/29
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: true
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-ingress-subnet-cluster-2
-
-            - name: egress-subnet-cluster-1
-              description: egress subnet
-              subnets:
-                - prefix: 10.237.101.48/28
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: true
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                consumers:
-                  - permit-to-nginx-subnet-10.237.101.96_28
-
-            - name: egress-subnet-cluster-2
-              description: egress subnet
-              subnets:
-                - prefix: 10.237.101.120/29
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: true
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                consumers:
-                  - permit-to-nginx-subnet-10.237.101.96_28
-
-            - name: ilb-vip-subnet
-              description: ilb vip subnet
-              subnets:
-                - prefix: 10.237.101.128/29
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: true
-                  import_security: true
-                  shared_security: true
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: true
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-ilb-vip-subnet
-
-            - name: pod-subnet-cluster-1
-              description: pod subnet
-              subnets:
-                - prefix: 10.1.0.0/16
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: false
-                  import_security: true
-                  shared_security: false
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-                - prefix: 10.100.16.0/20
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: false
-                  import_security: true
-                  shared_security: false
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-pod-subnet-cluster-1
-                consumers:
-                  - permit-to-node-subnet
-                  - permit-to-pod-subnet-cluster-2
-
-            - name: pod-subnet-cluster-2
-              description: pod subnet
-              subnets:
-                - prefix: 10.2.0.0/16
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: false
-                  import_security: true
-                  shared_security: false
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-                - prefix: 10.100.32.0/19
-                  import_route_control: false
-                  export_route_control: false
-                  shared_route_control: false
-                  import_security: true
-                  shared_security: false
-                  aggregate_import_route_control: false
-                  aggregate_export_route_control: false
-                  aggregate_shared_route_control: false
-                  bgp_route_summarization: false
-                  ospf_route_summarization: false
-              contracts:
-                providers:
-                  - permit-to-pod-subnet-cluster-2
-                consumers:
-                  - permit-to-node-subnet
-                  - permit-to-pod-subnet-cluster-1
-
+# L3out: Location in GUI: `Tenants` » `XXX` » `VRFs` » `XXX`
         - name: isovalent.vrf-02
-          alias: vrf-02-to-core-and-evpn
-          description: L3out peering to core AS64800 and EVPN AS65150
+          alias: vrf-02-to-core
+          description: L3out peering to core AS64800
           vrf: vrf-02
           domain: isovalent.vrf-02
           ospf:
             area: backbone
             area_type: regular
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-internal-vrf-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-isovalent-supernet
+                  - match-k8s-egress-subnet-cluster-1
+                  - match-k8s-egress-subnet-cluster-2
+                  - match-k8s-ingress-subnet-cluster-1
+                  - match-k8s-ingress-subnet-cluster-2
+                  - match-k8s-ilb-vip-subnet
+                  - match-k8s-node-subnet
+                  - match-bridge-domain-subnets
 
-# Nodes
+# Nodes Pod 1
           node_profiles:
             - name: border-leafs-pod-1
               nodes:
@@ -1047,7 +1152,7 @@ apic:
                   admin_state: true
                   as_propagate: no-prepend
 
-# Interfaces
+# Interfaces Pod 1
               interface_profiles:
                 - name: leaf-1101-eth7.15
                   description: L12-C93180YC-FX-01 eth1/7.15
@@ -1077,19 +1182,19 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-1101-eth33.15
-                  description: L11-C93180YC-FX-01 eth1/53
-                  interfaces:
-                    - node_id: 1101
-                      pod_id: 1
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.16/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
+                # - name: leaf-1101-eth33.15
+                #   description: L11-C93180YC-FX-01 eth1/53
+                #   interfaces:
+                #     - node_id: 1101
+                #       pod_id: 1
+                #       port: 33
+                #       vlan: 15
+                #       svi: false
+                #       ip: 10.100.0.16/31
+                #       mtu: inherit
+                #       mac: 10:12:BD:F8:19:FF
+                #   ospf:
+                #     policy: OSPF_p2p
 
                 - name: leaf-1102-eth7.15
                   description: L12-C93180YC-EX-02 eth1/7.15
@@ -1119,21 +1224,21 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-1102-eth33.15
-                  description: L11-C93180YC-FX-01 eth1/54
-                  interfaces:
-                    - node_id: 1102
-                      pod_id: 1
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.18/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
+                # - name: leaf-1102-eth33.15
+                #   description: L11-C93180YC-FX-01 eth1/54
+                #   interfaces:
+                #     - node_id: 1102
+                #       pod_id: 1
+                #       port: 33
+                #       vlan: 15
+                #       svi: false
+                #       ip: 10.100.0.18/31
+                #       mtu: inherit
+                #       mac: 10:12:BD:F8:19:FF
+                #   ospf:
+                #     policy: OSPF_p2p
 
-# Nodes
+# Nodes Pod 2
             - name: border-leafs-pod-2
               nodes:
                 - node_id: 2101
@@ -1195,7 +1300,7 @@ apic:
                   admin_state: true
                   as_propagate: no-prepend
 
-# Interfaces
+# Interfaces Pod 2
               interface_profiles:
                 - name: leaf-2101-eth7.15
                   description: L13-C93180YC-FX-01 eth1/7.15
@@ -1283,263 +1388,261 @@ apic:
 
 # extEPGs
           external_endpoint_groups:
-            - name: dummy-extEPG-for-vrf-01-bgp-AS-65151
+            - name: dummy-extEPG-for-vrf-02-bgp-AS-64809
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65151
 
-#         - name: isovalent.vrf-02-to-bgp-as-65150 
-#           alias: vrf-02-to-core
-#           description: L3out peering to EVPN C93108TC-FX3P
-#           vrf: vrf-02
-#           domain: isovalent.vrf-02
+# L3out: Location in GUI: `Tenants` » `XXX` » `VRFs` » `XXX`
+        # - name: isovalent.vrf-02-to-bgp-as-65150 
+        #   alias: vrf-02-to-core
+        #   description: L3out peering to EVPN C93108TC-FX3P
+        #   vrf: vrf-02
+        #   domain: isovalent.vrf-02
 
-# # Nodes
-#           node_profiles:
-#             - name: border-leafs-pod-1
-#               nodes:
-#                 - node_id: 1101
-#                   pod_id: 1
-#                   router_id: 110.1.0.3
-#                   router_id_as_loopback: false
-#                   loopbacks:
-#                     - 110.1.0.7
+# Nodes Pod 1
+          # node_profiles:
+          #   - name: border-leafs-pod-1
+          #     nodes:
+          #       - node_id: 1101
+          #         pod_id: 1
+          #         router_id: 110.1.0.3
+          #         router_id_as_loopback: false
+          #         loopbacks:
+          #           - 110.1.0.7
 
-#                 - node_id: 1102
-#                   pod_id: 1
-#                   router_id: 110.2.0.3
-#                   router_id_as_loopback: false
-#                   loopbacks:
-#                     - 110.2.0.7
+          #       - node_id: 1102
+          #         pod_id: 1
+          #         router_id: 110.2.0.3
+          #         router_id_as_loopback: false
+          #         loopbacks:
+          #           - 110.2.0.7
 
-#               # bgp_peers:
-#               #   - ip: 12.0.0.3
-#               #     description: L12-C93180YC-FX-01
-#               #     remote_as: 64800  
-#               #     local_as: 65151
-#               #     allow_self_as: false
-#               #     as_override: true
-#               #     disable_peer_as_check: true
-#               #     next_hop_self: false
-#               #     send_community: false
-#               #     send_ext_community: false
-#               #     allowed_self_as_count: 3
-#               #     bfd: false
-#               #     disable_connected_check: false
-#               #     ttl: 2
-#               #     remove_all_private_as: false
-#               #     remove_private_as: false
-#               #     replace_private_as_with_local_as: false
-#               #     unicast_address_family: true
-#               #     multicast_address_family: false
-#               #     admin_state: true
-#               #     as_propagate: no-prepend
+              # bgp_peers:
+              #   - ip: 12.0.0.3
+              #     description: L12-C93180YC-FX-01
+              #     remote_as: 64800  
+              #     local_as: 65151
+              #     allow_self_as: false
+              #     as_override: true
+              #     disable_peer_as_check: true
+              #     next_hop_self: false
+              #     send_community: false
+              #     send_ext_community: false
+              #     allowed_self_as_count: 3
+              #     bfd: false
+              #     disable_connected_check: false
+              #     ttl: 2
+              #     remove_all_private_as: false
+              #     remove_private_as: false
+              #     replace_private_as_with_local_as: false
+              #     unicast_address_family: true
+              #     multicast_address_family: false
+              #     admin_state: true
+              #     as_propagate: no-prepend
 
-#               #   - ip: 12.0.0.4
-#               #     description: L12-C93180YC-EX-02
-#               #     remote_as: 64800  
-#               #     local_as: 65151
-#               #     allow_self_as: false
-#               #     as_override: true
-#               #     disable_peer_as_check: true
-#               #     next_hop_self: false
-#               #     send_community: false
-#               #     send_ext_community: false
-#               #     allowed_self_as_count: 3
-#               #     bfd: false
-#               #     disable_connected_check: false
-#               #     ttl: 2
-#               #     remove_all_private_as: false
-#               #     remove_private_as: false
-#               #     replace_private_as_with_local_as: false
-#               #     unicast_address_family: true
-#               #     multicast_address_family: false
-#               #     admin_state: true
-#               #     as_propagate: no-prepend
+              #   - ip: 12.0.0.4
+              #     description: L12-C93180YC-EX-02
+              #     remote_as: 64800  
+              #     local_as: 65151
+              #     allow_self_as: false
+              #     as_override: true
+              #     disable_peer_as_check: true
+              #     next_hop_self: false
+              #     send_community: false
+              #     send_ext_community: false
+              #     allowed_self_as_count: 3
+              #     bfd: false
+              #     disable_connected_check: false
+              #     ttl: 2
+              #     remove_all_private_as: false
+              #     remove_private_as: false
+              #     replace_private_as_with_local_as: false
+              #     unicast_address_family: true
+              #     multicast_address_family: false
+              #     admin_state: true
+              #     as_propagate: no-prepend
 
-# # Interfaces
-#               # interface_profiles:
-#               #   - name: leaf-1101-eth7.15
-#               #     description: L12-C93180YC-FX-01 eth1/7.15
-#               #     interfaces:
-#               #       - node_id: 1101
-#               #         pod_id: 1
-#               #         port: 7
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.240/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+# Interfaces Pod 1
+              # interface_profiles:
+              #   - name: leaf-1101-eth7.15
+              #     description: L12-C93180YC-FX-01 eth1/7.15
+              #     interfaces:
+              #       - node_id: 1101
+              #         pod_id: 1
+              #         port: 7
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.240/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-1101-eth8.15
-#               #     description: L12-C93180YC-EX-02 eth1/8.15
-#               #     interfaces:
-#               #       - node_id: 1101
-#               #         pod_id: 1
-#               #         port: 8
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.242/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-1101-eth8.15
+              #     description: L12-C93180YC-EX-02 eth1/8.15
+              #     interfaces:
+              #       - node_id: 1101
+              #         pod_id: 1
+              #         port: 8
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.242/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-1102-eth7.15
-#               #     description: L12-C93180YC-EX-02 eth1/7.15
-#               #     interfaces:
-#               #       - node_id: 1102
-#               #         pod_id: 1
-#               #         port: 7
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.244/31
-#               #         mtu: inherit
-#               #         mac: 10:22:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-1102-eth7.15
+              #     description: L12-C93180YC-EX-02 eth1/7.15
+              #     interfaces:
+              #       - node_id: 1102
+              #         pod_id: 1
+              #         port: 7
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.244/31
+              #         mtu: inherit
+              #         mac: 10:22:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-1102-eth8.15
-#               #     description: L12-C93180YC-FX-01 eth1/8.15
-#               #     interfaces:
-#               #       - node_id: 1102
-#               #         pod_id: 1
-#               #         port: 8
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.246/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-1102-eth8.15
+              #     description: L12-C93180YC-FX-01 eth1/8.15
+              #     interfaces:
+              #       - node_id: 1102
+              #         pod_id: 1
+              #         port: 8
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.246/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-# # Nodes
-#             - name: border-leafs-pod-2
-#               nodes:
-#                 - node_id: 2101
-#                   pod_id: 2
-#                   router_id: 210.1.0.3
-#                   router_id_as_loopback: false
-#                   loopbacks:
-#                     - 210.1.0.7
+# Nodes Pod 2
+            # - name: border-leafs-pod-2
+            #   nodes:
+            #     - node_id: 2101
+            #       pod_id: 2
+            #       router_id: 210.1.0.3
+            #       router_id_as_loopback: false
+            #       loopbacks:
+            #         - 210.1.0.7
 
-#                 - node_id: 2102
-#                   pod_id: 2
-#                   router_id: 210.2.0.3
-#                   router_id_as_loopback: false
-#                   loopbacks:
-#                     - 210.2.0.7
+            #     - node_id: 2102
+            #       pod_id: 2
+            #       router_id: 210.2.0.3
+            #       router_id_as_loopback: false
+            #       loopbacks:
+            #         - 210.2.0.7
 
-#               # bgp_peers:
-#               #   - ip: 13.0.0.3
-#               #     description: L13-C93180YC-FX-01
-#               #     remote_as: 64800  
-#               #     local_as: 65151
-#               #     allow_self_as: false
-#               #     as_override: true
-#               #     disable_peer_as_check: true
-#               #     next_hop_self: false
-#               #     send_community: false
-#               #     send_ext_community: false
-#               #     allowed_self_as_count: 3
-#               #     bfd: false
-#               #     disable_connected_check: false
-#               #     ttl: 2
-#               #     remove_all_private_as: false
-#               #     remove_private_as: false
-#               #     replace_private_as_with_local_as: false
-#               #     unicast_address_family: true
-#               #     multicast_address_family: false
-#               #     admin_state: true
-#               #     as_propagate: no-prepend
+              # bgp_peers:
+              #   - ip: 13.0.0.3
+              #     description: L13-C93180YC-FX-01
+              #     remote_as: 64800  
+              #     local_as: 65151
+              #     allow_self_as: false
+              #     as_override: true
+              #     disable_peer_as_check: true
+              #     next_hop_self: false
+              #     send_community: false
+              #     send_ext_community: false
+              #     allowed_self_as_count: 3
+              #     bfd: false
+              #     disable_connected_check: false
+              #     ttl: 2
+              #     remove_all_private_as: false
+              #     remove_private_as: false
+              #     replace_private_as_with_local_as: false
+              #     unicast_address_family: true
+              #     multicast_address_family: false
+              #     admin_state: true
+              #     as_propagate: no-prepend
 
-#               #   - ip: 13.0.0.4
-#               #     description: L13-C93180YC-FX-02
-#               #     remote_as: 64800  
-#               #     local_as: 65151
-#               #     allow_self_as: false
-#               #     as_override: true
-#               #     disable_peer_as_check: true
-#               #     next_hop_self: false
-#               #     send_community: false
-#               #     send_ext_community: false
-#               #     allowed_self_as_count: 3
-#               #     bfd: false
-#               #     disable_connected_check: false
-#               #     ttl: 2
-#               #     remove_all_private_as: false
-#               #     remove_private_as: false
-#               #     replace_private_as_with_local_as: false
-#               #     unicast_address_family: true
-#               #     multicast_address_family: false
-#               #     admin_state: true
-#               #     as_propagate: no-prepend
+              #   - ip: 13.0.0.4
+              #     description: L13-C93180YC-FX-02
+              #     remote_as: 64800  
+              #     local_as: 65151
+              #     allow_self_as: false
+              #     as_override: true
+              #     disable_peer_as_check: true
+              #     next_hop_self: false
+              #     send_community: false
+              #     send_ext_community: false
+              #     allowed_self_as_count: 3
+              #     bfd: false
+              #     disable_connected_check: false
+              #     ttl: 2
+              #     remove_all_private_as: false
+              #     remove_private_as: false
+              #     replace_private_as_with_local_as: false
+              #     unicast_address_family: true
+              #     multicast_address_family: false
+              #     admin_state: true
+              #     as_propagate: no-prepend
 
-# # Interfaces
-#               # interface_profiles:
-#               #   - name: leaf-2101-eth7.15
-#               #     description: L13-C93180YC-FX-01 eth1/7.15
-#               #     interfaces:
-#               #       - node_id: 2101
-#               #         pod_id: 2
-#               #         port: 7
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.248/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+# Interfaces Pod 2
+              # interface_profiles:
+              #   - name: leaf-2101-eth7.15
+              #     description: L13-C93180YC-FX-01 eth1/7.15
+              #     interfaces:
+              #       - node_id: 2101
+              #         pod_id: 2
+              #         port: 7
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.248/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-2101-eth8.15
-#               #     description: L13-C93180YC-EX-02 eth1/8.15
-#               #     interfaces:
-#               #       - node_id: 2101
-#               #         pod_id: 2
-#               #         port: 8
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.250/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-2101-eth8.15
+              #     description: L13-C93180YC-EX-02 eth1/8.15
+              #     interfaces:
+              #       - node_id: 2101
+              #         pod_id: 2
+              #         port: 8
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.250/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-2102-eth7.15
-#               #     description: L13-C93180YC-FX-02 eth1/7.15
-#               #     interfaces:
-#               #       - node_id: 2102
-#               #         pod_id: 2
-#               #         port: 7
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.252/31
-#               #         mtu: inherit
-#               #         mac: 10:22:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-2102-eth7.15
+              #     description: L13-C93180YC-FX-02 eth1/7.15
+              #     interfaces:
+              #       - node_id: 2102
+              #         pod_id: 2
+              #         port: 7
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.252/31
+              #         mtu: inherit
+              #         mac: 10:22:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-#               #   - name: leaf-2102-eth8.15
-#               #     description: L13-C93180YC-FX-01 eth1/8.15
-#               #     interfaces:
-#               #       - node_id: 2102
-#               #         pod_id: 2
-#               #         port: 8
-#               #         vlan: 15
-#               #         svi: false
-#               #         ip: 10.237.99.254/31
-#               #         mtu: inherit
-#               #         mac: 10:12:BD:F8:19:FF
-#               #     ospf:
-#               #       policy: OSPF_p2p
+              #   - name: leaf-2102-eth8.15
+              #     description: L13-C93180YC-FX-01 eth1/8.15
+              #     interfaces:
+              #       - node_id: 2102
+              #         pod_id: 2
+              #         port: 8
+              #         vlan: 15
+              #         svi: false
+              #         ip: 10.237.99.254/31
+              #         mtu: inherit
+              #         mac: 10:12:BD:F8:19:FF
+              #     ospf:
+              #       policy: OSPF_p2p
 
-# # extEPGs
-#           external_endpoint_groups:
-#             - name: dummy-extEPG-for-vrf-02-bgp-AS-65150
-#               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65151
-
-
-
+# extEPGs
+          # external_endpoint_groups:
+          #   - name: dummy-extEPG-for-vrf-02-bgp-AS-65150
+          #     description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65151
 
 # bridge domains
       bridge_domains:
@@ -1580,7 +1683,6 @@ apic:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant  
 
-
 # Application Profiles
       application_profiles:
         - name: 'network-segments'
@@ -1604,7 +1706,7 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-        - name: 'network-security-groups'
+        - name: 'network-segments-esgs'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
             - name: 10.237.101.96_28-nginx-subnet
@@ -1638,3 +1740,115 @@ apic:
                   - permit-to-ingress-subnet-cluster-1
                   - permit-to-ingress-subnet-cluster-2
                   - permit-to-ilb-vip-subnet
+
+        - name: 'egress-subnets-esgs'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: egress-subnet-cluster-1
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.101.48/28
+                  shared: true
+              contracts:
+                consumers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
+            - name: egress-subnet-cluster-2
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.101.120/29
+                  shared: true
+              contracts:
+                consumers:
+                  - permit-to-nginx-subnet-10.237.101.96_28
+
+        - name: 'ingress-subnets-esgs'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: ingress-subnet-cluster-1
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.101.32/28
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-ingress-subnet-cluster-1
+            - name: ingress-subnet-cluster-2
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.101.112/29
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-ingress-subnet-cluster-2
+
+        - name: 'ilb-vip-subnets-esgs'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: ilb-vip-subnet
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.101.128/29
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-ilb-vip-subnet
+
+        - name: 'node-subnets-esgs'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: node-subnets
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.100.0.0/23
+                  shared: true
+                - ip: 10.237.101.0/27
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-node-subnet
+                consumers:
+                  - permit-to-ingress-subnet-cluster-1
+                  - permit-to-ingress-subnet-cluster-2
+                  - permit-to-ilb-vip-subnet
+                  - permit-to-pod-subnet-cluster-1
+                  - permit-to-pod-subnet-cluster-2
+
+        - name: 'external-subnets-esgs'
+          description: 'ESGs are used to define security groups'
+          endpoint_security_groups:
+            - name: core-services
+              vrf: vrf-02
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.97.128/27
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-core-services
+                  - permit-from-core-services
+            - name: lab-desktops
+              vrf: vrf-02
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.237.97.160/28
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-lab-desktops
+            - name: all-external-subnets
+              vrf: vrf-02
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 0.0.0.0/1
+                  shared: true
+                - ip: 128.0.0.0/1
+                  shared: true
+              contracts:
+                providers:
+                  - permit-to-all-external-subnets

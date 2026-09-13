@@ -13,9 +13,9 @@ provider "aci" {
 }
 
 module "aci" {
-  source = "netascode/nac-aci/aci"
-  # version = "1.2.0"
-  version = ">=2.0.0"
+  source = "github.com/spsharman/terraform-aci-nac-aci?ref=tcp_rules"
+  # source = "netascode/nac-aci/aci"
+  # version = ">=2.0.0"
 
   # source = "github.com/netascode/terraform-aci-nac-aci?ref=main"
 
