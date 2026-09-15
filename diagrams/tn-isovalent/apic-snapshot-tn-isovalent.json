@@ -1,0 +1,52 @@
+{
+  "source": "APIC read-only query of uni/tn-isovalent (no credentials stored)",
+  "tenant": "isovalent",
+  "host": "64.103.44.66",
+  "vz_consumers_vrf01": [
+    "permit-to-all-external-subnets",
+    "permit-from-core-services",
+    "permit-to-core-services",
+    "permit-to-lab-desktops"
+  ],
+  "l3outs": {
+    "isovalent.vrf-01": {"alias": "vrf-01-to-k8s", "vrf": "vrf-01"},
+    "isovalent.vrf-02": {"alias": "vrf-02-to-core", "vrf": "vrf-02"}
+  },
+  "bds": [
+    {"name": "10.237.101.96_28", "ip": "10.237.101.97/28", "scope": "public,shared"},
+    {"name": "10.237.101.144_28", "ip": "10.237.101.145/28", "scope": "public,shared"}
+  ],
+  "epgs": [
+    {"ap": "network-segments", "name": "10.237.101.96_28"},
+    {"ap": "network-segments", "name": "10.237.101.144_28"}
+  ],
+  "contracts": {
+    "intra-tenant": "context",
+    "permit-to-all-external-subnets": "tenant",
+    "permit-to-egress-subnet": "tenant",
+    "permit-to-ingress-subnet-cluster-1": "tenant",
+    "permit-to-ingress-subnet-cluster-2": "tenant",
+    "permit-to-ilb-vip-subnet": "tenant",
+    "permit-to-node-subnet": "tenant",
+    "permit-to-pod-subnet-cluster-1": "context",
+    "permit-to-pod-subnet-cluster-2": "context",
+    "permit-to-nginx-subnet-10.237.101.96_28": "context",
+    "permit-from-core-services": "tenant",
+    "permit-to-core-services": "tenant",
+    "permit-from-lab-desktops": "tenant",
+    "permit-to-lab-desktops": "tenant"
+  },
+  "esgs": [
+    {"ap": "external-subnets-esgs", "name": "all-external-subnets", "vrf": "vrf-02", "selectors": ["IP selector  0.0.0.0/1   shared", "IP selector  128.0.0.0/1   shared"], "consumers": [], "providers": ["permit-to-all-external-subnets"]},
+    {"ap": "external-subnets-esgs", "name": "core-services", "vrf": "vrf-02", "selectors": ["IP selector  10.237.97.128/27   shared"], "consumers": [], "providers": ["permit-to-core-services", "permit-from-core-services"]},
+    {"ap": "external-subnets-esgs", "name": "lab-desktops", "vrf": "vrf-02", "selectors": ["IP selector  10.237.97.160/28   shared"], "consumers": [], "providers": ["permit-to-lab-desktops"]},
+    {"ap": "network-segments-esgs", "name": "10.237.101.96_28-nginx-subnet", "vrf": "vrf-01", "selectors": ["EPG selector  network-segments / 10.237.101.96_28"], "consumers": ["permit-to-ingress-subnet-cluster-1", "permit-to-ingress-subnet-cluster-2", "permit-to-ilb-vip-subnet"], "providers": ["permit-to-nginx-subnet-10.237.101.96_28"]},
+    {"ap": "network-segments-esgs", "name": "10.237.101.144_28-jumphosts", "vrf": "vrf-01", "selectors": ["EPG selector  network-segments / 10.237.101.144_28"], "consumers": ["permit-to-node-subnet", "permit-to-nginx-subnet-10.237.101.96_28", "permit-to-ingress-subnet-cluster-1", "permit-to-ingress-subnet-cluster-2", "permit-to-ilb-vip-subnet"], "providers": []},
+    {"ap": "egress-subnets-esgs", "name": "egress-subnet-cluster-1", "vrf": "vrf-01", "selectors": ["IP selector  10.237.101.48/28   shared"], "consumers": ["permit-to-nginx-subnet-10.237.101.96_28"], "providers": []},
+    {"ap": "egress-subnets-esgs", "name": "egress-subnet-cluster-2", "vrf": "vrf-01", "selectors": ["IP selector  10.237.101.120/29   shared"], "consumers": ["permit-to-nginx-subnet-10.237.101.96_28"], "providers": []},
+    {"ap": "ingress-subnets-esgs", "name": "ingress-subnet-cluster-1", "vrf": "vrf-01", "selectors": ["IP selector  10.237.101.32/28   shared"], "consumers": [], "providers": ["permit-to-ingress-subnet-cluster-1"]},
+    {"ap": "ingress-subnets-esgs", "name": "ingress-subnet-cluster-2", "vrf": "vrf-01", "selectors": ["IP selector  10.237.101.112/29   shared"], "consumers": [], "providers": ["permit-to-ingress-subnet-cluster-2"]},
+    {"ap": "ilb-vip-subnets-esgs", "name": "ilb-vip-subnet", "vrf": "vrf-01", "selectors": ["IP selector  10.237.101.128/29   shared"], "consumers": [], "providers": ["permit-to-ilb-vip-subnet"]},
+    {"ap": "node-subnets-esgs", "name": "node-subnets", "vrf": "vrf-01", "selectors": ["IP selector  10.100.0.0/23   shared", "IP selector  10.237.101.0/27   shared"], "consumers": ["permit-to-ingress-subnet-cluster-1", "permit-to-ingress-subnet-cluster-2", "permit-to-ilb-vip-subnet", "permit-to-pod-subnet-cluster-1", "permit-to-pod-subnet-cluster-2"], "providers": ["permit-to-node-subnet"]}
+  ]
+}

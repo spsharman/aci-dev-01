@@ -11,24 +11,24 @@
 apic:
   tenants:
 # The shared-services tenant is unmanaged, the following contracts are exported
-    - name: shared-services
-      managed: false
-      imported_contracts:
-        - name: permit-to-tn-isovalent-egress-subnet
-          tenant: isovalent
-          contract: permit-to-egress-subnet
+    # - name: shared-services
+    #   managed: false
+    #   imported_contracts:
+    #     - name: permit-to-tn-isovalent-egress-subnet
+    #       tenant: isovalent
+    #       contract: permit-to-egress-subnet
 
-        - name: permit-to-tn-isovalent-ingress-subnet-cluster-1
-          tenant: isovalent
-          contract: permit-to-ingress-subnet-cluster-1
+    #     - name: permit-to-tn-isovalent-ingress-subnet-cluster-1
+    #       tenant: isovalent
+    #       contract: permit-to-ingress-subnet-cluster-1
 
-        - name: permit-to-tn-isovalent-ingress-subnet-cluster-2
-          tenant: isovalent
-          contract: permit-to-ingress-subnet-cluster-2
+    #     - name: permit-to-tn-isovalent-ingress-subnet-cluster-2
+    #       tenant: isovalent
+    #       contract: permit-to-ingress-subnet-cluster-2
 
-        - name: permit-to-tn-isovalent-node-subnet
-          tenant: isovalent
-          contract: permit-to-node-subnet
+    #     - name: permit-to-tn-isovalent-node-subnet
+    #       tenant: isovalent
+    #       contract: permit-to-node-subnet
 
 # The isovalent tenant is managed
     - name: isovalent
