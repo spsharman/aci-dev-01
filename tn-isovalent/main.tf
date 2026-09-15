@@ -27,7 +27,8 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v6.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v8.nac.yaml"] << working configuration
-  yaml_files = ["floating-svi/configuration-v9.nac.yaml"] # << testing
+  # yaml_files = ["floating-svi/configuration-v9.nac.yaml"]
+  yaml_files = ["floating-svi/configuration-v10.nac.yaml"] # << testing Smart Switch iBGP AS65151
 
 
 # SVI configuration

@@ -235,6 +235,10 @@ apic:
         routed_domains:
           - shared-services.vrf-01
 
+      - name: vlans-allowed-to-routed-interfaces-to-smart-switch
+        routed_domains:
+          - isovalent.vrf-01
+
       - name: vlans-allowed-to-ssharman-ubuntu-nodes
         physical_domains:
           - ssharman-ubuntu-nodes

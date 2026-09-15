@@ -32,6 +32,14 @@ apic:
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
 
+      - name: routed-interfaces-to-smart-switch
+        type: access
+        aaep: vlans-allowed-to-routed-interfaces-to-smart-switch
+        link_level_policy: speed-10G
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+
       - name: ssharman-ubuntu-nodes
         type: access
         aaep: vlans-allowed-to-ssharman-ubuntu-nodes

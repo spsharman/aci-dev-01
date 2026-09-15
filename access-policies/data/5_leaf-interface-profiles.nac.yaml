@@ -23,6 +23,14 @@ apic:
                 from_port: 10
                 to_port: 10
 
+          - name: routed-interfaces-to-smart-switch
+            policy_group: routed-interfaces-to-smart-switch
+            port_blocks:
+              - name: block-1
+                description: smart-switch e1/3
+                from_port: 9
+                to_port: 9
+
           - name: ftd-4112-01-mgmt
             policy_group: vpc_to_ftd-4112-01-mgmt
             port_blocks:
@@ -174,6 +182,14 @@ apic:
                 description: smart-switch e1/2
                 from_port: 10
                 to_port: 10
+
+          - name: routed-interfaces-to-smart-switch
+            policy_group: routed-interfaces-to-smart-switch
+            port_blocks:
+              - name: block-1
+                description: smart-switch e1/4
+                from_port: 9
+                to_port: 9
 
           - name: ftd-4112-01-mgmt
             policy_group: vpc_to_ftd-4112-01-mgmt
