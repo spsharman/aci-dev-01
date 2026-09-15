@@ -1,7 +1,7 @@
 {
   "source": "APIC read-only query of uni/tn-isovalent (no credentials stored)",
   "tenant": "isovalent",
-  "host": "64.103.44.66",
+  "host": "",
   "vz_consumers_vrf01": [
     "permit-to-all-external-subnets",
     "permit-from-core-services",

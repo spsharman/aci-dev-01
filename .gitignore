@@ -29,3 +29,10 @@ plan.out
 
 # Exclude deployment notes
 **/deployment-notes.txt
+
+# Local APIC connection — host, user, and password must never be committed
+.env
+**/.env
+
+# Live APIC dumps (may include lab addressing)
+diagrams/**/tenant.json

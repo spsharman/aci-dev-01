@@ -20,6 +20,7 @@ Four ways to run
    python3 diagrams/render_v9_tenant_diagram.py --no-prompt --tenant common --tenant-json diagrams/tn-common/tenant.json --nac path/to/configuration.nac.yaml
 
 Outputs land in diagrams/tn-<tenant>/. APIC login writes tenant.json there.
+Copy diagrams/.env.example to diagrams/.env for host and user (gitignored).
 Password is taken from the dialog or APIC_PASS and is never stored in this file.
 With no flags, a prompt box asks for the same four choices.
 """
@@ -44,9 +45,28 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 DEFAULT_TENANT = "common"
-# Preconfigured lab fabric — host/user only. Password is never hardcoded.
-DEFAULT_APIC_HOST = "https://64.103.44.66"
-DEFAULT_APIC_USER = "readonly"
+
+
+def load_local_env() -> None:
+    """Load APIC_HOST / APIC_USER / APIC_PASS from a gitignored .env if present."""
+    for path in (HERE / ".env", REPO / ".env"):
+        if not path.is_file():
+            continue
+        for raw in path.read_text().splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, val = line.partition("=")
+            key = key.strip()
+            val = val.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = val
+
+
+load_local_env()
+# Host and user come from the environment or dialog — never from this file.
+DEFAULT_APIC_HOST = os.environ.get("APIC_HOST", "")
+DEFAULT_APIC_USER = os.environ.get("APIC_USER", "")
 # macOS ships a deprecated system Tk; silence that warning before any Tk import.
 os.environ.setdefault("TK_SILENCE_DEPRECATION", "1")
 
@@ -1085,6 +1105,14 @@ def prompt_job(job: Job) -> Job:
             messagebox.showerror("Required", "Supply a NAC file, a tenant.json file, or retrieve from APIC.")
             return
         password = pass_var.get() or os.environ.get("APIC_PASS") or None
+        host = host_var.get().strip() or DEFAULT_APIC_HOST
+        user = user_var.get().strip() or DEFAULT_APIC_USER
+        if from_apic and not host:
+            messagebox.showerror("Required", "Enter the APIC host or set APIC_HOST in diagrams/.env")
+            return
+        if from_apic and not user:
+            messagebox.showerror("Required", "Enter the APIC user or set APIC_USER in diagrams/.env")
+            return
         if from_apic and not password:
             messagebox.showerror("Required", "Enter the APIC password or set APIC_PASS.")
             return
@@ -1094,8 +1122,8 @@ def prompt_job(job: Job) -> Job:
             nac=nac,
             tenant_json=json_path,
             from_apic=from_apic,
-            apic_host=host_var.get().strip() or DEFAULT_APIC_HOST,
-            apic_user=user_var.get().strip() or DEFAULT_APIC_USER,
+            apic_host=host,
+            apic_user=user,
             apic_pass=password,
         )
         root.destroy()
@@ -1137,6 +1165,10 @@ def run_job(job: Job) -> None:
 
     data = None
     if job.from_apic:
+        if not job.apic_host:
+            raise SystemExit("APIC host is not set. Copy diagrams/.env.example to diagrams/.env or pass --apic-host.")
+        if not job.apic_user:
+            raise SystemExit("APIC user is not set. Set APIC_USER in diagrams/.env or pass --apic-user.")
         password = job.apic_pass or os.environ.get("APIC_PASS")
         if not password:
             password = getpass.getpass(f"Password for {job.apic_user}@{job.apic_host}: ")
