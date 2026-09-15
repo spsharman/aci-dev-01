@@ -1,8 +1,8 @@
 # aci-dev-01
 
-Personal ACI lab notes and a small tenant-diagram tool. This is a **pet project**, not a product.
+Personal ACI lab notes and a small tenant-diagram tool. This is a **pet project**, not a Cisco product, and not official Cisco sample code.
 
-There is **no support**. See [LICENSE](LICENSE).
+There is **no support** and no SLA. Issues and questions may go unanswered.
 
 ## Tenant diagrams
 
@@ -51,4 +51,6 @@ Lab APICs often use a self-signed certificate. This script skips TLS verificatio
 
 ## License
 
-See [LICENSE](LICENSE). No warranty, no support, use at your own risk.
+[MIT](LICENSE) — Copyright (c) 2026 Steve Sharman.
+
+The license already disclaims all warranties. In addition: no support is offered, and this repository is not endorsed by Cisco or any employer. Use at your own risk, against your own lab, with your own credentials.
