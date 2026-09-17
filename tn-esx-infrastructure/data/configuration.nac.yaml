@@ -51,17 +51,6 @@ apic:
                   node_id: 1102
                   deployment_immediacy: immediate
 
-                - channel: "hx-dev-02-fi-a"
-                  pod_id: 2
-                  vlan: 992
-                  node_id: 2101
-                  deployment_immediacy: immediate
-                - channel: "hx-dev-02-fi-b"
-                  pod_id: 2
-                  vlan: 992
-                  node_id: 2102
-                  deployment_immediacy: immediate 
-
                 - channel: "vpc_to_rack_L11-tor"
                   pod_id: 1
                   vlan: 992
@@ -125,17 +114,6 @@ apic:
                   node_id: 1102
                   deployment_immediacy: immediate
 
-                - channel: "hx-dev-02-fi-a"
-                  pod_id: 2
-                  vlan: 987
-                  node_id: 2101
-                  deployment_immediacy: immediate
-                - channel: "hx-dev-02-fi-b"
-                  pod_id: 2
-                  vlan: 987
-                  node_id: 2102
-                  deployment_immediacy: immediate
-
             - name: "vmotion"
               bridge_domain: 192.168.4.x_24
               physical_domains:
@@ -152,17 +130,6 @@ apic:
                   pod_id: 1
                   vlan: 986
                   node_id: 1102
-                  deployment_immediacy: immediate
-
-                - channel: "hx-dev-02-fi-a"
-                  pod_id: 2
-                  vlan: 986
-                  node_id: 2101
-                  deployment_immediacy: immediate
-                - channel: "hx-dev-02-fi-b"
-                  pod_id: 2
-                  vlan: 986
-                  node_id: 2102
                   deployment_immediacy: immediate
 
                 - node_id: 1101

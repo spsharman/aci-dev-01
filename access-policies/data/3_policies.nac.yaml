@@ -1,6 +1,6 @@
 ---
 apic:
-# Node (switch) policies
+# VPC Groups: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Switch` » `Virtual Port Channel default`
   node_policies:
     vpc_groups:
       mode: explicit
@@ -20,7 +20,7 @@ apic:
           switch_1: 2103
           switch_2: 2104
 
-# Interface policies
+# MCP Global Instance: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Global` » `MCP Instance Policy default`
   access_policies:
     mcp:
       action: true
@@ -31,6 +31,7 @@ apic:
       per_vlan: true
       key: cisco
 
+# CDP Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `CDP Interface`
     interface_policies:
       cdp_policies:
         - name: cdp-enabled
@@ -39,10 +40,12 @@ apic:
         - name: cdp-disabled
           admin_state: false
 
+# L2 Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `L2 Interface`
       l2_policies:
         - name: port-local-vlans
           vlan_scope: portlocal
 
+# Link Level Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `Link Level`
       link_level_policies:
         - name: speed-1G
           speed: "1G"
@@ -54,6 +57,7 @@ apic:
           auto: true
           fec_mode: inherit
 
+# LLDP Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `LLDP Interface`
       lldp_policies:
         - name: lldp-enabled
           admin_rx_state: true
@@ -63,10 +67,12 @@ apic:
           admin_rx_state: false
           admin_tx_state: false
 
+# MCP Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `MCP Interface`
       mcp_policies:
         - name: mcp-enabled
           admin_state: true
 
+# Port Channel Interface Policy: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Interface` » `Port Channel`
       port_channel_policies:
         - name: lacp-active
           mode: active
@@ -90,7 +96,7 @@ apic:
           fast_select_standby: false
 
 
-# Global policies
+# AAEP: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Global` » `Attachable Access Entity Profiles`
     aaeps:
       - name: mgmt_inb
         infra_vlan: false
@@ -234,6 +240,8 @@ apic:
           - smart-switches
         routed_domains:
           - shared-services.vrf-01
+          - isovalent.vrf-01
+          - isovalent.vrf-03
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
         routed_domains:
@@ -243,6 +251,7 @@ apic:
         physical_domains:
           - ssharman-ubuntu-nodes
 
+# PTP Profile: Location in GUI: `Fabric` » `Access Policies` » `Policies` » `Global` » `PTP User Profile`
     ptp_profiles:
       - name: aci-dev-01
         template: telecom

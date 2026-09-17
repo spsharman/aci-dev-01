@@ -28,8 +28,10 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
   # yaml_files = ["floating-svi/configuration-v8.nac.yaml"] << working configuration
   # yaml_files = ["floating-svi/configuration-v9.nac.yaml"]
-  yaml_files = ["floating-svi/configuration-v10.nac.yaml"] # << testing Smart Switch iBGP AS65151
-
+  # yaml_files = ["floating-svi/configuration-v10.nac.yaml"] # << testing Smart Switch iBGP AS65151
+  # yaml_files = ["floating-svi/configuration-v11.nac.yaml"] # << testing Smart Switch iBGP AS65151
+  # yaml_files = ["floating-svi/configuration-v12.nac.yaml"] # << vrf-01 SVI to Smart Switch 10.100.6.32/29
+  yaml_files = ["floating-svi/configuration-v13.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
 
 # SVI configuration
 

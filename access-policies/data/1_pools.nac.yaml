@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:
 
-# VLAN pools  
+# VLAN Pool: Location in GUI: `Fabric` » `Access Policies` » `Pools` » `VLAN`
     vlan_pools:
       - name: BRKDCN-2959.vrf-02
         allocation: static
@@ -339,6 +339,14 @@ apic:
             description: L3out to isovalent.vrf-01 subnet 10.100.0.0/23
           - from: 53
             description: L3out to isovalent.vrf-01 subnet 10.100.4.0/23
+          - from: 42
+            description: L3out SVI isovalent.vrf-01 to Smart Switch 10.100.6.32/29
+
+      - name: isovalent.vrf-03
+        allocation: static
+        ranges:
+          - from: 41
+            description: L3out SVI isovalent.vrf-03 to Smart Switch
 
       - name: mgmt_inb
         allocation: static
@@ -379,6 +387,11 @@ apic:
           - from: 40
             to: 40
             description: smart switch L3out peering
+            allocation: inherit
+            role: external
+          - from: 42
+            to: 42
+            description: isovalent.vrf-01 SVI to Smart Switch 10.100.6.32/29
             allocation: inherit
             role: external
 

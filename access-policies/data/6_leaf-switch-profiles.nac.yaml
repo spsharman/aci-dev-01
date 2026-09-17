@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf switch profiles - Pod 1
+# Access Leaf Switch Profile: Location in GUI: `Fabric` » `Access Policies` » `Switches` » `Leaf Switches` » `Profiles`
     leaf_switch_profiles:
       - name: aci-dev-01-pod-01-leaf-1101
         selectors:
@@ -24,7 +24,7 @@ apic:
         interface_profiles:
           - aci-dev-01-pod-01-leaf-1102
 
-# Leaf switch profiles - Pod 2
+# Access Leaf Switch Profile: Location in GUI: `Fabric` » `Access Policies` » `Switches` » `Leaf Switches` » `Profiles`
       - name: aci-dev-01-pod-02-leaf-2101
         selectors:
           - name: aci-dev-01-pod-02-leaf-2101

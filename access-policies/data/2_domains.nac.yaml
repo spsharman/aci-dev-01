@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:
 
-# Physical Domains
+# Physical Domain: Location in GUI: `Fabric` » `Access Policies` » `Physical and External Domains` » `Physical Domains`
     physical_domains:
       - name: BRKDCN-2959.vrf-02
         vlan_pool: BRKDCN-2959.vrf-02
@@ -56,7 +56,7 @@ apic:
       - name: ucsc-c220m5-vds-01
         vlan_pool: ucsc-c220m5-vds-01
 
-# L3 Domains
+# Routed Domain: Location in GUI: `Fabric` » `Access Policies` » `Physical and External Domains` » `L3 Domains`
     routed_domains:
       - name: ajshahid.vrf-01
         vlan_pool: hx-dev-01-vds-02
@@ -118,6 +118,9 @@ apic:
 
       - name: isovalent.vrf-02
         vlan_pool: isovalent-nodes
+
+      - name: isovalent.vrf-03
+        vlan_pool: isovalent.vrf-03
 
       - name: mgmt-inb.vrf-01
 

@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf interface policy groups
+# Access Leaf Interface Policy Group: Location in GUI: `Fabric` » `Access Policies` » `Interfaces` » `Leaf Interfaces` » `Policy Groups`
     leaf_interface_policy_groups:
 
 # Access port

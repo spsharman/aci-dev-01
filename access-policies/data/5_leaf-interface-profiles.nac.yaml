@@ -2,7 +2,7 @@ apic:
   new_interface_configuration: false
   access_policies:  
 
-# Leaf interface profiles - Pod 1
+# Access Leaf Interface Profile: Location in GUI: `Fabric` » `Access Policies` » `Interfaces` » `Leaf Interfaces` » `Profiles`
     leaf_interface_profiles:
 # aci-dev-01-pod-01-leaf-1101
       - name: aci-dev-01-pod-01-leaf-1101
@@ -324,7 +324,7 @@ apic:
                 from_port: 45
                 to_port: 45
 
-# Leaf interface profiles - Pod 2
+# Access Leaf Interface Profile: Location in GUI: `Fabric` » `Access Policies` » `Interfaces` » `Leaf Interfaces` » `Profiles`
 
 # aci-dev-01-pod-02-leaf-2101
       - name: aci-dev-01-pod-02-leaf-2101
@@ -361,17 +361,17 @@ apic:
                 from_port: 14
                 to_port: 14
 
-          - name: hx-dev-02-fi-a
-            policy_group: hx-dev-02-fi-a
-            port_blocks:
-              - name: block-1
-                description: hx-dev-02-fi-a e1/31
-                from_port: 9
-                to_port: 9
-              - name: block-2
-                description: hx-dev-02-fi-a e1/32
-                from_port: 10
-                to_port: 10
+          # - name: hx-dev-02-fi-a
+          #   policy_group: hx-dev-02-fi-a
+          #   port_blocks:
+          #     - name: block-1
+          #       description: hx-dev-02-fi-a e1/31
+          #       from_port: 9
+          #       to_port: 9
+          #     - name: block-2
+          #       description: hx-dev-02-fi-a e1/32
+          #       from_port: 10
+          #       to_port: 10
 
           # - name: ucs-c220m3-vds-01
           #   policy_group: ucs-c220m3-vds-01
@@ -445,17 +445,17 @@ apic:
                 from_port: 14
                 to_port: 14
 
-          - name: hx-dev-02-fi-b
-            policy_group: hx-dev-02-fi-b
-            port_blocks:
-              - name: block-1
-                description: hx-dev-02-fi-b e1/31
-                from_port: 9
-                to_port: 9
-              - name: block-2
-                description: hx-dev-02-fi-b e1/32
-                from_port: 10
-                to_port: 10
+          # - name: hx-dev-02-fi-b
+          #   policy_group: hx-dev-02-fi-b
+          #   port_blocks:
+          #     - name: block-1
+          #       description: hx-dev-02-fi-b e1/31
+          #       from_port: 9
+          #       to_port: 9
+          #     - name: block-2
+          #       description: hx-dev-02-fi-b e1/32
+          #       from_port: 10
+          #       to_port: 10
 
           # - name: ucs-c220m3-vds-01
           #   policy_group: ucs-c220m3-vds-01
