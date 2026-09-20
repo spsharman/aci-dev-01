@@ -1,0 +1,561 @@
+{
+  "tenant": "isovalent",
+  "subtitle": "INTENT   \u00b7   configuration-v13.nac.yaml   \u00b7   desired VRF / AP / ESG / contracts",
+  "generated": "2026-09-17 14:49 UTC",
+  "vrfs": {
+    "primary": "vrf-01",
+    "secondary": "vrf-02",
+    "all": [
+      "vrf-02",
+      "vrf-01",
+      "vrf-03"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "esg:egress-subnet-cluster-1",
+      "label": "egress-subnet-cluster-1",
+      "kind": "esg",
+      "ap": "egress-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 1,
+      "provides": 0,
+      "degree": 1
+    },
+    {
+      "id": "esg:egress-subnet-cluster-2",
+      "label": "egress-subnet-cluster-2",
+      "kind": "esg",
+      "ap": "egress-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 1,
+      "provides": 0,
+      "degree": 1
+    },
+    {
+      "id": "esg:10.100.7.0_24",
+      "label": "10.100.7.0_24",
+      "kind": "esg",
+      "ap": "external-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 1,
+      "provides": 1,
+      "degree": 2
+    },
+    {
+      "id": "esg:all-external-subnets",
+      "label": "all-external-subnets",
+      "kind": "esg",
+      "ap": "external-subnets-esgs",
+      "vrf": "vrf-02",
+      "consumes": 0,
+      "provides": 1,
+      "degree": 1
+    },
+    {
+      "id": "esg:core-services",
+      "label": "core-services",
+      "kind": "esg",
+      "ap": "external-subnets-esgs",
+      "vrf": "vrf-02",
+      "consumes": 0,
+      "provides": 2,
+      "degree": 2
+    },
+    {
+      "id": "esg:lab-desktops",
+      "label": "lab-desktops",
+      "kind": "esg",
+      "ap": "external-subnets-esgs",
+      "vrf": "vrf-02",
+      "consumes": 0,
+      "provides": 1,
+      "degree": 1
+    },
+    {
+      "id": "esg:ilb-vip-subnet",
+      "label": "ilb-vip-subnet",
+      "kind": "esg",
+      "ap": "ilb-vip-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 0,
+      "provides": 1,
+      "degree": 1
+    },
+    {
+      "id": "esg:ingress-subnet-cluster-1",
+      "label": "ingress-subnet-cluster-1",
+      "kind": "esg",
+      "ap": "ingress-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 0,
+      "provides": 1,
+      "degree": 1
+    },
+    {
+      "id": "esg:ingress-subnet-cluster-2",
+      "label": "ingress-subnet-cluster-2",
+      "kind": "esg",
+      "ap": "ingress-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 0,
+      "provides": 1,
+      "degree": 1
+    },
+    {
+      "id": "esg:10.100.8.0_24",
+      "label": "10.100.8.0_24",
+      "kind": "esg",
+      "ap": "network-segments",
+      "vrf": "vrf-01",
+      "consumes": 1,
+      "provides": 1,
+      "degree": 2
+    },
+    {
+      "id": "esg:10.237.101.144_28-jumphosts",
+      "label": "10.237.101.144_28-jumphosts",
+      "kind": "esg",
+      "ap": "network-segments-esgs",
+      "vrf": "vrf-01",
+      "consumes": 5,
+      "provides": 0,
+      "degree": 5
+    },
+    {
+      "id": "esg:10.237.101.96_28-nginx-subnet",
+      "label": "10.237.101.96_28-nginx-subnet",
+      "kind": "esg",
+      "ap": "network-segments-esgs",
+      "vrf": "vrf-01",
+      "consumes": 3,
+      "provides": 1,
+      "degree": 4
+    },
+    {
+      "id": "esg:node-subnets",
+      "label": "node-subnets",
+      "kind": "esg",
+      "ap": "node-subnets-esgs",
+      "vrf": "vrf-01",
+      "consumes": 5,
+      "provides": 1,
+      "degree": 6
+    },
+    {
+      "id": "vzany",
+      "label": "vzAny",
+      "kind": "vzany",
+      "ap": "\u2014",
+      "vrf": "vrf-01",
+      "consumes": 4,
+      "provides": 0,
+      "degree": 4
+    }
+  ],
+  "contracts": [
+    {
+      "name": "intra-tenant",
+      "scope": "context",
+      "consumers": [],
+      "providers": [],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": true
+    },
+    {
+      "name": "permit-from-core-services",
+      "scope": "tenant",
+      "consumers": [
+        "vzany"
+      ],
+      "providers": [
+        "esg:core-services"
+      ],
+      "filters": [
+        "tcp-src-22-dst-any: ipv4 tcp src 22",
+        "tcp-src-443-dst-any: ipv4 tcp src 443",
+        "udp-src-68-dst-any: ipv4 udp src 68",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-from-lab-desktops",
+      "scope": "tenant",
+      "consumers": [],
+      "providers": [],
+      "filters": [
+        "src-any-dst-any: unspecified",
+        "icmp: icmp"
+      ],
+      "dangling": true
+    },
+    {
+      "name": "permit-to-all-external-subnets",
+      "scope": "tenant",
+      "consumers": [
+        "vzany"
+      ],
+      "providers": [
+        "esg:all-external-subnets"
+      ],
+      "filters": [
+        "src-any-dst-any: unspecified",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-core-services",
+      "scope": "tenant",
+      "consumers": [
+        "vzany"
+      ],
+      "providers": [
+        "esg:core-services"
+      ],
+      "filters": [
+        "tcp-src-any-dst-22: ipv4 tcp 22",
+        "tcp-src-any-dst-80: ipv4 tcp 80",
+        "tcp-src-any-dst-443: ipv4 tcp 443",
+        "udp-src-any-dst-53: ipv4 udp 53",
+        "udp-src-any-dst-67: ipv4 udp 67",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-egress-subnet",
+      "scope": "tenant",
+      "consumers": [],
+      "providers": [],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": true
+    },
+    {
+      "name": "permit-to-ilb-vip-subnet",
+      "scope": "tenant",
+      "consumers": [
+        "esg:10.237.101.144_28-jumphosts",
+        "esg:10.237.101.96_28-nginx-subnet",
+        "esg:node-subnets"
+      ],
+      "providers": [
+        "esg:ilb-vip-subnet"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-ingress-subnet-cluster-1",
+      "scope": "tenant",
+      "consumers": [
+        "esg:10.237.101.144_28-jumphosts",
+        "esg:10.237.101.96_28-nginx-subnet",
+        "esg:node-subnets"
+      ],
+      "providers": [
+        "esg:ingress-subnet-cluster-1"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-ingress-subnet-cluster-2",
+      "scope": "tenant",
+      "consumers": [
+        "esg:10.237.101.144_28-jumphosts",
+        "esg:10.237.101.96_28-nginx-subnet",
+        "esg:node-subnets"
+      ],
+      "providers": [
+        "esg:ingress-subnet-cluster-2"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-lab-desktops",
+      "scope": "tenant",
+      "consumers": [
+        "vzany"
+      ],
+      "providers": [
+        "esg:lab-desktops"
+      ],
+      "filters": [
+        "src-any-dst-any: unspecified",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-network-segments-10.100.7.0_24",
+      "scope": "context",
+      "consumers": [
+        "esg:10.100.8.0_24"
+      ],
+      "providers": [
+        "esg:10.100.7.0_24"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-network-segments-10.100.8.0_24",
+      "scope": "context",
+      "consumers": [
+        "esg:10.100.7.0_24"
+      ],
+      "providers": [
+        "esg:10.100.8.0_24"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-nginx-subnet-10.237.101.96_28",
+      "scope": "context",
+      "consumers": [
+        "esg:10.237.101.144_28-jumphosts",
+        "esg:egress-subnet-cluster-1",
+        "esg:egress-subnet-cluster-2"
+      ],
+      "providers": [
+        "esg:10.237.101.96_28-nginx-subnet"
+      ],
+      "filters": [
+        "tcp-src-any-dst-80: ipv4 tcp 80",
+        "tcp-src-any-dst-4444: tcp 4444",
+        "tcp-src-any-dst-19765: tcp 19765",
+        "icmp: icmp"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-node-subnet",
+      "scope": "tenant",
+      "consumers": [
+        "esg:10.237.101.144_28-jumphosts"
+      ],
+      "providers": [
+        "esg:node-subnets"
+      ],
+      "filters": [
+        "ipv4-src-any-dst-any: ipv4"
+      ],
+      "dangling": false
+    },
+    {
+      "name": "permit-to-pod-subnet-cluster-1",
+      "scope": "context",
+      "consumers": [
+        "esg:node-subnets"
+      ],
+      "providers": [],
+      "filters": [
+        "icmp: icmp",
+        "tcp-src-any-dst-any: tcp",
+        "udp-src-any-dst-any: udp"
+      ],
+      "dangling": true
+    },
+    {
+      "name": "permit-to-pod-subnet-cluster-2",
+      "scope": "context",
+      "consumers": [
+        "esg:node-subnets"
+      ],
+      "providers": [],
+      "filters": [
+        "icmp: icmp",
+        "tcp-src-any-dst-any: tcp",
+        "udp-src-any-dst-any: udp"
+      ],
+      "dangling": true
+    }
+  ],
+  "links": [
+    {
+      "source": "vzany",
+      "target": "esg:core-services",
+      "contract": "permit-from-core-services",
+      "scope": "tenant"
+    },
+    {
+      "source": "vzany",
+      "target": "esg:all-external-subnets",
+      "contract": "permit-to-all-external-subnets",
+      "scope": "tenant"
+    },
+    {
+      "source": "vzany",
+      "target": "esg:core-services",
+      "contract": "permit-to-core-services",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.144_28-jumphosts",
+      "target": "esg:ilb-vip-subnet",
+      "contract": "permit-to-ilb-vip-subnet",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.96_28-nginx-subnet",
+      "target": "esg:ilb-vip-subnet",
+      "contract": "permit-to-ilb-vip-subnet",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:node-subnets",
+      "target": "esg:ilb-vip-subnet",
+      "contract": "permit-to-ilb-vip-subnet",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.144_28-jumphosts",
+      "target": "esg:ingress-subnet-cluster-1",
+      "contract": "permit-to-ingress-subnet-cluster-1",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.96_28-nginx-subnet",
+      "target": "esg:ingress-subnet-cluster-1",
+      "contract": "permit-to-ingress-subnet-cluster-1",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:node-subnets",
+      "target": "esg:ingress-subnet-cluster-1",
+      "contract": "permit-to-ingress-subnet-cluster-1",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.144_28-jumphosts",
+      "target": "esg:ingress-subnet-cluster-2",
+      "contract": "permit-to-ingress-subnet-cluster-2",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.237.101.96_28-nginx-subnet",
+      "target": "esg:ingress-subnet-cluster-2",
+      "contract": "permit-to-ingress-subnet-cluster-2",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:node-subnets",
+      "target": "esg:ingress-subnet-cluster-2",
+      "contract": "permit-to-ingress-subnet-cluster-2",
+      "scope": "tenant"
+    },
+    {
+      "source": "vzany",
+      "target": "esg:lab-desktops",
+      "contract": "permit-to-lab-desktops",
+      "scope": "tenant"
+    },
+    {
+      "source": "esg:10.100.8.0_24",
+      "target": "esg:10.100.7.0_24",
+      "contract": "permit-to-network-segments-10.100.7.0_24",
+      "scope": "context"
+    },
+    {
+      "source": "esg:10.100.7.0_24",
+      "target": "esg:10.100.8.0_24",
+      "contract": "permit-to-network-segments-10.100.8.0_24",
+      "scope": "context"
+    },
+    {
+      "source": "esg:10.237.101.144_28-jumphosts",
+      "target": "esg:10.237.101.96_28-nginx-subnet",
+      "contract": "permit-to-nginx-subnet-10.237.101.96_28",
+      "scope": "context"
+    },
+    {
+      "source": "esg:egress-subnet-cluster-1",
+      "target": "esg:10.237.101.96_28-nginx-subnet",
+      "contract": "permit-to-nginx-subnet-10.237.101.96_28",
+      "scope": "context"
+    },
+    {
+      "source": "esg:egress-subnet-cluster-2",
+      "target": "esg:10.237.101.96_28-nginx-subnet",
+      "contract": "permit-to-nginx-subnet-10.237.101.96_28",
+      "scope": "context"
+    },
+    {
+      "source": "esg:10.237.101.144_28-jumphosts",
+      "target": "esg:node-subnets",
+      "contract": "permit-to-node-subnet",
+      "scope": "tenant"
+    }
+  ],
+  "bds": [
+    {
+      "name": "10.237.101.96/28",
+      "gw": "GW  10.237.101.97/28   public + shared",
+      "vrf": "vrf-01"
+    },
+    {
+      "name": "10.237.101.144/28",
+      "gw": "GW  10.237.101.145/28   public + shared",
+      "vrf": "vrf-01"
+    },
+    {
+      "name": "10.100.8.0/24",
+      "gw": "GW  10.100.8.1/24   public",
+      "vrf": "vrf-01"
+    },
+    {
+      "name": "10.100.7.0/24",
+      "gw": "GW  10.100.7.1/24   public",
+      "vrf": "vrf-03"
+    }
+  ],
+  "l3outs": {
+    "inside": [
+      "vrf-01-to-k8s-nodes    vrf-01-bgp-floating-l3out",
+      "vrf-01-to-smart-switch-p2p    vrf-01-bgp-p2p",
+      "vrf-01-to-smart-switch-svi    vrf-01-bgp-svi"
+    ],
+    "outside": [
+      "vrf-02-to-core    vrf-02-bgp-p2p"
+    ],
+    "vrf-02": [
+      "vrf-02-to-core    vrf-02-bgp-p2p"
+    ],
+    "vrf-01": [
+      "vrf-01-to-k8s-nodes    vrf-01-bgp-floating-l3out",
+      "vrf-01-to-smart-switch-p2p    vrf-01-bgp-p2p",
+      "vrf-01-to-smart-switch-svi    vrf-01-bgp-svi"
+    ],
+    "vrf-03": [
+      "vrf-03-to-smart-switch    vrf-03-bgp-svi"
+    ]
+  },
+  "notes": "Defined but not attached in NAC:  intra-tenant  \u00b7  permit-to-egress-subnet  \u00b7  permit-from-lab-desktops",
+  "stats": {
+    "nodes": 14,
+    "links": 19,
+    "contracts": 16,
+    "dangling": 5,
+    "unfiltered": 0
+  }
+}

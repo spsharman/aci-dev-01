@@ -1,0 +1,549 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3400" height="3147" viewBox="0 0 3400 3147" shape-rendering="geometricPrecision">
+<rect x="0" y="0" width="3400" height="3147" fill="#ffffff"/>
+<ellipse cx="48" cy="43" rx="20" ry="17" fill="#e2e9f0" stroke="#8292a2" stroke-width="1"/>
+<ellipse cx="75" cy="36" rx="27" ry="24" fill="#e2e9f0" stroke="#8292a2" stroke-width="1"/>
+<ellipse cx="107" cy="42" rx="23" ry="18" fill="#e2e9f0" stroke="#8292a2" stroke-width="1"/>
+<rect x="42" y="40" width="72" height="19" fill="#e2e9f0" stroke="none"/>
+<line x1="42" y1="59" x2="114" y2="59" stroke="#8292a2" stroke-width="1"/>
+<text x="138" y="40" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#212529" xml:space="preserve">isovalent</text>
+<text x="255" y="39" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="14" fill="#5f5f5f" xml:space="preserve">INTENT   ·   configuration-v13.nac.yaml   ·   desired VRF / AP / ESG / contracts</text>
+<rect x="1180" y="28" width="14" height="12" fill="#7ab548" stroke="none"/>
+<text x="1198" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">tenant</text>
+<rect x="1258" y="28" width="14" height="12" fill="#f47b20" stroke="none"/>
+<text x="1276" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">VRF</text>
+<rect x="1336" y="28" width="14" height="12" fill="#c41e3a" stroke="none"/>
+<text x="1354" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">AP</text>
+<rect x="1414" y="28" width="14" height="12" fill="#66a636" stroke="none"/>
+<text x="1432" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">ESG</text>
+<rect x="1492" y="28" width="14" height="12" fill="#0091d6" stroke="none"/>
+<text x="1510" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">BD</text>
+<rect x="1570" y="28" width="14" height="12" fill="#343434" stroke="none"/>
+<text x="1588" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">EPG</text>
+<rect x="1648" y="26" width="16" height="16" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1651" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1668" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">consumer</text>
+<rect x="1736" y="26" width="16" height="16" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1739" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1756" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">provider</text>
+<text x="1828" y="37" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">CCI consumed-IF I intra</text>
+<rect x="16" y="58" width="3368" height="3045" rx="8" ry="8" fill="none" stroke="#7ab548" stroke-width="3"/>
+<rect x="32" y="74" width="1101" height="2489" rx="6" ry="6" fill="none" stroke="#f47b20" stroke-width="2"/>
+<ellipse cx="69" cy="96.5" rx="17" ry="6.5" fill="#0091d6" stroke="#0064a0" stroke-width="1"/>
+<rect x="52" y="96" width="34" height="14" fill="#0091d6" stroke="none"/>
+<ellipse cx="69" cy="110.5" rx="17" ry="6.5" fill="#0078ba" stroke="#005a8c" stroke-width="1"/>
+<ellipse cx="61" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="70" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="79" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<text x="98" y="108" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="#212529" xml:space="preserve">vrf-02  (outside)</text>
+<rect x="52" y="128" width="620" height="34" rx="4" ry="4" fill="#ffffff" stroke="#a0a0a0" stroke-width="1"/>
+<text x="64" y="148" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">L3out  vrf-02-to-core    vrf-02-bgp-p2p</text>
+<rect x="52" y="192" width="1061" height="408" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="53" y="193" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="62" y="214" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  external-subnets-esgs</text>
+<rect x="62" y="224" width="1041" height="119" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="63" y="225" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="72" y="247" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  core-services</text>
+<text x="72" y="267" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.97.128/27   shared</text>
+<rect x="72" y="274" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="75" y="284" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="94" y="284" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-core-services</text>
+<rect x="72" y="291" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="75" y="301" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="94" y="301" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-from-core-services</text>
+<rect x="72" y="317" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="86.5" y="330" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="118" y="317" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="127.5" y="330" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="164" y="317" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="180.5" y="330" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="210" y="317" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="224.5" y="330" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="62" y="351" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="63" y="352" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="72" y="374" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  lab-desktops</text>
+<text x="72" y="394" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.97.160/28   shared</text>
+<rect x="72" y="401" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="75" y="411" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="94" y="411" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-lab-desktops</text>
+<rect x="72" y="427" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="86.5" y="440" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="118" y="427" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="127.5" y="440" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="164" y="427" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="180.5" y="440" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="210" y="427" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="224.5" y="440" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="62" y="461" width="1041" height="119" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="63" y="462" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="72" y="484" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  all-external-subnets</text>
+<text x="72" y="504" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  0.0.0.0/1   shared</text>
+<text x="72" y="521" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  128.0.0.0/1   shared</text>
+<rect x="72" y="528" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="75" y="538" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="94" y="538" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-all-external-subnets</text>
+<rect x="72" y="554" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="86.5" y="567" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="118" y="554" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="127.5" y="567" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="164" y="554" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="180.5" y="567" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="210" y="554" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="224.5" y="567" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1149" y="74" width="1101" height="2489" rx="6" ry="6" fill="none" stroke="#f47b20" stroke-width="2"/>
+<ellipse cx="1186" cy="96.5" rx="17" ry="6.5" fill="#0091d6" stroke="#0064a0" stroke-width="1"/>
+<rect x="1169" y="96" width="34" height="14" fill="#0091d6" stroke="none"/>
+<ellipse cx="1186" cy="110.5" rx="17" ry="6.5" fill="#0078ba" stroke="#005a8c" stroke-width="1"/>
+<ellipse cx="1178" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="1187" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="1196" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<text x="1215" y="108" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="#212529" xml:space="preserve">vrf-01  (inside)</text>
+<rect x="1169" y="128" width="620" height="34" rx="4" ry="4" fill="#ffffff" stroke="#a0a0a0" stroke-width="1"/>
+<text x="1181" y="148" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">L3out  vrf-01-to-k8s-nodes    vrf-01-bgp-floating-l3out</text>
+<rect x="1169" y="172" width="620" height="34" rx="4" ry="4" fill="#ffffff" stroke="#a0a0a0" stroke-width="1"/>
+<text x="1181" y="192" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">L3out  vrf-01-to-smart-switch-p2p    vrf-01-bgp-p2p</text>
+<rect x="1169" y="216" width="620" height="34" rx="4" ry="4" fill="#ffffff" stroke="#a0a0a0" stroke-width="1"/>
+<text x="1181" y="236" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">L3out  vrf-01-to-smart-switch-svi    vrf-01-bgp-svi</text>
+<rect x="1169" y="280" width="964" height="132" rx="5" ry="5" fill="#ffffff" stroke="#343434" stroke-width="1"/>
+<rect x="1170" y="281" width="962" height="6" fill="#343434" stroke="none"/>
+<text x="1179" y="303" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">EPG  vzAny  (vrf-01)</text>
+<rect x="1179" y="313" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1182" y="323" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1201" y="323" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-all-external-subnets</text>
+<rect x="1179" y="330" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1182" y="340" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1201" y="340" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-from-core-services</text>
+<rect x="1179" y="347" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1182" y="357" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1201" y="357" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-core-services</text>
+<rect x="1179" y="364" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1182" y="374" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1201" y="374" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-lab-desktops</text>
+<rect x="1179" y="388" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1193.5" y="401" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1225" y="388" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1234.5" y="401" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1271" y="388" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1287.5" y="401" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1317" y="388" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="1331.5" y="401" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="1169" y="432" width="360" height="46" rx="4" ry="4" fill="#ffffff" stroke="#0091d6" stroke-width="2"/>
+<rect x="1170" y="433" width="358" height="5" fill="#0091d6" stroke="none"/>
+<text x="1179" y="454" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">BD  10.237.101.96/28</text>
+<text x="1179" y="469" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">GW  10.237.101.97/28   public + shared</text>
+<rect x="1549" y="432" width="360" height="46" rx="4" ry="4" fill="#ffffff" stroke="#0091d6" stroke-width="2"/>
+<rect x="1550" y="433" width="358" height="5" fill="#0091d6" stroke="none"/>
+<text x="1559" y="454" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">BD  10.237.101.144/28</text>
+<text x="1559" y="469" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">GW  10.237.101.145/28   public + shared</text>
+<rect x="1169" y="488" width="360" height="46" rx="4" ry="4" fill="#ffffff" stroke="#0091d6" stroke-width="2"/>
+<rect x="1170" y="489" width="358" height="5" fill="#0091d6" stroke="none"/>
+<text x="1179" y="510" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">BD  10.100.8.0/24</text>
+<text x="1179" y="525" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">GW  10.100.8.1/24   public</text>
+<rect x="1169" y="554" width="1061" height="332" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="555" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="576" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  network-segments</text>
+<rect x="1179" y="586" width="1041" height="88" rx="4" ry="4" fill="#ffffff" stroke="#343434" stroke-width="1"/>
+<rect x="1180" y="587" width="1039" height="5" fill="#343434" stroke="none"/>
+<text x="1189" y="608" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">EPG  10.237.101.96/28</text>
+<rect x="1187" y="618" width="1025" height="48" rx="3" ry="3" fill="#f6f6f6" stroke="#d2d2d2" stroke-width="1"/>
+<rect x="1195" y="632" width="16" height="22" rx="2" ry="2" fill="#c41e3a" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1198" y="637" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1221" y="632" width="16" height="22" rx="2" ry="2" fill="#c41e3a" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1224" y="637" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1247" y="632" width="16" height="22" rx="2" ry="2" fill="#c41e3a" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1250" y="637" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1273" y="632" width="16" height="22" rx="2" ry="2" fill="#c41e3a" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1276" y="637" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1179" y="682" width="1041" height="88" rx="4" ry="4" fill="#ffffff" stroke="#343434" stroke-width="1"/>
+<rect x="1180" y="683" width="1039" height="5" fill="#343434" stroke="none"/>
+<text x="1189" y="704" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">EPG  10.237.101.144/28</text>
+<rect x="1187" y="714" width="1025" height="48" rx="3" ry="3" fill="#f6f6f6" stroke="#d2d2d2" stroke-width="1"/>
+<rect x="1195" y="728" width="16" height="22" rx="2" ry="2" fill="#0070ba" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1198" y="733" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1221" y="728" width="16" height="22" rx="2" ry="2" fill="#0070ba" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1224" y="733" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1247" y="728" width="16" height="22" rx="2" ry="2" fill="#0070ba" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1250" y="733" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1273" y="728" width="16" height="22" rx="2" ry="2" fill="#0070ba" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1276" y="733" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1179" y="778" width="1041" height="88" rx="4" ry="4" fill="#ffffff" stroke="#343434" stroke-width="1"/>
+<rect x="1180" y="779" width="1039" height="5" fill="#343434" stroke="none"/>
+<text x="1189" y="800" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">EPG  10.100.8.0/24</text>
+<rect x="1187" y="810" width="1025" height="48" rx="3" ry="3" fill="#f6f6f6" stroke="#d2d2d2" stroke-width="1"/>
+<rect x="1195" y="824" width="16" height="22" rx="2" ry="2" fill="#66a636" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1198" y="829" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1221" y="824" width="16" height="22" rx="2" ry="2" fill="#66a636" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1224" y="829" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1247" y="824" width="16" height="22" rx="2" ry="2" fill="#66a636" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1250" y="829" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1273" y="824" width="16" height="22" rx="2" ry="2" fill="#66a636" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="1276" y="829" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="1169" y="898" width="1061" height="493" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="899" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="920" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  network-segments-esgs</text>
+<rect x="1179" y="930" width="1041" height="153" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="931" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="953" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.237.101.96_28-nginx-subnet</text>
+<text x="1189" y="973" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">EPG selector  network-segments / 10.237.101.96_28</text>
+<rect x="1189" y="980" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="990" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="990" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-1</text>
+<rect x="1189" y="997" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1007" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1007" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-2</text>
+<rect x="1189" y="1014" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1024" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1024" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ilb-vip-subnet</text>
+<rect x="1189" y="1031" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="1041" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="1041" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-nginx-subnet-10.237.101.96_28</text>
+<rect x="1189" y="1057" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1070" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="1057" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1070" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1057" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1070" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1057" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1070" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1179" y="1091" width="1041" height="170" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1092" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="1114" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.237.101.144_28-jumphosts</text>
+<text x="1189" y="1134" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">EPG selector  network-segments / 10.237.101.144_28</text>
+<rect x="1189" y="1141" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1151" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1151" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-node-subnet</text>
+<rect x="1189" y="1158" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1168" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1168" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-nginx-subnet-10.237.101.96_28</text>
+<rect x="1189" y="1175" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1185" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1185" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-1</text>
+<rect x="1189" y="1192" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1202" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1202" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-2</text>
+<rect x="1189" y="1209" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1219" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1219" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ilb-vip-subnet</text>
+<rect x="1189" y="1235" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1248" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="1235" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1248" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1235" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1248" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1235" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1248" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="1179" y="1269" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1270" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="1292" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.100.8.0_24</text>
+<text x="1189" y="1312" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">EPG selector  network-segments / 10.100.8.0_24</text>
+<rect x="1189" y="1319" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="1329" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="1329" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.8.0_24</text>
+<rect x="1189" y="1345" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1358" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="1235" y="1345" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1358" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1345" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1358" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1345" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1358" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1169" y="1403" width="1061" height="256" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="1404" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="1425" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  node-subnets-esgs</text>
+<rect x="1179" y="1435" width="1041" height="204" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1436" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="1458" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  node-subnets</text>
+<text x="1189" y="1478" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.100.0.0/23   shared</text>
+<text x="1189" y="1495" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.0/27   shared</text>
+<rect x="1189" y="1502" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1512" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1512" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-1</text>
+<rect x="1189" y="1519" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1529" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1529" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-2</text>
+<rect x="1189" y="1536" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1546" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1546" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ilb-vip-subnet</text>
+<rect x="1189" y="1553" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1563" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1563" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-pod-subnet-cluster-1</text>
+<rect x="1189" y="1570" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1580" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1580" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-pod-subnet-cluster-2</text>
+<rect x="1189" y="1587" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="1597" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="1597" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-node-subnet</text>
+<rect x="1189" y="1613" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1626" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="1613" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1626" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1613" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1626" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1613" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1626" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1169" y="1671" width="1061" height="264" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="1672" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="1693" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  egress-subnets-esgs</text>
+<rect x="1179" y="1703" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1704" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="1726" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  egress-subnet-cluster-1</text>
+<text x="1189" y="1746" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.48/28   shared</text>
+<rect x="1189" y="1753" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1763" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1763" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-nginx-subnet-10.237.101.96_28</text>
+<rect x="1189" y="1779" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1792" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="1779" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1792" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1779" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1792" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1779" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1792" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="1179" y="1813" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1814" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="1836" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  egress-subnet-cluster-2</text>
+<text x="1189" y="1856" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.120/29   shared</text>
+<rect x="1189" y="1863" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="1873" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="1873" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-nginx-subnet-10.237.101.96_28</text>
+<rect x="1189" y="1889" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="1902" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="1889" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="1902" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="1889" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="1902" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="1889" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="1902" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="1169" y="1947" width="1061" height="264" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="1948" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="1969" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  ingress-subnets-esgs</text>
+<rect x="1179" y="1979" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="1980" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="2002" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  ingress-subnet-cluster-1</text>
+<text x="1189" y="2022" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.32/28   shared</text>
+<rect x="1189" y="2029" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="2039" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="2039" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-1</text>
+<rect x="1189" y="2055" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="2068" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="1235" y="2055" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="2068" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="2055" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="2068" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="2055" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="2068" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1179" y="2089" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="2090" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="2112" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  ingress-subnet-cluster-2</text>
+<text x="1189" y="2132" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.112/29   shared</text>
+<rect x="1189" y="2139" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="2149" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="2149" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-2</text>
+<rect x="1189" y="2165" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="2178" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="1235" y="2165" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="2178" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="2165" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="2178" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="2165" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="2178" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1169" y="2223" width="1061" height="154" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="2224" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="2245" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  ilb-vip-subnets-esgs</text>
+<rect x="1179" y="2255" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="2256" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="2278" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  ilb-vip-subnet</text>
+<text x="1189" y="2298" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.237.101.128/29   shared</text>
+<rect x="1189" y="2305" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1192" y="2315" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="1211" y="2315" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-ilb-vip-subnet</text>
+<rect x="1189" y="2331" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="2344" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="1235" y="2331" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="2344" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="2331" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="2344" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="2331" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="2344" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="1169" y="2389" width="1061" height="154" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="1170" y="2390" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="1179" y="2411" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  external-subnets-esgs</text>
+<rect x="1179" y="2421" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="1180" y="2422" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="1189" y="2444" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.100.7.0_24</text>
+<text x="1189" y="2464" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.100.7.0/24</text>
+<rect x="1189" y="2471" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1192" y="2481" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="1211" y="2481" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.8.0_24</text>
+<rect x="1189" y="2497" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="1203.5" y="2510" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="1235" y="2497" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1244.5" y="2510" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="1281" y="2497" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="1297.5" y="2510" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="1327" y="2497" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="1341.5" y="2510" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="2266" y="74" width="1101" height="2489" rx="6" ry="6" fill="none" stroke="#f47b20" stroke-width="2"/>
+<ellipse cx="2303" cy="96.5" rx="17" ry="6.5" fill="#0091d6" stroke="#0064a0" stroke-width="1"/>
+<rect x="2286" y="96" width="34" height="14" fill="#0091d6" stroke="none"/>
+<ellipse cx="2303" cy="110.5" rx="17" ry="6.5" fill="#0078ba" stroke="#005a8c" stroke-width="1"/>
+<ellipse cx="2295" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="2304" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<ellipse cx="2313" cy="97" rx="3" ry="3" fill="#b4e6ff" stroke="none"/>
+<text x="2332" y="108" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="#212529" xml:space="preserve">vrf-03</text>
+<rect x="2286" y="128" width="620" height="34" rx="4" ry="4" fill="#ffffff" stroke="#a0a0a0" stroke-width="1"/>
+<text x="2298" y="148" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">L3out  vrf-03-to-smart-switch    vrf-03-bgp-svi</text>
+<rect x="2286" y="192" width="360" height="46" rx="4" ry="4" fill="#ffffff" stroke="#0091d6" stroke-width="2"/>
+<rect x="2287" y="193" width="358" height="5" fill="#0091d6" stroke="none"/>
+<text x="2296" y="214" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">BD  10.100.7.0/24</text>
+<text x="2296" y="229" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">GW  10.100.7.1/24   public</text>
+<rect x="2286" y="258" width="1061" height="140" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="2287" y="259" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="2296" y="280" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  network-segments</text>
+<rect x="2296" y="290" width="1041" height="88" rx="4" ry="4" fill="#ffffff" stroke="#343434" stroke-width="1"/>
+<rect x="2297" y="291" width="1039" height="5" fill="#343434" stroke="none"/>
+<text x="2306" y="312" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">EPG  10.100.7.0/24</text>
+<rect x="2304" y="322" width="1025" height="48" rx="3" ry="3" fill="#f6f6f6" stroke="#d2d2d2" stroke-width="1"/>
+<rect x="2312" y="336" width="16" height="22" rx="2" ry="2" fill="#0091d6" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="2315" y="341" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="2338" y="336" width="16" height="22" rx="2" ry="2" fill="#0091d6" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="2341" y="341" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="2364" y="336" width="16" height="22" rx="2" ry="2" fill="#0091d6" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="2367" y="341" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="2390" y="336" width="16" height="22" rx="2" ry="2" fill="#0091d6" stroke="#5a5a5a" stroke-width="1"/>
+<rect x="2393" y="341" width="10" height="3" fill="#ffffff" stroke="none"/>
+<rect x="2286" y="410" width="1061" height="154" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="2287" y="411" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="2296" y="432" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  network-segments-esgs</text>
+<rect x="2296" y="442" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="2297" y="443" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="2306" y="465" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.100.7.0_24</text>
+<text x="2306" y="485" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">EPG selector  network-segments / 10.100.7.0_24</text>
+<rect x="2306" y="492" width="16" height="14" rx="2" ry="2" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="2309" y="502" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<text x="2328" y="502" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.7.0_24</text>
+<rect x="2306" y="518" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#0091ad" stroke-width="1"/>
+<text x="2320.5" y="531" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#0091ad" xml:space="preserve">C</text>
+<rect x="2352" y="518" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="2361.5" y="531" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="2398" y="518" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="2414.5" y="531" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="2444" y="518" width="36" height="18" rx="3" ry="3" fill="#66a636" stroke="#66a636" stroke-width="1"/>
+<text x="2458.5" y="531" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">P</text>
+<rect x="2286" y="576" width="1061" height="154" rx="5" ry="5" fill="#ffffff" stroke="#c41e3a" stroke-width="2"/>
+<rect x="2287" y="577" width="1059" height="6" fill="#c41e3a" stroke="none"/>
+<text x="2296" y="598" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">AP  external-subnets-esgs</text>
+<rect x="2296" y="608" width="1041" height="102" rx="5" ry="5" fill="#ffffff" stroke="#66a636" stroke-width="2"/>
+<rect x="2297" y="609" width="1039" height="6" fill="#66a636" stroke="none"/>
+<text x="2306" y="631" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">ESG  10.100.8.0_24</text>
+<text x="2306" y="651" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#5f5f5f" xml:space="preserve">IP selector  10.100.8.0/24</text>
+<rect x="2306" y="658" width="16" height="14" rx="2" ry="2" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="2309" y="668" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<text x="2328" y="668" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.7.0_24</text>
+<rect x="2306" y="684" width="36" height="18" rx="3" ry="3" fill="#0091ad" stroke="#0091ad" stroke-width="1"/>
+<text x="2320.5" y="697" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" xml:space="preserve">C</text>
+<rect x="2352" y="684" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="2361.5" y="697" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">CCI</text>
+<rect x="2398" y="684" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#f5c018" stroke-width="1"/>
+<text x="2414.5" y="697" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#f5c018" xml:space="preserve">I</text>
+<rect x="2444" y="684" width="36" height="18" rx="3" ry="3" fill="#ffffff" stroke="#66a636" stroke-width="1"/>
+<text x="2458.5" y="697" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" fill="#66a636" xml:space="preserve">P</text>
+<rect x="32" y="2583" width="3336" height="512" rx="6" ry="6" fill="none" stroke="#7ab548" stroke-width="2"/>
+<text x="48" y="2611" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="#212529" xml:space="preserve">Contract relationships</text>
+<text x="300" y="2613" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" fill="#5f5f5f" xml:space="preserve">Consumer  →  contract  →  Provider</text>
+<rect x="40" y="2633" width="3320" height="26" fill="#ecf5e4" stroke="none"/>
+<text x="48" y="2650" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#7ab548" xml:space="preserve">Contract</text>
+<text x="700" y="2650" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#7ab548" xml:space="preserve">Scope</text>
+<text x="830" y="2650" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#7ab548" xml:space="preserve">Consumers</text>
+<text x="2130" y="2650" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#7ab548" xml:space="preserve">Providers</text>
+<rect x="40" y="2662" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2680" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">intra-tenant</text>
+<rect x="700" y="2667" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2679" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="2679" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">not attached</text>
+<text x="2130" y="2679" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">not attached</text>
+<text x="48" y="2705" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-from-core-services</text>
+<rect x="700" y="2692" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2704" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2704" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">vzAny (vrf-01)</text>
+<text x="2130" y="2704" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG core-services</text>
+<rect x="40" y="2712" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2730" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-from-lab-desktops</text>
+<rect x="700" y="2717" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2729" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2729" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">not attached</text>
+<text x="2130" y="2729" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">not attached</text>
+<text x="48" y="2755" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-all-external-subnets</text>
+<rect x="700" y="2742" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2754" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2754" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">vzAny (vrf-01)</text>
+<text x="2130" y="2754" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG all-external-subnets</text>
+<rect x="40" y="2762" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2780" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-core-services</text>
+<rect x="700" y="2767" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2779" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2779" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">vzAny (vrf-01)</text>
+<text x="2130" y="2779" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG core-services</text>
+<text x="48" y="2805" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-egress-subnet</text>
+<rect x="700" y="2792" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2804" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2804" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">not attached</text>
+<text x="2130" y="2804" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">not attached</text>
+<rect x="40" y="2812" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2830" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-ilb-vip-subnet</text>
+<rect x="700" y="2817" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2829" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2829" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.144_28-jumphosts,  ESG 10.237.101.96_28-nginx-subnet,  ESG node-subnets</text>
+<text x="2130" y="2829" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG ilb-vip-subnet</text>
+<text x="48" y="2855" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-1</text>
+<rect x="700" y="2842" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2854" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2854" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.144_28-jumphosts,  ESG 10.237.101.96_28-nginx-subnet,  ESG node-subnets</text>
+<text x="2130" y="2854" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG ingress-subnet-cluster-1</text>
+<rect x="40" y="2862" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2880" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-ingress-subnet-cluster-2</text>
+<rect x="700" y="2867" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2879" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2879" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.144_28-jumphosts,  ESG 10.237.101.96_28-nginx-subnet,  ESG node-subnets</text>
+<text x="2130" y="2879" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG ingress-subnet-cluster-2</text>
+<text x="48" y="2905" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-lab-desktops</text>
+<rect x="700" y="2892" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2904" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="2904" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">vzAny (vrf-01)</text>
+<text x="2130" y="2904" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG lab-desktops</text>
+<rect x="40" y="2912" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2930" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.7.0_24</text>
+<rect x="700" y="2917" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2929" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="2929" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.100.8.0_24</text>
+<text x="2130" y="2929" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.100.7.0_24</text>
+<text x="48" y="2955" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-network-segments-10.100.8.0_24</text>
+<rect x="700" y="2942" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2954" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="2954" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.100.7.0_24</text>
+<text x="2130" y="2954" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.100.8.0_24</text>
+<rect x="40" y="2962" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="2980" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-nginx-subnet-10.237.101.96_28</text>
+<rect x="700" y="2967" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="2979" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="2979" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.144_28-jumphosts,  ESG egress-subnet-cluster-1,  ESG egress-subnet-cluster-2</text>
+<text x="2130" y="2979" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.96_28-nginx-subnet</text>
+<text x="48" y="3005" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-node-subnet</text>
+<rect x="700" y="2992" width="46" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="3004" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">tenant</text>
+<text x="830" y="3004" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG 10.237.101.144_28-jumphosts</text>
+<text x="2130" y="3004" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG node-subnets</text>
+<rect x="40" y="3012" width="3320" height="25" fill="#fafafa" stroke="none"/>
+<text x="48" y="3030" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-pod-subnet-cluster-1</text>
+<rect x="700" y="3017" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="3029" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="3029" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG node-subnets</text>
+<text x="2130" y="3029" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">not attached</text>
+<text x="48" y="3055" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#212529" xml:space="preserve">permit-to-pod-subnet-cluster-2</text>
+<rect x="700" y="3042" width="52" height="18" rx="3" ry="3" fill="#ecf5e4" stroke="#7ab548" stroke-width="1"/>
+<text x="706" y="3054" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#7ab548" xml:space="preserve">context</text>
+<text x="830" y="3054" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#212529" xml:space="preserve">ESG node-subnets</text>
+<text x="2130" y="3054" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">not attached</text>
+<text x="48" y="3082" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#787878" xml:space="preserve">Defined but not attached in NAC:  intra-tenant  ·  permit-to-egress-subnet  ·  permit-from-lab-desktops</text>
+<text x="24" y="3124" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="12" fill="#505050" xml:space="preserve">© 2026 Cisco and/or its affiliates. All rights reserved.</text>
+<text x="3290" y="3128" font-family="Liberation Sans, Arial, Helvetica, sans-serif" font-size="18" font-weight="bold" fill="#212529" xml:space="preserve">cisco</text>
+</svg>

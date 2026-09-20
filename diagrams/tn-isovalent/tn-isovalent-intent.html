@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>isovalent — contract relationships</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+<style>
+  /* ---------- light (default) ---------- */
+  :root {
+    color-scheme: light;
+    --bg:#f7f8f9; --panel:#ffffff; --ink:#212529; --muted:#6c757d;
+    --line:#e2e2e2; --hair:#f2f2f2; --row:#fafafa; --head:#ecf5e4;
+    --green:#7ab548; --orange:#f47b20; --red:#c41e3a;
+    --kind-epg:#0091d6; --kind-esg:#66a636; --kind-vzany:#3d4348; --kind-other:#8a9199;
+    --kind-contract:#f47b20;
+    --consumer:#0091ad; --provider:#66a636; --both:#f47b20;
+    --link:#0091ad; --faint:#c2c8ce;
+    --cell-lo:#eaf4dd; --cell-hi:#c41e3a; --cell-bg:#fcfcfc; --grid:#eef0f2;
+    --pill-bg:#eef6e7; --pill-fg:#4b7a2a;
+    --pill-c-bg:#fdecef; --pill-c-fg:#8c1024;
+    --pill-w-bg:#fff6d8; --pill-w-fg:#7a5c00; --pill-w-bd:#f5c018;
+    --pill-f-bg:#eaf4fb; --pill-f-fg:#0b5f8a;
+    --dim-node:.34; --dim-label:.30; --dim-link:.28;
+    --shadow:0 1px 2px rgba(0,0,0,.05);
+    accent-color:#7ab548;
+  }
+  /* ---------- dark ---------- */
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:#14171a; --panel:#1c2024; --ink:#e6e9ec; --muted:#8b949e;
+    --line:#2c3238; --hair:#23282d; --row:#20252a; --head:#233021;
+    --green:#8fce5c; --orange:#ff9542; --red:#ff5f74;
+    --kind-epg:#3fb6f0; --kind-esg:#7fd155; --kind-vzany:#aab3bb; --kind-other:#79828b;
+    --kind-contract:#ff9542;
+    --consumer:#35bed3; --provider:#8fce5c; --both:#ffab5c;
+    --link:#35bed3; --faint:#3a424a;
+    --cell-lo:#24352a; --cell-hi:#ff5f74; --cell-bg:#1a1e22; --grid:#262c32;
+    --pill-bg:#22301d; --pill-fg:#a5d97a;
+    --pill-c-bg:#331a1f; --pill-c-fg:#ff8fa0;
+    --pill-w-bg:#332a12; --pill-w-fg:#f0cf7a; --pill-w-bd:#8a6d1c;
+    --pill-f-bg:#14293a; --pill-f-fg:#7fc4f0;
+    --dim-node:.30; --dim-label:.28; --dim-link:.26;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+    accent-color:#8fce5c;
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; font:13px/1.45 "Liberation Sans",Arial,Helvetica,sans-serif;
+         color:var(--ink); background:var(--bg); }
+
+  header { background:var(--panel); border-bottom:3px solid var(--green);
+           padding:9px 16px; display:flex; align-items:center; gap:14px;
+           flex-wrap:wrap; position:sticky; top:0; z-index:20; box-shadow:var(--shadow); }
+  header h1 { margin:0; font-size:19px; }
+  header .sub { color:var(--muted); font-size:12px; }
+  header .stats { margin-left:auto; color:var(--muted); font-size:12px; }
+  header .stats b { color:var(--ink); }
+  .warn { color:var(--red); font-weight:bold; }
+  .tbtn { font:inherit; font-size:15px; line-height:1; padding:5px 10px; cursor:pointer;
+          background:var(--panel); color:var(--ink);
+          border:1px solid var(--line); border-radius:4px; }
+  .tbtn:hover { border-color:var(--green); }
+
+  #layout { display:flex; align-items:flex-start; }
+  aside { width:270px; flex:0 0 270px; padding:12px; background:var(--panel);
+          border-right:1px solid var(--line); height:calc(100vh - 54px);
+          overflow-y:auto; position:sticky; top:54px; }
+  aside h3 { font-size:11px; text-transform:uppercase; letter-spacing:.06em;
+             color:var(--green); margin:16px 0 6px; display:flex; align-items:baseline; }
+  aside h3:first-of-type { margin-top:0; }
+  aside label { display:flex; align-items:center; gap:5px; padding:1px 0; cursor:pointer; }
+  aside label span.txt { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  aside label.all { border-bottom:1px solid var(--hair); padding-bottom:4px;
+                    margin-bottom:3px; }
+  .count { margin-left:auto; color:var(--muted); font-size:11px; }
+  a.only { margin-left:auto; font-size:10px; color:var(--muted); cursor:pointer;
+           text-decoration:none; opacity:0; flex:0 0 auto; }
+  aside label:hover a.only { opacity:1; }
+  a.only:hover { color:var(--green); text-decoration:underline; }
+  aside input[type=search] { width:100%; padding:5px 7px; border:1px solid var(--line);
+                             border-radius:3px; font:inherit;
+                             background:var(--bg); color:var(--ink); }
+  #reset { width:100%; margin-top:14px; }
+
+  main { flex:1; padding:12px 16px 40px; min-width:0; }
+  .tabs { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .tabs button { font:inherit; padding:6px 14px; cursor:pointer;
+                 border:1px solid var(--line); border-radius:4px;
+                 background:var(--panel); color:var(--ink); }
+  .tabs button:hover { border-color:var(--green); }
+  .tabs button.on { background:var(--green); border-color:var(--green);
+                    color:#10240a; font-weight:bold; }
+
+  #canvas { background:var(--panel); border:1px solid var(--line); border-radius:6px;
+            overflow:auto; box-shadow:var(--shadow); }
+  svg { display:block; }
+  .hint { color:var(--muted); font-size:12px; margin:8px 0 0; }
+
+  .lbl { font-size:11px; fill:var(--ink); pointer-events:none; }
+  .lbl-sm { font-size:10px; fill:var(--muted); pointer-events:none; }
+  .link { fill:none; }
+  .cell { stroke:var(--panel); stroke-width:1px; cursor:pointer; }
+  .sankey-node rect { cursor:pointer; }
+  .sankey-link { fill:none; }
+  .chord-ribbon { stroke:var(--panel); stroke-width:.4px; }
+  .dim      { opacity:var(--dim-node) !important; }
+  .dim-lbl  { opacity:var(--dim-label) !important; }
+
+  #tip { position:fixed; pointer-events:none; background:rgba(16,18,20,.95);
+         color:#f3f5f7; padding:6px 9px; border-radius:4px; font-size:12px;
+         max-width:360px; opacity:0; transition:opacity .1s; z-index:60;
+         box-shadow:0 2px 8px rgba(0,0,0,.35); }
+  #detail { margin-top:12px; background:var(--panel); border:1px solid var(--line);
+            border-radius:6px; padding:12px; box-shadow:var(--shadow); }
+  #detail h2 { margin:0 0 6px; font-size:15px; }
+  #detail table { border-collapse:collapse; width:100%; margin-top:8px; }
+  #detail th { text-align:left; font-size:11px; text-transform:uppercase;
+               color:var(--green); border-bottom:1px solid var(--line);
+               padding:4px 8px 4px 0; }
+  #detail td { padding:3px 8px 3px 0; border-bottom:1px solid var(--hair);
+               vertical-align:top; }
+  .pill { display:inline-block; padding:1px 7px; border-radius:9px; font-size:11px;
+          background:var(--pill-bg); color:var(--pill-fg);
+          border:1px solid var(--kind-esg); }
+  .pill.c { background:var(--pill-c-bg); color:var(--pill-c-fg); border-color:var(--red); }
+  .pill.w { background:var(--pill-w-bg); color:var(--pill-w-fg);
+            border-color:var(--pill-w-bd); }
+  .pill.f { background:var(--pill-f-bg); color:var(--pill-f-fg);
+            border-color:var(--kind-epg);
+            font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10.5px; }
+  a.obj { color:var(--kind-epg); cursor:pointer; text-decoration:none; }
+  a.obj:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<header>
+  <h1>isovalent</h1>
+  <span class="sub">INTENT   ·   configuration-v13.nac.yaml   ·   desired VRF / AP / ESG / contracts</span>
+  <span class="stats" id="stats"></span>
+  <button class="tbtn" id="theme" title="Toggle dark mode (d)">◐</button>
+</header>
+
+<div id="layout">
+  <aside>
+    <h3>Search</h3>
+    <input type="search" id="q" placeholder="object, contract or port…">
+    <h3>Object type</h3><div id="f-kind"></div>
+    <h3>Application profile</h3><div id="f-ap"></div>
+    <h3>Contract</h3><div id="f-contract"></div>
+    <h3>Audit</h3><div id="audit"></div>
+    <button class="tbtn" id="reset">Reset filters</button>
+  </aside>
+
+  <main>
+    <div class="tabs" id="tabs"></div>
+    <div id="canvas"></div>
+    <p class="hint" id="hint"></p>
+    <div id="detail"></div>
+  </main>
+</div>
+
+<div id="tip"></div>
+<script type="application/json" id="graph-data">{"tenant": "isovalent", "subtitle": "INTENT   \u00b7   configuration-v13.nac.yaml   \u00b7   desired VRF / AP / ESG / contracts", "generated": "2026-09-17 14:49 UTC", "vrfs": {"primary": "vrf-01", "secondary": "vrf-02", "all": ["vrf-02", "vrf-01", "vrf-03"]}, "nodes": [{"id": "esg:egress-subnet-cluster-1", "label": "egress-subnet-cluster-1", "kind": "esg", "ap": "egress-subnets-esgs", "vrf": "vrf-01", "consumes": 1, "provides": 0, "degree": 1}, {"id": "esg:egress-subnet-cluster-2", "label": "egress-subnet-cluster-2", "kind": "esg", "ap": "egress-subnets-esgs", "vrf": "vrf-01", "consumes": 1, "provides": 0, "degree": 1}, {"id": "esg:10.100.7.0_24", "label": "10.100.7.0_24", "kind": "esg", "ap": "external-subnets-esgs", "vrf": "vrf-01", "consumes": 1, "provides": 1, "degree": 2}, {"id": "esg:all-external-subnets", "label": "all-external-subnets", "kind": "esg", "ap": "external-subnets-esgs", "vrf": "vrf-02", "consumes": 0, "provides": 1, "degree": 1}, {"id": "esg:core-services", "label": "core-services", "kind": "esg", "ap": "external-subnets-esgs", "vrf": "vrf-02", "consumes": 0, "provides": 2, "degree": 2}, {"id": "esg:lab-desktops", "label": "lab-desktops", "kind": "esg", "ap": "external-subnets-esgs", "vrf": "vrf-02", "consumes": 0, "provides": 1, "degree": 1}, {"id": "esg:ilb-vip-subnet", "label": "ilb-vip-subnet", "kind": "esg", "ap": "ilb-vip-subnets-esgs", "vrf": "vrf-01", "consumes": 0, "provides": 1, "degree": 1}, {"id": "esg:ingress-subnet-cluster-1", "label": "ingress-subnet-cluster-1", "kind": "esg", "ap": "ingress-subnets-esgs", "vrf": "vrf-01", "consumes": 0, "provides": 1, "degree": 1}, {"id": "esg:ingress-subnet-cluster-2", "label": "ingress-subnet-cluster-2", "kind": "esg", "ap": "ingress-subnets-esgs", "vrf": "vrf-01", "consumes": 0, "provides": 1, "degree": 1}, {"id": "esg:10.100.8.0_24", "label": "10.100.8.0_24", "kind": "esg", "ap": "network-segments", "vrf": "vrf-01", "consumes": 1, "provides": 1, "degree": 2}, {"id": "esg:10.237.101.144_28-jumphosts", "label": "10.237.101.144_28-jumphosts", "kind": "esg", "ap": "network-segments-esgs", "vrf": "vrf-01", "consumes": 5, "provides": 0, "degree": 5}, {"id": "esg:10.237.101.96_28-nginx-subnet", "label": "10.237.101.96_28-nginx-subnet", "kind": "esg", "ap": "network-segments-esgs", "vrf": "vrf-01", "consumes": 3, "provides": 1, "degree": 4}, {"id": "esg:node-subnets", "label": "node-subnets", "kind": "esg", "ap": "node-subnets-esgs", "vrf": "vrf-01", "consumes": 5, "provides": 1, "degree": 6}, {"id": "vzany", "label": "vzAny", "kind": "vzany", "ap": "\u2014", "vrf": "vrf-01", "consumes": 4, "provides": 0, "degree": 4}], "contracts": [{"name": "intra-tenant", "scope": "context", "consumers": [], "providers": [], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": true}, {"name": "permit-from-core-services", "scope": "tenant", "consumers": ["vzany"], "providers": ["esg:core-services"], "filters": ["tcp-src-22-dst-any: ipv4 tcp src 22", "tcp-src-443-dst-any: ipv4 tcp src 443", "udp-src-68-dst-any: ipv4 udp src 68", "icmp: icmp"], "dangling": false}, {"name": "permit-from-lab-desktops", "scope": "tenant", "consumers": [], "providers": [], "filters": ["src-any-dst-any: unspecified", "icmp: icmp"], "dangling": true}, {"name": "permit-to-all-external-subnets", "scope": "tenant", "consumers": ["vzany"], "providers": ["esg:all-external-subnets"], "filters": ["src-any-dst-any: unspecified", "icmp: icmp"], "dangling": false}, {"name": "permit-to-core-services", "scope": "tenant", "consumers": ["vzany"], "providers": ["esg:core-services"], "filters": ["tcp-src-any-dst-22: ipv4 tcp 22", "tcp-src-any-dst-80: ipv4 tcp 80", "tcp-src-any-dst-443: ipv4 tcp 443", "udp-src-any-dst-53: ipv4 udp 53", "udp-src-any-dst-67: ipv4 udp 67", "icmp: icmp"], "dangling": false}, {"name": "permit-to-egress-subnet", "scope": "tenant", "consumers": [], "providers": [], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": true}, {"name": "permit-to-ilb-vip-subnet", "scope": "tenant", "consumers": ["esg:10.237.101.144_28-jumphosts", "esg:10.237.101.96_28-nginx-subnet", "esg:node-subnets"], "providers": ["esg:ilb-vip-subnet"], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": false}, {"name": "permit-to-ingress-subnet-cluster-1", "scope": "tenant", "consumers": ["esg:10.237.101.144_28-jumphosts", "esg:10.237.101.96_28-nginx-subnet", "esg:node-subnets"], "providers": ["esg:ingress-subnet-cluster-1"], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": false}, {"name": "permit-to-ingress-subnet-cluster-2", "scope": "tenant", "consumers": ["esg:10.237.101.144_28-jumphosts", "esg:10.237.101.96_28-nginx-subnet", "esg:node-subnets"], "providers": ["esg:ingress-subnet-cluster-2"], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": false}, {"name": "permit-to-lab-desktops", "scope": "tenant", "consumers": ["vzany"], "providers": ["esg:lab-desktops"], "filters": ["src-any-dst-any: unspecified", "icmp: icmp"], "dangling": false}, {"name": "permit-to-network-segments-10.100.7.0_24", "scope": "context", "consumers": ["esg:10.100.8.0_24"], "providers": ["esg:10.100.7.0_24"], "filters": ["ipv4-src-any-dst-any: ipv4", "icmp: icmp"], "dangling": false}, {"name": "permit-to-network-segments-10.100.8.0_24", "scope": "context", "consumers": ["esg:10.100.7.0_24"], "providers": ["esg:10.100.8.0_24"], "filters": ["ipv4-src-any-dst-any: ipv4", "icmp: icmp"], "dangling": false}, {"name": "permit-to-nginx-subnet-10.237.101.96_28", "scope": "context", "consumers": ["esg:10.237.101.144_28-jumphosts", "esg:egress-subnet-cluster-1", "esg:egress-subnet-cluster-2"], "providers": ["esg:10.237.101.96_28-nginx-subnet"], "filters": ["tcp-src-any-dst-80: ipv4 tcp 80", "tcp-src-any-dst-4444: tcp 4444", "tcp-src-any-dst-19765: tcp 19765", "icmp: icmp"], "dangling": false}, {"name": "permit-to-node-subnet", "scope": "tenant", "consumers": ["esg:10.237.101.144_28-jumphosts"], "providers": ["esg:node-subnets"], "filters": ["ipv4-src-any-dst-any: ipv4"], "dangling": false}, {"name": "permit-to-pod-subnet-cluster-1", "scope": "context", "consumers": ["esg:node-subnets"], "providers": [], "filters": ["icmp: icmp", "tcp-src-any-dst-any: tcp", "udp-src-any-dst-any: udp"], "dangling": true}, {"name": "permit-to-pod-subnet-cluster-2", "scope": "context", "consumers": ["esg:node-subnets"], "providers": [], "filters": ["icmp: icmp", "tcp-src-any-dst-any: tcp", "udp-src-any-dst-any: udp"], "dangling": true}], "links": [{"source": "vzany", "target": "esg:core-services", "contract": "permit-from-core-services", "scope": "tenant"}, {"source": "vzany", "target": "esg:all-external-subnets", "contract": "permit-to-all-external-subnets", "scope": "tenant"}, {"source": "vzany", "target": "esg:core-services", "contract": "permit-to-core-services", "scope": "tenant"}, {"source": "esg:10.237.101.144_28-jumphosts", "target": "esg:ilb-vip-subnet", "contract": "permit-to-ilb-vip-subnet", "scope": "tenant"}, {"source": "esg:10.237.101.96_28-nginx-subnet", "target": "esg:ilb-vip-subnet", "contract": "permit-to-ilb-vip-subnet", "scope": "tenant"}, {"source": "esg:node-subnets", "target": "esg:ilb-vip-subnet", "contract": "permit-to-ilb-vip-subnet", "scope": "tenant"}, {"source": "esg:10.237.101.144_28-jumphosts", "target": "esg:ingress-subnet-cluster-1", "contract": "permit-to-ingress-subnet-cluster-1", "scope": "tenant"}, {"source": "esg:10.237.101.96_28-nginx-subnet", "target": "esg:ingress-subnet-cluster-1", "contract": "permit-to-ingress-subnet-cluster-1", "scope": "tenant"}, {"source": "esg:node-subnets", "target": "esg:ingress-subnet-cluster-1", "contract": "permit-to-ingress-subnet-cluster-1", "scope": "tenant"}, {"source": "esg:10.237.101.144_28-jumphosts", "target": "esg:ingress-subnet-cluster-2", "contract": "permit-to-ingress-subnet-cluster-2", "scope": "tenant"}, {"source": "esg:10.237.101.96_28-nginx-subnet", "target": "esg:ingress-subnet-cluster-2", "contract": "permit-to-ingress-subnet-cluster-2", "scope": "tenant"}, {"source": "esg:node-subnets", "target": "esg:ingress-subnet-cluster-2", "contract": "permit-to-ingress-subnet-cluster-2", "scope": "tenant"}, {"source": "vzany", "target": "esg:lab-desktops", "contract": "permit-to-lab-desktops", "scope": "tenant"}, {"source": "esg:10.100.8.0_24", "target": "esg:10.100.7.0_24", "contract": "permit-to-network-segments-10.100.7.0_24", "scope": "context"}, {"source": "esg:10.100.7.0_24", "target": "esg:10.100.8.0_24", "contract": "permit-to-network-segments-10.100.8.0_24", "scope": "context"}, {"source": "esg:10.237.101.144_28-jumphosts", "target": "esg:10.237.101.96_28-nginx-subnet", "contract": "permit-to-nginx-subnet-10.237.101.96_28", "scope": "context"}, {"source": "esg:egress-subnet-cluster-1", "target": "esg:10.237.101.96_28-nginx-subnet", "contract": "permit-to-nginx-subnet-10.237.101.96_28", "scope": "context"}, {"source": "esg:egress-subnet-cluster-2", "target": "esg:10.237.101.96_28-nginx-subnet", "contract": "permit-to-nginx-subnet-10.237.101.96_28", "scope": "context"}, {"source": "esg:10.237.101.144_28-jumphosts", "target": "esg:node-subnets", "contract": "permit-to-node-subnet", "scope": "tenant"}], "bds": [{"name": "10.237.101.96/28", "gw": "GW  10.237.101.97/28   public + shared", "vrf": "vrf-01"}, {"name": "10.237.101.144/28", "gw": "GW  10.237.101.145/28   public + shared", "vrf": "vrf-01"}, {"name": "10.100.8.0/24", "gw": "GW  10.100.8.1/24   public", "vrf": "vrf-01"}, {"name": "10.100.7.0/24", "gw": "GW  10.100.7.1/24   public", "vrf": "vrf-03"}], "l3outs": {"inside": ["vrf-01-to-k8s-nodes    vrf-01-bgp-floating-l3out", "vrf-01-to-smart-switch-p2p    vrf-01-bgp-p2p", "vrf-01-to-smart-switch-svi    vrf-01-bgp-svi"], "outside": ["vrf-02-to-core    vrf-02-bgp-p2p"], "vrf-02": ["vrf-02-to-core    vrf-02-bgp-p2p"], "vrf-01": ["vrf-01-to-k8s-nodes    vrf-01-bgp-floating-l3out", "vrf-01-to-smart-switch-p2p    vrf-01-bgp-p2p", "vrf-01-to-smart-switch-svi    vrf-01-bgp-svi"], "vrf-03": ["vrf-03-to-smart-switch    vrf-03-bgp-svi"]}, "notes": "Defined but not attached in NAC:  intra-tenant  \u00b7  permit-to-egress-subnet  \u00b7  permit-from-lab-desktops", "stats": {"nodes": 14, "links": 19, "contracts": 16, "dangling": 5, "unfiltered": 0}}</script>
+<script>
+window.addEventListener('error', function (e) {
+  var box = document.getElementById('canvas');
+  if (!box) return;
+  box.innerHTML = '<div style="padding:22px;color:#c41e3a">' +
+    '<b>Viewer script error \u2014 nothing rendered.</b><br><br><code>' +
+    String(e.message || e.error) + '</code><br><span style="opacity:.7">line ' +
+    (e.lineno || '?') + ', column ' + (e.colno || '?') + ' of this file</span></div>';
+});
+</script>
+<script>
+"use strict";
+
+/* ===================================================== data + small helpers */
+const DATA  = JSON.parse(document.getElementById('graph-data').textContent);
+const NODES = new Map(DATA.nodes.map(n => [n.id, n]));
+const CONTRACT = new Map(DATA.contracts.map(c => [c.name, c]));
+
+const $   = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,
+  ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
+const fmt = n => String(n);
+const pairKey = (a, b) => a + '\u0001' + b;
+
+const cFilters  = name => (CONTRACT.get(name) || {}).filters || [];
+const filtPills = name => cFilters(name)
+  .map(f => '<span class="pill f">' + esc(f) + '</span>').join(' ');
+const filtLines = name => cFilters(name).map(f => esc(f)).join('<br>');
+const contractText = name => name + ' ' + cFilters(name).join(' ');
+
+const KIND_LABEL = { epg: 'EPG', esg: 'ESG', vzany: 'vzAny', other: 'other' };
+const SYMBOL = {
+  consumer: d3.symbolCircle,
+  provider: d3.symbolSquare,
+  both:     d3.symbolDiamond
+};
+
+/* ===================================================== theme */
+const THEME_KEY = 'aci-diagram-theme';
+let P = {};
+
+function palette() {
+  const cs = getComputedStyle(document.documentElement);
+  const v  = n => cs.getPropertyValue(n).trim();
+  return {
+    epg:v('--kind-epg'), esg:v('--kind-esg'), vzany:v('--kind-vzany'),
+    other:v('--kind-other'), contract:v('--kind-contract'),
+    consumer:v('--consumer'), provider:v('--provider'), both:v('--both'),
+    link:v('--link'), faint:v('--faint'), ink:v('--ink'), muted:v('--muted'),
+    panel:v('--panel'), cellLo:v('--cell-lo'), cellHi:v('--cell-hi'),
+    cellBg:v('--cell-bg'), grid:v('--grid')
+  };
+}
+const kindColor = k => P[k] || P.other;
+const roleColor = r => r === 'both' ? P.both : r === 'provider' ? P.provider : P.consumer;
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* file:// */ }
+  P = palette();
+}
+(function initTheme() {
+  let t = null;
+  try { t = localStorage.getItem(THEME_KEY); } catch (e) { /* ignore */ }
+  if (!t) {
+    t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark' : 'light';
+  }
+  applyTheme(t);
+})();
+
+/* ===================================================== tooltip */
+const tip = $('#tip');
+function showTip(html, ev) {
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  tip.style.left = Math.min(ev.clientX + 14, innerWidth  - 372) + 'px';
+  tip.style.top  = Math.min(ev.clientY + 16, innerHeight - 110) + 'px';
+}
+const hideTip = () => { tip.style.opacity = 0; };
+
+/* ===================================================== filter state
+   state.sel is one of:
+     null
+     { t:'node',     id:<nodeId>, role:'consumer'|'provider' }
+     { t:'contract', name:<contractName> }
+   A node selection is DIRECTIONAL: one object on its own axis, n on the other. */
+const state = {
+  view: 'force',
+  kinds:     new Set(DATA.nodes.map(n => n.kind)),
+  aps:       new Set(DATA.nodes.map(n => n.ap)),
+  contracts: new Set(DATA.contracts.map(c => c.name)),
+  q: '',
+  sel: null
+};
+
+const matches = t => !state.q || String(t).toLowerCase().includes(state.q);
+
+function nodeVisible(id) {
+  const n = NODES.get(id);
+  return !!n && state.kinds.has(n.kind) && state.aps.has(n.ap);
+}
+function visibleLinks() {
+  return DATA.links.filter(l =>
+    state.contracts.has(l.contract) &&
+    nodeVisible(l.source) && nodeVisible(l.target) &&
+    (!state.q || matches(contractText(l.contract)) ||
+     matches(NODES.get(l.source).label) || matches(NODES.get(l.target).label)));
+}
+function visibleNodeIds(links) {
+  const s = new Set();
+  links.forEach(l => { s.add(l.source); s.add(l.target); });
+  return [...s];
+}
+
+/* ---- selection ---------------------------------------------------------- */
+function globalRoles(id) {
+  return {
+    consumes: DATA.links.some(l => l.source === id),
+    provides: DATA.links.some(l => l.target === id)
+  };
+}
+
+/* role omitted  -> auto-pick, and flip on a repeat click of the same node.
+   role supplied -> honour it (Sankey column, Matrix axis). */
+function selectNode(id, role) {
+  const r = globalRoles(id);
+  let use = role || null;
+  if (!use) {
+    const same = state.sel && state.sel.t === 'node' && state.sel.id === id;
+    if (same && r.consumes && r.provides) {
+      use = state.sel.role === 'consumer' ? 'provider' : 'consumer';
+    } else {
+      use = r.consumes ? 'consumer' : 'provider';
+    }
+  }
+  if (use === 'consumer' && !r.consumes) use = 'provider';
+  if (use === 'provider' && !r.provides) use = 'consumer';
+  state.sel = { t: 'node', id: id, role: use };
+}
+const selectContract = name => { state.sel = { t: 'contract', name: name }; };
+const flipSelection = () => {
+  if (state.sel && state.sel.t === 'node') {
+    selectNode(state.sel.id,
+      state.sel.role === 'consumer' ? 'provider' : 'consumer');
+  }
+};
+
+function selection() {
+  if (!state.sel) return null;
+
+  if (state.sel.t === 'contract') {
+    const name = state.sel.name;
+    const links = DATA.links.filter(l => l.contract === name);
+    const cons = new Set(), prov = new Set(), pairs = new Set();
+    links.forEach(l => {
+      cons.add(l.source); prov.add(l.target); pairs.add(pairKey(l.source, l.target));
+    });
+    return {
+      contract: name, focus: null, role: null,
+      cons: cons, prov: prov, contracts: new Set([name]), pairs: pairs,
+      any: new Set([...cons, ...prov])
+    };
+  }
+
+  /* Directional: only ONE direction is collected, so the focus object is the
+     sole member of its own axis. This is what makes it strictly 1:n. */
+  const id = state.sel.id, role = state.sel.role;
+  const links = role === 'consumer'
+    ? DATA.links.filter(l => l.source === id)
+    : DATA.links.filter(l => l.target === id);
+
+  const cons = new Set(), prov = new Set(), contracts = new Set(), pairs = new Set();
+  links.forEach(l => {
+    cons.add(l.source); prov.add(l.target);
+    contracts.add(l.contract); pairs.add(pairKey(l.source, l.target));
+  });
+  if (role === 'consumer') { cons.clear(); cons.add(id); }
+  else                     { prov.clear(); prov.add(id); }
+
+  return {
+    contract: null, focus: id, role: role,
+    cons: cons, prov: prov, contracts: contracts, pairs: pairs,
+    any: new Set([...cons, ...prov])
+  };
+}
+
+function linkSelected(l, S) {
+  if (!S) return true;
+  if (S.contract) return l.contract === S.contract;
+  return S.role === 'consumer' ? (l.source === S.focus) : (l.target === S.focus);
+}
+
+/* Role within the currently visible sub-graph (drives shape / arc colour). */
+function roleMap(links) {
+  const cons = new Set(links.map(l => l.source));
+  const prov = new Set(links.map(l => l.target));
+  const m = new Map();
+  visibleNodeIds(links).forEach(id => {
+    const c = cons.has(id), p = prov.has(id);
+    m.set(id, c && p ? 'both' : p ? 'provider' : 'consumer');
+  });
+  return m;
+}
+
+/* ===================================================== legend */
+function kindsPresent(ids) {
+  const out = [];
+  ids.forEach(id => {
+    const k = (NODES.get(id) || {}).kind || 'other';
+    if (out.indexOf(k) < 0) out.push(k);
+  });
+  return out.sort();
+}
+
+function drawLegend(svg, x, y, ids, showShapes) {
+  const kinds = kindsPresent(ids);
+  const rows = (showShapes ? 4 : 0) + 1 + kinds.length;
+  const g = svg.append('g')
+    .attr('transform', 'translate(' + x + ',' + y + ')')
+    .style('pointer-events', 'none');
+  g.append('rect')
+    .attr('width', 196).attr('height', 16 * rows + 12).attr('rx', 4)
+    .attr('fill', P.panel).attr('fill-opacity', .93)
+    .attr('stroke', P.grid);
+
+  let cy = 15;
+  const head = t => {
+    g.append('text').attr('class', 'lbl-sm').attr('x', 9).attr('y', cy)
+      .attr('font-weight', 'bold').attr('fill', P.muted).text(t);
+    cy += 16;
+  };
+
+  if (showShapes) {
+    head('SHAPE = role');
+    [['consumer', 'consumes only'], ['provider', 'provides only'],
+     ['both', 'consumes + provides']].forEach(it => {
+      g.append('path')
+        .attr('d', d3.symbol().type(SYMBOL[it[0]]).size(118)())
+        .attr('transform', 'translate(18,' + (cy - 4) + ')')
+        .attr('fill', 'none').attr('stroke', roleColor(it[0])).attr('stroke-width', 2.2);
+      g.append('text').attr('class', 'lbl-sm').attr('x', 32).attr('y', cy).text(it[1]);
+      cy += 16;
+    });
+  }
+
+  head(showShapes ? 'FILL = object type' : 'COLOUR = object type');
+  kinds.forEach(k => {
+    g.append('rect')
+      .attr('x', 12).attr('y', cy - 9).attr('width', 12).attr('height', 12).attr('rx', 2)
+      .attr('fill', kindColor(k)).attr('stroke', P.panel);
+    g.append('text').attr('class', 'lbl-sm').attr('x', 32).attr('y', cy)
+      .text(KIND_LABEL[k] || k);
+    cy += 16;
+  });
+  return g;
+}
+
+/* Caption naming the current focus + direction. */
+function focusCaption(svg, S, x, y) {
+  if (!S) return;
+  let txt;
+  if (S.contract) {
+    txt = 'contract ' + S.contract + '  ·  ' + S.cons.size + ' consumer(s) → ' +
+          S.prov.size + ' provider(s)';
+  } else {
+    const n = NODES.get(S.focus) || { label: S.focus };
+    txt = S.role === 'consumer'
+      ? n.label + '  consumes →  ' + S.prov.size + ' provider(s)'
+      : S.prov.size + ' ← ' + S.cons.size + ' consumer(s)  →  provides  ' + n.label;
+    txt = S.role === 'consumer'
+      ? n.label + '  →  ' + S.prov.size + ' provider(s)'
+      : S.cons.size + ' consumer(s)  →  ' + n.label;
+  }
+  svg.append('text').attr('class', 'lbl-sm')
+    .attr('x', x).attr('y', y)
+    .attr('font-weight', 'bold')
+    .attr('fill', S.contract ? P.contract : roleColor(S.role))
+    .text('focus: ' + txt);
+}
+
+/* ===================================================== sidebar */
+function checkboxGroup(host, values, set, onchange) {
+  host.innerHTML = '';
+  const boxes = new Map();
+
+  const all   = document.createElement('label');
+  all.className = 'all';
+  const allCb = document.createElement('input');
+  allCb.type = 'checkbox';
+  const allTx = document.createElement('span');
+  allTx.className = 'txt';
+  allTx.innerHTML = '<b>all</b>';
+  const count = document.createElement('span');
+  count.className = 'count';
+  all.append(allCb, allTx, count);
+  host.appendChild(all);
+
+  function sync() {
+    const n = values.reduce((a, v) => a + (set.has(v) ? 1 : 0), 0);
+    allCb.checked = n === values.length && n > 0;
+    allCb.indeterminate = n > 0 && n < values.length;
+    count.textContent = n + '/' + values.length;
+    boxes.forEach((cb, v) => { cb.checked = set.has(v); });
+  }
+
+  /* Toggle from the SET, never from the checkbox's own state. */
+  allCb.addEventListener('click', () => {
+    const full = values.every(v => set.has(v));
+    values.forEach(v => full ? set.delete(v) : set.add(v));
+    sync(); onchange();
+  });
+
+  values.forEach(v => {
+    const l  = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.addEventListener('change', () => {
+      if (cb.checked) set.add(v); else set.delete(v);
+      sync(); onchange();
+    });
+    const tx = document.createElement('span');
+    tx.className = 'txt';
+    tx.textContent = v;
+    const only = document.createElement('a');
+    only.className = 'only';
+    only.textContent = 'only';
+    only.title = 'Show only this';
+    only.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      set.clear(); set.add(v); sync(); onchange();
+    });
+    l.append(cb, tx, only);
+    host.appendChild(l);
+    boxes.set(v, cb);
+  });
+
+  sync();
+  return sync;
+}
+
+const SYNC = [];
+
+function buildSidebar() {
+  const kinds = [...new Set(DATA.nodes.map(n => n.kind))].sort();
+  const aps   = [...new Set(DATA.nodes.map(n => n.ap))].sort();
+  const cons  = DATA.contracts.map(c => c.name).sort();
+  SYNC.length = 0;
+  SYNC.push(checkboxGroup($('#f-kind'),     kinds, state.kinds,     render));
+  SYNC.push(checkboxGroup($('#f-ap'),       aps,   state.aps,       render));
+  SYNC.push(checkboxGroup($('#f-contract'), cons,  state.contracts, render));
+  buildAudit();
+  buildStats();
+}
+const syncSidebar = () => SYNC.forEach(f => f());
+
+function buildAudit() {
+  const bad = DATA.contracts.filter(c => c.dangling);
+  const nof = DATA.contracts.filter(c => !c.dangling && !(c.filters || []).length);
+  const row = (cls, txt, name) =>
+    '<div><span class="pill ' + cls + '">' + txt + '</span> ' +
+    '<a class="obj" data-contract="' + esc(name) + '">' + esc(name) + '</a></div>';
+  $('#audit').innerHTML =
+    (bad.length
+      ? bad.map(c => row('w', c.consumers.length ? 'no provider' : 'no consumer', c.name)).join('')
+      : '<span class="pill">all contracts have both ends</span>') +
+    (nof.length
+      ? '<div style="margin-top:6px"></div>' + nof.map(c => row('w', 'no filters', c.name)).join('')
+      : '');
+  $('#audit').querySelectorAll('[data-contract]').forEach(a => {
+    a.onclick = () => { selectContract(a.dataset.contract); render(); };
+  });
+}
+
+function buildStats() {
+  const s = DATA.stats;
+  $('#stats').innerHTML =
+    '<b>' + s.nodes + '</b> objects · <b>' + s.contracts + '</b> contracts · <b>' +
+    s.links + '</b> relationships' +
+    (s.dangling   ? ' · <span class="warn">' + s.dangling   + ' incomplete</span>' : '') +
+    (s.unfiltered ? ' · <span class="warn">' + s.unfiltered + ' unfiltered</span>' : '');
+}
+
+/* ===================================================== detail panel */
+function objLink(id, role) {
+  const n = NODES.get(id);
+  return '<a class="obj" data-node="' + esc(id) + '"' +
+         (role ? ' data-role="' + role + '"' : '') + '>' +
+         esc(n ? n.label : id) + '</a>';
+}
+
+function detail() {
+  const host = $('#detail');
+  if (!state.sel) {
+    host.innerHTML = '<h2>Nothing selected</h2><p class="hint">' +
+      'Click an object or a contract in any view. Selecting an object is ' +
+      'directional — one consumer to many providers, or one provider to many ' +
+      'consumers. Press Esc to clear, f to flip direction.</p>';
+    return;
+  }
+
+  if (state.sel.t === 'contract') {
+    const ct = CONTRACT.get(state.sel.name);
+    if (!ct) { state.sel = null; return detail(); }
+    host.innerHTML =
+      '<h2>Contract ' + esc(ct.name) + '</h2>' +
+      (ct.scope ? '<span class="pill">' + esc(ct.scope) + '</span> ' : '') +
+      ((ct.filters || []).length ? filtPills(ct.name)
+        : '<span class="pill w">no filters resolved</span>') +
+      '<table><tr><th>Consumers (' + ct.consumers.length + ')</th>' +
+      '<th>Providers (' + ct.providers.length + ')</th></tr><tr><td>' +
+      (ct.consumers.map(id => objLink(id, 'consumer')).join('<br>') || '<i>none</i>') +
+      '</td><td>' +
+      (ct.providers.map(id => objLink(id, 'provider')).join('<br>') || '<i>none</i>') +
+      '</td></tr></table>';
+  } else {
+    const n = NODES.get(state.sel.id);
+    if (!n) { state.sel = null; return detail(); }
+    const role = state.sel.role;
+    const r = globalRoles(n.id);
+    const consumed = DATA.contracts.filter(x => x.consumers.includes(n.id));
+    const provided = DATA.contracts.filter(x => x.providers.includes(n.id));
+    const list = role === 'consumer' ? consumed : provided;
+
+    host.innerHTML =
+      '<h2>' + (KIND_LABEL[n.kind] || n.kind) + ' ' + esc(n.label) + '</h2>' +
+      '<span class="pill">AP ' + esc(n.ap) + '</span> ' +
+      '<span class="pill">VRF ' + esc(n.vrf || '—') + '</span> ' +
+      '<span class="pill ' + (role === 'consumer' ? 'c' : '') + '">viewing as ' +
+        role + '</span> ' +
+      ((r.consumes && r.provides)
+        ? ' <a class="obj" id="flip">flip to ' +
+          (role === 'consumer' ? 'provider' : 'consumer') + ' →</a>'
+        : '') +
+      '<table><tr><th>' +
+      (role === 'consumer'
+        ? 'Consumes (' + consumed.length + ') → providers'
+        : 'Provides (' + provided.length + ') ← consumers') +
+      '</th></tr><tr><td>' +
+      (list.map(x =>
+        role === 'consumer'
+          ? '<a class="obj" data-contract="' + esc(x.name) + '">' + esc(x.name) +
+            '</a> ' + filtPills(x.name) + ' → ' +
+            (x.providers.map(id => objLink(id, 'provider')).join(', ')
+              || '<i>no provider</i>')
+          : (x.consumers.map(id => objLink(id, 'consumer')).join(', ')
+              || '<i>no consumer</i>') +
+            ' → <a class="obj" data-contract="' + esc(x.name) + '">' + esc(x.name) +
+            '</a> ' + filtPills(x.name)
+      ).join('<br>') || '<i>none</i>') +
+      '</td></tr></table>' +
+      '<p class="hint">Also ' + (role === 'consumer'
+        ? 'provides ' + provided.length + ' contract(s)'
+        : 'consumes ' + consumed.length + ' contract(s)') +
+      ' — not shown in this direction.</p>';
+
+    const fl = document.getElementById('flip');
+    if (fl) fl.onclick = () => { flipSelection(); render(); };
+  }
+
+  host.querySelectorAll('[data-node]').forEach(a => {
+    a.onclick = () => { selectNode(a.dataset.node, a.dataset.role || null); render(); };
+  });
+  host.querySelectorAll('[data-contract]').forEach(a => {
+    a.onclick = () => { selectContract(a.dataset.contract); render(); };
+  });
+}
+
+/* ===================================================== view: force */
+function drawForce() {
+  const links = visibleLinks();
+  if (!links.length) return empty();
+  const roles = roleMap(links);
+  const ids   = visibleNodeIds(links);
+  const S     = selection();
+
+  const w = Math.max(680, ($('#canvas').clientWidth || 1100) - 4);
+  const h = Math.max(560, Math.min(920, 300 + ids.length * 13));
+
+  const nodes = ids.map(id => {
+    const n = NODES.get(id);
+    const rad = 7 + Math.min(9, (n.degree || 1) * 1.3);
+    return Object.assign({}, n,
+      { role: roles.get(id), rad: rad, area: Math.PI * rad * rad });
+  });
+  const byId = new Map(nodes.map(n => [n.id, n]));
+  const ls = links.map(l => Object.assign({}, l,
+    { source: byId.get(l.source), target: byId.get(l.target) }));
+
+  const svg = d3.create('svg').attr('width', w).attr('height', h);
+  const defs = svg.append('defs');
+  [['arrow', P.faint], ['arrow-hot', P.link]].forEach(a => {
+    defs.append('marker').attr('id', a[0]).attr('viewBox', '0 -5 10 10')
+      .attr('refX', 19).attr('refY', 0)
+      .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
+      .append('path').attr('d', 'M0,-4L9,0L0,4').attr('fill', a[1]);
+  });
+  svg.on('click', () => { state.sel = null; render(); });
+
+  const g = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([0.35, 3])
+      .on('zoom', e => g.attr('transform', e.transform)))
+     .on('dblclick.zoom', null);
+
+  const link = g.append('g').selectAll('path').data(ls).join('path')
+    .attr('class', 'link')
+    .attr('stroke', d => linkSelected(d, S) ? P.link : P.faint)
+    .attr('stroke-width', d => linkSelected(d, S) ? 2.4 : 1.3)
+    .attr('stroke-opacity', d => !S ? .55 : (linkSelected(d, S) ? .95 : .16))
+    .attr('marker-end', d => linkSelected(d, S) ? 'url(#arrow-hot)' : 'url(#arrow)')
+    .style('cursor', 'pointer')
+    .on('mouseover', (e, d) => showTip(
+      '<b>' + esc(d.contract) + '</b>' + (d.scope ? ' · ' + esc(d.scope) : '') + '<br>' +
+      esc(d.source.label) + ' → ' + esc(d.target.label) +
+      (cFilters(d.contract).length ? '<br>' + filtLines(d.contract) : ''), e))
+    .on('mouseout', hideTip)
+    .on('click', (e, d) => {
+      e.stopPropagation(); selectContract(d.contract); render();
+    });
+
+  const node = g.append('g').selectAll('g.n').data(nodes).join('g').attr('class', 'n')
+    .classed('dim', d => !!(S && !S.any.has(d.id)))
+    .style('cursor', 'pointer')
+    .on('click', (e, d) => { e.stopPropagation(); selectNode(d.id, null); render(); })
+    .on('mouseover', (e, d) => showTip(
+      '<b>' + esc(d.label) + '</b><br>' +
+      (KIND_LABEL[d.kind] || d.kind) + ' · AP ' + esc(d.ap) +
+      '<br>here: ' + d.role +
+      '<br>overall: consumes ' + d.consumes + ' · provides ' + d.provides +
+      ((d.consumes && d.provides) ? '<br><i>click twice to flip direction</i>' : ''), e))
+    .on('mouseout', hideTip)
+    .call(d3.drag()
+      .on('start', (e, d) => {
+        if (!e.active) sim.alphaTarget(.25).restart(); d.fx = d.x; d.fy = d.y;
+      })
+      .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+      .on('end',   (e, d) => {
+        if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null;
+      }));
+
+  node.append('path')
+    .attr('d', d => d3.symbol()
+      .type(SYMBOL[d.role] || d3.symbolCircle).size(d.area * 1.25)())
+    .attr('fill', d => kindColor(d.kind))
+    .attr('stroke', d => (S && S.focus === d.id)
+      ? roleColor(S.role) : roleColor(d.role))
+    .attr('stroke-width', d => (S && S.focus === d.id) ? 4.5 : 2.5);
+  node.append('text').attr('class', 'lbl')
+    .attr('x', d => d.rad + 7).attr('y', 4)
+    .text(d => d.label);
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(ls).id(d => d.id).distance(155).strength(.35))
+    .force('charge', d3.forceManyBody().strength(-390))
+    .force('center', d3.forceCenter(w / 2, h / 2))
+    .force('collide', d3.forceCollide(d => d.rad + 17))
+    .on('tick', () => {
+      link.attr('d', d => {
+        const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y;
+        const r = Math.hypot(dx, dy) * 1.6;
+        return 'M' + d.source.x + ',' + d.source.y + 'A' + r + ',' + r +
+               ' 0 0,1 ' + d.target.x + ',' + d.target.y;
+      });
+      node.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+    });
+
+  drawLegend(svg, 12, 12, ids, true);
+  focusCaption(svg, S, 220, 24);
+  $('#hint').textContent =
+    'Shape = role in this view, fill = object type. Selecting an object is ' +
+    'directional: click it again (or press f) to flip between its consumer and ' +
+    'provider side. Drag to rearrange, scroll to zoom.';
+  return svg.node();
+}
+
+/* ===================================================== view: sankey */
+function drawSankey() {
+  const links = visibleLinks();
+  if (!links.length) return empty();
+  const S = selection();
+
+  /* An object can consume AND provide, so left and right copies must be
+     separate nodes: d3-sankey needs an acyclic graph. */
+  const names = [];
+  const seen  = new Set();
+  const add = k => { if (!seen.has(k)) { seen.add(k); names.push(k); } return k; };
+  const agg = new Map();
+  links.forEach(l => {
+    const a = 'c\u0000' + l.source, m = 'k\u0000' + l.contract, b = 'p\u0000' + l.target;
+    add(a); add(m); add(b);
+    [[a, m], [m, b]].forEach(pair => {
+      const key = pair[0] + '\u0001' + pair[1];
+      agg.set(key, (agg.get(key) || 0) + 1);
+    });
+  });
+  const index = new Map(names.map((n, i) => [n, i]));
+  const sLinks = [...agg].map(kv => {
+    const parts = kv[0].split('\u0001');
+    return { source: index.get(parts[0]), target: index.get(parts[1]), value: kv[1] };
+  });
+
+  const w = Math.max(760, ($('#canvas').clientWidth || 1100) - 4);
+  const h = Math.max(430, 52 + names.length * 15);
+  const svg = d3.create('svg').attr('width', w).attr('height', h);
+  svg.on('click', () => { state.sel = null; render(); });
+
+  const graph = d3.sankey().nodeWidth(16).nodePadding(11)
+    .extent([[172, 34], [w - 172, h - 16]])
+    ({ nodes: names.map(n => ({ name: n })), links: sLinks });
+
+  const label = n => n.name.slice(n.name.indexOf('\u0000') + 1);
+  const side  = n => n.name.charAt(0);   /* c consumer | k contract | p provider */
+
+  /* Strict 1:n — S.cons holds exactly one id when a consumer is focused,
+     S.prov exactly one when a provider is focused. */
+  const hot = n => {
+    if (!S) return true;
+    if (side(n) === 'k') return S.contracts.has(label(n));
+    return side(n) === 'c' ? S.cons.has(label(n)) : S.prov.has(label(n));
+  };
+  const nodeFill = n => {
+    if (!hot(n)) return P.faint;
+    if (side(n) === 'k') return P.contract;
+    return side(n) === 'c' ? P.consumer : P.provider;
+  };
+  const linkOn = d => {
+    if (!S) return true;
+    if (!(hot(d.source) && hot(d.target))) return false;
+    /* Also require the underlying relationship to involve the focus, so a
+       shared contract does not pull in unrelated ends. */
+    if (S.contract) return true;
+    if (side(d.source) === 'c') return S.cons.has(label(d.source));
+    return S.prov.has(label(d.target));
+  };
+  const isFocus = n => !!(S && S.focus && label(n) === S.focus &&
+    ((S.role === 'consumer' && side(n) === 'c') ||
+     (S.role === 'provider' && side(n) === 'p')));
+
+  svg.append('g').selectAll('path').data(graph.links).join('path')
+    .attr('class', 'sankey-link')
+    .attr('d', d3.sankeyLinkHorizontal())
+    .attr('stroke-width', d => Math.max(1.3, d.width))
+    .attr('stroke', d => linkOn(d) ? P.link : P.faint)
+    .attr('stroke-opacity', d => !S ? .30 : (linkOn(d) ? .74 : .14))
+    .on('mouseover', function (e, d) {
+      d3.select(this).attr('stroke-opacity', .9);
+      showTip(esc(label(d.source)) + ' → ' + esc(label(d.target)) +
+              ' · ' + fmt(d.value) + ' link(s)', e);
+    })
+    .on('mouseout', function (e, d) {
+      d3.select(this).attr('stroke-opacity', !S ? .30 : (linkOn(d) ? .74 : .14));
+      hideTip();
+    });
+
+  const gn = svg.append('g').selectAll('g').data(graph.nodes).join('g')
+    .attr('class', 'sankey-node');
+  gn.append('rect')
+    .attr('x', d => d.x0).attr('y', d => d.y0)
+    .attr('width', d => d.x1 - d.x0)
+    .attr('height', d => Math.max(2, d.y1 - d.y0))
+    .attr('rx', 2)
+    .attr('fill', nodeFill)
+    .attr('fill-opacity', d => hot(d) ? 1 : .5)
+    .attr('stroke', d => isFocus(d) ? P.ink : 'none')
+    .attr('stroke-width', 2)
+    .on('click', (e, d) => {
+      e.stopPropagation();
+      if (side(d) === 'k') selectContract(label(d));
+      else if (NODES.has(label(d)))
+        selectNode(label(d), side(d) === 'c' ? 'consumer' : 'provider');
+      else state.sel = null;
+      render();
+    })
+    .on('mouseover', (e, d) => {
+      const n = NODES.get(label(d));
+      showTip('<b>' + esc(label(d)) + '</b><br>' +
+        (side(d) === 'k'
+          ? 'contract' + (cFilters(label(d)).length ? '<br>' + filtLines(label(d)) : '')
+          : (n ? (KIND_LABEL[n.kind] || n.kind) + ' · AP ' + esc(n.ap) + '<br>' : '') +
+            (side(d) === 'c' ? 'click: show its providers'
+                             : 'click: show its consumers')), e);
+    })
+    .on('mouseout', hideTip);
+
+  gn.filter(d => side(d) !== 'k').append('rect')
+    .attr('width', 9).attr('height', 9).attr('rx', 2)
+    .attr('x', d => side(d) === 'p' ? d.x1 + 6 : d.x0 - 15)
+    .attr('y', d => (d.y0 + d.y1) / 2 - 4.5)
+    .attr('fill', d => {
+      const n = NODES.get(label(d));
+      return hot(d) ? kindColor(n ? n.kind : 'other') : P.faint;
+    })
+    .attr('opacity', d => hot(d) ? 1 : .5);
+
+  gn.append('text')
+    .attr('class', 'lbl')
+    .attr('fill', d => hot(d) ? P.ink : P.muted)
+    .attr('opacity', d => hot(d) ? 1 : .58)
+    .attr('font-weight', d => isFocus(d) ? 'bold' : 'normal')
+    .attr('x', d => side(d) === 'p' ? d.x1 + (side(d) === 'k' ? 6 : 19)
+                                    : d.x0 - (side(d) === 'k' ? 6 : 19))
+    .attr('y', d => (d.y0 + d.y1) / 2 + 4)
+    .attr('text-anchor', d => side(d) === 'p' ? 'start' : 'end')
+    .text(d => label(d));
+
+  svg.append('text').attr('class', 'lbl-sm').attr('x', 168).attr('y', 14)
+     .attr('text-anchor', 'end').attr('font-weight', 'bold')
+     .attr('fill', P.consumer).text('CONSUMER');
+  svg.append('text').attr('class', 'lbl-sm').attr('x', w / 2).attr('y', 14)
+     .attr('text-anchor', 'middle').attr('font-weight', 'bold')
+     .attr('fill', P.contract).text('CONTRACT');
+  svg.append('text').attr('class', 'lbl-sm').attr('x', w - 168).attr('y', 14)
+     .attr('font-weight', 'bold').attr('fill', P.provider).text('PROVIDER');
+  focusCaption(svg, S, 12, 28);
+
+  $('#hint').textContent =
+    'Click a left-hand block to see that one consumer and all of its providers; ' +
+    'click a right-hand block for one provider and all of its consumers. The same ' +
+    'object on the other side stays grey — press f to flip.';
+  return svg.node();
+}
+
+/* ===================================================== view: matrix */
+function cmpNode(a, b) {
+  const x = NODES.get(a), y = NODES.get(b);
+  return (x.ap || '').localeCompare(y.ap || '') || x.label.localeCompare(y.label);
+}
+
+function drawMatrix() {
+  const links = visibleLinks();
+  if (!links.length) return empty();
+  const S = selection();
+
+  const rows = [...new Set(links.map(l => l.source))].sort(cmpNode);
+  const cols = [...new Set(links.map(l => l.target))].sort(cmpNode);
+
+  const cells = new Map();
+  links.forEach(l => {
+    const k = pairKey(l.source, l.target);
+    if (!cells.has(k)) cells.set(k, []);
+    cells.get(k).push(l.contract);
+  });
+
+  const cs   = Math.max(17, Math.min(30, Math.floor(780 / Math.max(cols.length, 1))));
+  const padL = 250, padT = 250;
+  const w = padL + cols.length * cs + 26;
+  const h = padT + rows.length * cs + 26;
+  const svg = d3.create('svg').attr('width', w).attr('height', h);
+  svg.on('click', () => { state.sel = null; render(); });
+
+  const maxN  = d3.max([...cells.values()], v => v.length) || 1;
+  const scale = d3.scaleSequential(d3.interpolateRgb(P.cellLo, P.cellHi)).domain([0, maxN]);
+
+  const rowHot = r => !S || S.cons.has(r);   /* consumer axis — 1 when focused */
+  const colHot = c => !S || S.prov.has(c);   /* provider axis — 1 when focused */
+
+  rows.forEach((r, i) => {
+    const n = NODES.get(r);
+    const on = rowHot(r);
+    const cy = padT + i * cs + cs / 2;
+    svg.append('rect')
+      .attr('x', padL - 17).attr('y', cy - 5.5)
+      .attr('width', 11).attr('height', 11).attr('rx', 2)
+      .attr('fill', on ? kindColor(n.kind) : P.faint)
+      .attr('opacity', on ? 1 : .5);
+    svg.append('text').attr('class', 'lbl')
+      .attr('x', padL - 23).attr('y', cy + 4)
+      .attr('text-anchor', 'end')
+      .attr('fill', on ? P.consumer : P.muted)
+      .attr('font-weight', (S && S.focus === r && S.role === 'consumer')
+        ? 'bold' : 'normal')
+      .classed('dim-lbl', !on)
+      .style('cursor', 'pointer')
+      .text(n.label)
+      .on('click', e => { e.stopPropagation(); selectNode(r, 'consumer'); render(); })
+      .on('mouseover', e => showTip('<b>' + esc(n.label) + '</b><br>' +
+        (KIND_LABEL[n.kind] || n.kind) + ' · AP ' + esc(n.ap) +
+        '<br>click: show its providers', e))
+      .on('mouseout', hideTip);
+  });
+
+  cols.forEach((c, j) => {
+    const n = NODES.get(c);
+    const on = colHot(c);
+    const cx = padL + j * cs + cs / 2;
+    svg.append('rect')
+      .attr('x', cx - 5.5).attr('y', padT - 17)
+      .attr('width', 11).attr('height', 11).attr('rx', 2)
+      .attr('fill', on ? kindColor(n.kind) : P.faint)
+      .attr('opacity', on ? 1 : .5);
+    svg.append('text').attr('class', 'lbl')
+      .attr('transform', 'translate(' + (cx + 4) + ',' + (padT - 23) + ') rotate(-90)')
+      .attr('fill', on ? P.provider : P.muted)
+      .attr('font-weight', (S && S.focus === c && S.role === 'provider')
+        ? 'bold' : 'normal')
+      .classed('dim-lbl', !on)
+      .style('cursor', 'pointer')
+      .text(n.label)
+      .on('click', e => { e.stopPropagation(); selectNode(c, 'provider'); render(); })
+      .on('mouseover', e => showTip('<b>' + esc(n.label) + '</b><br>' +
+        (KIND_LABEL[n.kind] || n.kind) + ' · AP ' + esc(n.ap) +
+        '<br>click: show its consumers', e))
+      .on('mouseout', hideTip);
+  });
+
+  const g = svg.append('g');
+  rows.forEach((r, i) => cols.forEach((c, j) => {
+    const list = cells.get(pairKey(r, c));
+    const on   = !S ? true : S.pairs.has(pairKey(r, c));
+    g.append('rect')
+      .attr('class', list ? 'cell' : '')
+      .attr('x', padL + j * cs).attr('y', padT + i * cs)
+      .attr('width', cs - 1).attr('height', cs - 1)
+      .attr('fill', list ? (on ? scale(list.length) : P.faint) : P.cellBg)
+      .attr('fill-opacity', list ? (on ? 1 : .4) : 1)
+      .attr('stroke', list ? P.panel : P.grid)
+      .on('mouseover', e => showTip(
+        '<b>' + esc(NODES.get(r).label) + '</b> <span style="opacity:.7">consumes</span>' +
+        ' → <b>' + esc(NODES.get(c).label) + '</b> <span style="opacity:.7">provides</span>' +
+        '<br>' + (list
+          ? list.map(x => esc(x) + (cFilters(x).length
+              ? ' <i>' + esc(cFilters(x).join(', ')) + '</i>' : '')).join('<br>')
+          : '<i>no contract</i>'), e))
+      .on('mouseout', hideTip)
+      .on('click', e => {
+        e.stopPropagation();
+        if (list) {
+          if (list.length === 1) selectContract(list[0]);
+          else selectNode(r, 'consumer');
+        }
+        render();
+      });
+  }));
+
+  svg.append('text').attr('class', 'lbl-sm').attr('x', 12).attr('y', 20)
+     .attr('font-weight', 'bold').attr('fill', P.consumer)
+     .text('↓  ROWS = consuming object');
+  svg.append('text').attr('class', 'lbl-sm').attr('x', 12).attr('y', 36)
+     .attr('font-weight', 'bold').attr('fill', P.provider)
+     .text('→  COLUMNS = providing object');
+  svg.append('text').attr('class', 'lbl-sm').attr('x', 12).attr('y', 54)
+     .attr('fill', P.muted).text('cell = contract(s) permitting that direction');
+  focusCaption(svg, S, 12, 72);
+
+  drawLegend(svg, 12, 84, rows.concat(cols), false);
+
+  $('#hint').textContent =
+    'Rows consume, columns provide — the same object can appear on both axes. ' +
+    'Clicking a row label shows only that consumer and its providers; a column ' +
+    'label shows only that provider and its consumers.';
+  return svg.node();
+}
+
+/* ===================================================== view: chord */
+function drawChord() {
+  const links = visibleLinks();
+  const ids = visibleNodeIds(links);
+  if (ids.length < 2) return empty();
+  if (ids.length > 40) {
+    const d = document.createElement('div');
+    d.style.padding = '28px';
+    d.innerHTML = '<b>Too many objects for a readable chord diagram (' + ids.length +
+      ').</b><br><span class="hint">Chord works up to roughly 25–30 objects. ' +
+      'Filter by application profile or contract, or use the Matrix view.</span>';
+    $('#hint').textContent = '';
+    return d;
+  }
+  const S = selection();
+  ids.sort(cmpNode);
+  const idx = new Map(ids.map((d, i) => [d, i]));
+  const m = ids.map(() => ids.map(() => 0));
+  links.forEach(l => { m[idx.get(l.source)][idx.get(l.target)] += 1; });
+
+  const size  = Math.min(830, Math.max(560, ($('#canvas').clientWidth || 900) - 40));
+  const outer = size / 2 - 138, inner = outer - 14;
+  const root  = d3.create('svg').attr('width', size).attr('height', size);
+  const svg   = root.append('g')
+    .attr('transform', 'translate(' + size / 2 + ',' + size / 2 + ')');
+  root.on('click', () => { state.sel = null; render(); });
+
+  const chord = (d3.chordDirected ? d3.chordDirected() : d3.chord())
+    .padAngle(.035).sortSubgroups(d3.descending)(m);
+  const arc    = d3.arc().innerRadius(inner).outerRadius(outer);
+  const ribbon = (d3.ribbonArrow ? d3.ribbonArrow() : d3.ribbon()).radius(inner - 1);
+  const roles  = roleMap(links);
+  const groupOn = i => !S || S.any.has(ids[i]);
+  const ribOn = d => !S || S.pairs.has(pairKey(ids[d.source.index], ids[d.target.index]));
+
+  svg.append('g').selectAll('path').data(chord.groups).join('path')
+    .attr('d', arc)
+    .attr('fill', d => groupOn(d.index) ? roleColor(roles.get(ids[d.index])) : P.faint)
+    .attr('fill-opacity', d => groupOn(d.index) ? .95 : .4)
+    .attr('stroke', d => (S && S.focus === ids[d.index]) ? P.ink : P.panel)
+    .attr('stroke-width', d => (S && S.focus === ids[d.index]) ? 2 : 1)
+    .style('cursor', 'pointer')
+    .on('click', (e, d) => {
+      e.stopPropagation(); selectNode(ids[d.index], null); render();
+    })
+    .on('mouseover', (e, d) => {
+      const n = NODES.get(ids[d.index]);
+      showTip('<b>' + esc(n.label) + '</b><br>' + (KIND_LABEL[n.kind] || n.kind) +
+              ' · AP ' + esc(n.ap) + '<br>role here: ' + roles.get(ids[d.index]) +
+              '<br><i>click twice to flip direction</i>', e);
+    })
+    .on('mouseout', hideTip);
+
+  const kindArc = d3.arc().innerRadius(outer + 3).outerRadius(outer + 8);
+  svg.append('g').selectAll('path').data(chord.groups).join('path')
+    .attr('d', kindArc)
+    .attr('fill', d => groupOn(d.index)
+      ? kindColor(NODES.get(ids[d.index]).kind) : P.faint)
+    .attr('fill-opacity', d => groupOn(d.index) ? .95 : .4)
+    .style('pointer-events', 'none');
+
+  svg.append('g').selectAll('path').data(chord).join('path')
+    .attr('class', 'chord-ribbon')
+    .attr('d', ribbon)
+    .attr('fill', d => ribOn(d) ? roleColor(roles.get(ids[d.source.index])) : P.faint)
+    .attr('fill-opacity', d => ribOn(d) ? .62 : .12)
+    .on('mouseover', (e, d) => {
+      const cs = [...new Set(links
+        .filter(l => l.source === ids[d.source.index] && l.target === ids[d.target.index])
+        .map(l => l.contract))];
+      showTip('<b>' + esc(NODES.get(ids[d.source.index]).label) + '</b> → <b>' +
+              esc(NODES.get(ids[d.target.index]).label) + '</b><br>' +
+              cs.map(esc).join('<br>'), e);
+    })
+    .on('mouseout', hideTip);
+
+  svg.append('g').selectAll('text').data(chord.groups).join('text')
+    .attr('class', 'lbl')
+    .attr('transform', d => {
+      const a = (d.startAngle + d.endAngle) / 2 - Math.PI / 2;
+      return 'rotate(' + (a * 180 / Math.PI) + ') translate(' + (outer + 13) + ') ' +
+             (a > Math.PI / 2 || a < -Math.PI / 2 ? 'rotate(180)' : '');
+    })
+    .attr('text-anchor', d => {
+      const a = (d.startAngle + d.endAngle) / 2 - Math.PI / 2;
+      return (a > Math.PI / 2 || a < -Math.PI / 2) ? 'end' : 'start';
+    })
+    .attr('dy', '.32em')
+    .attr('font-weight', d => (S && S.focus === ids[d.index]) ? 'bold' : 'normal')
+    .classed('dim-lbl', d => !groupOn(d.index))
+    .text(d => NODES.get(ids[d.index]).label);
+
+  drawLegend(root, 10, 10, ids, false);
+  focusCaption(root, S, 216, 24);
+  $('#hint').textContent =
+    'Inner arc colour = role, thin outer band = object type. Ribbons run ' +
+    'consumer → provider. Selecting an arc is directional — click it again to flip.';
+  return root.node();
+}
+
+/* ===================================================== shell */
+function empty() {
+  const d = document.createElement('div');
+  d.style.padding = '28px';
+  d.className = 'hint';
+  d.textContent = 'No relationships match the current filters.';
+  $('#hint').textContent = '';
+  return d;
+}
+
+const VIEWS = {
+  force:  { label:'Force graph', fn: drawForce  },
+  sankey: { label:'Sankey flow', fn: drawSankey },
+  matrix: { label:'Matrix',      fn: drawMatrix },
+  chord:  { label:'Chord',       fn: drawChord  }
+};
+
+function render() {
+  const tabs = $('#tabs');
+  tabs.innerHTML = '';
+  Object.keys(VIEWS).forEach(k => {
+    const b = document.createElement('button');
+    b.textContent = VIEWS[k].label;
+    b.className = state.view === k ? 'on' : '';
+    b.onclick = () => { state.view = k; render(); };
+    tabs.appendChild(b);
+  });
+  const c = $('#canvas');
+  c.innerHTML = '';
+  c.appendChild(VIEWS[state.view].fn());
+  detail();
+}
+
+$('#q').oninput = e => { state.q = e.target.value.trim().toLowerCase(); render(); };
+
+$('#theme').onclick = () => {
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  render();
+};
+
+$('#reset').onclick = () => {
+  DATA.nodes.forEach(n => { state.kinds.add(n.kind); state.aps.add(n.ap); });
+  DATA.contracts.forEach(c => state.contracts.add(c.name));
+  state.q = ''; $('#q').value = ''; state.sel = null;
+  syncSidebar(); render();
+};
+
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'Escape') { state.sel = null; render(); }
+  if (e.key === 'f' || e.key === 'F') { flipSelection(); render(); }
+  if (e.key === 'd' || e.key === 'D') $('#theme').click();
+});
+
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 180); });
+
+buildSidebar();
+render();
+
+</script>
+</body>
+</html>

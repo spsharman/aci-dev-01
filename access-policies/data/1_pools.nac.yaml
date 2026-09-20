@@ -348,6 +348,12 @@ apic:
           - from: 41
             description: L3out SVI isovalent.vrf-03 to Smart Switch
 
+      - name: isovalent.vrf-01
+        allocation: static
+        ranges:
+          - from: 42
+            description: L3out SVI isovalent.vrf-03 to Smart Switch
+
       - name: mgmt_inb
         allocation: static
         ranges:
@@ -389,9 +395,14 @@ apic:
             description: smart switch L3out peering
             allocation: inherit
             role: external
-          - from: 42
-            to: 42
-            description: isovalent.vrf-01 SVI to Smart Switch 10.100.6.32/29
+          - from: 43
+            to: 43
+            description: L2 stretch to tn-isovalent
+            allocation: inherit
+            role: external
+          - from: 44
+            to: 44
+            description: smart switch PBR for tn-isovalent
             allocation: inherit
             role: external
 
