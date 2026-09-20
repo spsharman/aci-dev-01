@@ -1,10 +1,10 @@
 # Notes:
 # Tenant isovalent
 #
-# Description: Build v13 from v12.
-# Network segments 10.100.7.0_24, 10.100.8.0_24, and 10.100.9.0_24 live in vrf-03 (BD / EPG / ESG).
-# Each ESG provides permit-to-network-segments-<prefix>; no contracts between these three segments.
-# Opposite-VRF statics (no leak): vrf-01 has 10.100.7.0/24, 10.100.8.0/24, and 10.100.9.0/24 via SS SVI .36.
+# Description: Build v16 from v15.
+# Leak jumphost 10.237.101.144/28 vrf-01 → vrf-03 (still leaked to vrf-02).
+# Leak 10.100.7.0/24 and 10.100.8.0/24 (internal) and 10.100.9.0/24 (SS-learned) vrf-03 → vrf-01 only.
+# Leaks into vrf-01 stay in vrf-01: not advertised on vrf-01-bgp-p2p, not leaked to vrf-02.
 #
 # Outstanding:
 # - Security domain for shared-services
@@ -158,6 +158,12 @@ apic:
                 aggregate: true
                 to_length: 0
 
+          - name: match-all-subnets
+            description: exact match for default route 0.0.0.0/0
+            prefixes:
+              - ip: 0.0.0.0/0
+                aggregate: false
+
           - name: match-vrf-01-subnets
             description: match vrf-01 subnets
             prefixes:
@@ -193,28 +199,14 @@ apic:
               - ip: 10.100.0.0/23
                 aggregate: false
 
-          - name: match-vrf-01-to-smart-switch-svi
-            description: remaining 10.100.0.0/16 prefixes advertised via vrf-01-bgp-svi
-            prefixes:
-              - ip: 10.100.0.0/16
-                aggregate: true
-                from_length: 17
-                to_length: 32
-
-          - name: match-vrf-01-smart-switch-peering
-            description: match vrf-01 Smart Switch peering subnets
-            prefixes:
-              - ip: 10.100.6.16/29
-                aggregate: true
-              - ip: 10.100.6.32/29
-                aggregate: true
-
           - name: match-vrf-03-subnets
             description: match vrf-03 subnets
             prefixes:
               - ip: 10.100.7.0/24
                 aggregate: false
               - ip: 10.100.8.0/24
+                aggregate: false
+              - ip: 10.237.101.144/28
                 aggregate: false
 
 # OSPF Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `OSPF` » `OSPF Interface`
@@ -249,7 +241,7 @@ apic:
                 order: 0
                 action: permit
                 match_rules:
-                  - pod-subnets
+                  - match-all-subnets
 
           - name: redist-ah
             type: global
@@ -306,6 +298,28 @@ apic:
                   - device: ftdv-01-adapter-7-gig-0-4
                     interface_name: gig-0-4
 
+          - name: smart-switch-east-west
+            physical_domain: smart-switches
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: smart-switch-east-west
+                interfaces:
+                  - name: data
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_smart-switch
+            logical_interfaces:
+              - name: data
+                vlan: 44
+                concrete_interfaces:
+                  - device: smart-switch-east-west
+                    interface_name: data
+
 # Redirect Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Policy-Based Redirect`
         redirect_policies:
           - name: redirect-to-ftdv-01-adapter-7-gig-0-4
@@ -315,9 +329,20 @@ apic:
                 mac: 00:50:56:A1:1C:2B
                 redirect_health_group: ftdv-01-adapter-7-gig-0-4
 
+          - name: smart-switch-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.11
+                name: smart-switch-east-west
+                redirect_health_group: smart-switch-east-west
+
 # Redirect Health Group: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Redirect Health Groups`
         redirect_health_groups:
           - name: ftdv-01-adapter-7-gig-0-4
+          - name: smart-switch-east-west
 
 # Service Graph Template: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Service Graph Templates`
         service_graph_templates:
@@ -328,6 +353,18 @@ apic:
             device:
               tenant: isovalent
               name: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: isovalent
+              name: smart-switch-east-west
             consumer:
               direct_connect: false
             provider:
@@ -349,6 +386,21 @@ apic:
               logical_interface: gig-0-4
               bridge_domain:
                 name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24-vrf-03
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24-vrf-03
 
 # Filter: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
       filters:
@@ -534,6 +586,17 @@ apic:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
+
+        - name: intra-vrf
+          scope: context
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters: 
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
 
         - name: permit-to-all-external-subnets
           scope: tenant
@@ -801,6 +864,8 @@ apic:
               destinations:
                 - tenant: isovalent
                   vrf: vrf-02
+                - tenant: isovalent
+                  vrf: vrf-03
           leaked_external_prefixes:
             - prefix: 10.100.0.0/23
               # from_prefix_length: 32
@@ -857,6 +922,22 @@ apic:
         - name: vrf-03
           description: configured with NAC
           alias: internal-vrf
+          leaked_internal_subnets:
+            - prefix: 10.100.7.0/24
+              public: false
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-01
+            - prefix: 10.100.8.0/24
+              public: false
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-01
+          leaked_external_prefixes:
+            - prefix: 10.100.9.0/24
+              destinations:
+                - tenant: isovalent
+                  vrf: vrf-01
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
       l3outs:
@@ -1184,7 +1265,7 @@ apic:
                 order: 0
                 action: permit
                 match_rules:
-                  - pod-subnets
+                  - match-all-subnets
 
 # Nodes — same router IDs as the floating L3Out (required for two L3Outs in one VRF on the same leaf).
 # Loopbacks stay on the floating L3Out only; ACI rejects the same loopback IP on two L3Outs in one VRF.
@@ -1279,86 +1360,6 @@ apic:
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-65253
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
-
-# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
-        - name: vrf-01-bgp-svi
-          description: L3out SVI to Smart Switch BGP AS65253
-          alias: vrf-01-to-smart-switch-svi
-          vrf: vrf-01
-          domain: isovalent.vrf-01
-          import_route_control_enforcement: true
-          export_route_map:
-            type: global
-            contexts:
-              - name: export-vrf-01-to-smart-switch-svi
-                order: 0
-                action: permit
-                match_rules:
-                  - match-vrf-01-to-smart-switch-svi
-              - name: default-route
-                order: 1
-                action: permit
-                match_rules:
-                  - pod-subnets
-
-# Nodes — same router IDs as the floating L3Out; no loopbacks (already on floating L3Out).
-# No bgpProtP: a leaf allows only one BGP protocol profile per VRF (on vrf-01-bgp-floating-l3out).
-          node_profiles:
-            - name: border-leafs
-              nodes:
-                - node_id: 1101
-                  pod_id: 1
-                  router_id: 110.1.5.1
-                  router_id_as_loopback: false
-
-                - node_id: 1102
-                  pod_id: 1
-                  router_id: 110.2.5.1
-                  router_id_as_loopback: false
-
-# Interfaces
-              interface_profiles:
-                - name: vpc_to_smart-switch
-                  interfaces:
-                    - node_id: 1101
-                      node2_id: 1102
-                      channel: vpc_to_smart-switch
-                      mode: regular
-                      scope: vrf
-                      vlan: 42
-                      svi: true
-                      ip_a: 10.100.6.33/29
-                      ip_b: 10.100.6.34/29
-                      ip_shared: 10.100.6.35/29
-                      mtu: 1500
-                      bgp_peers:
-                        - ip: 10.100.6.36
-                          description: Smart Switch SVI VLAN 42
-                          remote_as: 65253
-                          local_as: 65151
-                          allow_self_as: false
-                          as_override: false
-                          disable_peer_as_check: false
-                          next_hop_self: true
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: true
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: false
-                          admin_state: true
-                          as_propagate: no-prepend
-                          peer_prefix_policy: smart-switch-bgp-prefix-policy
-
-# extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
-          external_endpoint_groups:
-            - name: dummy-extEPG-for-vrf-01-bgp-svi-AS-65253
-              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-svi
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-02-bgp-p2p
@@ -2039,6 +2040,15 @@ apic:
             - ip: 6.6.6.1/24
               public: false
 
+        - name: 6.6.6.0_24-vrf-03
+          description: PBR subnet, not advertised - local to VRF
+          alias: vrf-03-internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-03
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
         - name: 10.237.101.96_28
           description: corporate subnet
           alias: vrf-01-corporate-subnet
@@ -2075,7 +2085,7 @@ apic:
           subnets:
             - ip: 10.100.7.1/24
               public: true
-              shared: false
+              shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -2089,7 +2099,7 @@ apic:
           subnets:
             - ip: 10.100.8.1/24
               public: true
-              shared: false
+              shared: true
               nd_ra_prefix: false
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
@@ -2222,6 +2232,7 @@ apic:
               contracts:
                 consumers:
                   - permit-to-network-segments-10.100.9.0_24
+                  - permit-to-network-segments-10.100.8.0_24
                 providers:
                   - permit-to-network-segments-10.100.7.0_24
 
@@ -2379,7 +2390,7 @@ apic:
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.100.9.0/24
-                  shared: false
+                  shared: true
               contracts:
                 providers:
                   - permit-to-network-segments-10.100.9.0_24

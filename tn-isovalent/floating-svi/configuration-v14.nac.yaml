@@ -306,6 +306,28 @@ apic:
                   - device: ftdv-01-adapter-7-gig-0-4
                     interface_name: gig-0-4
 
+          - name: smart-switch-east-west
+            physical_domain: smart-switches
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: smart-switch-east-west
+                interfaces:
+                  - name: data
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_smart-switch
+            logical_interfaces:
+              - name: data
+                vlan: 44
+                concrete_interfaces:
+                  - device: smart-switch-east-west
+                    interface_name: data
+
 # Redirect Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Policy-Based Redirect`
         redirect_policies:
           - name: redirect-to-ftdv-01-adapter-7-gig-0-4
@@ -315,9 +337,20 @@ apic:
                 mac: 00:50:56:A1:1C:2B
                 redirect_health_group: ftdv-01-adapter-7-gig-0-4
 
+          - name: smart-switch-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.11
+                name: smart-switch-east-west
+                redirect_health_group: smart-switch-east-west
+
 # Redirect Health Group: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Redirect Health Groups`
         redirect_health_groups:
           - name: ftdv-01-adapter-7-gig-0-4
+          - name: smart-switch-east-west
 
 # Service Graph Template: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Service Graph Templates`
         service_graph_templates:
@@ -328,6 +361,18 @@ apic:
             device:
               tenant: isovalent
               name: ftdv-01-adapter-7-gig-0-4
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+          - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: isovalent
+              name: smart-switch-east-west
             consumer:
               direct_connect: false
             provider:
@@ -349,6 +394,21 @@ apic:
               logical_interface: gig-0-4
               bridge_domain:
                 name: 6.6.6.0_24
+
+          - contract: any
+            service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24-vrf-03
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24-vrf-03
 
 # Filter: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
       filters:
@@ -534,6 +594,17 @@ apic:
             - name: permit-ipv4-src-any-dst-any
               filters: 
                 - filter: ipv4-src-any-dst-any
+
+        - name: intra-vrf
+          scope: context
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters: 
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+                  action: permit
 
         - name: permit-to-all-external-subnets
           scope: tenant
@@ -2039,6 +2110,15 @@ apic:
             - ip: 6.6.6.1/24
               public: false
 
+        - name: 6.6.6.0_24-vrf-03
+          description: PBR subnet, not advertised - local to VRF
+          alias: vrf-03-internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-03
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
         - name: 10.237.101.96_28
           description: corporate subnet
           alias: vrf-01-corporate-subnet
@@ -2222,6 +2302,7 @@ apic:
               contracts:
                 consumers:
                   - permit-to-network-segments-10.100.9.0_24
+                  - permit-to-network-segments-10.100.8.0_24
                 providers:
                   - permit-to-network-segments-10.100.7.0_24
 

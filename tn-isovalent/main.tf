@@ -31,7 +31,11 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v10.nac.yaml"] # << testing Smart Switch iBGP AS65151
   # yaml_files = ["floating-svi/configuration-v11.nac.yaml"] # << testing Smart Switch iBGP AS65151
   # yaml_files = ["floating-svi/configuration-v12.nac.yaml"] # << vrf-01 SVI to Smart Switch 10.100.6.32/29
-  yaml_files = ["floating-svi/configuration-v13.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
+  # yaml_files = ["floating-svi/configuration-v13.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
+  # yaml_files = ["floating-svi/configuration-v14.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
+  # yaml_files = ["floating-svi/configuration-v15.nac.yaml"] # << drop vrf-01-bgp-svi; p2p default via match-all-subnets
+  # yaml_files = ["floating-svi/configuration-v16.nac.yaml"] # << leak jumphost 10.237.101.144/28 to vrf-03
+  yaml_files = ["floating-svi/configuration-v17.nac.yaml"] # << export jumphost to SS on vrf-03-bgp-svi
 
 # SVI configuration
 
