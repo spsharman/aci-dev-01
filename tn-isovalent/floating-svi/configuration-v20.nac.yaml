@@ -1,8 +1,8 @@
 # Notes:
 # Tenant isovalent
 #
-# Description: Build v18 from v17.
-# Tenant-scope permit-to-network-segments-10.100.{7,8,9}.0_24; jumphost ESG consumes all three.
+# Description: Build v20 from v19.
+# Export leaked 10.100.7/8/9 from vrf-02-bgp-p2p to core. vrf-01 leaks stay non-public.
 #
 # Outstanding:
 # - Security domain for shared-services
@@ -205,6 +205,16 @@ apic:
               - ip: 10.100.8.0/24
                 aggregate: false
               - ip: 10.237.101.144/28
+                aggregate: false
+
+          - name: match-vrf-03-to-external
+            description: vrf-03 10.100.7/8/9 advertised from vrf-02 to core
+            prefixes:
+              - ip: 10.100.7.0/24
+                aggregate: false
+              - ip: 10.100.8.0/24
+                aggregate: false
+              - ip: 10.100.9.0/24
                 aggregate: false
 
 # OSPF Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `OSPF` » `OSPF Interface`
@@ -932,16 +942,6 @@ apic:
         - name: vrf-03
           description: configured with NAC
           alias: internal-vrf
-          contracts:
-            # providers: 
-            #   - intra-tenant
-            consumers:
-              # - intra-tenant
-              - permit-to-all-external-subnets
-              - permit-from-core-services
-              - permit-to-core-services
-              - permit-to-lab-desktops
-
           leaked_internal_subnets:
             - prefix: 10.100.7.0/24
               public: false
@@ -950,6 +950,7 @@ apic:
                   vrf: vrf-01
                 - tenant: isovalent
                   vrf: vrf-02
+                  public: true
             - prefix: 10.100.8.0/24
               public: false
               destinations:
@@ -957,6 +958,7 @@ apic:
                   vrf: vrf-01
                 - tenant: isovalent
                   vrf: vrf-02
+                  public: true
           leaked_external_prefixes:
             - prefix: 10.100.9.0/24
               destinations:
@@ -964,6 +966,7 @@ apic:
                   vrf: vrf-01
                 - tenant: isovalent
                   vrf: vrf-02
+                  public: true
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
       l3outs:
@@ -1404,6 +1407,11 @@ apic:
                 action: permit
                 match_rules:
                   - match-vrf-01-subnets
+              - name: export-vrf-03-to-external
+                order: 1
+                action: permit
+                match_rules:
+                  - match-vrf-03-to-external
 
 # Nodes
           node_profiles:
@@ -2263,6 +2271,10 @@ apic:
                 consumers:
                   - permit-to-network-segments-10.100.9.0_24
                   - permit-to-network-segments-10.100.8.0_24
+                  - permit-to-all-external-subnets
+                  - permit-to-core-services
+                  - permit-from-core-services
+                  - permit-to-lab-desktops
                 providers:
                   - permit-to-network-segments-10.100.7.0_24
 
@@ -2277,6 +2289,10 @@ apic:
               contracts:
                 consumers:
                   - permit-to-network-segments-10.100.9.0_24
+                  - permit-to-all-external-subnets
+                  - permit-to-core-services
+                  - permit-from-core-services
+                  - permit-to-lab-desktops
                 providers:
                   - permit-to-network-segments-10.100.8.0_24
 
@@ -2288,6 +2304,12 @@ apic:
               epg_selectors:
                 - application_profile: 'network-segments'
                   endpoint_group: '10.100.9.0_24'
+              contracts:
+                consumers:
+                  - permit-to-all-external-subnets
+                  - permit-to-core-services
+                  - permit-from-core-services
+                  - permit-to-lab-desktops
 
 # Application Profile: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX`
         - name: 'egress-subnets-esgs'
@@ -2424,3 +2446,8 @@ apic:
               contracts:
                 providers:
                   - permit-to-network-segments-10.100.9.0_24
+                consumers:
+                  - permit-to-all-external-subnets
+                  - permit-to-core-services
+                  - permit-from-core-services
+                  - permit-to-lab-desktops

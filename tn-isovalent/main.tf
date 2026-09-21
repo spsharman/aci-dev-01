@@ -36,7 +36,11 @@ module "aci" {
   # yaml_files = ["floating-svi/configuration-v15.nac.yaml"] # << drop vrf-01-bgp-svi; p2p default via match-all-subnets
   # yaml_files = ["floating-svi/configuration-v16.nac.yaml"] # << leak jumphost 10.237.101.144/28 to vrf-03
   # yaml_files = ["floating-svi/configuration-v17.nac.yaml"] # << export jumphost to SS on vrf-03-bgp-svi
-  yaml_files = ["floating-svi/configuration-v18.nac.yaml"] # << tenant-scope segment contracts; jumphost consumes 7/8/9
+  # yaml_files = ["floating-svi/configuration-v18.nac.yaml"] # << tenant-scope segment contracts; jumphost consumes 7/8/9
+  # yaml_files = ["floating-svi/configuration-v19.nac.yaml"] # << 7/8/9 consume external, core-services, lab-desktops
+  # yaml_files = ["floating-svi/configuration-v20.nac.yaml"] # << export 10.100.7/8/9 from vrf-02 to core
+  # yaml_files = ["floating-svi/configuration-v21.nac.yaml"] # << vrf-03 vzAny consumes external/core/lab; drop from 7/8/9 ESGs
+  yaml_files = ["floating-svi/configuration-v22.nac.yaml"] # << export default to SS on vrf-03-bgp-svi
 
 # SVI configuration
 
