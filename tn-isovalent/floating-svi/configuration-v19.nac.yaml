@@ -179,7 +179,7 @@ apic:
                 aggregate: true
               - ip: 10.237.101.120/29
                 aggregate: true
-              - ip: 10.237.101.128/29
+              - ip: 10.237.101.128/28
                 aggregate: true
               - ip: 10.237.101.144/28
                 aggregate: false
@@ -911,7 +911,7 @@ apic:
               destinations:
                 - tenant: isovalent
                   vrf: vrf-02
-            - prefix: 10.237.101.128/29
+            - prefix: 10.237.101.128/28
               # from_prefix_length: 32
               # to_prefix_length: 32
               destinations:
@@ -2353,7 +2353,7 @@ apic:
               vrf: vrf-01
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
-                - ip: 10.237.101.128/29
+                - ip: 10.237.101.128/28
                   shared: true
               contracts:
                 providers:
