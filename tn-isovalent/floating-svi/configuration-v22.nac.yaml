@@ -168,8 +168,8 @@ apic:
               - ip: 0.0.0.0/0
                 aggregate: false
 
-          - name: match-vrf-01-subnets
-            description: match vrf-01 subnets
+          - name: match-vrf-02-subnets
+            description: match vrf-02 subnets
             prefixes:
               - ip: 10.100.0.0/23
                 aggregate: true
@@ -214,7 +214,7 @@ apic:
                 aggregate: false
 
           - name: match-vrf-03-to-external
-            description: vrf-03 10.100.7/8/9 advertised from vrf-02 to core
+            description: vrf-03 10.100.7/8/9 advertised from vrf-01 to core
             prefixes:
               - ip: 10.100.7.0/24
                 aggregate: false
@@ -248,7 +248,7 @@ apic:
                   - pod-subnets
                 set_rule: floating-L3out-optimizations
 
-          - name: export-vrf-01-to-smart-switch-p2p
+          - name: export-vrf-02-to-smart-switch-p2p
             type: global
             contexts:
               - name: default-route
@@ -407,13 +407,13 @@ apic:
                 name: redirect-to-ftdv-01-adapter-7-gig-0-4
               logical_interface: gig-0-4
               bridge_domain:
-                name: 6.6.6.0_24
+                name: 6.6.6.0_24-vrf-02
             provider:
               redirect_policy:
                 name: redirect-to-ftdv-01-adapter-7-gig-0-4
               logical_interface: gig-0-4
               bridge_domain:
-                name: 6.6.6.0_24
+                name: 6.6.6.0_24-vrf-02
 
           - contract: any
             service_graph_template: smart-switch-east-west
@@ -865,7 +865,7 @@ apic:
 
 # VRF: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
-        - name: vrf-01
+        - name: vrf-02
           description: configured with NAC
           alias: internal-vrf
           bgp:
@@ -886,12 +886,12 @@ apic:
               public: true
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.144/28
               public: true
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
                 - tenant: isovalent
                   vrf: vrf-03
                   public: true
@@ -901,52 +901,52 @@ apic:
               # to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.0/27
               # from_prefix_length: 32
               # to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.32/28
               from_prefix_length: 32
               to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.48/28
               from_prefix_length: 32
               to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.112/29
               from_prefix_length: 32
               to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.120/29
               from_prefix_length: 32
               to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
             - prefix: 10.237.101.128/28
               # from_prefix_length: 32
               # to_prefix_length: 32
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-02
+                  vrf: vrf-01
 
-        - name: vrf-02
+        - name: vrf-01
           description: configured with NAC
           alias: external-vrf
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
                 - tenant: isovalent
-                  vrf: vrf-01
+                  vrf: vrf-02
                 - tenant: isovalent
                   vrf: vrf-03
 
@@ -965,32 +965,32 @@ apic:
               destinations:
                 - tenant: isovalent
                   vrf: vrf-01
+                  public: true
                 - tenant: isovalent
                   vrf: vrf-02
-                  public: true
             - prefix: 10.100.8.0/24
               public: false
               destinations:
                 - tenant: isovalent
                   vrf: vrf-01
+                  public: true
                 - tenant: isovalent
                   vrf: vrf-02
-                  public: true
           leaked_external_prefixes:
             - prefix: 10.100.9.0/24
               destinations:
                 - tenant: isovalent
                   vrf: vrf-01
+                  public: true
                 - tenant: isovalent
                   vrf: vrf-02
-                  public: true
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
       l3outs:
-        - name: vrf-01-bgp-floating-l3out
+        - name: vrf-02-bgp-floating-l3out
           description: Floating SVI L3Out to Isovalent K8s AS65252
-          alias: vrf-01-to-k8s-nodes
-          vrf: vrf-01
+          alias: vrf-02-to-k8s-nodes
+          vrf: vrf-02
           domain: isovalent.vrf-01
           import_route_control_enforcement: true
           # interleak_route_map: route-map-for-floating-L3out-optimizations
@@ -1291,14 +1291,14 @@ apic:
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
-            - name: dummy-extEPG-for-vrf-01-bgp-AS-65252
-              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65252
+            - name: dummy-extEPG-for-vrf-02-bgp-AS-65252
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-AS-65252
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
-        - name: vrf-01-bgp-p2p
+        - name: vrf-02-bgp-p2p
           description: Routed p2p iBGP to Smart Switch AS65253
-          alias: vrf-01-to-smart-switch-p2p
-          vrf: vrf-01
+          alias: vrf-02-to-smart-switch-p2p
+          vrf: vrf-02
           domain: isovalent.vrf-01
           import_route_control_enforcement: true
           redistribution_route_maps:
@@ -1367,7 +1367,7 @@ apic:
                           as_propagate: no-prepend
                           peer_prefix_policy: smart-switch-bgp-prefix-policy
                           import_route_control: floating-L3out-optimizations
-                          export_route_control: export-vrf-01-to-smart-switch-p2p
+                          export_route_control: export-vrf-02-to-smart-switch-p2p
 
                     - node_id: 1102
                       pod_id: 1
@@ -1400,18 +1400,18 @@ apic:
                           as_propagate: no-prepend
                           peer_prefix_policy: smart-switch-bgp-prefix-policy
                           import_route_control: floating-L3out-optimizations
-                          export_route_control: export-vrf-01-to-smart-switch-p2p
+                          export_route_control: export-vrf-02-to-smart-switch-p2p
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
-            - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-65253
-              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
+            - name: dummy-extEPG-for-vrf-02-bgp-p2p-AS-65253
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-p2p
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
-        - name: vrf-02-bgp-p2p
-          alias: vrf-02-to-core
+        - name: vrf-01-bgp-p2p
+          alias: vrf-01-to-core
           description: L3out peering to core AS64800
-          vrf: vrf-02
+          vrf: vrf-01
           domain: isovalent.vrf-02
           ospf:
             area: backbone
@@ -1419,11 +1419,11 @@ apic:
           export_route_map:
             type: global
             contexts:
-              - name: export-vrf-01-subnets
+              - name: export-vrf-02-subnets
                 order: 0
                 action: permit
                 match_rules:
-                  - match-vrf-01-subnets
+                  - match-vrf-02-subnets
               - name: export-vrf-03-to-external
                 order: 1
                 action: permit
@@ -1729,8 +1729,8 @@ apic:
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
-            - name: dummy-extEPG-for-vrf-02-bgp-p2p-AS-64809
-              description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-p2p
+            - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-64809
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-03-bgp-svi
@@ -1834,10 +1834,10 @@ apic:
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-03-bgp-svi
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
-        # - name: isovalent.vrf-02-to-bgp-as-65150 
-        #   alias: vrf-02-to-core
+        # - name: isovalent.vrf-02-to-bgp-as-65150
+        #   alias: vrf-01-to-core
         #   description: L3out peering to EVPN C93108TC-FX3P
-        #   vrf: vrf-02
+        #   vrf: vrf-01
         #   domain: isovalent.vrf-02
 
 # Nodes
@@ -2083,16 +2083,16 @@ apic:
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           # external_endpoint_groups:
-          #   - name: dummy-extEPG-for-vrf-02-bgp-AS-65150
-          #     description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-AS-65150
+          #   - name: dummy-extEPG-for-vrf-01-bgp-AS-65150
+          #     description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-AS-65150
 
 # Bridge Domain: Location in GUI: `Tenants` » `XXX` » `Networking` » `Bridge Domains`
       bridge_domains:
-        - name: 6.6.6.0_24
+        - name: 6.6.6.0_24-vrf-02
           description: PBR subnet, not advertised - local to VRF
-          alias: vrf-01-internal-subnet
+          alias: vrf-02-internal-subnet
           unknown_unicast: proxy
-          vrf: vrf-01
+          vrf: vrf-02
           subnets:
             - ip: 6.6.6.1/24
               public: false
@@ -2108,9 +2108,9 @@ apic:
 
         - name: 10.237.101.96_28
           description: corporate subnet
-          alias: vrf-01-corporate-subnet
+          alias: vrf-02-corporate-subnet
           unknown_unicast: proxy
-          vrf: vrf-01
+          vrf: vrf-02
           subnets:
             - ip: 10.237.101.97/28
               public: true
@@ -2122,9 +2122,9 @@ apic:
 
         - name: 10.237.101.144_28
           description: corporate subnet
-          alias: vrf-01-corporate-subnet
+          alias: vrf-02-corporate-subnet
           unknown_unicast: proxy
-          vrf: vrf-01
+          vrf: vrf-02
           subnets:
             - ip: 10.237.101.145/28
               public: true
@@ -2247,7 +2247,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: 10.237.101.96_28-nginx-subnet
-              vrf: vrf-01
+              vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
@@ -2263,7 +2263,7 @@ apic:
                   - permit-to-nginx-subnet-10.237.101.96_28
 
             - name: 10.237.101.144_28-jumphosts
-              vrf: vrf-01
+              vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
@@ -2326,7 +2326,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: egress-subnet-cluster-1
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.101.48/28
@@ -2335,7 +2335,7 @@ apic:
                 consumers:
                   - permit-to-nginx-subnet-10.237.101.96_28
             - name: egress-subnet-cluster-2
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.101.120/29
@@ -2351,7 +2351,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: ingress-subnet-cluster-1
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.101.32/28
@@ -2360,7 +2360,7 @@ apic:
                 providers:
                   - permit-to-ingress-subnet-cluster-1
             - name: ingress-subnet-cluster-2
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.101.112/29
@@ -2376,7 +2376,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: ilb-vip-subnet
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.101.128/28
@@ -2392,7 +2392,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: node-subnets
-              vrf: vrf-01
+              vrf: vrf-02
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.100.0.0/23
@@ -2416,7 +2416,7 @@ apic:
 # Endpoint Security Group: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Endpoint Security Groups`
           endpoint_security_groups:
             - name: core-services
-              vrf: vrf-02
+              vrf: vrf-01
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.97.128/27
@@ -2426,7 +2426,7 @@ apic:
                   - permit-to-core-services
                   - permit-from-core-services
             - name: lab-desktops
-              vrf: vrf-02
+              vrf: vrf-01
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 10.237.97.160/28
@@ -2435,7 +2435,7 @@ apic:
                 providers:
                   - permit-to-lab-desktops
             - name: all-external-subnets
-              vrf: vrf-02
+              vrf: vrf-01
               deployment_immediacy: immediate
               ip_external_subnet_selectors:
                 - ip: 0.0.0.0/1
