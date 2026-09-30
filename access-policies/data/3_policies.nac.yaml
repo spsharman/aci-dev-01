@@ -113,21 +113,21 @@ apic:
           - BRKDCN-2984.vrf-01
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
-          - isovalent.vrf-01
           - isovalent.vrf-02
+          - isovalent.vrf-01
           - mgmt-inb.vrf-01
           - tech-elevate.vrf-01
           - tech-elevate.vrf-02
 
       - name: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
         routed_domains:
-          - isovalent.vrf-02
+          - isovalent.vrf-01
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
           - isovalent-nodes
         routed_domains:
-          - isovalent.vrf-01
+          - isovalent.vrf-02
 
       - name: vlans-allowed-to-firewalls
         physical_domains:
@@ -159,7 +159,7 @@ apic:
           - demo-03.vrf-01
           - demo-05.vrf-01
           - demo-06.vrf-01
-          - isovalent.vrf-01
+          - isovalent.vrf-02
           - robvand.vrf-01
           - tech-elevate.vrf-01
           - tech-elevate.vrf-02
@@ -240,12 +240,12 @@ apic:
           - smart-switches
         routed_domains:
           - shared-services.vrf-01
-          - isovalent.vrf-01
+          - isovalent.vrf-02
           - isovalent.vrf-03
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
         routed_domains:
-          - isovalent.vrf-01
+          - isovalent.vrf-02
 
       - name: vlans-allowed-to-ssharman-ubuntu-nodes
         physical_domains:
