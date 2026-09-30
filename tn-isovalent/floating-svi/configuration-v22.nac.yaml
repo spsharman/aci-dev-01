@@ -87,7 +87,6 @@ apic:
             description: BGP timer policies for core network peering
             keepalive_interval: 60
             hold_interval: 180
-            stale_interval: 300
             graceful_restart_helper: true
             maximum_as_limit: 10
 
