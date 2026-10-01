@@ -863,8 +863,8 @@ apic:
 # VRF: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
       vrfs:
         - name: vrf-01
-          description: configured with NAC
-          alias: external-vrf
+          description: Shared transit VRF to core
+          alias: core-vrf
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
@@ -874,8 +874,8 @@ apic:
                   vrf: vrf-03
 
         - name: vrf-02
-          description: configured with NAC
-          alias: internal-vrf
+          description: Default Isovalent VRF
+          alias: default-vrf
           bgp:
             timer_policy: cilium-cni-bgp-timers
             ipv4_address_family_context_policy: cilium-cni-bgp-af-context
@@ -948,8 +948,8 @@ apic:
                   vrf: vrf-01
 
         - name: vrf-03
-          description: configured with NAC
-          alias: internal-vrf
+          description: Kubernetes tenant 1 VRF
+          alias: tenant-1-vrf
           contracts:
             consumers:
               - permit-to-all-external-subnets
@@ -963,24 +963,18 @@ apic:
                 - tenant: isovalent
                   vrf: vrf-01
                   public: true
-                - tenant: isovalent
-                  vrf: vrf-02
             - prefix: 10.100.8.0/24
               public: false
               destinations:
                 - tenant: isovalent
                   vrf: vrf-01
                   public: true
-                - tenant: isovalent
-                  vrf: vrf-02
           leaked_external_prefixes:
             - prefix: 10.100.9.0/24
               destinations:
                 - tenant: isovalent
                   vrf: vrf-01
                   public: true
-                - tenant: isovalent
-                  vrf: vrf-02
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
       l3outs:

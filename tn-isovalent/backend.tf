@@ -1,7 +1,9 @@
 terraform {
-  backend "http" {
-    address        = "https://tf-rest.uktme.cisco.com/state/tn-isovalent"
-    lock_address   = "https://tf-rest.uktme.cisco.com/state/tn-isovalent"
-    unlock_address = "https://tf-rest.uktme.cisco.com/state/tn-isovalent"
+  backend "s3" {
+    bucket         = "isovalent.tf-state-bucket"
+    key            = "aci-dev-01/tn-isovalent.tfstate"
+    region         = "eu-west-1"
+    dynamodb_table = "terraform-locks"
+    profile        = "isovalent-demo"
   }
 }
