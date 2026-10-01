@@ -20,6 +20,9 @@ plan.out
 .DS_Store
 **/.DS_Store
 
+# Exclude Python bytecode caches
+__pycache__/
+
 # Exclude .terraform directories
 .terraform/
 **/.terraform/

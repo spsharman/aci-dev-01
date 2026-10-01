@@ -26,3 +26,11 @@ chmod 600 ~/.apic/credentials
 Example to provide credentials at runtime:
 
 `make init APIC_USERNAME=johndoe APIC_PASSWORD='xxxx' APIC_URL='https://64.103.44.66/'`
+
+## Network connectivity tests
+
+Install the test dependency into the Python environment used by Make, then run `make network-test`. In this workspace, use `../../.venv/bin/python -m pip install -r requirements-test.txt`; otherwise activate your virtual environment and install with `python3 -m pip install -r requirements-test.txt`. The target prefers the workspace `.venv` when present and falls back to `python3`.
+
+The suite checks API reachability locally, from the jumphost's default route, and bound to each jumphost interface (`10.237.101.6` and `10.100.0.26`). Hostname-based API curls also exercise DNS resolution. Separate jumphost checks ping each lab DNS server from both interfaces, and Internet checks run using the default source and `10.100.0.26`. The jumphost SSH connection supports your normal SSH configuration or agent; set `NETWORK_SSH_BATCHMODE=yes` to disable interactive authentication prompts.
+
+Override the jumphost, source, DNS server, or jumphost interface addresses with `make network-test NETWORK_JUMPHOST=user@host NETWORK_SOURCE_IP=10.100.0.26 NETWORK_DNS_SERVER_IPS=10.237.97.134,10.237.97.135 NETWORK_JUMPHOST_INTERFACE_IPS=10.237.101.6,10.100.0.26`.

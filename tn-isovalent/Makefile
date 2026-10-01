@@ -17,7 +17,14 @@ fi; \
 [ -z "$${APIC_URL}" ] || export TF_VAR_apic_url="$${APIC_URL}";
 endef
 
-.PHONY: init plan apply destroy
+NETWORK_JUMPHOST ?= localuser@10.237.101.6
+NETWORK_SOURCE_IP ?= 10.100.0.26
+NETWORK_DNS_SERVER_IPS ?= 10.237.97.134,10.237.97.135
+NETWORK_JUMPHOST_INTERFACE_IPS ?= 10.237.101.6,10.100.0.26
+NETWORK_SSH_BATCHMODE ?= no
+PYTHON ?= $(if $(wildcard ../../.venv/bin/python),../../.venv/bin/python,python3)
+
+.PHONY: init plan apply destroy network-test
 
 init:
 	terraform init
@@ -30,3 +37,11 @@ apply:
 
 destroy:
 	@$(LOAD_CREDS) terraform destroy
+
+network-test:
+	NETWORK_JUMPHOST="$(NETWORK_JUMPHOST)" \
+	NETWORK_SOURCE_IP="$(NETWORK_SOURCE_IP)" \
+	NETWORK_DNS_SERVER_IPS="$(NETWORK_DNS_SERVER_IPS)" \
+	NETWORK_JUMPHOST_INTERFACE_IPS="$(NETWORK_JUMPHOST_INTERFACE_IPS)" \
+	NETWORK_SSH_BATCHMODE="$(NETWORK_SSH_BATCHMODE)" \
+	$(PYTHON) -m pytest -v tests/network
