@@ -121,7 +121,7 @@ apic:
 
       - name: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
         routed_domains:
-          - isovalent.vrf-01
+          - isovalent.vrf-02
 
       - name: vlans-allowed-to-isovalent-nodes
         physical_domains:
