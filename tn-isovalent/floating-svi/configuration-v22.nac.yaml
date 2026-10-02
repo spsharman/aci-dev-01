@@ -73,6 +73,12 @@ apic:
             threshold: 75
             max_prefixes: 100
 
+          - name: nxos-bgp-prefix-policy
+            description: BGP prefix policy for NX-OS
+            action: 'reject'
+            threshold: 75
+            max_prefixes: 100
+
 # BGP Timer Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Timers`
         bgp_timer_policies:
           - name: cilium-cni-bgp-timers
@@ -92,7 +98,7 @@ apic:
 
 # BGP Route Summarization Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Route Summarization`
         bgp_route_summarization_policies:
-          - name: core-summary-only
+          - name: tenant-summaries-only
             description: Advertise core aggregates without their more-specific routes
             summary_only: true
             af_ucast: true
@@ -196,7 +202,7 @@ apic:
               - ip: 10.100.8.0/24
                 aggregate: false
 
-          - name: match-core-aggregates
+          - name: match-tenant-aggregates
             description: exact core aggregate routes
             prefixes:
               - ip: 10.100.0.0/16
@@ -240,6 +246,15 @@ apic:
                 match_rules:
                   - match-all-subnets
 
+          - name: export-vrf-02-to-nxos-p2p
+            type: global
+            contexts:
+              - name: default-route
+                order: 0
+                action: permit
+                match_rules:
+                  - match-all-subnets
+
           - name: export-vrf-03-to-smart-switch
             type: global
             contexts:
@@ -261,7 +276,7 @@ apic:
                 order: 0
                 action: permit
                 match_rules:
-                  - match-core-aggregates
+                  - match-tenant-aggregates
 
           - name: redist-ah
             type: global
@@ -860,6 +875,20 @@ apic:
         - name: vrf-01
           description: Shared transit VRF to core
           alias: core-vrf
+          route_summarization_policies:
+            - name: aggregate-tenant-to-core
+              nodes:
+              - id: 1101
+              - id: 1102
+              - id: 2101
+              - id: 2102
+              subnets:
+              - prefix: 10.100.0.0/16
+                bgp_route_summarization_policy: tenant-summaries-only
+              - prefix: 10.237.101.0/25
+                bgp_route_summarization_policy: tenant-summaries-only
+              - prefix: 10.237.101.128/26
+                bgp_route_summarization_policy: tenant-summaries-only
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
@@ -1393,6 +1422,198 @@ apic:
             - name: dummy-extEPG-for-vrf-02-bgp-p2p-AS-65253
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-p2p
 
+        - name: vrf-02-bgp-p2p-nxos
+          description: Routed p2p BGP to L11 and L14 C93108TC-FX3P AS65150
+          alias: vrf-02-to-nxos-p2p
+          vrf: vrf-02
+          domain: isovalent.vrf-02
+          import_route_control_enforcement: true
+          redistribution_route_maps:
+            - source: attached-host
+              route_map: redist-ah
+          export_route_map:
+            type: global
+            contexts:
+              - name: default-route
+                order: 0
+                action: permit
+                match_rules:
+                  - match-all-subnets
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 110.1.7.1
+                  router_id_as_loopback: false
+
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 110.2.7.1
+                  router_id_as_loopback: false
+
+              bgp:
+                timer_policy: cilium-cni-bgp-timers
+
+              interface_profiles:
+                - name: p2p-to-l11-nxos
+                  description: routed p2p BGP to L11-C93108TC-FX3P AS65150
+                  interfaces:
+                    - node_id: 1101
+                      pod_id: 1
+                      port: 33
+                      svi: false
+                      ip: 10.100.6.24/31
+                      mtu: inherit
+                      description: p2p to L11-C93108TC-FX3P Ethernet1/53
+                      bgp_peers:
+                        - ip: 10.100.6.25
+                          description: L11-C93108TC-FX3P Ethernet1/53
+                          remote_as: 65150
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          import_route_control: floating-L3out-optimizations
+                          export_route_control: export-vrf-02-to-nxos-p2p
+
+                    - node_id: 1102
+                      pod_id: 1
+                      port: 33
+                      svi: false
+                      ip: 10.100.6.26/31
+                      mtu: inherit
+                      description: p2p to L11-C93108TC-FX3P Ethernet1/54
+                      bgp_peers:
+                        - ip: 10.100.6.27
+                          description: L11-C93108TC-FX3P Ethernet1/54
+                          remote_as: 65150
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          import_route_control: floating-L3out-optimizations
+                          export_route_control: export-vrf-02-to-nxos-p2p
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 210.1.7.1
+                  router_id_as_loopback: false
+
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 210.2.7.1
+                  router_id_as_loopback: false
+
+              bgp:
+                timer_policy: cilium-cni-bgp-timers
+
+              interface_profiles:
+                - name: p2p-to-l14-nxos
+                  description: routed p2p BGP to L14-C93108TC-FX3P AS65150
+                  interfaces:
+                    - node_id: 2101
+                      pod_id: 2
+                      port: 33
+                      svi: false
+                      ip: 10.100.6.32/31
+                      mtu: inherit
+                      description: p2p to L14-C93108TC-FX3P Ethernet1/53
+                      bgp_peers:
+                        - ip: 10.100.6.33
+                          description: L14-C93108TC-FX3P Ethernet1/53
+                          remote_as: 65150
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          import_route_control: floating-L3out-optimizations
+                          export_route_control: export-vrf-02-to-nxos-p2p
+
+                    - node_id: 2102
+                      pod_id: 2
+                      port: 33
+                      svi: false
+                      ip: 10.100.6.34/31
+                      mtu: inherit
+                      description: p2p to L14-C93108TC-FX3P Ethernet1/54
+                      bgp_peers:
+                        - ip: 10.100.6.35
+                          description: L14-C93108TC-FX3P Ethernet1/54
+                          remote_as: 65150
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          import_route_control: floating-L3out-optimizations
+                          export_route_control: export-vrf-02-to-nxos-p2p
+
+          external_endpoint_groups:
+            - name: dummy-extEPG-for-vrf-02-bgp-p2p-nxos-AS-65150
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-02-bgp-p2p-nxos
+
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-01-bgp-p2p
           alias: vrf-01-to-core
@@ -1648,20 +1869,6 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-2101-eth33.15
-                  description: L14-C93180YC-FX-01 eth1/53
-                  interfaces:
-                    - node_id: 2101
-                      pod_id: 2
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.20/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
-
                 - name: leaf-2102-eth7.15
                   description: L13-C93180YC-FX-02 eth1/7.15
                   interfaces:
@@ -1690,39 +1897,11 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-2102-eth33.15
-                  description: L14-C93180YC-FX-01 eth1/54
-                  interfaces:
-                    - node_id: 2102
-                      pod_id: 2
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.22/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-64809
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
-            - name: core-advertised-routes
-              description: BGP summary routes advertised to the core
-              subnets:
-                - prefix: 10.100.0.0/16
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.0/25
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.128/26
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-03-bgp-svi
@@ -1832,246 +2011,6 @@ apic:
         #   vrf: vrf-01
         #   domain: isovalent.vrf-02
 
-# Nodes
-          # node_profiles:
-          #   - name: border-leafs-pod-1
-          #     nodes:
-          #       - node_id: 1101
-          #         pod_id: 1
-          #         router_id: 110.1.0.3
-          #         router_id_as_loopback: false
-          #         loopbacks:
-          #           - 110.1.0.7
-
-          #       - node_id: 1102
-          #         pod_id: 1
-          #         router_id: 110.2.0.3
-          #         router_id_as_loopback: false
-          #         loopbacks:
-          #           - 110.2.0.7
-
-              # bgp_peers:
-              #   - ip: 12.0.0.3
-              #     description: L12-C93180YC-FX-01
-              #     remote_as: 64800  
-              #     local_as: 65151
-              #     allow_self_as: false
-              #     as_override: true
-              #     disable_peer_as_check: true
-              #     next_hop_self: false
-              #     send_community: false
-              #     send_ext_community: false
-              #     allowed_self_as_count: 3
-              #     bfd: false
-              #     disable_connected_check: false
-              #     ttl: 2
-              #     remove_all_private_as: false
-              #     remove_private_as: false
-              #     replace_private_as_with_local_as: false
-              #     unicast_address_family: true
-              #     multicast_address_family: false
-              #     admin_state: true
-              #     as_propagate: no-prepend
-
-              #   - ip: 12.0.0.4
-              #     description: L12-C93180YC-EX-02
-              #     remote_as: 64800  
-              #     local_as: 65151
-              #     allow_self_as: false
-              #     as_override: true
-              #     disable_peer_as_check: true
-              #     next_hop_self: false
-              #     send_community: false
-              #     send_ext_community: false
-              #     allowed_self_as_count: 3
-              #     bfd: false
-              #     disable_connected_check: false
-              #     ttl: 2
-              #     remove_all_private_as: false
-              #     remove_private_as: false
-              #     replace_private_as_with_local_as: false
-              #     unicast_address_family: true
-              #     multicast_address_family: false
-              #     admin_state: true
-              #     as_propagate: no-prepend
-
-# Interfaces
-              # interface_profiles:
-              #   - name: leaf-1101-eth7.15
-              #     description: L12-C93180YC-FX-01 eth1/7.15
-              #     interfaces:
-              #       - node_id: 1101
-              #         pod_id: 1
-              #         port: 7
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.240/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-1101-eth8.15
-              #     description: L12-C93180YC-EX-02 eth1/8.15
-              #     interfaces:
-              #       - node_id: 1101
-              #         pod_id: 1
-              #         port: 8
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.242/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-1102-eth7.15
-              #     description: L12-C93180YC-EX-02 eth1/7.15
-              #     interfaces:
-              #       - node_id: 1102
-              #         pod_id: 1
-              #         port: 7
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.244/31
-              #         mtu: inherit
-              #         mac: 10:22:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-1102-eth8.15
-              #     description: L12-C93180YC-FX-01 eth1/8.15
-              #     interfaces:
-              #       - node_id: 1102
-              #         pod_id: 1
-              #         port: 8
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.246/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-# Nodes
-            # - name: border-leafs-pod-2
-            #   nodes:
-            #     - node_id: 2101
-            #       pod_id: 2
-            #       router_id: 210.1.0.3
-            #       router_id_as_loopback: false
-            #       loopbacks:
-            #         - 210.1.0.7
-
-            #     - node_id: 2102
-            #       pod_id: 2
-            #       router_id: 210.2.0.3
-            #       router_id_as_loopback: false
-            #       loopbacks:
-            #         - 210.2.0.7
-
-              # bgp_peers:
-              #   - ip: 13.0.0.3
-              #     description: L13-C93180YC-FX-01
-              #     remote_as: 64800  
-              #     local_as: 65151
-              #     allow_self_as: false
-              #     as_override: true
-              #     disable_peer_as_check: true
-              #     next_hop_self: false
-              #     send_community: false
-              #     send_ext_community: false
-              #     allowed_self_as_count: 3
-              #     bfd: false
-              #     disable_connected_check: false
-              #     ttl: 2
-              #     remove_all_private_as: false
-              #     remove_private_as: false
-              #     replace_private_as_with_local_as: false
-              #     unicast_address_family: true
-              #     multicast_address_family: false
-              #     admin_state: true
-              #     as_propagate: no-prepend
-
-              #   - ip: 13.0.0.4
-              #     description: L13-C93180YC-FX-02
-              #     remote_as: 64800  
-              #     local_as: 65151
-              #     allow_self_as: false
-              #     as_override: true
-              #     disable_peer_as_check: true
-              #     next_hop_self: false
-              #     send_community: false
-              #     send_ext_community: false
-              #     allowed_self_as_count: 3
-              #     bfd: false
-              #     disable_connected_check: false
-              #     ttl: 2
-              #     remove_all_private_as: false
-              #     remove_private_as: false
-              #     replace_private_as_with_local_as: false
-              #     unicast_address_family: true
-              #     multicast_address_family: false
-              #     admin_state: true
-              #     as_propagate: no-prepend
-
-# Interfaces
-              # interface_profiles:
-              #   - name: leaf-2101-eth7.15
-              #     description: L13-C93180YC-FX-01 eth1/7.15
-              #     interfaces:
-              #       - node_id: 2101
-              #         pod_id: 2
-              #         port: 7
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.248/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-2101-eth8.15
-              #     description: L13-C93180YC-EX-02 eth1/8.15
-              #     interfaces:
-              #       - node_id: 2101
-              #         pod_id: 2
-              #         port: 8
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.250/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-2102-eth7.15
-              #     description: L13-C93180YC-FX-02 eth1/7.15
-              #     interfaces:
-              #       - node_id: 2102
-              #         pod_id: 2
-              #         port: 7
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.252/31
-              #         mtu: inherit
-              #         mac: 10:22:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
-
-              #   - name: leaf-2102-eth8.15
-              #     description: L13-C93180YC-FX-01 eth1/8.15
-              #     interfaces:
-              #       - node_id: 2102
-              #         pod_id: 2
-              #         port: 8
-              #         vlan: 15
-              #         svi: false
-              #         ip: 10.237.99.254/31
-              #         mtu: inherit
-              #         mac: 10:12:BD:F8:19:FF
-              #     ospf:
-              #       policy: OSPF_p2p
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           # external_endpoint_groups:
