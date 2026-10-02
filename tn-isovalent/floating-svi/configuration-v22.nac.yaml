@@ -1855,20 +1855,6 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-2101-eth33.15
-                  description: L14-C93180YC-FX-01 eth1/53
-                  interfaces:
-                    - node_id: 2101
-                      pod_id: 2
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.20/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
-
                 - name: leaf-2102-eth7.15
                   description: L13-C93180YC-FX-02 eth1/7.15
                   interfaces:
@@ -1897,19 +1883,6 @@ apic:
                   ospf:
                     policy: OSPF_p2p
 
-                - name: leaf-2102-eth33.15
-                  description: L14-C93180YC-FX-01 eth1/54
-                  interfaces:
-                    - node_id: 2102
-                      pod_id: 2
-                      port: 33
-                      vlan: 15
-                      svi: false
-                      ip: 10.100.0.22/31
-                      mtu: inherit
-                      mac: 10:12:BD:F8:19:FF
-                  ospf:
-                    policy: OSPF_p2p
 
 # extEPGs: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs` » `XXX` » `External EPGs`
           external_endpoint_groups:
