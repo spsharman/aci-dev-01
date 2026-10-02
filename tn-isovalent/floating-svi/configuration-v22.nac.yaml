@@ -98,7 +98,7 @@ apic:
 
 # BGP Route Summarization Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Route Summarization`
         bgp_route_summarization_policies:
-          - name: core-summary-only
+          - name: tenant-summaries-only
             description: Advertise core aggregates without their more-specific routes
             summary_only: true
             af_ucast: true
@@ -875,6 +875,20 @@ apic:
         - name: vrf-01
           description: Shared transit VRF to core
           alias: core-vrf
+          route_summarization_policies:
+            - name: aggregate-tenant-to-core
+              nodes:
+              - id: 1101
+              - id: 1102
+              - id: 2101
+              - id: 2102
+              subnets:
+              - prefix: 10.100.0.0/16
+                bgp_route_summarization_policy: tenant-summaries-only
+              - prefix: 10.237.101.0/25
+                bgp_route_summarization_policy: tenant-summaries-only
+              - prefix: 10.237.101.128/26
+                bgp_route_summarization_policy: tenant-summaries-only
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
@@ -1888,21 +1902,6 @@ apic:
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-64809
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
-            - name: core-advertised-routes
-              description: BGP summary routes advertised to the core
-              subnets:
-                - prefix: 10.100.0.0/16
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.0/25
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.128/26
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-03-bgp-svi
