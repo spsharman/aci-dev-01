@@ -202,7 +202,7 @@ apic:
               - ip: 10.100.8.0/24
                 aggregate: false
 
-          - name: match-core-aggregates
+          - name: match-tenant-aggregates
             description: exact core aggregate routes
             prefixes:
               - ip: 10.100.0.0/16
@@ -276,7 +276,7 @@ apic:
                 order: 0
                 action: permit
                 match_rules:
-                  - match-core-aggregates
+                  - match-tenant-aggregates
 
           - name: redist-ah
             type: global
