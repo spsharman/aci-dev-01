@@ -992,31 +992,31 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.5.1
+                  router_id: 110.1.7.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.1.5.11
+                    - 110.1.7.11
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.5.1
+                  router_id: 110.2.7.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 110.2.5.11
+                    - 110.2.7.11
 
                 - node_id: 2101
                   pod_id: 2
-                  router_id: 210.1.5.1
+                  router_id: 210.1.7.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.1.5.11
+                    - 210.1.7.11
 
                 - node_id: 2102
                   pod_id: 2
-                  router_id: 210.2.5.1
+                  router_id: 210.2.7.1
                   router_id_as_loopback: false
                   loopbacks:
-                    - 210.2.5.11
+                    - 210.2.7.11
 
               bgp:
                 timer_policy: cilium-cni-bgp-timers
@@ -1306,12 +1306,12 @@ apic:
               nodes:
                 - node_id: 1101
                   pod_id: 1
-                  router_id: 110.1.5.1
+                  router_id: 110.1.7.1
                   router_id_as_loopback: false
 
                 - node_id: 1102
                   pod_id: 1
-                  router_id: 110.2.5.1
+                  router_id: 110.2.7.1
                   router_id_as_loopback: false
 
               bgp:
