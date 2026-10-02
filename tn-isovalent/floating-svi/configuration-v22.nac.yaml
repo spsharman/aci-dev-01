@@ -90,14 +90,6 @@ apic:
             graceful_restart_helper: true
             maximum_as_limit: 10
 
-# BGP Route Summarization Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Route Summarization`
-        bgp_route_summarization_policies:
-          - name: core-summary-only
-            description: Advertise core aggregates without their more-specific routes
-            summary_only: true
-            af_ucast: true
-            af_mcast: false
-
 # DHCP Relay Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `DHCP` » `Relay Policies`
         dhcp_relay_policies:
           - name: dhcp.uktme.cisco.com
@@ -175,6 +167,28 @@ apic:
               - ip: 0.0.0.0/0
                 aggregate: false
 
+          - name: match-vrf-02-subnets
+            description: match vrf-02 subnets
+            prefixes:
+              - ip: 10.100.0.0/23
+                aggregate: true
+              - ip: 10.237.101.0/27
+                aggregate: false
+              - ip: 10.237.101.32/28
+                aggregate: true
+              - ip: 10.237.101.48/28
+                aggregate: true
+              - ip: 10.237.101.96/28
+                aggregate: false
+              - ip: 10.237.101.112/29
+                aggregate: true
+              - ip: 10.237.101.120/29
+                aggregate: true
+              - ip: 10.237.101.128/28
+                aggregate: true
+              - ip: 10.237.101.144/28
+                aggregate: false
+
           - name: match-ah
             description: attached-host /32s eligible for redistribution into BGP
             prefixes:
@@ -196,14 +210,14 @@ apic:
               - ip: 10.100.8.0/24
                 aggregate: false
 
-          - name: match-core-aggregates
-            description: exact core aggregate routes
+          - name: match-vrf-03-to-external
+            description: vrf-03 10.100.7/8/9 advertised from vrf-01 to core
             prefixes:
-              - ip: 10.100.0.0/16
+              - ip: 10.100.7.0/24
                 aggregate: false
-              - ip: 10.237.101.0/25
+              - ip: 10.100.8.0/24
                 aggregate: false
-              - ip: 10.237.101.128/26
+              - ip: 10.100.9.0/24
                 aggregate: false
 
 # OSPF Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `OSPF` » `OSPF Interface`
@@ -253,15 +267,6 @@ apic:
                 action: permit
                 match_rules:
                   - match-default-route
-
-          - name: export-vrf-01-aggregates-to-core
-            type: global
-            contexts:
-              - name: aggregate-routes
-                order: 0
-                action: permit
-                match_rules:
-                  - match-core-aggregates
 
           - name: redist-ah
             type: global
@@ -1402,6 +1407,19 @@ apic:
           ospf:
             area: backbone
             area_type: regular
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-vrf-02-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-02-subnets
+              - name: export-vrf-03-to-external
+                order: 1
+                action: permit
+                match_rules:
+                  - match-vrf-03-to-external
 
 # Nodes
           node_profiles:
@@ -1443,7 +1461,6 @@ apic:
                   multicast_address_family: false
                   admin_state: true
                   as_propagate: no-prepend
-                  export_route_control: export-vrf-01-aggregates-to-core
 
                 - ip: 12.0.0.4
                   description: L12-C93180YC-EX-02
@@ -1466,7 +1483,6 @@ apic:
                   multicast_address_family: false
                   admin_state: true
                   as_propagate: no-prepend
-                  export_route_control: export-vrf-01-aggregates-to-core
 
 # Interfaces
               interface_profiles:
@@ -1593,7 +1609,6 @@ apic:
                   multicast_address_family: false
                   admin_state: true
                   as_propagate: no-prepend
-                  export_route_control: export-vrf-01-aggregates-to-core
 
                 - ip: 13.0.0.4
                   description: L13-C93180YC-FX-02
@@ -1616,7 +1631,6 @@ apic:
                   multicast_address_family: false
                   admin_state: true
                   as_propagate: no-prepend
-                  export_route_control: export-vrf-01-aggregates-to-core
 
 # Interfaces
               interface_profiles:
@@ -1708,21 +1722,6 @@ apic:
           external_endpoint_groups:
             - name: dummy-extEPG-for-vrf-01-bgp-p2p-AS-64809
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-p2p
-            - name: core-advertised-routes
-              description: BGP summary routes advertised to the core
-              subnets:
-                - prefix: 10.100.0.0/16
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.0/25
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
-                - prefix: 10.237.101.128/26
-                  export_route_control: true
-                  bgp_route_summarization: true
-                  bgp_route_summarization_policy: core-summary-only
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         - name: vrf-03-bgp-svi
