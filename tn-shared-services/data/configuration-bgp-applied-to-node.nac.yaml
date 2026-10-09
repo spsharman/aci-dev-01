@@ -737,6 +737,9 @@ apic:
                 - tenant: maxalvar
                   vrf: vrf-01
                   description: Leaked to tn-maxalvar:vrf-01
+                - tenant: ssharman
+                  vrf: vrf-01
+                  description: Leaked to tn-ssharman:vrf-01
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
       l3outs:

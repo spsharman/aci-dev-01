@@ -22,6 +22,15 @@ apic:
                 l3out: shared-services.vrf-01-bgp-as-64801
                 external_endpoint_group: core-services-subnets
 
+        igmp_interface_policies:
+          - name: allow_igmp_v3
+            version: v3
+
+        igmp_snooping_policies:
+          - name: enable_igmp_snooping
+            admin_state: true
+            querier: true
+
 # Filters
       filters:
         - name: 'icmp'
@@ -150,83 +159,261 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: online-boutique-permit-from-all-online-boutique-endpoints
-          description: online-boutique application is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              description: allows outbound stateful tcp from consumer to provider
-              filters:
-                - filter: tcp-src-any-dst-any-stateful
-            - name: icmp
-              description: allows outbound icmp from consumer to provider
-              filters:
-                - filter: icmp
-            - name: udp
-              description: allows outbound udp from consumer to provider
-              filters:
-                - filter: udp-src-any-dst-53
-                - filter: udp-src-any-dst-123
-
-        - name: online-boutique-permit-intra-all-online-boutique-endpoints
-          description: intra online-boutique application
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: src-any-dst-any
-
-        - name: online-boutique-permit-to-all-online-boutique-endpoints
-          description: online-boutique application is the contract Provider
+        - name: permit-to-esg-10.237.99.160_28
+          description: allows inbound traffic to the 10.237.99.160_28 EPG
           scope: tenant
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
               filters:
                 - filter: tcp-src-any-dst-22-stateful
-                - filter: tcp-src-any-dst-80-stateful
-                - filter: tcp-src-any-dst-443-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
                   - filter: icmp
 
-        - name: siwapp-permit-from-all-siwapp-endpoints
-          description: siwapp application is the contract Consumer
-          scope: tenant
-          subjects:
-            - name: tcp
-              description: allows outbound stateful tcp from consumer to provider
-              filters:
-                - filter: tcp-src-any-dst-any-stateful
-            - name: icmp
-              description: allows outbound icmp from consumer to provider
-              filters:
-                - filter: icmp
-            - name: udp
-              description: allows outbound udp from consumer to provider
-              filters:
-                - filter: udp-src-any-dst-53
-                - filter: udp-src-any-dst-123
-
-        - name: siwapp-permit-intra-all-siwapp-endpoints
-          description: intra siwapp application
-          scope: tenant
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: src-any-dst-any
-
-        - name: siwapp-permit-to-all-siwapp-endpoints
-          description: siwapp application is the contract Provider
+        - name: permit-to-esg-10.237.99.176_28
+          description: allows inbound traffic to the 10.237.99.176_28 EPG
           scope: tenant
           subjects:
             - name: tcp
               description: allows inbound stateful tcp from consumer to provider
               filters:
                 - filter: tcp-src-any-dst-22-stateful
-                - filter: tcp-src-any-dst-80-stateful
-                - filter: tcp-src-any-dst-443-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+
+        - name: permit-to-esg-ip-10.237.99.168
+          description: allows inbound traffic to the ip-10.237.99.168 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.169
+          description: allows inbound traffic to the ip-10.237.99.169 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.170
+          description: allows inbound traffic to the ip-10.237.99.170 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.171
+          description: allows inbound traffic to the ip-10.237.99.171 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.172
+          description: allows inbound traffic to the ip-10.237.99.172 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.173
+          description: allows inbound traffic to the ip-10.237.99.173 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.174
+          description: allows inbound traffic to the ip-10.237.99.174 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.184
+          description: allows inbound traffic to the ip-10.237.99.184 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.185
+          description: allows inbound traffic to the ip-10.237.99.185 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.186
+          description: allows inbound traffic to the ip-10.237.99.186 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.187
+          description: allows inbound traffic to the ip-10.237.99.187 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.188
+          description: allows inbound traffic to the ip-10.237.99.188 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.189
+          description: allows inbound traffic to the ip-10.237.99.189 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.237.99.190
+          description: allows inbound traffic to the ip-10.237.99.190 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound stateful tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22-stateful
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -260,95 +447,66 @@ apic:
           description: configured with NAC
           alias: internal-vrf
           leaked_internal_subnets:
-            - prefix: 10.5.32.0/24
+            - prefix: 10.237.99.160/28
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.5.33.0/24
+            - prefix: 10.237.99.176/28
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.5.34.0/24
-              public: true
-              destinations:
-                - tenant: shared-services
-                  vrf: vrf-01
+
           contracts:
             imported_consumers:
               - permit-from-shared-services-core-services
               - permit-to-shared-services-core-services
               - permit-from-shared-services-lab-desktops
+              - permit-to-shared-services-all-external-subnets
 
 # Bridge Domains
       bridge_domains:
-        - name: 10.5.32.0_24
+        - name: '10.237.99.160_28'
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.5.32.1/24
+            - ip: 10.237.99.161/28
               public: true
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
 
-        - name: 10.5.33.0_24
+        - name: 10.237.99.176_28
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.5.33.1/24
+            - ip: 10.237.99.177/28
               public: true
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
               scope: tenant
-
-        - name: 10.5.34.0_24
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.5.34.1/24
-              public: true
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant
-
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
+          
 # Application profiles
       application_profiles:
         - name: 'network-segments-epgs-and-vlans'
           description: EPGs provide the VLAN backing for application workloads - no contracts are applied to these EPGs
           endpoint_groups:
-            - name: '10.5.32.0_24'
-              bridge_domain: '10.5.32.0_24'
+            - name: '10.237.99.160_28'
+              bridge_domain: '10.237.99.160_28'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-                  primary_vlan: 1239
-                  secondary_vlan: 1240
 
-            - name: '10.5.33.0_24'
-              bridge_domain: '10.5.33.0_24'
+            - name: '10.237.99.176_28'
+              bridge_domain: '10.237.99.176_28'
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-                  primary_vlan: 1241
-                  secondary_vlan: 1242
 
-            - name: '10.5.34.0_24'
-              bridge_domain: '10.5.34.0_24'
-              vmware_vmm_domains:
-                - name: hx-dev-01-vds-01
-                  u_segmentation: true
-                  deployment_immediacy: immediate
-                  resolution_immediacy: immediate
-                  primary_vlan: 1243
-                  secondary_vlan: 1244
-
-        - name: 'epg-security-groups'
+        - name: 'network-security-groups'
           description: 'ESGs are used to define security groups'
           endpoint_security_groups:
             - name: all-epgs
@@ -356,396 +514,122 @@ apic:
               deployment_immediacy: immediate
               epg_selectors:
                 - application_profile: 'network-segments-epgs-and-vlans'
-                  endpoint_group: 10.5.32.0_24
+                  endpoint_group: 10.237.99.160_28
                 - application_profile: 'network-segments-epgs-and-vlans'
-                  endpoint_group: 10.5.33.0_24
-                - application_profile: 'network-segments-epgs-and-vlans'
-                  endpoint_group: 10.5.34.0_24
-              contracts:
-                consumers:
-                  - epg-security-groups-permit-from-all-epgs
-                  - permit-to-shared-services-all-external-subnets
-                providers:
-                  - epg-security-groups-permit-to-all-epgs
+                  endpoint_group: 10.237.99.176_28
 
-        - name: 'siwapp'
+        - name: 'endpoint-ip-security-groups'
           description: 'ESGs are used to define security groups'
           endpoint_security_groups:
-            - name: all-siwapp-endpoints
+            - name: ip-10.237.99.168
               vrf: vrf-01
               deployment_immediacy: immediate
               ip_subnet_selectors:
-                - value: 10.5.32.49
-                - value: 10.5.32.50
-                - value: 10.5.32.51
-                - value: 10.5.32.52
-                - value: 10.5.32.166
-                - value: 10.5.33.49
-                - value: 10.5.33.50
-                - value: 10.5.33.51
-                - value: 10.5.33.52
-                - value: 10.5.33.166
-                - value: 10.5.34.50
-                - value: 10.5.34.51
-                - value: 10.5.34.52
+                - value: 10.237.99.168/32
               contracts:
                 providers:
-                  - siwapp-permit-to-all-siwapp-endpoints
-                consumers:
-                  - siwapp-permit-from-all-siwapp-endpoints
-                intra_esgs:
-                  - siwapp-permit-intra-all-siwapp-endpoints
-
-        - name: 'online-boutique'
-          description: 'ESGs are used to define security groups'
-          endpoint_security_groups:
-            - name: all-online-boutique-endpoints
+                  - permit-to-esg-ip-10.237.99.168
+            - name: ip-10.237.99.169
               vrf: vrf-01
               deployment_immediacy: immediate
               ip_subnet_selectors:
-                - value: 10.5.32.100
-                - value: 10.5.32.101
-                - value: 10.5.32.102
-                - value: 10.5.32.103
-                - value: 10.5.33.100
-                - value: 10.5.33.101
-                - value: 10.5.33.102
-                - value: 10.5.33.103
-                - value: 10.5.34.100
-                - value: 10.5.34.101
-                - value: 10.5.34.102
+                - value: 10.237.99.169/32
               contracts:
                 providers:
-                  - online-boutique-permit-to-all-online-boutique-endpoints
-                consumers:
-                  - online-boutique-permit-from-all-online-boutique-endpoints
-                intra_esgs:
-                  - online-boutique-permit-intra-all-online-boutique-endpoints
-
-
-# Policies
-      policies:
-        dhcp_relay_policies:
-          - name: dhcp.uktme.cisco.com
-            description: "dhcp.uktme.cisco.com"
-            providers:
-              - ip: 10.237.97.133
-                type: external_epg
-                tenant: shared-services
-                l3out: shared-services.vrf-01-bgp-as-64801
-                external_endpoint_group: core-services-subnets
-
-# Service
-      # services:
-# Define redirection policy
-        # redirect_policies:
-        #   - name: redirect-to-ftdv-02-adapter-8-gig-0-5
-        #     l3_destinations:
-        #       - ip: 6.6.6.11
-        #         mac: 00:50:56:A1:0A:C5
-
-# Define imported L4-7 device
-#         imported_l4l7_devices:
-#           - name: ftdv-02-adapter-8-gig-0-5
-#             tenant: shared-services
-
-# Define L4-7 device            
-        # l4l7_devices:
-        #   - name: ftdv-02-adapter-8-gig-0-5
-        #     vmware_vmm_domain: ucsc-c220m5-vds-01
-        #     context_aware: single-Context
-        #     type: VIRTUAL
-        #     function: GoTo
-        #     service_type: FW
-        #     trunking: false
-        #     concrete_devices:
-        #       - name: ftdv-02-adapter-8-gig-0-5
-        #         vcenter_name: hx-dev-01-vc01.uktme.cisco.com
-        #         vm_name: ftdv72_82-02.uktme.cisco.com
-        #         interfaces:
-        #           - name: gig-0-5
-        #             vnic_name: Network adapter 8
-        #     logical_interfaces:
-        #       - name: gig-0-5
-        #         concrete_interfaces:
-        #           - device: ftdv-02-adapter-8-gig-0-5
-        #             interface_name: gig-0-5
-
-# Define L4-7 service graph template
-        # service_graph_templates:
-        #   - name: ftdv-02-adapter-8-gig-0-5
-        #     template_type: FW_ROUTED
-        #     redirect: true
-        #     share_encapsulation: false
-        #     device:
-        #       tenant: shared-services
-        #       name: ftdv-02-adapter-8-gig-0-5
-        #     consumer:
-        #       direct_connect: false
-        #     provider:
-        #       direct_connect: true
-
-# Define L4-7 device selection policy
-        # device_selection_policies:
-        #   - contract: any
-        #     service_graph_template: ftdv-02-adapter-8-gig-0-5
-        #     consumer:
-        #       redirect_policy:
-        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
-        #       logical_interface: gig-0-5
-        #       bridge_domain:
-        #         name: 6.6.6.0_24
-        #     provider:
-        #       redirect_policy:
-        #         name: redirect-to-ftdv-02-adapter-8-gig-0-5
-        #       logical_interface: gig-0-5
-        #       bridge_domain:
-        #         name: 6.6.6.0_24
-
-# Filters
-      filters:
-        - name: 'icmp'
-          entries:
-            - name: 'icmp'
-              protocol: icmp
-
-        - name: 'permit-src-any-dst-any'
-          entries:
-            - name: 'permit-src-any-dst-any'
-              ethertype: unspecified
-
-# Contracts
-      contracts:
-        - name: intra-tenant
-          description: vzAny is contract Consumer and Provider
-          scope: context
-          subjects:
-            - name: permit-src-any-dst-any
-              filters: 
-                - filter: permit-src-any-dst-any
-
-        - name: intra-esg
-          description: intra ESG contract for monitoring
-          scope: context
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: permit-src-any-dst-any
-
-        - name: permit-to-vzAny
-          description: vzAny is contract Provider
-          scope: context
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: permit-src-any-dst-any
-
-        - name: permit-from-vzAny
-          description: vzAny is contract Consumer
-          scope: context
-          subjects:
-            - name: permit-src-any-dst-any
-              filters:
-                - filter: permit-src-any-dst-any
-
-# Imported contracts
-      imported_contracts:
-        - name: permit-to-shared-services-all-external-subnets
-          tenant: shared-services
-          contract: permit-to-all-external-subnets
-
-        - name: permit-from-shared-services-core-services
-          tenant: shared-services
-          contract: permit-from-core-services
-
-        - name: permit-to-shared-services-core-services
-          tenant: shared-services
-          contract: permit-to-core-services
-
-        - name: permit-from-shared-services-lab-desktops
-          tenant: shared-services
-          contract: permit-from-lab-desktops
-
-        # - name: permit-to-shared-services-all-external-subnets
-        #   tenant: shared-services
-        #   contract: permit-to-all-external-subnets-from-tn-ssharman
-
-        # - name: permit-from-shared-services-core-services
-        #   tenant: shared-services
-        #   contract: permit-from-core-services-to-tn-ssharman
-
-        # - name: permit-to-shared-services-core-services
-        #   tenant: shared-services
-        #   contract: permit-to-core-services-from-tn-ssharman
-
-        # - name: permit-from-shared-services-lab-desktops
-        #   tenant: shared-services
-        #   contract: permit-from-lab-desktops-to-tn-ssharman
-
-# VRFs
-      vrfs:
-        - name: vrf-01
-          description: configured with NAC
-          alias: internal-vrf
-          contracts:
-            imported_consumers:
-              - permit-from-shared-services-core-services
-              - permit-to-shared-services-core-services
-              - permit-from-shared-services-lab-desktops
-
-          # leaked_internal_prefixes:
-          #   - prefix: 10.237.99.160/28
-          #     public: true
-          #     destinations:
-          #       - tenant: shared-services
-          #         vrf: vrf-01
-          #         public: true
-          #         description: Leaked to shared-services:vrf-01 and advertised externally
-
-            # - prefix: 10.237.99.176/28
-            #   public: true
-            #   destinations:
-            #     - tenant: shared-services
-            #       vrf: vrf-01
-            #       public: true
-            #       description: Leaked to shared-services:vrf-01 and advertised externally
-
-# Bridge Domains
-      bridge_domains:
-        - name: 6.6.6.0_24
-          description: PBR subnet, not advertised - local to VRF
-          alias: vrf-local-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 6.6.6.1/24
-              public: false
-
-        - name: 10.237.99.160_28
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.99.161/28
-              public: true
-              shared: true
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-        - name: 10.237.99.176_28
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.99.177/28
-              public: true
-              shared: true
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-
-# Application profiles
-      application_profiles:
-        - name: 'network-segments'
-          description: EPGs provide the VLAN backing for application workloads
-          endpoint_groups:      
-            - name: '10.237.99.160_28'
-              alias: corporate-subnet
-              bridge_domain: '10.237.99.160_28'
-              physical_domains:
-                - ssharman-ubuntu-nodes
-              # static_ports:
-                # - pod_id: 2
-                #   node_id: 2103
-                #   vlan: 15
-                #   port: 1
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - pod_id: 2
-                #   node_id: 2104
-                #   vlan: 15
-                #   port: 1
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - pod_id: 2
-                #   node_id: 2103
-                #   vlan: 15
-                #   port: 2
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - pod_id: 2
-                #   node_id: 2104
-                #   vlan: 15
-                #   port: 2
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - pod_id: 2
-                #   node_id: 2103
-                #   vlan: 15
-                #   port: 3
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - pod_id: 2
-                #   node_id: 2104
-                #   vlan: 15
-                #   port: 3
-                #   mode: untagged
-                #   deployment_immediacy: immediate
-
-                # - channel: vpc_to_ssharman-ubuntu-01
-                #   node_id: 2103
-                #   node2_id: 2104
-                #   pod_id: 2
-                #   deployment_immediacy: immediate
-                #   mode: regular
-                #   vlan: 15
-
-                # - channel: vpc_to_ssharman-ubuntu-02
-                #   node_id: 2103
-                #   node2_id: 2104
-                #   pod_id: 2
-                #   deployment_immediacy: immediate
-                #   mode: regular
-                #   vlan: 15
-
-                # - channel: vpc_to_ssharman-ubuntu-03
-                #   node_id: 2103
-                #   node2_id: 2104
-                #   pod_id: 2
-                #   mode: regular
-                #   vlan: 15
-                #   deployment_immediacy: immediate
-
+                  - permit-to-esg-ip-10.237.99.169
+            - name: ip-10.237.99.170
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.170/32
               contracts:
-                imported_consumers:
-                  - permit-to-shared-services-all-external-subnets
-
-            - name: '10.237.99.176_28'
-              alias: corporate-subnet
-              bridge_domain: '10.237.99.176_28'
-
-      
-        # - name: 'network-security-groups'
-        #   description: 'ESGs are used to define security groups' 
-        #   endpoint_security_groups:
-        #     - name: all-epgs
-        #       vrf: vrf-01
-        #       shutdown: false
-        #       intra_esg_isolation: false
-        #       preferred_group: false
-        #       epg_selectors:
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.1.1.0_27'
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.1.1.32_27'
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.1.1.64_27'
-        #         - application_profile: 'network-segments'
-        #           endpoint_group: '10.1.1.96_27'
-        #       contracts:
-        #         consumers:
-        #           - permit-to-all-external-subnets
+                providers:
+                  - permit-to-esg-ip-10.237.99.170
+            - name: ip-10.237.99.171
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.171/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.171
+            - name: ip-10.237.99.172
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.172/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.172
+            - name: ip-10.237.99.173
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.173/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.173
+            - name: ip-10.237.99.174
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.174/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.174
+            - name: ip-10.237.99.184
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.184/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.184
+            - name: ip-10.237.99.185
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.185/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.185
+            - name: ip-10.237.99.186
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.186/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.186
+            - name: ip-10.237.99.187
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.187/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.187
+            - name: ip-10.237.99.188
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.188/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.188
+            - name: ip-10.237.99.189
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.189/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.189
+            - name: ip-10.237.99.190
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.237.99.190/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.237.99.190
