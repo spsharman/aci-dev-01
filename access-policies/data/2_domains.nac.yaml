@@ -122,6 +122,9 @@ apic:
       - name: isovalent.vrf-03
         vlan_pool: isovalent.vrf-03
 
+      - name: ssharman.vrf-01
+        vlan_pool: ssharman.vrf-01
+
       - name: mgmt-inb.vrf-01
 
       - name: multisite

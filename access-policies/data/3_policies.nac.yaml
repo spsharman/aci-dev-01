@@ -242,6 +242,7 @@ apic:
           - shared-services.vrf-01
           - isovalent.vrf-02
           - isovalent.vrf-03
+          - ssharman.vrf-01
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
         routed_domains:

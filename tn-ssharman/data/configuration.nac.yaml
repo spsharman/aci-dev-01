@@ -1,13 +1,13 @@
 #
 # Tenant ssharman - 10.5.32.0/21 subnets
 # Modelled after tn-tech-elevate/06-increase-contract-security.nac.yaml
-# Uses shared L3out from shared-services (no local L3out)
+# Local L3Out vrf-01-bgp-svi peers the smart switch. Shared-services still advertises to the core.
 #
 ---
 apic:
   tenants:
     - name: ssharman
-      description: 10.5.32.0/21
+      description: 10.5.32.0/21, 10.237.99.160/28, 10.237.99.176/28
       managed: true
 
 # Policies
@@ -31,6 +31,142 @@ apic:
             admin_state: true
             querier: true
 
+        bgp_peer_prefix_policies:
+          - name: smart-switch-bgp-prefix-policy
+            description: BGP prefix policy for Smart Switch
+            action: reject
+            threshold: 75
+            max_prefixes: 100
+
+        bgp_timer_policies:
+          - name: core-bgp-timers
+            description: BGP timer policies for smart switch peering
+            keepalive_interval: 60
+            hold_interval: 180
+            graceful_restart_helper: true
+            maximum_as_limit: 10
+
+        bfd_interface_policies:
+          - name: smart-switch-bfd
+            description: single-hop BFD for the smart switch SVI
+            detection_multiplier: 3
+            echo_admin_state: true
+            echo_rx_interval: 50
+            min_rx_interval: 50
+            min_tx_interval: 50
+
+        match_rules:
+          - name: match-default-route
+            description: exact match for default route 0.0.0.0/0
+            prefixes:
+              - ip: 0.0.0.0/0
+                aggregate: false
+
+          - name: match-vrf-01-subnets
+            description: subnets still on ACI bridge domains
+            prefixes:
+              - ip: 10.5.32.0/24
+                aggregate: false
+              - ip: 10.5.33.0/24
+                aggregate: false
+
+        route_control_route_maps:
+          - name: export-vrf-01-to-smart-switch
+            type: global
+            contexts:
+              - name: export-vrf-01-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-01-subnets
+              - name: export-default-route
+                order: 1
+                action: permit
+                match_rules:
+                  - match-default-route
+
+# IP SLA Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `IP SLA` » `IP SLA Monitoring Policies`
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services: Location in GUI: `Tenants` » `XXX` » `Services`
+      services:
+
+# L4L7 Device: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Devices`
+        l4l7_devices:
+          - name: smart-switch-east-west
+            physical_domain: smart-switches
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: smart-switch-east-west
+                interfaces:
+                  - name: data
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_smart-switch
+            logical_interfaces:
+              - name: data
+                vlan: 45
+                concrete_interfaces:
+                  - device: smart-switch-east-west
+                    interface_name: data
+
+# Redirect Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Policy-Based Redirect`
+        redirect_policies:
+          - name: smart-switch-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.11
+                name: smart-switch-east-west
+                redirect_health_group: smart-switch-east-west
+
+# Redirect Health Group: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Redirect Health Groups`
+        redirect_health_groups:
+          - name: smart-switch-east-west
+
+# Service Graph Template: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Service Graph Templates`
+        service_graph_templates:
+          - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: ssharman
+              name: smart-switch-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+# Device Selection Policy: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Device Selection Policies`
+        device_selection_policies:
+          - contract: any
+            service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
 # Filters
       filters:
         - name: 'icmp'
@@ -43,12 +179,30 @@ apic:
             - name: 'src-any-dst-any'
               ethertype: unspecified
 
+        - name: 'ipv4-src-any-dst-any'
+          entries:
+            - name: 'ipv4-src-any-dst-any'
+              ethertype: ipv4
+
+        - name: 'tcp-src-any-dst-any'
+          entries:
+            - name: 'tcp-src-any-dst-any'
+              ethertype: ip
+              protocol: tcp
+
         - name: 'tcp-src-any-dst-any-stateful'
           entries:
             - name: 'tcp-src-any-dst-any-stateful'
               ethertype: ip
               protocol: tcp
               stateful: true
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
 
         - name: 'tcp-src-any-dst-22-stateful'
           entries:
@@ -114,7 +268,24 @@ apic:
 
 # Contracts
       contracts:
-        - name: epg-security-groups-permit-from-all-epgs
+        - name: inter-esg-non-stateful
+          description: inter-esg contract
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows outbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows outbound icmp from consumer to provider
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows outbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: network-security-groups-permit-from-all-epgs
           description: esg-all-epgs is the contract Consumer
           scope: tenant
           subjects:
@@ -132,15 +303,15 @@ apic:
                   - filter: udp-src-any-dst-53
                   - filter: udp-src-any-dst-123
 
-        - name: epg-security-groups-permit-intra-all-epgs
-          description: intra epg-security-groups
+        - name: network-security-groups-permit-intra-all-epgs
+          description: intra network-security-groups
           scope: tenant
           subjects:
             - name: permit-src-any-dst-any
               filters:
                 - filter: src-any-dst-any
 
-        - name: epg-security-groups-permit-to-all-epgs
+        - name: network-security-groups-permit-to-all-epgs
           description: esg-all-epgs is the contract Provider
           scope: tenant
           subjects:
@@ -185,14 +356,14 @@ apic:
               filters:
                   - filter: icmp
 
-        - name: permit-to-esg-ip-10.237.99.168
+        - name: permit-to-esg-ip-10.237.99.168-non-stateful
           description: allows inbound traffic to the ip-10.237.99.168 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -202,14 +373,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.169
+        - name: permit-to-esg-ip-10.237.99.169-non-stateful
           description: allows inbound traffic to the ip-10.237.99.169 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -219,14 +390,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.170
+        - name: permit-to-esg-ip-10.237.99.170-non-stateful
           description: allows inbound traffic to the ip-10.237.99.170 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -236,14 +407,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.171
+        - name: permit-to-esg-ip-10.237.99.171-non-stateful
           description: allows inbound traffic to the ip-10.237.99.171 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -253,14 +424,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.172
+        - name: permit-to-esg-ip-10.237.99.172-non-stateful
           description: allows inbound traffic to the ip-10.237.99.172 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -270,14 +441,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.173
+        - name: permit-to-esg-ip-10.237.99.173-non-stateful
           description: allows inbound traffic to the ip-10.237.99.173 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -287,14 +458,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.174
+        - name: permit-to-esg-ip-10.237.99.174-non-stateful
           description: allows inbound traffic to the ip-10.237.99.174 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -304,14 +475,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.184
+        - name: permit-to-esg-ip-10.237.99.184-non-stateful
           description: allows inbound traffic to the ip-10.237.99.184 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -321,14 +492,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.185
+        - name: permit-to-esg-ip-10.237.99.185-non-stateful
           description: allows inbound traffic to the ip-10.237.99.185 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -338,14 +509,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.186
+        - name: permit-to-esg-ip-10.237.99.186-non-stateful
           description: allows inbound traffic to the ip-10.237.99.186 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -355,14 +526,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.187
+        - name: permit-to-esg-ip-10.237.99.187-non-stateful
           description: allows inbound traffic to the ip-10.237.99.187 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -372,14 +543,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.188
+        - name: permit-to-esg-ip-10.237.99.188-non-stateful
           description: allows inbound traffic to the ip-10.237.99.188 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -389,14 +560,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.189
+        - name: permit-to-esg-ip-10.237.99.189-non-stateful
           description: allows inbound traffic to the ip-10.237.99.189 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -406,14 +577,14 @@ apic:
               filters:
                   - filter: udp-src-any-dst-any
 
-        - name: permit-to-esg-ip-10.237.99.190
+        - name: permit-to-esg-ip-10.237.99.190-non-stateful
           description: allows inbound traffic to the ip-10.237.99.190 ESG
           scope: tenant
           subjects:
             - name: tcp
-              description: allows inbound stateful tcp from consumer to provider
+              description: allows inbound tcp from consumer to provider
               filters:
-                - filter: tcp-src-any-dst-22-stateful
+                - filter: tcp-src-any-dst-22
             - name: icmp
               description: allows inbound icmp from consumer to provider
               filters:
@@ -422,6 +593,621 @@ apic:
               description: allows inbound udp from consumer to provider
               filters:
                   - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.128-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.128 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.129-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.129 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.130-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.130 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.131-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.131 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.132-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.132 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.133-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.133 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.134-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.134 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.135-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.135 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.136-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.136 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.137-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.137 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.138-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.138 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.139-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.139 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.140-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.140 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.32.141-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.141 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+                  
+        - name: permit-to-esg-ip-10.5.32.142-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.142 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+        - name: permit-to-esg-ip-10.5.32.143-non-stateful
+          description: allows inbound traffic to the ip-10.5.32.143 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.128-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.128 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.129-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.129 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.130-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.130 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.131-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.131 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.132-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.132 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.133-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.133 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.134-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.134 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.135-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.135 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.136-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.136 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.137-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.137 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.138-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.138 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.139-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.139 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.140-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.140 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.141-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.141 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.142-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.142 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-esg-ip-10.5.33.143-non-stateful
+          description: allows inbound traffic to the ip-10.5.33.143 ESG
+          scope: tenant
+          subjects:
+            - name: tcp
+              description: allows inbound tcp from consumer to provider
+              filters:
+                - filter: tcp-src-any-dst-22
+            - name: icmp
+              description: allows inbound icmp from consumer to provider
+              service_graph: smart-switch-east-west
+              filters:
+                  - filter: icmp
+            - name: udp
+              description: allows inbound udp from consumer to provider
+              filters:
+                  - filter: udp-src-any-dst-any
+
+        - name: permit-to-network-segments-10.5.32.0_24
+          scope: tenant
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters:
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+
+        - name: permit-to-network-segments-10.5.33.0_24
+          scope: tenant
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters:
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+
+        - name: permit-to-network-segments-10.5.34.0_24
+          scope: tenant
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters:
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
+
+        - name: permit-to-network-segments-10.5.35.0_24
+          scope: tenant
+          subjects:
+            - name: permit-ipv4-src-any-dst-any
+              filters:
+                - filter: ipv4-src-any-dst-any
+            - name: icmp
+              filters:
+                - filter: icmp
 
 # Imported contracts
       imported_contracts:
@@ -457,6 +1243,29 @@ apic:
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
+            - prefix: 10.5.32.0/24
+              public: false
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.5.33.0/24
+              public: false
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+          leaked_external_prefixes:
+            - prefix: 10.5.34.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.5.35.0/24
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
 
           contracts:
             imported_consumers:
@@ -465,8 +1274,109 @@ apic:
               - permit-from-shared-services-lab-desktops
               - permit-to-shared-services-all-external-subnets
 
+# L3Out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
+      l3outs:
+        - name: vrf-01-bgp-svi
+          description: L3out SVI to Smart Switch BGP AS64811
+          alias: vrf-01-to-smart-switch
+          vrf: vrf-01
+          domain: ssharman.vrf-01
+          import_route_control_enforcement: false
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-vrf-01-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-01-subnets
+              - name: export-default-route
+                order: 1
+                action: permit
+                match_rules:
+                  - match-default-route
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 110.1.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.1.10.11
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 110.2.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.2.10.11
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 210.1.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 210.1.10.11
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 210.2.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 210.2.10.11
+              bgp:
+                timer_policy: core-bgp-timers
+              interface_profiles:
+                - name: vpc_to_smart-switch
+                  bfd_policy: smart-switch-bfd
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      channel: vpc_to_smart-switch
+                      mode: regular
+                      scope: vrf
+                      vlan: 48
+                      svi: true
+                      ip_a: 10.5.39.1/29
+                      ip_b: 10.5.39.2/29
+                      ip_shared: 10.5.39.3/29
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.5.39.4
+                          description: Smart Switch SVI
+                          remote_as: 65257
+                          local_as: 64811
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: smart-switch-bgp-prefix-policy
+                          export_route_control: export-vrf-01-to-smart-switch
+          external_endpoint_groups:
+            - name: dummy-extEPG-for-vrf-01-bgp-svi-AS-64811
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-svi
+
 # Bridge Domains
       bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
         - name: '10.237.99.160_28'
           unknown_unicast: proxy
           vrf: vrf-01
@@ -490,7 +1400,51 @@ apic:
               scope: tenant
           igmp_interface_policy: allow_igmp_v3
           igmp_snooping_policy: enable_igmp_snooping
-          
+
+        - name: 10.5.32.0_24
+          description: internal subnet
+          alias: vrf-01-internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.32.1/24
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.33.0_24
+          description: internal subnet
+          alias: vrf-01-internal-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.33.1/24
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+
+        - name: 10.5.34.0_24
+          description: L2 only, gateway 10.5.34.1 is on the smart switch
+          alias: vrf-01-l2-subnet
+          vrf: vrf-01
+          unicast_routing: false
+          arp_flooding: true
+          unknown_unicast: flood
+
+        - name: 10.5.35.0_24
+          description: L2 only, gateway 10.5.35.1 is on the smart switch
+          alias: vrf-01-l2-subnet
+          vrf: vrf-01
+          unicast_routing: false
+          arp_flooding: true
+          unknown_unicast: flood
+
 # Application profiles
       application_profiles:
         - name: 'network-segments-epgs-and-vlans'
@@ -506,6 +1460,52 @@ apic:
               vmware_vmm_domains:
                 - name: hx-dev-01-vds-01
 
+            - name: '10.5.32.0_24'
+              bridge_domain: '10.5.32.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+
+            - name: '10.5.33.0_24'
+              bridge_domain: '10.5.33.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+
+            - name: '10.5.34.0_24'
+              bridge_domain: '10.5.34.0_24'
+              proxy_arp: false
+              physical_domains:
+                - smart-switches
+              static_ports:
+                - channel: vpc_to_smart-switch
+                  pod_id: 1
+                  vlan: 46
+                  node_id: 1101
+                  node2_id: 1102
+                  deployment_immediacy: immediate
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
+            - name: '10.5.35.0_24'
+              bridge_domain: '10.5.35.0_24'
+              proxy_arp: false
+              physical_domains:
+                - smart-switches
+              static_ports:
+                - channel: vpc_to_smart-switch
+                  pod_id: 1
+                  vlan: 47
+                  node_id: 1101
+                  node2_id: 1102
+                  deployment_immediacy: immediate
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+                  u_segmentation: false
+                  deployment_immediacy: immediate
+                  resolution_immediacy: immediate
+
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups'
           endpoint_security_groups:
@@ -517,8 +1517,47 @@ apic:
                   endpoint_group: 10.237.99.160_28
                 - application_profile: 'network-segments-epgs-and-vlans'
                   endpoint_group: 10.237.99.176_28
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.32.0_24
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.33.0_24
+              contracts:
+                consumers:
+                  - network-security-groups-permit-from-all-epgs
+                providers:
+                  - network-security-groups-permit-to-all-epgs
+                intra_esgs:
+                  - network-security-groups-permit-intra-all-epgs
 
-        - name: 'endpoint-ip-security-groups'
+            - name: 10.5.34.0_24
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              epg_selectors:
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.34.0_24
+              contracts:
+                consumers:
+                  - network-security-groups-permit-to-all-epgs
+                  - permit-to-network-segments-10.5.35.0_24
+                providers:
+                  - network-security-groups-permit-from-all-epgs
+                  - permit-to-network-segments-10.5.34.0_24
+
+            - name: 10.5.35.0_24
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              epg_selectors:
+                - application_profile: 'network-segments-epgs-and-vlans'
+                  endpoint_group: 10.5.35.0_24
+              contracts:
+                consumers:
+                  - network-security-groups-permit-to-all-epgs
+                  - permit-to-network-segments-10.5.34.0_24
+                providers:
+                  - network-security-groups-permit-from-all-epgs
+                  - permit-to-network-segments-10.5.35.0_24
+
+        - name: 'endpoint-security-groups'
           description: 'ESGs are used to define security groups'
           endpoint_security_groups:
             - name: ip-10.237.99.168
@@ -528,7 +1567,7 @@ apic:
                 - value: 10.237.99.168/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.168
+                  - permit-to-esg-ip-10.237.99.168-non-stateful
             - name: ip-10.237.99.169
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -536,7 +1575,7 @@ apic:
                 - value: 10.237.99.169/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.169
+                  - permit-to-esg-ip-10.237.99.169-non-stateful
             - name: ip-10.237.99.170
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -544,7 +1583,7 @@ apic:
                 - value: 10.237.99.170/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.170
+                  - permit-to-esg-ip-10.237.99.170-non-stateful
             - name: ip-10.237.99.171
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -552,7 +1591,7 @@ apic:
                 - value: 10.237.99.171/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.171
+                  - permit-to-esg-ip-10.237.99.171-non-stateful
             - name: ip-10.237.99.172
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -560,7 +1599,7 @@ apic:
                 - value: 10.237.99.172/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.172
+                  - permit-to-esg-ip-10.237.99.172-non-stateful
             - name: ip-10.237.99.173
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -568,7 +1607,7 @@ apic:
                 - value: 10.237.99.173/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.173
+                  - permit-to-esg-ip-10.237.99.173-non-stateful
             - name: ip-10.237.99.174
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -576,7 +1615,7 @@ apic:
                 - value: 10.237.99.174/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.174
+                  - permit-to-esg-ip-10.237.99.174-non-stateful
             - name: ip-10.237.99.184
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -584,7 +1623,7 @@ apic:
                 - value: 10.237.99.184/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.184
+                  - permit-to-esg-ip-10.237.99.184-non-stateful
             - name: ip-10.237.99.185
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -592,7 +1631,7 @@ apic:
                 - value: 10.237.99.185/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.185
+                  - permit-to-esg-ip-10.237.99.185-non-stateful
             - name: ip-10.237.99.186
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -600,7 +1639,7 @@ apic:
                 - value: 10.237.99.186/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.186
+                  - permit-to-esg-ip-10.237.99.186-non-stateful
             - name: ip-10.237.99.187
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -608,7 +1647,7 @@ apic:
                 - value: 10.237.99.187/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.187
+                  - permit-to-esg-ip-10.237.99.187-non-stateful
             - name: ip-10.237.99.188
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -616,7 +1655,7 @@ apic:
                 - value: 10.237.99.188/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.188
+                  - permit-to-esg-ip-10.237.99.188-non-stateful
             - name: ip-10.237.99.189
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -624,7 +1663,7 @@ apic:
                 - value: 10.237.99.189/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.189
+                  - permit-to-esg-ip-10.237.99.189-non-stateful
             - name: ip-10.237.99.190
               vrf: vrf-01
               deployment_immediacy: immediate
@@ -632,4 +1671,277 @@ apic:
                 - value: 10.237.99.190/32
               contracts:
                 providers:
-                  - permit-to-esg-ip-10.237.99.190
+                  - permit-to-esg-ip-10.237.99.190-non-stateful
+            - name: ip-10.5.32.128
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.128/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.128-non-stateful
+            - name: ip-10.5.32.129
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.129/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.129-non-stateful
+            - name: ip-10.5.32.130
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.130/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.130-non-stateful
+            - name: ip-10.5.32.131
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.131/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.131-non-stateful
+            - name: ip-10.5.32.132
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.132/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.132-non-stateful
+            - name: ip-10.5.32.133
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.133/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.133-non-stateful
+            - name: ip-10.5.32.134
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.134/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.134-non-stateful
+            - name: ip-10.5.32.135
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.135/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.135-non-stateful
+            - name: ip-10.5.32.136
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.136/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.136-non-stateful
+            - name: ip-10.5.32.137
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.137/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.137-non-stateful
+            - name: ip-10.5.32.138
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.138/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.138-non-stateful
+            - name: ip-10.5.32.139
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.139/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.139-non-stateful
+            - name: ip-10.5.32.140
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.140/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.140-non-stateful
+            - name: ip-10.5.32.141
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.141/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.141-non-stateful
+            - name: ip-10.5.32.142
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.142/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.142-non-stateful
+            - name: ip-10.5.32.143
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.32.143/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.32.143-non-stateful
+            - name: ip-10.5.33.128
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.128/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.128-non-stateful
+            - name: ip-10.5.33.129
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.129/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.129-non-stateful
+            - name: ip-10.5.33.130
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.130/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.130-non-stateful
+            - name: ip-10.5.33.131
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.131/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.131-non-stateful
+            - name: ip-10.5.33.132
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.132/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.132-non-stateful
+            - name: ip-10.5.33.133
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.133/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.133-non-stateful
+            - name: ip-10.5.33.134
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.134/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.134-non-stateful
+            - name: ip-10.5.33.135
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.135/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.135-non-stateful
+            - name: ip-10.5.33.136
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.136/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.136-non-stateful
+            - name: ip-10.5.33.137
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.137/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.137-non-stateful
+            - name: ip-10.5.33.138
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.138/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.138-non-stateful
+            - name: ip-10.5.33.139
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.139/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.139-non-stateful
+            - name: ip-10.5.33.140
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.140/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.140-non-stateful
+            - name: ip-10.5.33.141
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.141/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.141-non-stateful
+            - name: ip-10.5.33.142
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.142/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.142-non-stateful
+            - name: ip-10.5.33.143
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_subnet_selectors:
+                - value: 10.5.33.143/32
+              contracts:
+                providers:
+                  - permit-to-esg-ip-10.5.33.143-non-stateful
+
+        - name: external-subnets-esgs
+          description: ESGs are used to define security groups
+          endpoint_security_groups:
+            - name: smart-switch-subnets
+              vrf: vrf-01
+              deployment_immediacy: immediate
+              ip_external_subnet_selectors:
+                - ip: 10.5.34.0/24
+                  shared: true
+                - ip: 10.5.35.0/24
+                  shared: true
+              contracts:
+                consumers:
+                  - network-security-groups-permit-to-all-epgs
+                providers:
+                  - network-security-groups-permit-from-all-epgs

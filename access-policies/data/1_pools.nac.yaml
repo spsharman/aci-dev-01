@@ -348,6 +348,12 @@ apic:
           - from: 41
             description: L3out SVI isovalent.vrf-03 to Smart Switch
 
+      - name: ssharman.vrf-01
+        allocation: static
+        ranges:
+          - from: 48
+            description: L3out SVI ssharman.vrf-01 to Smart Switch
+
       - name: isovalent.vrf-02
         allocation: static
         ranges:
@@ -405,6 +411,19 @@ apic:
             description: smart switch PBR for tn-isovalent
             allocation: inherit
             role: external
+          - from: 45
+            to: 45
+            description: smart switch PBR for tn-ssharman
+            allocation: inherit
+            role: external
+          - from: 46
+            to: 46
+            description: L2 stretch ssharman 10.5.34.0/24
+            allocation: inherit
+          - from: 47
+            to: 47
+            description: L2 stretch ssharman 10.5.35.0/24
+            allocation: inherit
 
       - name: ssharman-ubuntu-nodes
         allocation: static
