@@ -7,8 +7,8 @@ apic:
 # aci-dev-01-pod-01-leaf-1101
       - name: aci-dev-01-pod-01-leaf-1101
         selectors:
-          - name: vpc_to_isovalent-pod-01
-            policy_group: vpc_to_isovalent-pod-01
+          - name: vpc_to_L11-C93108TC-FX3P
+            policy_group: vpc_to_L11-C93108TC-FX3P
             port_blocks:
               - name: block-1
                 description: Isovalent - L11 RU34 L11-C93108TC-FX3P Ethernet1/53
@@ -175,8 +175,8 @@ apic:
 # aci-dev-01-pod-01-leaf-1102
       - name: aci-dev-01-pod-01-leaf-1102
         selectors:
-          - name: vpc_to_isovalent-pod-01
-            policy_group: vpc_to_isovalent-pod-01
+          - name: vpc_to_L11-C93108TC-FX3P
+            policy_group: vpc_to_L11-C93108TC-FX3P
             port_blocks:
               - name: block-1
                 description: Isovalent - L11 RU34 L11-C93108TC-FX3P Ethernet1/54
@@ -345,8 +345,8 @@ apic:
 # aci-dev-01-pod-02-leaf-2101
       - name: aci-dev-01-pod-02-leaf-2101
         selectors:
-          - name: vpc_to_isovalent-pod-02
-            policy_group: vpc_to_isovalent-pod-02
+          - name: vpc_to_L14-C93108TC-FX3P
+            policy_group: vpc_to_L14-C93108TC-FX3P
             port_blocks:
               - name: block-1
                 description: Isovalent - L14 RU25 L14-C93108TC-FX3P Ethernet1/53
@@ -437,8 +437,8 @@ apic:
 # aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2102
         selectors:
-          - name: vpc_to_isovalent-pod-02
-            policy_group: vpc_to_isovalent-pod-02
+          - name: vpc_to_L14-C93108TC-FX3P
+            policy_group: vpc_to_L14-C93108TC-FX3P
             port_blocks:
               - name: block-1
                 description: Isovalent - L14 RU25 L14-C93108TC-FX3P Ethernet1/54
