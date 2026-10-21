@@ -7,6 +7,14 @@ apic:
 # aci-dev-01-pod-01-leaf-1101
       - name: aci-dev-01-pod-01-leaf-1101
         selectors:
+          - name: vpc_to_L11-C93108TC-FX3P
+            policy_group: vpc_to_L11-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: Isovalent - L11 RU34 L11-C93108TC-FX3P Ethernet1/53
+                from_port: 34
+                to_port: 34
+
           - name: fabric-inband-mgmt
             policy_group: fabric-inband-mgmt
             port_blocks:
@@ -167,6 +175,14 @@ apic:
 # aci-dev-01-pod-01-leaf-1102
       - name: aci-dev-01-pod-01-leaf-1102
         selectors:
+          - name: vpc_to_L11-C93108TC-FX3P
+            policy_group: vpc_to_L11-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: Isovalent - L11 RU34 L11-C93108TC-FX3P Ethernet1/54
+                from_port: 34
+                to_port: 34
+
           - name: fabric-inband-mgmt
             policy_group: fabric-inband-mgmt
             port_blocks:
@@ -329,6 +345,14 @@ apic:
 # aci-dev-01-pod-02-leaf-2101
       - name: aci-dev-01-pod-02-leaf-2101
         selectors:
+          - name: vpc_to_L14-C93108TC-FX3P
+            policy_group: vpc_to_L14-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: Isovalent - L14 RU25 L14-C93108TC-FX3P Ethernet1/53
+                from_port: 34
+                to_port: 34
+
           - name: ftd-4112-02-mgmt
             policy_group: vpc_to_ftd-4112-02-mgmt
             port_blocks:
@@ -413,6 +437,14 @@ apic:
 # aci-dev-01-pod-02-leaf-2102
       - name: aci-dev-01-pod-02-leaf-2102
         selectors:
+          - name: vpc_to_L14-C93108TC-FX3P
+            policy_group: vpc_to_L14-C93108TC-FX3P
+            port_blocks:
+              - name: block-1
+                description: Isovalent - L14 RU25 L14-C93108TC-FX3P Ethernet1/54
+                from_port: 34
+                to_port: 34
+
           - name: ftd-4112-02-mgmt
             policy_group: vpc_to_ftd-4112-02-mgmt
             port_blocks:
