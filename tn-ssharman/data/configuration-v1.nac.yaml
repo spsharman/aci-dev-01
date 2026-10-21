@@ -1,0 +1,626 @@
+#
+# Tenant ssharman - 10.5.32.0/21 subnets
+# Modelled after tn-tech-elevate/06-increase-contract-security.nac.yaml
+# Local L3Out vrf-01-bgp-svi peers the smart switch. Shared-services still advertises to the core.
+#
+---
+apic:
+  tenants:
+    - name: ssharman
+      description: 10.5.32.0/21, 10.237.99.160/28, 10.237.99.176/28
+      alias: blueprint-v1
+      managed: true
+
+# Policies: Location in GUI: `Tenants` » `XXX` » `Policies`
+      policies:
+# DHCP Relay Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `DHCP` » `Relay Policies`
+        dhcp_relay_policies:
+          - name: dhcp.uktme.cisco.com
+            description: "dhcp.uktme.cisco.com"
+            providers:
+              - ip: 10.237.97.133
+                type: external_epg
+                tenant: shared-services
+                l3out: shared-services.vrf-01-bgp-as-64801
+                external_endpoint_group: core-services-subnets
+
+# IGMP Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `IGMP Interface`
+        igmp_interface_policies:
+          - name: allow_igmp_v3
+            version: v3
+          - name: allow_igmp_v2
+            version: v2
+
+# IGMP Snooping Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `IGMP Snoop`
+        igmp_snooping_policies:
+          - name: enable_igmp_snooping
+            admin_state: true
+            querier: true
+
+# BGP Peer Prefix Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Peer Prefix`
+        bgp_peer_prefix_policies:
+          - name: smart-switch-bgp-prefix-policy
+            description: BGP prefix policy for Smart Switch
+            action: reject
+            threshold: 75
+            max_prefixes: 100
+
+# BGP Timer Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BGP` » `BGP Timers`
+        bgp_timer_policies:
+          - name: core-bgp-timers
+            description: BGP timer policies for smart switch peering
+            keepalive_interval: 60
+            hold_interval: 180
+            graceful_restart_helper: true
+            maximum_as_limit: 10
+
+# BFD Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `BFD`
+        bfd_interface_policies:
+          - name: smart-switch-bfd
+            description: single-hop BFD for the smart switch SVI
+            detection_multiplier: 3
+            echo_admin_state: true
+            echo_rx_interval: 50
+            min_rx_interval: 50
+            min_tx_interval: 50
+
+# Match Rules: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `Match Rules`
+        match_rules:
+          - name: match-default-route
+            description: exact match for default route 0.0.0.0/0
+            prefixes:
+              - ip: 0.0.0.0/0
+                aggregate: false
+
+          - name: match-vrf-01-subnets
+            description: subnets still on ACI bridge domains
+            prefixes:
+              - ip: 10.5.32.0/24
+                aggregate: false
+              - ip: 10.5.33.0/24
+                aggregate: false
+
+# Multicast Route Maps: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `Route Maps for Multicast`
+        multicast_route_maps: 
+          - name: mcast-groups-to-rp-172.22.4.1 # using this so the 239.1.1.1 group shows up in "show ip igmp groups"
+            entries:
+              - order: 1
+                group_ip: 239.1.1.10/24
+                #rp_ip: 172.16.239.10 # Already defined in static RP - Could be used with Auto RP and BSR
+                action: permit        
+              - order: 2
+                group_ip: 239.1.2.10/24
+                #rp_ip: 172.16.239.10 # Already defined in static RP - Could be used with Auto RP and BSR
+                action: permit  
+              - order: 3
+                group_ip: 239.1.3.10/24
+                #rp_ip: 172.16.239.10 # Already defined in static RP - Could be used with Auto RP and BSR
+                action: permit  
+
+# Route Control Route Maps: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `Route Maps for Route Control`
+        route_control_route_maps:
+          - name: export-vrf-01-to-smart-switch
+            type: global
+            contexts:
+              - name: export-vrf-01-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-01-subnets
+              - name: export-default-route
+                order: 1
+                action: permit
+                match_rules:
+                  - match-default-route
+
+# IP SLA Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `IP SLA` » `IP SLA Monitoring Policies`
+        ip_sla_policies:
+          - name: icmp-aggressive-timers
+            description: This policy sends a icmp ping every 1 second
+            frequency: 1
+            multiplier: 3
+            sla_type: icmp
+
+# Services: Location in GUI: `Tenants` » `XXX` » `Services`
+      services:
+
+# L4L7 Device: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Devices`
+        l4l7_devices:
+          - name: smart-switch-east-west
+            physical_domain: smart-switches
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: smart-switch-east-west
+                interfaces:
+                  - name: data
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_smart-switch
+            logical_interfaces:
+              - name: data
+                vlan: 45
+                concrete_interfaces:
+                  - device: smart-switch-east-west
+                    interface_name: data
+
+          - name: ftdv-03-adapter-10-gig-0-7
+            vmware_vmm_domain: hx-dev-01-vds-01
+            context_aware: single-Context
+            type: VIRTUAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftdv-03-adapter-10-gig-0-7
+                vcenter_name: hx-dev-01-vc01.uktme.cisco.com
+                vm_name: ftdv72_82-03.uktme.cisco.com
+                interfaces:
+                  - name: gig-0-7
+                    vnic_name: Network adapter 10
+            logical_interfaces:
+              - name: gig-0-7
+                concrete_interfaces:
+                  - device: ftdv-03-adapter-10-gig-0-7
+                    interface_name: gig-0-7
+
+# Redirect Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Policy-Based Redirect`
+        redirect_policies:
+          - name: smart-switch-east-west
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.11
+                name: smart-switch-east-west
+                redirect_health_group: smart-switch-east-west
+          - name: ftdv-03-adapter-10-gig-0-7
+            anycast: false
+            pod_aware: true
+            resilient_hashing: false
+            ip_sla_policy: icmp-aggressive-timers
+            l3_destinations:
+              - ip: 6.6.6.10
+                name: ftdv-03-adapter-10-gig-0-7
+                redirect_health_group: ftdv-03-adapter-10-gig-0-7
+
+
+# Redirect Health Group: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `L4-L7 Redirect Health Groups`
+        redirect_health_groups:
+          - name: smart-switch-east-west
+          - name: ftdv-03-adapter-10-gig-0-7
+
+
+# Service Graph Template: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Service Graph Templates`
+        service_graph_templates:
+          - name: smart-switch-east-west
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: ssharman
+              name: smart-switch-east-west
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+          - name: ftdv-03-adapter-10-gig-0-7
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: ssharman
+              name: ftdv-03-adapter-10-gig-0-7
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+
+# Device Selection Policy: Location in GUI: `Tenants` » `XXX` » `Services` » `L4-L7` » `Device Selection Policies`
+        device_selection_policies:
+          - contract: any
+            service_graph_template: smart-switch-east-west
+            consumer:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: smart-switch-east-west
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+          - contract: any
+            service_graph_template: ftdv-03-adapter-10-gig-0-7
+            consumer:
+              redirect_policy:
+                name: ftdv-03-adapter-10-gig-0-7
+              logical_interface: gig-0-7
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftdv-03-adapter-10-gig-0-7
+              logical_interface: gig-0-7
+              bridge_domain:
+                name: 6.6.6.0_24
+
+
+# Filters: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Filters`
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'ipv4-src-any-dst-any'
+          entries:
+            - name: 'ipv4-src-any-dst-any'
+              ethertype: ipv4
+
+        - name: 'tcp-src-any-dst-any'
+          entries:
+            - name: 'tcp-src-any-dst-any'
+              ethertype: ip
+              protocol: tcp
+
+        - name: 'tcp-src-any-dst-any-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-any-stateful'
+              ethertype: ip
+              protocol: tcp
+              stateful: true
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-22-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-22-stateful'
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+              stateful: true
+
+        - name: 'tcp-src-any-dst-80-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-80-stateful'
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+              stateful: true
+
+        - name: 'tcp-src-any-dst-443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-443-stateful'
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+              stateful: true
+
+        - name: 'tcp-src-any-dst-6443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-6443-stateful'
+              protocol: tcp
+              destination_from_port: 6443
+              destination_to_port: 6443
+              stateful: true
+
+        - name: 'tcp-src-any-dst-8443-stateful'
+          entries:
+            - name: 'tcp-src-any-dst-8443-stateful'
+              protocol: tcp
+              destination_from_port: 8443
+              destination_to_port: 8443
+              stateful: true
+
+        - name: 'udp-src-any-dst-any'
+          entries:
+            - name: 'udp-src-any-dst-any'
+              ethertype: ip
+              protocol: udp
+
+        - name: 'udp-src-any-dst-53'
+          entries:
+            - name: 'udp-src-any-dst-53'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 53
+              destination_to_port: 53
+
+        - name: 'udp-src-any-dst-123'
+          entries:
+            - name: 'udp-src-any-dst-123'
+              ethertype: ip
+              protocol: udp
+              destination_from_port: 123
+              destination_to_port: 123
+
+# Contracts: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Standard`
+      contracts:
+        - name: intra-vrf
+          description: vzAny is contract Consumer and Provider - permits any/any between all EPGs in the VRF
+          scope: context
+          subjects:
+            - name: permit-src-any-dst-any
+              filters:
+                - filter: src-any-dst-any
+
+# Imported contracts: Location in GUI: `Tenants` » `XXX` » `Contracts` » `Imported`
+      imported_contracts:
+        - name: permit-to-shared-services-all-external-subnets
+          tenant: shared-services
+          contract: permit-to-all-external-subnets
+
+        - name: permit-from-shared-services-core-services
+          tenant: shared-services
+          contract: permit-from-core-services
+
+        - name: permit-to-shared-services-core-services
+          tenant: shared-services
+          contract: permit-to-core-services
+
+        - name: permit-from-shared-services-lab-desktops
+          tenant: shared-services
+          contract: permit-from-lab-desktops
+
+# VRFs: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs`
+      vrfs:
+        - name: vrf-01
+          description: configured with NAC
+          alias: internal-vrf
+
+        # PIM: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs` » `XXX` » `PIM`
+          pim:
+            static_rps:
+              - ip: 172.22.4.1
+                multicast_route_map: mcast-groups-to-rp-172.22.4.1
+            inter_vrf_policies:
+              - tenant: shared-services
+                vrf: vrf-01
+                multicast_route_map: mcast-groups-to-rp-172.22.4.1
+
+          leaked_internal_subnets:
+            - prefix: 10.237.99.160/28
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.237.99.176/28
+              public: true
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+            - prefix: 10.5.32.0/24
+              public: false
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.5.33.0/24
+              public: false
+              destinations:
+                - tenant: shared-services
+                  vrf: vrf-01
+                  public: true
+
+          # vzAny: Location in GUI: `Tenants` » `XXX` » `Networking` » `VRFs` » `XXX` » `EPG Collection for VRF`
+          contracts:
+            providers:
+              - intra-vrf
+            consumers:
+              - intra-vrf
+            imported_consumers:
+              - permit-from-shared-services-core-services
+              - permit-to-shared-services-core-services
+              - permit-from-shared-services-lab-desktops
+              - permit-to-shared-services-all-external-subnets
+
+# L3Out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3Outs`
+      l3outs:
+        - name: vrf-01-bgp-svi
+          description: L3out SVI to Smart Switch BGP AS64811
+          alias: vrf-01-to-smart-switch
+          vrf: vrf-01
+          domain: ssharman.vrf-01
+          import_route_control_enforcement: false
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-vrf-01-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-01-subnets
+              - name: export-default-route
+                order: 1
+                action: permit
+                match_rules:
+                  - match-default-route
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 110.1.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.1.10.11
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 110.2.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 110.2.10.11
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 210.1.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 210.1.10.11
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 210.2.10.1
+                  router_id_as_loopback: false
+                  loopbacks:
+                    - 210.2.10.11
+              bgp:
+                timer_policy: core-bgp-timers
+              interface_profiles:
+                - name: vpc_to_smart-switch
+                  bfd_policy: smart-switch-bfd
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      channel: vpc_to_smart-switch
+                      mode: regular
+                      scope: vrf
+                      vlan: 48
+                      svi: true
+                      ip_a: 10.5.39.1/29
+                      ip_b: 10.5.39.2/29
+                      ip_shared: 10.5.39.3/29
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.5.39.4
+                          description: Smart Switch SVI
+                          remote_as: 65257
+                          local_as: 64811
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: smart-switch-bgp-prefix-policy
+                          export_route_control: export-vrf-01-to-smart-switch
+          external_endpoint_groups:
+            - name: dummy-extEPG-for-vrf-01-bgp-svi-AS-64811
+              description: do not use - this is a placeholder to enable the L3out to be created for vrf-01-bgp-svi
+
+# Bridge Domains: Location in GUI: `Tenants` » `XXX` » `Networking` » `Bridge Domains`
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: PBR subnet, not advertised - local to VRF
+          alias: vrf-01-pbr-subnet
+          unknown_unicast: proxy
+          vrf: vrf-01
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+
+        - name: '10.237.99.160_28'
+          unknown_unicast: proxy
+          vrf: vrf-01
+          alias: vrf-01-corporate-subnet
+          subnets:
+            - ip: 10.237.99.161/28
+              public: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
+
+        - name: 10.237.99.176_28
+          unknown_unicast: proxy
+          vrf: vrf-01
+          alias: vrf-01-corporate-subnet
+          subnets:
+            - ip: 10.237.99.177/28
+              public: true
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
+
+        - name: 10.5.32.0_24
+          description: internal subnet
+          alias: vrf-01-lab-local-subnet
+          unknown_unicast: proxy
+          l3_multicast: true
+          advertise_host_routes: true
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.32.1/24
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+          igmp_interface_policy: allow_igmp_v2
+          igmp_snooping_policy: enable_igmp_snooping
+
+        - name: 10.5.33.0_24
+          description: internal subnet
+          alias: vrf-01-lab-local-subnet
+          unknown_unicast: proxy
+          l3_multicast: true
+          advertise_host_routes: true
+          vrf: vrf-01
+          subnets:
+            - ip: 10.5.33.1/24
+              public: true
+              shared: true
+              nd_ra_prefix: false
+          dhcp_labels:
+            - dhcp_relay_policy: dhcp.uktme.cisco.com
+              scope: tenant
+          igmp_interface_policy: allow_igmp_v2
+          igmp_snooping_policy: enable_igmp_snooping
+          
+# Application profiles: Location in GUI: `Tenants` » `XXX` » `Application Profiles`
+      application_profiles:
+        - name: 'network-segments-epgs-and-vlans'
+          description: EPGs provide the VLAN backing for application workloads - no contracts are applied to these EPGs
+# Endpoint Groups: Location in GUI: `Tenants` » `XXX` » `Application Profiles` » `XXX` » `Application EPGs`
+          endpoint_groups:
+            - name: '10.237.99.160_28'
+              bridge_domain: '10.237.99.160_28'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+
+            - name: '10.237.99.176_28'
+              bridge_domain: '10.237.99.176_28'
+              vmware_vmm_domains:
+                - name: hx-dev-01-vds-01
+
+            - name: '10.5.32.0_24'
+              bridge_domain: '10.5.32.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'
+
+            - name: '10.5.33.0_24'
+              bridge_domain: '10.5.33.0_24'
+              vmware_vmm_domains:
+                - name: 'hx-dev-01-vds-01'

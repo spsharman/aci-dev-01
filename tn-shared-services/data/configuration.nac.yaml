@@ -26,7 +26,45 @@ apic:
             multiplier: 3
             sla_type: icmp
 
+        igmp_interface_policies:
+          - name: allow_igmp_v3
+            version: v3
+            query_response_interval: 10 # matches live APIC (NaC default is 25); avoids changing working state on apply
+
+        igmp_snooping_policies:
+          - name: enable_igmp_snooping
+            admin_state: true
+            querier: true
+
+        multicast_route_maps:
+          - name: mcast-groups-to-rp-172.22.4.1
+            entries:
+              - order: 1
+                group_ip: 239.1.1.10/24
+                action: permit
+              - order: 2
+                group_ip: 239.1.2.10/24
+                action: permit
+              - order: 3
+                group_ip: 239.1.3.10/24
+                action: permit
+
         match_rules:
+          # Multicast RP / VRF core support (see core/vrf-core-multicast-cutover.md)
+          - name: match-172.22.4.1_32
+            description: exact match for the VRF core PIM sparse-mode RP loopback
+            prefixes:
+              - ip: 172.22.4.1/32
+                aggregate: false
+
+          - name: match-all-ipv4
+            description: any IPv4 prefix (0.0.0.0/0 le 32)
+            prefixes:
+              - ip: 0.0.0.0/0
+                aggregate: true
+                from_length: 0
+                to_length: 32
+
           - name: match-10.237.101.0_27
             description: matches Isovalent node subnets
             prefixes:
@@ -666,6 +704,10 @@ apic:
           description: external connectivity
           alias: external-vrf
           transit_route_tag_policy: shared-services.vrf-01
+          pim:
+            static_rps:
+              - ip: 172.22.4.1
+                multicast_route_map: mcast-groups-to-rp-172.22.4.1
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
               destinations:
@@ -696,6 +738,32 @@ apic:
           description: configured with NAC
           vrf: vrf-01
           domain: shared-services.vrf-01-bgp-core
+
+          # L3 multicast (PIM sparse mode, IPv4) on the L3Out.
+          # Creates pimExtP (enabledAf ipv4-mcast) under this L3Out.
+          # Without it the border leafs form no PIM neighbors with the core.
+          l3_multicast_ipv4: true
+
+          # L3Out-scoped route map (rtctrlProfile) attached to the all-external-subnets
+          # extEPG as an export profile (see external_endpoint_groups below).
+          # Keeps 172.22.4.1/32 (VRF core RP) from being advertised back to the core by the
+          # 0.0.0.0/0 aggregate export. 172.22.4.1/32 is leaked into receiver VRFs via the
+          # shared-rtctrl subnet "vrf-core-rp" for multicast RPF only.
+          route_maps:
+            - name: deny-vrf-core-rp-export
+              description: do not advertise the core RP back to the core
+              type: combinable
+              contexts:
+                - name: deny-172.22.4.1_32
+                  order: 0
+                  action: deny
+                  match_rules:
+                    - match-172.22.4.1_32
+                - name: permit-all-ipv4
+                  order: 1
+                  action: permit
+                  match_rules:
+                    - match-all-ipv4
 
           export_route_map:
             name: export-subnets
@@ -1037,6 +1105,9 @@ apic:
 # extEPGs
           external_endpoint_groups:
             - name: all-external-subnets
+              route_control_profiles:
+                - name: deny-vrf-core-rp-export
+                  direction: export
               subnets:
                 - prefix: 0.0.0.0/0
                   name: route-control-only
@@ -1044,6 +1115,15 @@ apic:
                   shared_route_control: true
                   export_route_control: true
                   aggregate_export_route_control: true
+
+                - prefix: 172.22.4.1/32
+                  name: vrf-core-rp
+                  description: leak RP into receiver VRFs for multicast RPF
+                  import_security: false
+                  shared_route_control: true
+                  # Export of this static is denied by rtctrlProfile deny-vrf-core-rp-export
+                  # on instP all-external-subnets. The 0.0.0.0/0 aggregate export otherwise
+                  # advertises 172.22.4.1/32 back to the core and pulls RP RPF into ACI.
 
                 - prefix: 0.0.0.0/1
                   shared_security: true
@@ -1488,12 +1568,16 @@ apic:
           description: corporate subnet
           alias: corporate-subnet
           unknown_unicast: proxy
+          l3_multicast: true
+          advertise_host_routes: true
           vrf: vrf-01
           subnets:
             - ip: 10.237.100.1/27
               public: true
               shared: true
               nd_ra_prefix: false
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
           l3outs:
             # - shared-services.vrf-01-ospf-area-0.0.0.1
             - shared-services.vrf-01-bgp-as-64801
@@ -1505,12 +1589,16 @@ apic:
           description: corporate subnet
           alias: corporate-subnet
           unknown_unicast: proxy
+          l3_multicast: true
+          advertise_host_routes: true
           vrf: vrf-01
           subnets:
             - ip: 10.237.100.33/28
               public: true
               shared: true
               nd_ra_prefix: false
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
           l3outs:
             # - shared-services.vrf-01-ospf-area-0.0.0.1
             - shared-services.vrf-01-bgp-as-64801
@@ -1522,29 +1610,16 @@ apic:
           description: corporate subnet
           alias: corporate-subnet
           unknown_unicast: proxy
+          l3_multicast: true
+          advertise_host_routes: true
           vrf: vrf-01
           subnets:
             - ip: 10.237.100.49/29
               public: true
               shared: true
               nd_ra_prefix: false
-          l3outs:
-            # - shared-services.vrf-01-ospf-area-0.0.0.1
-            - shared-services.vrf-01-bgp-as-64801
-          dhcp_labels:
-            - dhcp_relay_policy: dhcp.uktme.cisco.com
-              scope: tenant
-
-        - name: 10.237.100.56_29
-          description: corporate subnet
-          alias: corporate-subnet
-          unknown_unicast: proxy
-          vrf: vrf-01
-          subnets:
-            - ip: 10.237.100.57/29
-              public: true
-              shared: true
-              nd_ra_prefix: false
+          igmp_interface_policy: allow_igmp_v3
+          igmp_snooping_policy: enable_igmp_snooping
           l3outs:
             # - shared-services.vrf-01-ospf-area-0.0.0.1
             - shared-services.vrf-01-bgp-as-64801

@@ -6,7 +6,7 @@ apic:
   tenants:
     - name: cgrabows
       managed: true
-      description: 10.1.11.0/24
+      description: 10.5.64.0/21
       security_domains:
         - cgrabows
 
@@ -388,7 +388,7 @@ apic:
                 filters:
                   - filter: src-any-dst-any
 
-          - name: permit-to-esg-10.1.11.0_27
+          - name: permit-to-esg-10.5.64.0_24
             scope: context
             subjects:
               - name: redirect
@@ -396,7 +396,7 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-10.1.11.32_27
+          - name: permit-to-esg-10.5.65.0_24
             scope: context
             subjects:
               - name: redirect
@@ -447,22 +447,22 @@ apic:
               - permit-to-shared-services-core-services
               - permit-from-shared-services-lab-desktops
           leaked_internal_prefixes:
-            - prefix: 10.1.11.0/27
+            - prefix: 10.5.64.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.11.32/27
+            - prefix: 10.5.65.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.11.64/27
+            - prefix: 10.5.66.0/24
               public: true
               destinations:
                 - tenant: shared-services
                   vrf: vrf-01
-            - prefix: 10.1.11.96/27
+            - prefix: 10.5.67.0/24
               public: true
               destinations:
                 - tenant: shared-services
@@ -477,39 +477,39 @@ apic:
           subnets:
             - ip: 6.6.6.1/24
 
-        - name: 10.1.11.0_27
+        - name: 10.5.64.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.11.1/27
+            - ip: 10.5.64.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.11.32_27
+        - name: 10.5.65.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.11.33/27
+            - ip: 10.5.65.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.11.64_27
+        - name: 10.5.66.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.11.65/27
+            - ip: 10.5.66.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.11.96_27
+        - name: 10.5.67.0_24
           alias: internal-vrf-01
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.11.97/27
+            - ip: 10.5.67.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -593,10 +593,10 @@ apic:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads - no contracts on EPGs
           endpoint_groups:      
-            - name: '10.1.11.0_27'
+            - name: '10.5.64.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.11.0_27'
+              bridge_domain: '10.5.64.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -605,10 +605,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.1.11.32_27'
+            - name: '10.5.65.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.11.32_27'
+              bridge_domain: '10.5.65.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -617,10 +617,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.1.11.64_27'
+            - name: '10.5.66.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.11.64_27'
+              bridge_domain: '10.5.66.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -629,10 +629,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-            - name: '10.1.11.96_27'
+            - name: '10.5.67.0_24'
               description: no contracts on this EPG, use ESGs for contracts
               alias: internal-vrf-01
-              bridge_domain: '10.1.11.96_27'
+              bridge_domain: '10.5.67.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   u_segmentation: true
@@ -644,38 +644,38 @@ apic:
         - name: 'network-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
-            - name: epg-10.1.11.0_27
+            - name: epg-10.5.64.0_24
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.11.0_27'
+                  endpoint_group: '10.5.64.0_24'
 
-            - name: epg-10.1.11.32_27
+            - name: epg-10.5.65.0_24
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.11.32_27'
+                  endpoint_group: '10.5.65.0_24'
 
-            - name: epg-10.1.11.64_27
+            - name: epg-10.5.66.0_24
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.11.64_27'
+                  endpoint_group: '10.5.66.0_24'
 
-            - name: epg-10.1.11.96_27
+            - name: epg-10.5.67.0_24
               vrf: vrf-01
               shutdown: false
               intra_esg_isolation: false
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.11.96_27'
+                  endpoint_group: '10.5.67.0_24'

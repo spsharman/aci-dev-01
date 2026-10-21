@@ -19,7 +19,10 @@ module "aci" {
   version = "2.0.0"
   # version = ">=0.8.1"
 
-  yaml_directories = ["data"]
+  # yaml_directories = ["data"]
+  # yaml_files = ["data/configuration-v1.nac.yaml"]
+  # yaml_files = ["data/configuration-v2.nac.yaml"]
+  yaml_files = ["data/configuration-v3.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false

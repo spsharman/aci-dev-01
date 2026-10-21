@@ -7,7 +7,7 @@
 apic:
   tenants:
     - name: demo-01
-      description: 10.1.1.0/24 
+      description: 10.5.40.0/21 
 
 # Policies
       policies:
@@ -175,7 +175,7 @@ apic:
           #     - intra-tenant
 
           leaked_internal_prefixes:
-            - prefix: 10.1.1.0/27
+            - prefix: 10.5.40.0/24
               public: true
               destinations:
                 - tenant: demo-01
@@ -183,7 +183,7 @@ apic:
                   public: true
                   description: Leaked to demo-01:vrf-01 and advertised externally
 
-            - prefix: 10.1.1.32/27
+            - prefix: 10.5.41.0/24
               public: true
               destinations:
                 - tenant: demo-01
@@ -191,7 +191,7 @@ apic:
                   public: true
                   description: Leaked to demo-01:vrf-01 and advertised externally
 
-            - prefix: 10.1.1.64/27
+            - prefix: 10.5.42.0/24
               public: true
               destinations:
                 - tenant: demo-01
@@ -199,7 +199,7 @@ apic:
                   public: true
                   description: Leaked to demo-01:vrf-01 and advertised externally
 
-            - prefix: 10.1.1.96/27
+            - prefix: 10.5.43.0/24
               public: true
               destinations:
                 - tenant: demo-01
@@ -284,39 +284,39 @@ apic:
             - ip: 6.6.6.1/24
               public: false
 
-        - name: 10.1.1.0_27
+        - name: 10.5.40.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
-            - ip: 10.1.1.1/27
+            - ip: 10.5.40.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.32_27
+        - name: 10.5.41.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
-            - ip: 10.1.1.33/27
+            - ip: 10.5.41.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.64_27
+        - name: 10.5.42.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
-            - ip: 10.1.1.65/27
+            - ip: 10.5.42.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.1.96_27
+        - name: 10.5.43.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-02
           subnets:
-            - ip: 10.1.1.97/27
+            - ip: 10.5.43.1/24
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
@@ -325,9 +325,9 @@ apic:
         - name: 'network-segments'
           description: EPGs provide the VLAN backing for application workloads
           endpoint_groups:      
-            - name: '10.1.1.0_27'
+            - name: '10.5.40.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.0_27'
+              bridge_domain: '10.5.40.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1215
@@ -336,9 +336,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
       
-            - name: '10.1.1.32_27'
+            - name: '10.5.41.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.32_27'
+              bridge_domain: '10.5.41.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1217
@@ -347,9 +347,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
         
-            - name: '10.1.1.64_27'
+            - name: '10.5.42.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.64_27'
+              bridge_domain: '10.5.42.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1219
@@ -358,9 +358,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
     
-            - name: '10.1.1.96_27'
+            - name: '10.5.43.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.1.96_27'
+              bridge_domain: '10.5.43.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1221
@@ -379,13 +379,13 @@ apic:
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.0_27'
+                  endpoint_group: '10.5.40.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.32_27'
+                  endpoint_group: '10.5.41.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.64_27'
+                  endpoint_group: '10.5.42.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.1.96_27'
+                  endpoint_group: '10.5.43.0_24'
               contracts:
                 consumers:
                   - permit-to-all-external-subnets

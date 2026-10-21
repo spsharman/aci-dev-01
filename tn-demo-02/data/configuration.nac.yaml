@@ -14,7 +14,7 @@
 apic:
   tenants:
     - name: demo-02
-      description: 10.1.2.0/24
+      description: 10.5.48.0/21
 # Policies
       policies:
         dhcp_relay_policies:
@@ -257,12 +257,12 @@ apic:
               shared: false
               nd_ra_prefix: false
 
-        - name: 10.1.2.0_27
+        - name: 10.5.48.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.0.1.1/24
+            - ip: 10.5.48.1/24
               public: true
               shared: false
               nd_ra_prefix: false
@@ -271,12 +271,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.2.32_27
+        - name: 10.5.49.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.2.33/27
+            - ip: 10.5.49.1/24
               public: true
               shared: false
               nd_ra_prefix: false
@@ -285,12 +285,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.2.64_27
+        - name: 10.5.50.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.2.65/27
+            - ip: 10.5.50.1/24
               public: true
               shared: false
               nd_ra_prefix: false
@@ -299,12 +299,12 @@ apic:
           dhcp_labels:
             - dhcp_relay_policy: dhcp.uktme.cisco.com
 
-        - name: 10.1.2.96_27
+        - name: 10.5.51.0_24
           alias: lab-local-subnet
           unknown_unicast: proxy
           vrf: vrf-01
           subnets:
-            - ip: 10.1.2.97/27
+            - ip: 10.5.51.1/24
               public: true
               shared: false
               nd_ra_prefix: false
@@ -327,9 +327,9 @@ apic:
             #       deployment_immediacy: immediate
             #       resolution_immediacy: immediate
 
-            - name: '10.1.2.0_27'
+            - name: '10.5.48.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.2.0_27'
+              bridge_domain: '10.5.48.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1223
@@ -338,9 +338,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
       
-            - name: '10.1.2.32_27'
+            - name: '10.5.49.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.2.32_27'
+              bridge_domain: '10.5.49.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1225
@@ -349,9 +349,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
         
-            - name: '10.1.2.64_27'
+            - name: '10.5.50.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.2.64_27'
+              bridge_domain: '10.5.50.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1227
@@ -360,9 +360,9 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
     
-            - name: '10.1.2.96_27'
+            - name: '10.5.51.0_24'
               alias: lab-local-subnet
-              bridge_domain: '10.1.2.96_27'
+              bridge_domain: '10.5.51.0_24'
               vmware_vmm_domains:
                 - name: 'hx-dev-01-vds-01'
                   primary_vlan: 1229
@@ -381,10 +381,10 @@ apic:
               preferred_group: false
               epg_selectors:
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.2.0_27'
+                  endpoint_group: '10.5.48.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.2.32_27'
+                  endpoint_group: '10.5.49.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.2.64_27'
+                  endpoint_group: '10.5.50.0_24'
                 - application_profile: 'network-segments'
-                  endpoint_group: '10.1.2.96_27'
+                  endpoint_group: '10.5.51.0_24'

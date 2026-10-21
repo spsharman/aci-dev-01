@@ -15,9 +15,10 @@ module "aci" {
   source  = "netascode/nac-aci/aci"
   version = "1.2.0"
 
-  # yaml_files = ["data/configuration.nac.yaml"]
-  yaml_files = ["data/configuration-bgp-applied-to-node.nac.yaml"]
   # yaml_directories = ["data"]
+  # yaml_files = ["data/configuration.nac.yaml"]
+  # yaml_files = ["data/configuration-bgp-applied-to-node-v1.nac.yaml"]
+  yaml_files = ["data/configuration-bgp-applied-to-node-v2.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false
