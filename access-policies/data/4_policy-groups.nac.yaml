@@ -88,6 +88,22 @@ apic:
         port_channel_policy: lacp-active
 
 # Virtual port channel
+      - name: vpc_to_isovalent-pod-01
+        type: vpc
+        description: Isovalent pod 1 - L11 RU34 L11-C93108TC-FX3P Ethernet1/53-54
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
+      - name: vpc_to_isovalent-pod-02
+        type: vpc
+        description: Isovalent pod 2 - L14 RU25 L14-C93108TC-FX3P Ethernet1/53-54
+        aaep: vlans-allowed-to-isovalent-nodes
+        lldp_policy: lldp-enabled
+        l2_policy: port-local-vlans
+        port_channel_policy: lacp-active
+
       - name: vpc_to_ftd-4112-01-ccl
         type: vpc
         aaep: vlans-allowed-to-firewalls
