@@ -2024,6 +2024,138 @@ apic:
               description: do not use - this is a placeholder to enable the L3out to be created for vrf-03-bgp-svi
 
 # L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
+        - name: vrf-03-bgp-svi-nxos
+          description: SVI BGP to L11 and L14 C93108TC-FX3P AS65150 on VLAN 41
+          alias: vrf-03-to-nxos-svi
+          vrf: vrf-03
+          domain: isovalent.vrf-03
+          import_route_control_enforcement: false
+          export_route_map:
+            type: global
+            contexts:
+              - name: export-vrf-03-subnets
+                order: 0
+                action: permit
+                match_rules:
+                  - match-vrf-03-subnets
+              - name: export-default-route
+                order: 1
+                action: permit
+                match_rules:
+                  - match-default-route
+
+          node_profiles:
+            - name: border-leafs-pod-1
+              nodes:
+                - node_id: 1101
+                  pod_id: 1
+                  router_id: 110.1.7.3
+                  router_id_as_loopback: false
+                - node_id: 1102
+                  pod_id: 1
+                  router_id: 110.2.7.3
+                  router_id_as_loopback: false
+              bgp:
+                timer_policy: core-bgp-timers
+              interface_profiles:
+                - name: vpc_to_L11-C93108TC-FX3P
+                  description: VLAN 41 SVI to L11-C93108TC-FX3P over existing vPC
+                  interfaces:
+                    - node_id: 1101
+                      node2_id: 1102
+                      pod_id: 1
+                      channel: vpc_to_L11-C93108TC-FX3P
+                      mode: regular
+                      scope: vrf
+                      vlan: 41
+                      svi: true
+                      ip_a: 10.100.6.41/29
+                      ip_b: 10.100.6.42/29
+                      ip_shared: 10.100.6.43/29
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.100.6.44
+                          description: L11-C93108TC-FX3P VLAN 41 SVI
+                          remote_as: 65150
+                          local_as: 65254
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          export_route_control: export-vrf-03-to-smart-switch
+
+            - name: border-leafs-pod-2
+              nodes:
+                - node_id: 2101
+                  pod_id: 2
+                  router_id: 210.1.7.3
+                  router_id_as_loopback: false
+                - node_id: 2102
+                  pod_id: 2
+                  router_id: 210.2.7.3
+                  router_id_as_loopback: false
+              bgp:
+                timer_policy: core-bgp-timers
+              interface_profiles:
+                - name: vpc_to_L14-C93108TC-FX3P
+                  description: VLAN 41 SVI to L14-C93108TC-FX3P over existing vPC
+                  interfaces:
+                    - node_id: 2101
+                      node2_id: 2102
+                      pod_id: 2
+                      channel: vpc_to_L14-C93108TC-FX3P
+                      mode: regular
+                      scope: vrf
+                      vlan: 41
+                      svi: true
+                      ip_a: 10.100.6.49/29
+                      ip_b: 10.100.6.50/29
+                      ip_shared: 10.100.6.51/29
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.100.6.52
+                          description: L14-C93108TC-FX3P VLAN 41 SVI
+                          remote_as: 65150
+                          local_as: 65254
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: true
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: true
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: false
+                          admin_state: true
+                          as_propagate: no-prepend
+                          peer_prefix_policy: nxos-bgp-prefix-policy
+                          export_route_control: export-vrf-03-to-smart-switch
+
+          external_endpoint_groups:
+            - name: dummy-extEPG-for-vrf-03-bgp-svi-nxos-AS-65254
+              description: Placeholder external EPG for vrf-03-bgp-svi-nxos
+
+# L3out: Location in GUI: `Tenants` » `XXX` » `Networking` » `L3outs`
         # - name: isovalent.vrf-02-to-bgp-as-65150
         #   alias: vrf-01-to-core
         #   description: L3out peering to EVPN C93108TC-FX3P
