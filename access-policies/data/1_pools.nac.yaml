@@ -339,6 +339,12 @@ apic:
             description: L3out to isovalent.vrf-02 subnet 10.100.0.0/23
           - from: 53
             description: L3out to isovalent.vrf-02 subnet 10.100.4.0/23
+          - from: 54
+            description: isovalent.vrf-03 subnet 10.100.7.0/24 for Local Access
+          - from: 55
+            description: isovalent.vrf-03 subnet 10.100.8.0/24 for Local Access
+          - from: 56
+            description: isovalent.vrf-03 subnet 10.100.9.0/24 for Local Access
           - from: 42
             description: L3out SVI isovalent.vrf-02 to Smart Switch 10.100.6.32/29
 
@@ -347,6 +353,8 @@ apic:
         ranges:
           - from: 41
             description: L3out SVI isovalent.vrf-03 to Smart Switch
+          - from: 42
+            description: L3out SVI isovalent.vrf-03 to NXOS Gateways
 
       - name: ssharman.vrf-01
         allocation: static
@@ -358,7 +366,7 @@ apic:
         allocation: static
         ranges:
           - from: 42
-            description: L3out SVI isovalent.vrf-03 to Smart Switch
+            description: L3out SVI isovalent.vrf-02 to Smart Switch
 
       - name: mgmt_inb
         allocation: static
