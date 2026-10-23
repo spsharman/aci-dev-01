@@ -25,9 +25,9 @@ apic:
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
 
-      - name: routed-interfaces-to-C93108TC-FX3P
+      - name: routed-interfaces-to-N93108TC-FX3P
         type: access
-        aaep: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
+        aaep: vlans-allowed-to-routed-interfaces-to-N93108TC-FX3P
         cdp_policy: cdp-enabled
         lldp_policy: lldp-disabled
         l2_policy: port-local-vlans
@@ -88,18 +88,18 @@ apic:
         port_channel_policy: lacp-active
 
 # Virtual port channel
-      - name: vpc_to_L11-C93108TC-FX3P
+      - name: vpc_to_L11-N93108TC-FX3P
         type: vpc
-        description: Isovalent pod 1 - L11 RU34 L11-C93108TC-FX3P Ethernet1/53-54
-        aaep: vlans-allowed-to-L11-C93108TC-FX3P
+        description: Isovalent pod 1 - L11 RU34 L11-N93108TC-FX3P Ethernet1/53-54
+        aaep: vlans-allowed-to-L11-N93108TC-FX3P
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
 
-      - name: vpc_to_L14-C93108TC-FX3P
+      - name: vpc_to_L14-N93108TC-FX3P
         type: vpc
-        description: Isovalent pod 2 - L14 RU25 L14-C93108TC-FX3P Ethernet1/53-54
-        aaep: vlans-allowed-to-L14-C93108TC-FX3P
+        description: Isovalent pod 2 - L14 RU25 L14-N93108TC-FX3P Ethernet1/53-54
+        aaep: vlans-allowed-to-L14-N93108TC-FX3P
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
