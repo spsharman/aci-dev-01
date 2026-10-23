@@ -247,12 +247,14 @@ apic:
         physical_domains:
           - isovalent-nxos-gateways
         routed_domains:
+          - isovalent.vrf-02
           - isovalent.vrf-03
 
       - name: vlans-allowed-to-L14-N93108TC-FX3P
         physical_domains:
           - isovalent-nxos-gateways
         routed_domains:
+          - isovalent.vrf-02
           - isovalent.vrf-03
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
