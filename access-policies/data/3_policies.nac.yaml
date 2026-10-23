@@ -113,13 +113,12 @@ apic:
           - BRKDCN-2984.vrf-01
           - BRKDCN-2959.vrf-01
           - BRKDCN-2959.vrf-02
-          - isovalent.vrf-02
           - isovalent.vrf-01
           - mgmt-inb.vrf-01
           - tech-elevate.vrf-01
           - tech-elevate.vrf-02
 
-      - name: vlans-allowed-to-routed-interfaces-to-C93108TC-FX3P
+      - name: vlans-allowed-to-routed-interfaces-to-N93108TC-FX3P
         routed_domains:
           - isovalent.vrf-02
 
@@ -243,6 +242,20 @@ apic:
           - isovalent.vrf-02
           - isovalent.vrf-03
           - ssharman.vrf-01
+
+      - name: vlans-allowed-to-L11-N93108TC-FX3P
+        physical_domains:
+          - isovalent-nxos-gateways
+        routed_domains:
+          - isovalent.vrf-02
+          - isovalent.vrf-03
+
+      - name: vlans-allowed-to-L14-N93108TC-FX3P
+        physical_domains:
+          - isovalent-nxos-gateways
+        routed_domains:
+          - isovalent.vrf-02
+          - isovalent.vrf-03
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
         routed_domains:
