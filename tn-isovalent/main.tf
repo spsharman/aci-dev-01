@@ -14,37 +14,12 @@ provider "aci" {
 
 module "aci" {
   source = "netascode/nac-aci/aci"
-  # version = "1.2.0"
   version = ">=2.0.0"
 
-# Floating SVI configuration
 
-  # yaml_files = ["floating-svi/configuration-v1.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v2.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v3.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v4.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v5.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v6.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v7.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v8.nac.yaml"] << working configuration
-  # yaml_files = ["floating-svi/configuration-v9.nac.yaml"]
-  # yaml_files = ["floating-svi/configuration-v10.nac.yaml"] # << testing Smart Switch iBGP AS65151
-  # yaml_files = ["floating-svi/configuration-v11.nac.yaml"] # << testing Smart Switch iBGP AS65151
-  # yaml_files = ["floating-svi/configuration-v12.nac.yaml"] # << vrf-01 SVI to Smart Switch 10.100.6.32/29
-  # yaml_files = ["floating-svi/configuration-v13.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
-  # yaml_files = ["floating-svi/configuration-v14.nac.yaml"] # << outside ESGs 10.100.7/8 consume to network ESGs
-  # yaml_files = ["floating-svi/configuration-v15.nac.yaml"] # << drop vrf-01-bgp-svi; p2p default via match-all-subnets
-  # yaml_files = ["floating-svi/configuration-v16.nac.yaml"] # << leak jumphost 10.237.101.144/28 to vrf-03
-  # yaml_files = ["floating-svi/configuration-v17.nac.yaml"] # << export jumphost to SS on vrf-03-bgp-svi
-  # yaml_files = ["floating-svi/configuration-v18.nac.yaml"] # << tenant-scope segment contracts; jumphost consumes 7/8/9
-  # yaml_files = ["floating-svi/configuration-v19.nac.yaml"] # << 7/8/9 consume external, core-services, lab-desktops
-  # yaml_files = ["floating-svi/configuration-v20.nac.yaml"] # << export 10.100.7/8/9 from vrf-02 to core
-  # yaml_files = ["floating-svi/configuration-v21.nac.yaml"] # << vrf-03 vzAny consumes external/core/lab; drop from 7/8/9 ESGs
-  yaml_files = ["floating-svi/configuration-v22.nac.yaml"] # << export default to SS on vrf-03-bgp-svi
+# Tenant configuration
 
-# SVI configuration
-
-  # yaml_files = ["svi/configuration.nac.yaml"]
+  yaml_files = ["configuration.nac.yaml"]
 
   manage_access_policies    = false
   manage_fabric_policies    = false
