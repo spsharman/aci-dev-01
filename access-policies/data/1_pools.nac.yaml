@@ -345,8 +345,14 @@ apic:
             description: isovalent.vrf-03 subnet 10.100.8.0/24 for Local Access
           - from: 56
             description: isovalent.vrf-03 subnet 10.100.9.0/24 for Local Access
-          - from: 42
-            description: L3out SVI isovalent.vrf-02 to Smart Switch 10.100.6.32/29
+
+      - name: isovalent-nxos-gw
+        allocation: static
+        ranges:
+          - from: 57
+            description: isovalent.vrf-03 BGP Peering
+          - from: 58
+            description: isovalent.vrf-03 RESERVED
 
       - name: isovalent.vrf-03
         allocation: static

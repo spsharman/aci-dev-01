@@ -244,9 +244,17 @@ apic:
           - isovalent.vrf-03
           - ssharman.vrf-01
 
-      - name: vlans-allowed-to-nxos-gw
+      - name: vlans-allowed-to-L11-C93108TC-FX3P
+        physical_domains:
+          - isovalent-nxos-gw
         routed_domains:
-          - nxos-gw
+          - isovalent.vrf-03
+
+      - name: vlans-allowed-to-L14-C93108TC-FX3P
+        physical_domains:
+          - isovalent-nxos-gw
+        routed_domains:
+          - isovalent.vrf-03
 
       - name: vlans-allowed-to-routed-interfaces-to-smart-switch
         routed_domains:

@@ -91,7 +91,7 @@ apic:
       - name: vpc_to_L11-C93108TC-FX3P
         type: vpc
         description: Isovalent pod 1 - L11 RU34 L11-C93108TC-FX3P Ethernet1/53-54
-        aaep: vlans-allowed-to-nxos-gw
+        aaep: vlans-allowed-to-L11-C93108TC-FX3P
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
@@ -99,7 +99,7 @@ apic:
       - name: vpc_to_L14-C93108TC-FX3P
         type: vpc
         description: Isovalent pod 2 - L14 RU25 L14-C93108TC-FX3P Ethernet1/53-54
-        aaep: vlans-allowed-to-nxos-gw
+        aaep: vlans-allowed-to-L14-C93108TC-FX3P
         lldp_policy: lldp-enabled
         l2_policy: port-local-vlans
         port_channel_policy: lacp-active
