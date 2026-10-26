@@ -34,7 +34,7 @@ apic:
 
 # The isovalent tenant is managed
     - name: isovalent
-      description: 10.237.101.0/26 and 10.237.101.144/28
+      description: 10.237.101.0/26 and 10.237.101.128/27
       security_domains:
         - isovalent
 
@@ -218,7 +218,7 @@ apic:
                 aggregate: false
               - ip: 10.237.101.0/25
                 aggregate: false
-              - ip: 10.237.101.128/26
+              - ip: 10.237.101.128/27
                 aggregate: false
 
 # OSPF Interface Policy: Location in GUI: `Tenants` » `XXX` » `Policies` » `Protocol` » `OSPF` » `OSPF Interface`
@@ -901,7 +901,7 @@ apic:
                 bgp_route_summarization_policy: tenant-summaries-only
               - prefix: 10.237.101.0/25
                 bgp_route_summarization_policy: tenant-summaries-only
-              - prefix: 10.237.101.128/26
+              - prefix: 10.237.101.128/27
                 bgp_route_summarization_policy: tenant-summaries-only
           leaked_external_prefixes:
             - prefix: 0.0.0.0/0
